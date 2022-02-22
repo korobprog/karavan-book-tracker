@@ -1,5 +1,6 @@
-import React from "react";
+import React from "react"
 import { Form, Input, Button, Checkbox } from 'antd';
+import GoogleButton from 'react-google-button'
 
 const Auth = () => {
   const onFinish = (values: any) => {
@@ -44,6 +45,9 @@ const Auth = () => {
         <Button type="primary" htmlType="submit">
           Submit
         </Button>
+              
+        <GoogleButton onClick={() => { console.log('Google button clicked') }}
+/>
       </Form.Item>
     </Form>
   );
