@@ -1,5 +1,10 @@
 import React from "React"
+import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
+import firebase from "../firebase/clientApp";
 import { Form, Input, Button, Checkbox } from 'antd';
+import GoogleButton from 'react-google-button'
+
+
 
 const Login = () => {
   const onFinish = (values: any) => {
@@ -44,6 +49,9 @@ const Login = () => {
         <Button type="primary" htmlType="submit">
           Submit
         </Button>
+              
+        <GoogleButton onClick={() => { console.log('Google button clicked') }}
+/>
       </Form.Item>
     </Form>
   );
