@@ -1,12 +1,8 @@
-import React from "React"
-import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
-import firebase from "../firebase/clientApp";
+import React from "react"
 import { Form, Input, Button, Checkbox } from 'antd';
 import GoogleButton from 'react-google-button'
 
-
-
-const Login = () => {
+const Auth = () => {
   const onFinish = (values: any) => {
     console.log('Success:', values);
   };
@@ -57,4 +53,4 @@ const Login = () => {
   );
 };
 
-export default {Login};
+export default Auth;
