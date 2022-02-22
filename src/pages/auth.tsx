@@ -1,8 +1,15 @@
 import React from "react"
 import { Form, Input, Button, Checkbox } from 'antd';
 import GoogleButton from 'react-google-button'
+import { useSignInWithGoogle } from "react-firebase-hooks/auth";
+import { getAuth } from "firebase/auth";
 
 const Auth = () => {
+  const auth = getAuth();
+  const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
+
+  console.log('user', user)
+
   const onFinish = (values: any) => {
     console.log('Success:', values);
   };
@@ -45,9 +52,8 @@ const Auth = () => {
         <Button type="primary" htmlType="submit">
           Submit
         </Button>
-              
-        <GoogleButton onClick={() => { console.log('Google button clicked') }}
-/>
+
+        <GoogleButton onClick={() => signInWithGoogle()} />
       </Form.Item>
     </Form>
   );
