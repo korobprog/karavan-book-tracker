@@ -1,24 +1,19 @@
-import React from "react"
-import { Form, Input, Button, Checkbox } from 'antd';
-import GoogleButton from 'react-google-button'
-import { useSignInWithGoogle } from "react-firebase-hooks/auth";
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import React from "react";
+import { Form, Input, Button, Checkbox } from "antd";
 import { getAuth } from "firebase/auth";
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 
-const Auth = () => {
+const Registration = () => {
   const auth = getAuth();
-  const [signInWithGoogle, user] = useSignInWithGoogle(auth);
+  const [createUserWithEmailAndPassword, user] = useCreateUserWithEmailAndPassword(auth);
   console.log("user", user);
 
-  const [signInWithEmailAndPassword, usersigned] = useCreateUserWithEmailAndPassword(auth);
-  console.log("usersigned", usersigned);
-
   const onFinish = ({ email, password }: any) => {
-    signInWithEmailAndPassword(email, password);
+    createUserWithEmailAndPassword(email, password);
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
+    console.log("Failed:", errorInfo);
   };
 
   return (
@@ -34,7 +29,7 @@ const Auth = () => {
       <Form.Item
         label="Email"
         name="email"
-        rules={[{ required: true, message: 'Please input your username!' }]}
+        rules={[{ required: true, message: "Please input your email!" }]}
       >
         <Input />
       </Form.Item>
@@ -42,12 +37,16 @@ const Auth = () => {
       <Form.Item
         label="Password"
         name="password"
-        rules={[{ required: true, message: 'Please input your password!' }]}
+        rules={[{ required: true, message: "Please input your password!" }]}
       >
         <Input.Password />
       </Form.Item>
 
-      <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>
+      <Form.Item
+        name="remember"
+        valuePropName="checked"
+        wrapperCol={{ offset: 8, span: 16 }}
+      >
         <Checkbox>Remember me</Checkbox>
       </Form.Item>
 
@@ -55,11 +54,9 @@ const Auth = () => {
         <Button type="primary" htmlType="submit">
           Submit
         </Button>
-
-        <GoogleButton onClick={() => signInWithGoogle()} />
       </Form.Item>
     </Form>
   );
 };
 
-export default Auth;
+export default Registration;
