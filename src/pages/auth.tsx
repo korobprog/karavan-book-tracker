@@ -1,7 +1,7 @@
-import React from "React"
+import React from "react";
 import { Form, Input, Button, Checkbox } from 'antd';
 
-const Login = () => {
+const Auth = () => {
   const onFinish = (values: any) => {
     console.log('Success:', values);
   };
@@ -49,4 +49,4 @@ const Login = () => {
   );
 };
 
-export default {Login};
+export default Auth;

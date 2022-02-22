@@ -1,14 +1,15 @@
 import "./App.css";
-import { BrowserRouter, Route } from "react-router-dom";
-import auth from './pages/auth'
-import React from "react"
-
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Auth from "./pages/auth";
+import React from "react";
 
 function App() {
   return (
     <BrowserRouter>
       <div>
-      <Route path="/" component={auth} exact />
+        <Routes>
+          <Route path="/" element={<Auth />} />
+        </Routes>
       </div>
     </BrowserRouter>
   );
