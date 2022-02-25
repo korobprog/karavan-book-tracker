@@ -1,10 +1,20 @@
 import React from "react";
-import { Form, Input, Button, Checkbox, Layout, PageHeader, Typography } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Checkbox,
+  Layout,
+  PageHeader,
+  Typography,
+} from "antd";
 import GoogleButton from "react-google-button";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import BbtLogo from "../images/bbt-logo.png";
+import { Link } from "react-router-dom";
+import { routes } from "../shared/routes";
 
 const Auth = () => {
   const auth = getAuth();
@@ -38,6 +48,7 @@ const Auth = () => {
       <Title className="site-page-title" level={2}>
         ВХОД В УЧЕТ КНИГ
       </Title>
+     
       <Content>
         <div className="site-layout-content">
           <Form
@@ -53,12 +64,14 @@ const Auth = () => {
               label="Email"
               name="email"
               rules={[
-                { required: true, message: "Пожалуйста, введите ваше имя пользователя!" },
+                {
+                  required: true,
+                  message: "Пожалуйста, введите ваше имя пользователя!",
+                },
               ]}
             >
               <Input />
             </Form.Item>
-
             <Form.Item
               label="Пароль"
               name="password"
@@ -79,11 +92,13 @@ const Auth = () => {
 
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
               <Button type="primary" htmlType="submit">
-              Войти
+                Войти
               </Button>
+              <Link to={routes.registration}>регистрация</Link>
             </Form.Item>
-            <GoogleButton 
-            className="site-page-google-button"
+           
+            <GoogleButton
+              className="site-page-google-button"
               label="Войти через Google"
               onClick={() => signInWithGoogle()}
             />
