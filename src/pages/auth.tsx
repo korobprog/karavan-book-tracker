@@ -6,13 +6,13 @@ import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import BbtLogo from "../images/bbt-logo.png";
 
-
 const Auth = () => {
   const auth = getAuth();
   const [signInWithGoogle, user] = useSignInWithGoogle(auth);
   console.log("user", user);
 
-  const [signInWithEmailAndPassword, usersigned] = useSignInWithEmailAndPassword(auth);
+  const [signInWithEmailAndPassword, usersigned] =
+    useSignInWithEmailAndPassword(auth);
   console.log("usersigned", usersigned);
 
   const onFinish = ({ email, password }: any) => {
