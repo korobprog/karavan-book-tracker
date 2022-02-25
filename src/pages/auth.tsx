@@ -2,15 +2,16 @@ import React from "react"
 import { Form, Input, Button, Checkbox } from 'antd';
 import GoogleButton from 'react-google-button'
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
+
 
 const Auth = () => {
   const auth = getAuth();
   const [signInWithGoogle, user] = useSignInWithGoogle(auth);
   console.log("user", user);
 
-  const [signInWithEmailAndPassword, usersigned] = useCreateUserWithEmailAndPassword(auth);
+  const [signInWithEmailAndPassword, usersigned] = useSignInWithEmailAndPassword(auth);
   console.log("usersigned", usersigned);
 
   const onFinish = ({ email, password }: any) => {
