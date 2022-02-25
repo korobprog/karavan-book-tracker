@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Input, Button, Checkbox, Layout, PageHeader } from "antd";
+import { Form, Input, Button, Checkbox, Layout, PageHeader, Typography } from "antd";
 import GoogleButton from "react-google-button";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
@@ -23,6 +23,7 @@ const Auth = () => {
     console.log("Failed:", errorInfo);
   };
   const { Header, Footer, Content } = Layout;
+  const { Title } = Typography;
 
   return (
     <Layout>
@@ -34,6 +35,9 @@ const Auth = () => {
           avatar={{ src: BbtLogo }}
         />
       </Header>
+      <Title className="site-page-title" level={2}>
+        ВХОД В УЧЕТ КНИГ
+      </Title>
       <Content>
         <div className="site-layout-content">
           <Form
@@ -49,17 +53,17 @@ const Auth = () => {
               label="Email"
               name="email"
               rules={[
-                { required: true, message: "Please input your username!" },
+                { required: true, message: "Пожалуйста, введите ваше имя пользователя!" },
               ]}
             >
               <Input />
             </Form.Item>
 
             <Form.Item
-              label="Password"
+              label="Пароль"
               name="password"
               rules={[
-                { required: true, message: "Please input your password!" },
+                { required: true, message: "Пожалуйста, введите ваш пароль!" },
               ]}
             >
               <Input.Password />
@@ -70,15 +74,19 @@ const Auth = () => {
               valuePropName="checked"
               wrapperCol={{ offset: 8, span: 16 }}
             >
-              <Checkbox>Remember me</Checkbox>
+              <Checkbox>Запомни меня</Checkbox>
             </Form.Item>
 
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
               <Button type="primary" htmlType="submit">
-                Submit
+              Войти
               </Button>
             </Form.Item>
-            <GoogleButton onClick={() => signInWithGoogle()} />
+            <GoogleButton 
+            className="site-page-google-button"
+              label="Войти через Google"
+              onClick={() => signInWithGoogle()}
+            />
           </Form>
         </div>
       </Content>

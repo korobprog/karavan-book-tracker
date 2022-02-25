@@ -1,9 +1,16 @@
 import React from "react";
-import { Form, Input, Button, PageHeader, Layout, Checkbox } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  PageHeader,
+  Layout,
+  Checkbox,
+  Typography,
+} from "antd";
 import { getAuth } from "firebase/auth";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import BbtLogo from "../images/bbt-logo.png";
-import { Content, Footer, Header } from "antd/lib/layout/layout";
 
 const Registration = () => {
   const auth = getAuth();
@@ -18,7 +25,8 @@ const Registration = () => {
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
-  const { Content, Footer, Header } = Layout;
+  const { Content, Footer, Header} = Layout;
+  const { Title } = Typography;
   return (
     <Layout>
       <Header className="site-page-header">
@@ -29,6 +37,9 @@ const Registration = () => {
           avatar={{ src: BbtLogo }}
         />
       </Header>
+      <Title className="site-page-title" level={2}>
+        СТРАНИЦА РЕГИСТРАЦИИ
+      </Title>
       <Content>
         <div className="site-layout-content">
           <Form
@@ -43,32 +54,53 @@ const Registration = () => {
             <Form.Item
               label="Email"
               name="email"
-              rules={[{ required: true, message: "Please input your email!" }]}
+              rules={[{ required: true, message: "Пожалуйста, введите свой адрес электронной почты!" }]}
             >
               <Input />
             </Form.Item>
 
             <Form.Item
-              label="Password"
+              label="Пароль"
               name="password"
               rules={[
-                { required: true, message: "Please input your password!" },
+                { required: true, message: "Пожалуйста, введите ваш пароль!" },
               ]}
             >
               <Input.Password />
             </Form.Item>
-
+            <Form.Item
+        name="confirm"
+        label="Подтвердить пароль"
+        dependencies={['password']}
+        hasFeedback
+        rules={[
+          {
+            required: true,
+            message: 'Пожалуйста, подтвердите свой пароль!',
+          },
+          ({ getFieldValue }) => ({
+            validator(_, value) {
+              if (!value || getFieldValue('password') === value) {
+                return Promise.resolve();
+              }
+              return Promise.reject(new Error('Два введенных вами пароля не совпадают!'));
+            },
+          }),
+        ]}
+      >
+        <Input.Password />
+      </Form.Item>
             <Form.Item
               name="remember"
               valuePropName="checked"
               wrapperCol={{ offset: 8, span: 16 }}
             >
-              <Checkbox>Remember me</Checkbox>
+              <Checkbox>Запомни меня</Checkbox>
             </Form.Item>
 
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
               <Button type="primary" htmlType="submit">
-                Submit
+              Зарегистрироваться и войти
               </Button>
             </Form.Item>
           </Form>

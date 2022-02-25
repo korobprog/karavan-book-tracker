@@ -30,3 +30,14 @@ code {
   background: #fff;
   padding: 8px;
 }
+
+.site-page-title {
+  margin-left: auto;
+  margin-right: auto;
+  padding: 16px;
+}
+.site-page-google-button {
+  margin-left: auto;
+  margin-right: auto;
+  
+}
