@@ -8,7 +8,6 @@ import {
   PageHeader,
   Typography,
   Space,
-  message,
 } from "antd";
 import GoogleButton from "react-google-button";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
@@ -35,9 +34,7 @@ const Auth = () => {
   }, [googleUser, signedUser, navigate]);
 
   const onFinish = ({ email, password }: any) => {
-    signInWithEmailAndPassword(email, password).catch((e) => {
-      message.error("Неверный логин или пароль");
-    });
+    signInWithEmailAndPassword(email, password);
   };
 
   const onFinishFailed = (errorInfo: any) => {
