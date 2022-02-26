@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Form,
   Input,
@@ -14,17 +14,24 @@ import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import BbtLogo from "../images/bbt-logo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
 
 const Auth = () => {
   const auth = getAuth();
-  const [signInWithGoogle, user] = useSignInWithGoogle(auth);
-  console.log("user", user);
-
-  const [signInWithEmailAndPassword, usersigned] =
+  const [signInWithGoogle, googleUser] = useSignInWithGoogle(auth);
+  const [signInWithEmailAndPassword, signedUser, , emailError] =
     useSignInWithEmailAndPassword(auth);
-  console.log("usersigned", usersigned);
+  const navigate = useNavigate();
+
+  console.log("googleUser", googleUser);
+  console.log("signedUser", signedUser);
+
+  useEffect(() => {
+    if (googleUser || signedUser) {
+      navigate(routes.root);
+    }
+  }, [googleUser, signedUser, navigate]);
 
   const onFinish = ({ email, password }: any) => {
     signInWithEmailAndPassword(email, password);
@@ -34,7 +41,7 @@ const Auth = () => {
     console.log("Failed:", errorInfo);
   };
   const { Header, Footer, Content } = Layout;
-  const { Title } = Typography;
+  const { Title, Text } = Typography;
 
   return (
     <Layout>
@@ -91,7 +98,14 @@ const Auth = () => {
               <Checkbox>Запомни меня</Checkbox>
             </Form.Item>
 
-            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+            <Form.Item
+              wrapperCol={{ offset: 8, span: 16 }}
+              help={
+                emailError && (
+                  <Text type="danger">Неверный логин или пароль</Text>
+                )
+              }
+            >
               <Space>
                 <Button type="primary" htmlType="submit">
                   Войти
