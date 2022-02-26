@@ -11,6 +11,8 @@ import {
 import { getAuth } from "firebase/auth";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import BbtLogo from "../images/bbt-logo.png";
+import { Link } from "react-router-dom";
+import { routes } from "../shared/routes";
 
 const Registration = () => {
   const auth = getAuth();
@@ -25,7 +27,7 @@ const Registration = () => {
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
-  const { Content, Footer, Header} = Layout;
+  const { Content, Footer, Header } = Layout;
   const { Title } = Typography;
   return (
     <Layout>
@@ -54,7 +56,12 @@ const Registration = () => {
             <Form.Item
               label="Email"
               name="email"
-              rules={[{ required: true, message: "Пожалуйста, введите свой адрес электронной почты!" }]}
+              rules={[
+                {
+                  required: true,
+                  message: "Пожалуйста, введите свой адрес электронной почты!",
+                },
+              ]}
             >
               <Input />
             </Form.Item>
@@ -69,27 +76,29 @@ const Registration = () => {
               <Input.Password />
             </Form.Item>
             <Form.Item
-        name="confirm"
-        label="Подтвердить пароль"
-        dependencies={['password']}
-        hasFeedback
-        rules={[
-          {
-            required: true,
-            message: 'Пожалуйста, подтвердите свой пароль!',
-          },
-          ({ getFieldValue }) => ({
-            validator(_, value) {
-              if (!value || getFieldValue('password') === value) {
-                return Promise.resolve();
-              }
-              return Promise.reject(new Error('Два введенных вами пароля не совпадают!'));
-            },
-          }),
-        ]}
-      >
-        <Input.Password />
-      </Form.Item>
+              name="confirm"
+              label="Подтвердить пароль"
+              dependencies={["password"]}
+              hasFeedback
+              rules={[
+                {
+                  required: true,
+                  message: "Пожалуйста, подтвердите свой пароль!",
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue("password") === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error("Два введенных вами пароля не совпадают!")
+                    );
+                  },
+                }),
+              ]}
+            >
+              <Input.Password />
+            </Form.Item>
             <Form.Item
               name="remember"
               valuePropName="checked"
@@ -98,10 +107,11 @@ const Registration = () => {
               <Checkbox>Запомни меня</Checkbox>
             </Form.Item>
 
-            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button type="primary" htmlType="submit">
-              Зарегистрироваться и войти
+            <Form.Item>
+              <Button type="primary" htmlType="submit" className="full-width">
+                Зарегистрироваться и войти
               </Button>
+              <Link to={routes.auth}>Уже есть аккаунт</Link>
             </Form.Item>
           </Form>
         </div>

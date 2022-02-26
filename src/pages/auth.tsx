@@ -7,6 +7,7 @@ import {
   Layout,
   PageHeader,
   Typography,
+  Space,
 } from "antd";
 import GoogleButton from "react-google-button";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
@@ -45,12 +46,12 @@ const Auth = () => {
           avatar={{ src: BbtLogo }}
         />
       </Header>
-      <Title className="site-page-title" level={2}>
-        ВХОД В УЧЕТ КНИГ
-      </Title>
-     
+
       <Content>
         <div className="site-layout-content">
+          <Title className="site-page-title" level={2}>
+            ВХОД В УЧЕТ КНИГ
+          </Title>
           <Form
             name="basic"
             labelCol={{ span: 8 }}
@@ -91,14 +92,16 @@ const Auth = () => {
             </Form.Item>
 
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button type="primary" htmlType="submit">
-                Войти
-              </Button>
-              <Link to={routes.registration}>регистрация</Link>
+              <Space>
+                <Button type="primary" htmlType="submit">
+                  Войти
+                </Button>
+                <Link to={routes.registration}>Регистрация</Link>
+              </Space>
             </Form.Item>
-           
+
             <GoogleButton
-              className="site-page-google-button"
+              className="centred"
               label="Войти через Google"
               onClick={() => signInWithGoogle()}
             />
