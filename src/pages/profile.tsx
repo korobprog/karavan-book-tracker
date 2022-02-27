@@ -99,6 +99,13 @@ const Profile = () => {
             <Input />
           </Form.Item>
           <Form.Item
+            name={["user", "name"]}
+            label="Ваш город"
+            rules={[{ required: true }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
             name="phone"
             label="Ваш телефон"
             rules={[
@@ -107,9 +114,16 @@ const Profile = () => {
           >
             <Input addonBefore={prefixSelector} style={{ width: "100%" }} />
           </Form.Item>
+          <Form.Item
+            name={["user", "name"]}
+            label="Ваш адрес"
+            rules={[{ required: true }]}
+          >
+            <Input />
+          </Form.Item>
           <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
         <Button type="primary" htmlType="submit">
-          Submit
+          СОХРАНИТЬ
         </Button>
       </Form.Item>
         </div>
