@@ -3,5 +3,6 @@ export const routes = {
     report: '/report',
     auth: '/auth',
     registration: '/registration',
+    profile: '/profile',
 };
 
