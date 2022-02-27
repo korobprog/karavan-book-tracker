@@ -1,6 +1,7 @@
 import { Sheet } from "use-google-sheets/dist/types";
 
 export type Book = {
+    id: string;
     name: string;
     short_name: string;
     category: string;
