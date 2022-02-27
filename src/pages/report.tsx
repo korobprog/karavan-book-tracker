@@ -1,18 +1,22 @@
 import React, { useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { getAuth, signOut } from "firebase/auth";
-import { Button, Layout, List, PageHeader, Tooltip, Typography } from "antd";
-import { LogoutOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import BbtLogo from "../images/bbt-logo.png";
 import { useNavigate } from "react-router-dom";
+import { getAuth, signOut } from "firebase/auth";
+import useGoogleSheets from "use-google-sheets";
+import { Button, Layout, List, PageHeader, Tooltip, Typography } from "antd";
+import { LogoutOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
+
+import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
 import { Spinner } from "../shared/components/Spinner";
-import useGoogleSheets from "use-google-sheets";
-import { getBooks } from "../shared/helpers/getBooks";
+import { Book, getBooks } from "../shared/helpers/getBooks";
+import { useUser } from "../firebase/api";
 
 const Report = () => {
   const auth = getAuth();
+  const { favorite, toggleFavorite, loading: userLoading } = useUser();
   const [user, loading] = useAuthState(auth);
+
   const navigate = useNavigate();
   const { Content, Footer, Header } = Layout;
   const { Title } = Typography;
@@ -28,13 +32,26 @@ const Report = () => {
     }
   }, [user, loading, navigate]);
 
-  if (booksLoading) {
+  if (booksLoading || userLoading) {
     return <Spinner />;
   }
 
   const onLogout = () => {
     signOut(auth);
   };
+
+  const { favoriteBooks, otherBooks } = books.reduce(
+    ({ favoriteBooks, otherBooks }, book) => {
+      if (favorite.includes(book.id)) {
+        favoriteBooks.push(book);
+      } else {
+        otherBooks.push(book);
+      }
+
+      return { favoriteBooks, otherBooks };
+    },
+    { favoriteBooks: [] as Book[], otherBooks: [] as Book[] }
+  );
 
   return (
     <Layout>
@@ -64,10 +81,34 @@ const Report = () => {
           </Title>
           <List
             itemLayout="horizontal"
-            dataSource={books}
+            dataSource={favoriteBooks}
             renderItem={(book) => (
               <List.Item
-                actions={[<Button icon={<PlusCircleOutlined />}></Button>]}
+                actions={[
+                  <Button
+                    onClick={() => toggleFavorite(book.id)}
+                    icon={<StarFilled />}
+                  ></Button>,
+                ]}
+              >
+                <List.Item.Meta
+                  title={book.name}
+                  description={book.points ? `Баллы: ${book.points}` : ""}
+                />
+              </List.Item>
+            )}
+          />
+          <List
+            itemLayout="horizontal"
+            dataSource={otherBooks}
+            renderItem={(book) => (
+              <List.Item
+                actions={[
+                  <Button
+                    onClick={() => toggleFavorite(book.id)}
+                    icon={<StarOutlined />}
+                  ></Button>,
+                ]}
               >
                 <List.Item.Meta
                   title={book.name}
