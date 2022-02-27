@@ -3,7 +3,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth, signOut } from "firebase/auth";
 import {
   Button,
-  Divider,
   Layout,
   PageHeader,
   Tooltip,
@@ -13,10 +12,7 @@ import {
   Select,
 } from "antd";
 import {
-  ReadOutlined,
   LogoutOutlined,
-  UserAddOutlined,
-  MessageOutlined,
 } from "@ant-design/icons";
 import BbtLogo from "../images/bbt-logo.png";
 import { useNavigate } from "react-router-dom";
@@ -41,9 +37,7 @@ const Profile = () => {
     return <Spinner />;
   }
 
-  const onAddReport = () => {
-    navigate(routes.report);
-  };
+
 
   const onLogout = () => {
     signOut(auth);
@@ -92,14 +86,14 @@ const Profile = () => {
           <Paragraph>Заполните Ваш профиль Ф.И.О</Paragraph>
 
           <Form.Item
-            name={["user", "name"]}
+            name="name"
             label="Ваше имя"
             rules={[{ required: true }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            name={["user", "name"]}
+            name="city"
             label="Ваш город"
             rules={[{ required: true }]}
           >
@@ -109,15 +103,15 @@ const Profile = () => {
             name="phone"
             label="Ваш телефон"
             rules={[
-              { required: true, message: "Please input your phone number!" },
+              { required: true, message: "Пожалуйста, введите свой номер телефона!" },
             ]}
           >
             <Input addonBefore={prefixSelector} style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item
-            name={["user", "name"]}
+            name="address"
             label="Ваш адрес"
-            rules={[{ required: true }]}
+            rules={[{ required: false }]}
           >
             <Input />
           </Form.Item>
