@@ -9,9 +9,11 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 
 type UserDoc = {
-  name: string;
-  phone: string;
-  favorite: string[];
+  name?: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+  favorite?: string[];
 };
 
 export const useUser = () => {
@@ -37,8 +39,14 @@ export const useUser = () => {
     }
   };
 
+  const setProfile = async (profile: UserDoc) => {
+    if (user && userDocData && userRef) {
+      await setDoc(userRef, { ...userDocData, ...profile });
+    }
+  };
+
   const favorite = userDocData?.favorite || ([] as string[]);
   const loading = userLoading || userDocLoading;
 
-  return { favorite, toggleFavorite, loading };
+  return { favorite, toggleFavorite, loading, setProfile };
 };
