@@ -27,8 +27,8 @@ export const useUser = () => {
   const [userDocData, userDocLoading] = useDocumentData<UserDoc>(userRef);
 
   const toggleFavorite = async (favoriteId: string) => {
-    if (user && userDocData && userRef) {
-      const favoriteArr = userDocData.favorite || [];
+    if (user && userRef) {
+      const favoriteArr = userDocData?.favorite || [];
       if (favoriteArr.includes(favoriteId)) {
         const favorite = favoriteArr.filter((value) => value !== favoriteId);
         await setDoc(userRef, { ...userDocData, favorite });
@@ -40,7 +40,7 @@ export const useUser = () => {
   };
 
   const setProfile = async (profile: UserDoc) => {
-    if (user && userDocData && userRef) {
+    if (user && userRef) {
       await setDoc(userRef, { ...userDocData, ...profile });
     }
   };
