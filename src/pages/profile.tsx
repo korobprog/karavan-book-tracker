@@ -83,19 +83,18 @@ const Profile = () => {
         />
       </Header>
 
-      <Content {...layout}>
+      <Content>
         <div className="site-layout-content">
           <Title className="site-page-title" level={2}>
             Привет, {user?.displayName || "друг"}
           </Title>
           <Form
             name="basic"
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
             initialValues={{ remember: true }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
+            {...layout}
           >
             <Paragraph>Обязательно заполните Ваш профиль</Paragraph>
 
