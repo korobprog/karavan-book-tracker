@@ -19,7 +19,7 @@ import { Spinner } from "../shared/components/Spinner";
 import { useUser } from "../firebase/api";
 
 const Profile = () => {
-  const { setProfile } = useUser();
+  const { profile, setProfile, loading: userLoading } = useUser();
   const auth = getAuth();
   const [user, loading] = useAuthState(auth);
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ const Profile = () => {
     }
   }, [user, loading, navigate]);
 
-  if (!user) {
+  if (!user || userLoading) {
     return <Spinner />;
   }
 
@@ -55,7 +55,7 @@ const Profile = () => {
   };
 
   const prefixSelector = (
-    <Form.Item name="prefix" noStyle>
+    <Form.Item name="prefix" noStyle initialValue="+7">
       <Select style={{ width: 70 }}>
         <Option value="7">+7</Option>
         <Option value="3">+3</Option>
@@ -83,19 +83,18 @@ const Profile = () => {
         />
       </Header>
 
-      <Content {...layout}>
+      <Content>
         <div className="site-layout-content">
           <Title className="site-page-title" level={2}>
-            Привет, {user?.displayName || "друг"}
+            Привет, {profile.name || user?.displayName || "друг"}
           </Title>
           <Form
             name="basic"
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
             initialValues={{ remember: true }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
+            {...layout}
           >
             <Paragraph>Обязательно заполните Ваш профиль</Paragraph>
 
@@ -103,6 +102,7 @@ const Profile = () => {
               name="name"
               label="Ваше Ф.И.О"
               rules={[{ required: true }]}
+              initialValue={profile.name || user.displayName || ''}
             >
               <Input />
             </Form.Item>
@@ -110,6 +110,7 @@ const Profile = () => {
               name="city"
               label="Ваш город"
               rules={[{ required: true }]}
+              initialValue={profile.city || ''}
             >
               <Input />
             </Form.Item>
@@ -122,6 +123,7 @@ const Profile = () => {
                   message: "Пожалуйста, введите свой номер телефона!",
                 },
               ]}
+              initialValue={profile.phone || ''}
             >
               <Input addonBefore={prefixSelector} style={{ width: "100%" }} />
             </Form.Item>
@@ -129,6 +131,7 @@ const Profile = () => {
               name="address"
               label="Ваш адрес"
               rules={[{ required: false }]}
+              initialValue={profile.address || ''}
             >
               <Input />
             </Form.Item>
