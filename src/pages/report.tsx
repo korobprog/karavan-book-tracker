@@ -3,8 +3,21 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
 import useGoogleSheets from "use-google-sheets";
-import { Button, Layout, List, PageHeader, Tooltip, Typography, Input, Space  } from "antd";
-import { LogoutOutlined, StarFilled, StarOutlined, AudioOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Layout,
+  List,
+  PageHeader,
+  Tooltip,
+  Typography,
+  Input,
+  InputNumber,
+} from "antd";
+import {
+  LogoutOutlined,
+  StarFilled,
+  StarOutlined,
+} from "@ant-design/icons";
 
 import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
@@ -56,6 +69,9 @@ const Report = () => {
   const { Search } = Input;
   const onSearch = (value: string) => console.log(value);
 
+  function onChange(value: number) {
+    console.log("changed", value);
+  }
 
   return (
     <Layout>
@@ -83,8 +99,20 @@ const Report = () => {
           <Title className="site-page-title" level={4}>
             Отметить распространненные книги
           </Title>
-          <Search placeholder="input search text" allowClear onSearch={onSearch} style={{ width: 200 }} />
-         
+          <Search
+            placeholder="input search text"
+            allowClear
+            onSearch={onSearch}
+            style={{ width: 200 }}
+          />
+
+          <InputNumber
+            min={1}
+            max={100000}
+            defaultValue={3}
+            onChange={onChange}
+          />
+
           <List
             itemLayout="horizontal"
             dataSource={favoriteBooks}
