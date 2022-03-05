@@ -3,8 +3,8 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
 import useGoogleSheets from "use-google-sheets";
-import { Button, Layout, List, PageHeader, Tooltip, Typography } from "antd";
-import { LogoutOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
+import { Button, Layout, List, PageHeader, Tooltip, Typography, Input, Space  } from "antd";
+import { LogoutOutlined, StarFilled, StarOutlined, AudioOutlined } from "@ant-design/icons";
 
 import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
@@ -53,6 +53,10 @@ const Report = () => {
     { favoriteBooks: [] as Book[], otherBooks: [] as Book[] }
   );
 
+  const { Search } = Input;
+  const onSearch = (value: string) => console.log(value);
+
+
   return (
     <Layout>
       <Header className="site-page-header">
@@ -79,6 +83,8 @@ const Report = () => {
           <Title className="site-page-title" level={4}>
             Отметить распространненные книги
           </Title>
+          <Search placeholder="input search text" allowClear onSearch={onSearch} style={{ width: 200 }} />
+         
           <List
             itemLayout="horizontal"
             dataSource={favoriteBooks}

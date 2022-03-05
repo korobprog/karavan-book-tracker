@@ -46,7 +46,7 @@ const Profile = () => {
     wrapperCol: { span: 16 },
   };
 
-  const onFinish = ({ name, phone, city, address }: any) => {
+  const onFinish = ({ name, phone, city, address = '' }: any) => {
     setProfile({name, phone, city, address});
   };
 
