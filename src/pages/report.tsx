@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
@@ -13,11 +13,7 @@ import {
   Input,
   InputNumber,
 } from "antd";
-import {
-  LogoutOutlined,
-  StarFilled,
-  StarOutlined,
-} from "@ant-design/icons";
+import { LogoutOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
 
 import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
@@ -29,6 +25,7 @@ const Report = () => {
   const auth = getAuth();
   const { favorite, toggleFavorite, loading: userLoading } = useUser();
   const [user, loading] = useAuthState(auth);
+  const [searchString, setSearchString] = useState("");
 
   const navigate = useNavigate();
   const { Content, Footer, Header } = Layout;
@@ -55,10 +52,12 @@ const Report = () => {
 
   const { favoriteBooks, otherBooks } = books.reduce(
     ({ favoriteBooks, otherBooks }, book) => {
-      if (favorite.includes(book.id)) {
-        favoriteBooks.push(book);
-      } else {
-        otherBooks.push(book);
+      if (book.name.toLowerCase().includes(searchString)) {
+        if (favorite.includes(book.id)) {
+          favoriteBooks.push(book);
+        } else {
+          otherBooks.push(book);
+        }
       }
 
       return { favoriteBooks, otherBooks };
@@ -67,7 +66,9 @@ const Report = () => {
   );
 
   const { Search } = Input;
-  const onSearch = (value: string) => console.log(value);
+  const onSearchChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setSearchString(e.target.value.toLowerCase());
+  };
 
   function onChange(value: number) {
     console.log("changed", value);
@@ -100,9 +101,11 @@ const Report = () => {
             Отметить распространненные книги
           </Title>
           <Search
-            placeholder="input search text"
+            placeholder="поиск книги"
             allowClear
-            onSearch={onSearch}
+            onChange={onSearchChange}
+            value={searchString}
+
             style={{ width: 200 }}
           />
 
