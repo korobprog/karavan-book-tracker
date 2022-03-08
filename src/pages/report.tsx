@@ -12,6 +12,8 @@ import {
   Typography,
   Input,
   InputNumber,
+  Space,
+  Form,
 } from "antd";
 import { LogoutOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
 
@@ -74,6 +76,10 @@ const Report = () => {
     console.log("changed", value);
   }
 
+  function onFinish(value: Record<number, number>) {
+    console.log("finish", value);
+  }
+
   return (
     <Layout>
       <Header className="site-page-header">
@@ -97,75 +103,87 @@ const Report = () => {
 
       <Content>
         <div className="site-layout-content">
-          <Title className="site-page-title" level={4}>
-            Отметить распространненные книги
-          </Title>
-          <Search
-            placeholder="поиск книги"
-            allowClear
-            onChange={onSearchChange}
-            value={searchString}
-            style={{ width: 200 }}
-          />
+          <Form name="basic" onFinish={onFinish}>
+            <Title className="site-page-title" level={4}>
+              Отметить распространненные книги
+            </Title>
+            <Space>
+              <Search
+                placeholder="поиск книги"
+                allowClear
+                onChange={onSearchChange}
+                value={searchString}
+                style={{ width: 170 }}
+              />
+              <Button type="primary" htmlType="submit">
+                Отправить
+              </Button>
+            </Space>
 
-          <List
-            itemLayout="horizontal"
-            dataSource={favoriteBooks}
-            locale={{
-              emptyText: searchString
-                ? "Не найдено избранного"
-                : "Нажмите на ⭐, чтобы добавить в избранное",
-            }}
-            renderItem={(book) => (
-              <List.Item
-                actions={[
-                  <Button
-                    onClick={() => toggleFavorite(book.id)}
-                    icon={<StarFilled />}
-                  ></Button>,
-                ]}
-              >
-                <List.Item.Meta
-                  title={book.name}
-                  description={book.points ? `Баллы: ${book.points}` : ""}
-                />
-                <InputNumber
-                  min={0}
-                  max={10000}
-                  defaultValue={0}
-                  onChange={onChange}
-                  style={{ width: 70 }}
-                />
-              </List.Item>
-            )}
-          />
-          <List
-            itemLayout="horizontal"
-            dataSource={otherBooks}
-            locale={{ emptyText: "Не найдено книг" }}
-            renderItem={(book) => (
-              <List.Item
-                actions={[
-                  <Button
-                    onClick={() => toggleFavorite(book.id)}
-                    icon={<StarOutlined />}
-                  ></Button>,
-                ]}
-              >
-                <List.Item.Meta
-                  title={book.name}
-                  description={book.points ? `Баллы: ${book.points}` : ""}
-                />
-                <InputNumber
-                  min={0}
-                  max={10000}
-                  defaultValue={0}
-                  onChange={onChange}
-                  style={{ width: 70 }}
-                />
-              </List.Item>
-            )}
-          />
+            <List
+              itemLayout="horizontal"
+              dataSource={favoriteBooks}
+              locale={{
+                emptyText: searchString
+                  ? "Не найдено избранного"
+                  : "Нажмите на ⭐, чтобы добавить в избранное",
+              }}
+              renderItem={(book) => (
+                <List.Item
+                  actions={[
+                    <Button
+                      onClick={() => toggleFavorite(book.id)}
+                      icon={<StarFilled />}
+                    ></Button>,
+                  ]}
+                >
+                  <List.Item.Meta
+                    title={book.name}
+                    description={book.points ? `Баллы: ${book.points}` : ""}
+                  />
+                  <Form.Item name={book.id} noStyle>
+                    <InputNumber
+                      min={0}
+                      max={10000}
+                      defaultValue={0}
+                      onChange={onChange}
+                      style={{ width: 70 }}
+                    />
+                  </Form.Item>
+                </List.Item>
+              )}
+            />
+            <List
+              itemLayout="horizontal"
+              dataSource={otherBooks}
+              locale={{ emptyText: "Не найдено книг" }}
+              renderItem={(book) => (
+                <List.Item
+                  actions={[
+                    <Button
+                      onClick={() => toggleFavorite(book.id)}
+                      icon={<StarOutlined />}
+                    ></Button>,
+                  ]}
+                >
+                  <List.Item.Meta
+                    title={book.name}
+                    description={book.points ? `Баллы: ${book.points}` : ""}
+                  />
+                  <Form.Item name={book.id} noStyle>
+                    <InputNumber
+                      name={book.id}
+                      min={0}
+                      max={10000}
+                      defaultValue={0}
+                      onChange={onChange}
+                      style={{ width: 70 }}
+                    />
+                  </Form.Item>
+                </List.Item>
+              )}
+            />
+          </Form>
         </div>
       </Content>
       <Footer></Footer>
