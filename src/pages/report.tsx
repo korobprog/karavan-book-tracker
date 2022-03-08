@@ -105,21 +105,17 @@ const Report = () => {
             allowClear
             onChange={onSearchChange}
             value={searchString}
-
             style={{ width: 200 }}
-          />
-
-          <InputNumber
-            min={1}
-            max={100000}
-            defaultValue={3}
-            onChange={onChange}
           />
 
           <List
             itemLayout="horizontal"
             dataSource={favoriteBooks}
-            locale={{ emptyText: searchString ? 'Не найдено избранного' : 'Нажмите на ⭐, чтобы добавить в избранное' }}
+            locale={{
+              emptyText: searchString
+                ? "Не найдено избранного"
+                : "Нажмите на ⭐, чтобы добавить в избранное",
+            }}
             renderItem={(book) => (
               <List.Item
                 actions={[
@@ -133,13 +129,20 @@ const Report = () => {
                   title={book.name}
                   description={book.points ? `Баллы: ${book.points}` : ""}
                 />
+                <InputNumber
+                  min={0}
+                  max={10000}
+                  defaultValue={0}
+                  onChange={onChange}
+                  style={{ width: 70 }}
+                />
               </List.Item>
             )}
           />
           <List
             itemLayout="horizontal"
             dataSource={otherBooks}
-            locale={{ emptyText: 'Не найдено книг' }}
+            locale={{ emptyText: "Не найдено книг" }}
             renderItem={(book) => (
               <List.Item
                 actions={[
@@ -152,6 +155,13 @@ const Report = () => {
                 <List.Item.Meta
                   title={book.name}
                   description={book.points ? `Баллы: ${book.points}` : ""}
+                />
+                <InputNumber
+                  min={0}
+                  max={10000}
+                  defaultValue={0}
+                  onChange={onChange}
+                  style={{ width: 70 }}
                 />
               </List.Item>
             )}
