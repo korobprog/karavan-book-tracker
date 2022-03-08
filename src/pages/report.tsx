@@ -119,6 +119,7 @@ const Report = () => {
           <List
             itemLayout="horizontal"
             dataSource={favoriteBooks}
+            locale={{ emptyText: searchString ? 'Не найдено избранного' : 'Нажмите на ⭐, чтобы добавить в избранное' }}
             renderItem={(book) => (
               <List.Item
                 actions={[
@@ -138,6 +139,7 @@ const Report = () => {
           <List
             itemLayout="horizontal"
             dataSource={otherBooks}
+            locale={{ emptyText: 'Не найдено книг' }}
             renderItem={(book) => (
               <List.Item
                 actions={[
