@@ -34,7 +34,7 @@ const Report = () => {
   const { Content, Footer, Header } = Layout;
   const { Title } = Typography;
   const { data, loading: booksLoading } = useGoogleSheets({
-    apiKey: process.env.REACT_APP_GOOGLE_API_KEY as string,
+    apiKey: process.env.REACT_APP_GOOGLE_API_KEY  as string,
     sheetId: process.env.REACT_APP_GOOGLE_SHEETS_ID as string,
   });
   const books = getBooks(data);
@@ -108,7 +108,7 @@ const Report = () => {
 
           <InputNumber
             min={1}
-            max={100000}
+            max={200}
             defaultValue={3}
             onChange={onChange}
           />
