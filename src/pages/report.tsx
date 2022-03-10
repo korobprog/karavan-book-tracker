@@ -21,22 +21,27 @@ import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
 import { Spinner } from "../shared/components/Spinner";
 import { Book, getBooks } from "../shared/helpers/getBooks";
-import { useUser } from "../firebase/api";
+import { useUser } from "../firebase/useUser";
+import {
+  DistributedBook,
+  OperationDoc,
+  useOperations,
+} from "../firebase/useOperations";
 
 const Report = () => {
   const auth = getAuth();
-  const { favorite, toggleFavorite, loading: userLoading } = useUser();
+  const { profile, favorite, toggleFavorite, loading: userLoading } = useUser();
   const [user, loading] = useAuthState(auth);
   const [searchString, setSearchString] = useState("");
 
   const navigate = useNavigate();
-  const { Content, Footer, Header } = Layout;
-  const { Title } = Typography;
+
   const { data, loading: booksLoading } = useGoogleSheets({
-    apiKey: process.env.REACT_APP_GOOGLE_API_KEY  as string,
+    apiKey: process.env.REACT_APP_GOOGLE_API_KEY as string,
     sheetId: process.env.REACT_APP_GOOGLE_SHEETS_ID as string,
   });
-  const books = getBooks(data);
+
+  const { addOperation } = useOperations();
 
   useEffect(() => {
     if (!user && !loading) {
@@ -52,6 +57,7 @@ const Report = () => {
     signOut(auth);
   };
 
+  const books = getBooks(data);
   const { favoriteBooks, otherBooks } = books.reduce(
     ({ favoriteBooks, otherBooks }, book) => {
       if (book.name.toLowerCase().includes(searchString)) {
@@ -67,7 +73,6 @@ const Report = () => {
     { favoriteBooks: [] as Book[], otherBooks: [] as Book[] }
   );
 
-  const { Search } = Input;
   const onSearchChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setSearchString(e.target.value.toLowerCase());
   };
@@ -76,9 +81,44 @@ const Report = () => {
     console.log("changed", value);
   }
 
-  function onFinish(value: Record<number, number>) {
-    console.log("finish", value);
+  function onFinish(bookIdsWithCounts: Record<number, number>) {
+    if (user && profile.name) {
+      let totalCount = 0;
+      let totalPoints = 0;
+      const operationBooks = Object.entries(bookIdsWithCounts).reduce(
+        (acc, [id, count]) => {
+          if (count) {
+            totalCount += count;
+            totalPoints +=
+              (Number(books.find((book) => book.id === id)?.points) || 0) *
+              count;
+            acc.push({ bookId: Number(id), count });
+          }
+          return acc;
+        },
+        [] as DistributedBook[]
+      );
+
+      const operation: OperationDoc = {
+        userId: user?.uid,
+        date: new Date().toISOString(),
+        // TODO: add locations doc
+        locationId: "1",
+        userName: profile.name,
+        books: operationBooks,
+        totalCount,
+        totalPoints,
+        isAuthorized: true,
+      };
+
+      console.log("finish", operation);
+      addOperation(operation).then(() => navigate(routes.root));
+    }
   }
+
+  const { Search } = Input;
+  const { Content, Footer, Header } = Layout;
+  const { Title } = Typography;
 
   return (
     <Layout>
@@ -145,7 +185,6 @@ const Report = () => {
                     <InputNumber
                       min={0}
                       max={10000}
-                      defaultValue={0}
                       onChange={onChange}
                       style={{ width: 70 }}
                     />
@@ -175,7 +214,6 @@ const Report = () => {
                       name={book.id}
                       min={0}
                       max={10000}
-                      defaultValue={0}
                       onChange={onChange}
                       style={{ width: 70 }}
                     />
