@@ -12,13 +12,13 @@ import BbtLogo from "../images/bbt-logo.png";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
 import { Spinner } from "../shared/components/Spinner";
+import { useOperations } from "../firebase/useOperations";
 
 const Home = () => {
   const auth = getAuth();
   const [user, loading] = useAuthState(auth);
   const navigate = useNavigate();
-  const { Content, Footer, Header } = Layout;
-  const { Title, Paragraph } = Typography;
+  const { myOperationDocData } = useOperations();
 
   useEffect(() => {
     if (!user && !loading) {
@@ -37,6 +37,9 @@ const Home = () => {
   const onLogout = () => {
     signOut(auth);
   };
+
+  const { Content, Footer, Header } = Layout;
+  const { Title, Paragraph } = Typography;
 
   return (
     <Layout>
@@ -73,6 +76,15 @@ const Home = () => {
           >
             Отметить книги
           </Button>
+          {myOperationDocData && <Paragraph>Последние операции:</Paragraph>}
+          {myOperationDocData?.map((operation, index) => {
+            return (
+              <Paragraph key={index}>
+                {new Date(operation.date).toLocaleDateString()} - книг:{" "}
+                {operation.totalCount}, баллов: {operation.totalPoints}
+              </Paragraph>
+            );
+          })}
           <Divider dashed />
           <Button
             href="https://t.me/MonahiSborIstoriy_bot"

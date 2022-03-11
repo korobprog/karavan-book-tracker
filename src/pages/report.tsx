@@ -12,6 +12,8 @@ import {
   Typography,
   Input,
   InputNumber,
+  Space,
+  Form,
 } from "antd";
 import { LogoutOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
 
@@ -19,22 +21,27 @@ import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
 import { Spinner } from "../shared/components/Spinner";
 import { Book, getBooks } from "../shared/helpers/getBooks";
-import { useUser } from "../firebase/api";
+import { useUser } from "../firebase/useUser";
+import {
+  DistributedBook,
+  OperationDoc,
+  useOperations,
+} from "../firebase/useOperations";
 
 const Report = () => {
   const auth = getAuth();
-  const { favorite, toggleFavorite, loading: userLoading } = useUser();
+  const { profile, favorite, toggleFavorite, loading: userLoading } = useUser();
   const [user, loading] = useAuthState(auth);
   const [searchString, setSearchString] = useState("");
 
   const navigate = useNavigate();
-  const { Content, Footer, Header } = Layout;
-  const { Title } = Typography;
+
   const { data, loading: booksLoading } = useGoogleSheets({
-    apiKey: process.env.REACT_APP_GOOGLE_API_KEY  as string,
+    apiKey: process.env.REACT_APP_GOOGLE_API_KEY as string,
     sheetId: process.env.REACT_APP_GOOGLE_SHEETS_ID as string,
   });
-  const books = getBooks(data);
+
+  const { addOperation } = useOperations();
 
   useEffect(() => {
     if (!user && !loading) {
@@ -50,6 +57,7 @@ const Report = () => {
     signOut(auth);
   };
 
+  const books = getBooks(data);
   const { favoriteBooks, otherBooks } = books.reduce(
     ({ favoriteBooks, otherBooks }, book) => {
       if (book.name.toLowerCase().includes(searchString)) {
@@ -65,7 +73,6 @@ const Report = () => {
     { favoriteBooks: [] as Book[], otherBooks: [] as Book[] }
   );
 
-  const { Search } = Input;
   const onSearchChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setSearchString(e.target.value.toLowerCase());
   };
@@ -73,6 +80,45 @@ const Report = () => {
   function onChange(value: number) {
     console.log("changed", value);
   }
+
+  function onFinish(bookIdsWithCounts: Record<number, number>) {
+    if (user && profile.name) {
+      let totalCount = 0;
+      let totalPoints = 0;
+      const operationBooks = Object.entries(bookIdsWithCounts).reduce(
+        (acc, [id, count]) => {
+          if (count) {
+            totalCount += count;
+            totalPoints +=
+              (Number(books.find((book) => book.id === id)?.points) || 0) *
+              count;
+            acc.push({ bookId: Number(id), count });
+          }
+          return acc;
+        },
+        [] as DistributedBook[]
+      );
+
+      const operation: OperationDoc = {
+        userId: user?.uid,
+        date: new Date().toISOString(),
+        // TODO: add locations doc
+        locationId: "1",
+        userName: profile.name,
+        books: operationBooks,
+        totalCount,
+        totalPoints,
+        isAuthorized: true,
+      };
+
+      console.log("finish", operation);
+      addOperation(operation).then(() => navigate(routes.root));
+    }
+  }
+
+  const { Search } = Input;
+  const { Content, Footer, Header } = Layout;
+  const { Title } = Typography;
 
   return (
     <Layout>
@@ -97,75 +143,85 @@ const Report = () => {
 
       <Content>
         <div className="site-layout-content">
-          <Title className="site-page-title" level={4}>
-            Отметить распространненные книги
-          </Title>
-          <Search
-            placeholder="поиск книги"
-            allowClear
-            onChange={onSearchChange}
-            value={searchString}
-            style={{ width: 200 }}
-          />
+          <Form name="basic" onFinish={onFinish}>
+            <Title className="site-page-title" level={4}>
+              Отметить распространненные книги
+            </Title>
+            <Space>
+              <Search
+                placeholder="поиск книги"
+                allowClear
+                onChange={onSearchChange}
+                value={searchString}
+                style={{ width: 170 }}
+              />
+              <Button type="primary" htmlType="submit">
+                Отправить
+              </Button>
+            </Space>
 
-          <List
-            itemLayout="horizontal"
-            dataSource={favoriteBooks}
-            locale={{
-              emptyText: searchString
-                ? "Не найдено избранного"
-                : "Нажмите на ⭐, чтобы добавить в избранное",
-            }}
-            renderItem={(book) => (
-              <List.Item
-                actions={[
-                  <Button
-                    onClick={() => toggleFavorite(book.id)}
-                    icon={<StarFilled />}
-                  ></Button>,
-                ]}
-              >
-                <List.Item.Meta
-                  title={book.name}
-                  description={book.points ? `Баллы: ${book.points}` : ""}
-                />
-                <InputNumber
-                  min={0}
-                  max={10000}
-                  defaultValue={0}
-                  onChange={onChange}
-                  style={{ width: 70 }}
-                />
-              </List.Item>
-            )}
-          />
-          <List
-            itemLayout="horizontal"
-            dataSource={otherBooks}
-            locale={{ emptyText: "Не найдено книг" }}
-            renderItem={(book) => (
-              <List.Item
-                actions={[
-                  <Button
-                    onClick={() => toggleFavorite(book.id)}
-                    icon={<StarOutlined />}
-                  ></Button>,
-                ]}
-              >
-                <List.Item.Meta
-                  title={book.name}
-                  description={book.points ? `Баллы: ${book.points}` : ""}
-                />
-                <InputNumber
-                  min={0}
-                  max={10000}
-                  defaultValue={0}
-                  onChange={onChange}
-                  style={{ width: 70 }}
-                />
-              </List.Item>
-            )}
-          />
+            <List
+              itemLayout="horizontal"
+              dataSource={favoriteBooks}
+              locale={{
+                emptyText: searchString
+                  ? "Не найдено избранного"
+                  : "Нажмите на ⭐, чтобы добавить в избранное",
+              }}
+              renderItem={(book) => (
+                <List.Item
+                  actions={[
+                    <Button
+                      onClick={() => toggleFavorite(book.id)}
+                      icon={<StarFilled />}
+                    ></Button>,
+                  ]}
+                >
+                  <List.Item.Meta
+                    title={book.name}
+                    description={book.points ? `Баллы: ${book.points}` : ""}
+                  />
+                  <Form.Item name={book.id} noStyle>
+                    <InputNumber
+                      min={0}
+                      max={10000}
+                      onChange={onChange}
+                      style={{ width: 70 }}
+                    />
+                  </Form.Item>
+                </List.Item>
+              )}
+            />
+            <List
+              itemLayout="horizontal"
+              dataSource={otherBooks}
+              locale={{ emptyText: "Не найдено книг" }}
+              renderItem={(book) => (
+                <List.Item
+                  actions={[
+                    <Button
+                      onClick={() => toggleFavorite(book.id)}
+                      icon={<StarOutlined />}
+                    ></Button>,
+                  ]}
+                >
+                  <List.Item.Meta
+                    title={book.name}
+                    description={book.points ? `Баллы: ${book.points}` : ""}
+                  />
+                  <Form.Item name={book.id} noStyle>
+                    <InputNumber
+                      name={book.id}
+                      min={0}
+                      max={10000}
+                      onChange={onChange}
+                      style={{ width: 70 }}
+                    />
+                  </Form.Item>
+                </List.Item>
+              )}
+            />
+          </Form>
         </div>
       </Content>
       <Footer></Footer>

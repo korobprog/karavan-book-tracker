@@ -16,7 +16,7 @@ import BbtLogo from "../images/bbt-logo.png";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
 import { Spinner } from "../shared/components/Spinner";
-import { useUser } from "../firebase/api";
+import { useUser } from "../firebase/useUser";
 
 const Profile = () => {
   const { profile, setProfile, loading: userLoading } = useUser();
