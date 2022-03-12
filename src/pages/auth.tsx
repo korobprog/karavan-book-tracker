@@ -16,6 +16,7 @@ import { getAuth } from "firebase/auth";
 import BbtLogo from "../images/bbt-logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
+import { useUser } from "../firebase/useUser";
 
 const Auth = () => {
   const auth = getAuth();
@@ -23,15 +24,19 @@ const Auth = () => {
   const [signInWithEmailAndPassword, signedUser, , emailError] =
     useSignInWithEmailAndPassword(auth);
   const navigate = useNavigate();
+  const { profile } = useUser();
 
   console.log("googleUser", googleUser);
   console.log("signedUser", signedUser);
 
   useEffect(() => {
-    if (googleUser || signedUser) {
+    if (profile) {
       navigate(routes.root);
+    } else if (googleUser || signedUser) {
+    navigate(routes.profile)
     }
-  }, [googleUser, signedUser, navigate]);
+  }, [googleUser, signedUser, navigate, profile]);
+
 
   const onFinish = ({ email, password }: any) => {
     signInWithEmailAndPassword(email, password);
