@@ -47,8 +47,8 @@ const Profile = () => {
   };
 
   const onFinish = ({ name, phone, city, address = '' }: any) => {
-    setProfile({name, phone, city, address});
-  };
+    setProfile({name, phone, city, address}).then(() => navigate(routes.root));
+    };
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
