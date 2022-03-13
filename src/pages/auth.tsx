@@ -24,18 +24,20 @@ const Auth = () => {
   const [signInWithEmailAndPassword, signedUser, , emailError] =
     useSignInWithEmailAndPassword(auth);
   const navigate = useNavigate();
-  const { profile } = useUser();
+  const { profile, loading } = useUser();
 
   console.log("googleUser", googleUser);
   console.log("signedUser", signedUser);
 
   useEffect(() => {
-    if (profile) {
-      navigate(routes.root);
-    } else if (googleUser || signedUser) {
-    navigate(routes.profile)
+    if ((googleUser || signedUser) && !loading) {
+      if (profile.name) {
+        navigate(routes.root);
+      } else {
+        navigate(routes.profile);
+      }
     }
-  }, [googleUser, signedUser, navigate, profile]);
+  }, [googleUser, signedUser, navigate, profile, loading]);
 
 
   const onFinish = ({ email, password }: any) => {
