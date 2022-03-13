@@ -24,7 +24,7 @@ const Registration = () => {
 
   const onFinish = ({ email, password }: any) => {
     createUserWithEmailAndPassword(email, password).then((user) => {
-      navigate(routes.root);
+      navigate(routes.auth);
     });
   };
 
