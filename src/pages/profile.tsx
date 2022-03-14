@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth, signOut } from "firebase/auth";
 import {
@@ -17,6 +17,9 @@ import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
 import { Spinner } from "../shared/components/Spinner";
 import { useUser } from "../firebase/useUser";
+import { LocationSelect } from "../shared/components/LocationSelect";
+import { useLocations } from "../firebase/useLocations";
+import { useDebouncedCallback } from "use-debounce/lib";
 
 const Profile = () => {
   const { profile, setProfile, loading: userLoading } = useUser();
@@ -27,11 +30,21 @@ const Profile = () => {
   const { Title, Paragraph } = Typography;
   const { Option } = Select;
 
+  const [locationSearchString, setLocationSearchString] = useState("");
+  const { addLocation, locationsDocData } = useLocations({
+    searchString: locationSearchString,
+  });
+
   useEffect(() => {
     if (!user && !loading) {
       navigate(routes.auth);
     }
   }, [user, loading, navigate]);
+
+  const onLocationChange = useDebouncedCallback((value: string) => {
+    setLocationSearchString(value.charAt(0).toUpperCase() + value.slice(1));
+  }, 1000);
+
 
   if (!user || userLoading) {
     return <Spinner />;
@@ -46,9 +59,18 @@ const Profile = () => {
     wrapperCol: { span: 16 },
   };
 
-  const onFinish = ({ name, phone, city, address = '' }: any) => {
-    setProfile({name, phone, city, address}).then(() => navigate(routes.root));
-    };
+  const onAddNewLocation = () => {
+    addLocation({
+      name: locationSearchString,
+    });
+    setLocationSearchString("");
+  };
+
+  const onFinish = ({ name, phone, city, address = "" }: any) => {
+    setProfile({ name, phone, city, address }).then(() =>
+      navigate(routes.root)
+    );
+  };
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
@@ -62,6 +84,10 @@ const Profile = () => {
       </Select>
     </Form.Item>
   );
+
+  const locationOptions = locationsDocData?.map((d) => (
+    <Select.Option key={d.id}>{d.name}</Select.Option>
+  ));
 
   return (
     <Layout>
@@ -102,7 +128,7 @@ const Profile = () => {
               name="name"
               label="Ваше Ф.И.О"
               rules={[{ required: true }]}
-              initialValue={profile.name || user.displayName || ''}
+              initialValue={profile.name || user.displayName || ""}
             >
               <Input />
             </Form.Item>
@@ -110,9 +136,15 @@ const Profile = () => {
               name="city"
               label="Ваш город"
               rules={[{ required: true }]}
-              initialValue={profile.city || ''}
+              initialValue={profile.city || ""}
             >
-              <Input />
+              <LocationSelect
+                onSearch={onLocationChange}
+                onAddNewLocation={onAddNewLocation}
+                locationSearchString={locationSearchString}
+              >
+                {locationOptions}
+              </LocationSelect>
             </Form.Item>
             <Form.Item
               name="phone"
@@ -123,7 +155,7 @@ const Profile = () => {
                   message: "Пожалуйста, введите свой номер телефона!",
                 },
               ]}
-              initialValue={profile.phone || ''}
+              initialValue={profile.phone || ""}
             >
               <Input addonBefore={prefixSelector} style={{ width: "100%" }} />
             </Form.Item>
@@ -131,7 +163,7 @@ const Profile = () => {
               name="address"
               label="Ваш адрес"
               rules={[{ required: false }]}
-              initialValue={profile.address || ''}
+              initialValue={profile.address || ""}
             >
               <Input />
             </Form.Item>
