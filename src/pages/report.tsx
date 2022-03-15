@@ -14,6 +14,7 @@ import {
   InputNumber,
   Space,
   Form,
+  Select,
 } from "antd";
 import { LogoutOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
 
@@ -27,12 +28,20 @@ import {
   OperationDoc,
   useOperations,
 } from "../firebase/useOperations";
+import { useLocations } from "../firebase/useLocations";
+import { LocationSelect } from "../shared/components/LocationSelect";
+import { useDebouncedCallback } from "use-debounce/lib";
+
+type FormValues = Record<number, number> & {
+  locationId: string;
+};
 
 const Report = () => {
   const auth = getAuth();
   const { profile, favorite, toggleFavorite, loading: userLoading } = useUser();
   const [user, loading] = useAuthState(auth);
   const [searchString, setSearchString] = useState("");
+  const [locationSearchString, setLocationSearchString] = useState("");
 
   const navigate = useNavigate();
 
@@ -42,12 +51,19 @@ const Report = () => {
   });
 
   const { addOperation } = useOperations();
+  const { addLocation, locationsDocData } = useLocations({
+    searchString: locationSearchString,
+  });
 
   useEffect(() => {
     if (!user && !loading) {
       navigate(routes.auth);
     }
   }, [user, loading, navigate]);
+
+  const onLocationChange = useDebouncedCallback((value: string) => {
+    setLocationSearchString(value.charAt(0).toUpperCase() + value.slice(1));
+  }, 1000);
 
   if (booksLoading || userLoading) {
     return <Spinner />;
@@ -73,16 +89,21 @@ const Report = () => {
     { favoriteBooks: [] as Book[], otherBooks: [] as Book[] }
   );
 
+  const onAddNewLocation = () => {
+    addLocation({
+      name: locationSearchString,
+    });
+    setLocationSearchString("");
+  };
+
   const onSearchChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setSearchString(e.target.value.toLowerCase());
   };
 
-  function onChange(value: number) {
-    console.log("changed", value);
-  }
-
-  function onFinish(bookIdsWithCounts: Record<number, number>) {
+  function onFinish(formValues: FormValues) {
     if (user && profile.name) {
+      const { locationId, ...bookIdsWithCounts } = formValues;
+
       let totalCount = 0;
       let totalPoints = 0;
       const operationBooks = Object.entries(bookIdsWithCounts).reduce(
@@ -102,8 +123,7 @@ const Report = () => {
       const operation: OperationDoc = {
         userId: user?.uid,
         date: new Date().toISOString(),
-        // TODO: add locations doc
-        locationId: "1",
+        locationId,
         userName: profile.name,
         books: operationBooks,
         totalCount,
@@ -111,10 +131,13 @@ const Report = () => {
         isAuthorized: true,
       };
 
-      console.log("finish", operation);
       addOperation(operation).then(() => navigate(routes.root));
     }
   }
+
+  const locationOptions = locationsDocData?.map((d) => (
+    <Select.Option key={d.id}>{d.name}</Select.Option>
+  ));
 
   const { Search } = Input;
   const { Content, Footer, Header } = Layout;
@@ -147,6 +170,20 @@ const Report = () => {
             <Title className="site-page-title" level={4}>
               Отметить распространненные книги
             </Title>
+            <Form.Item
+              name="locationId"
+              label="Место"
+              rules={[{ required: true }]}
+            >
+              <LocationSelect
+                onSearch={onLocationChange}
+                onAddNewLocation={onAddNewLocation}
+                locationSearchString={locationSearchString}
+                // TODO: add onChange add to localStorage
+              >
+                {locationOptions}
+              </LocationSelect>
+            </Form.Item>
             <Space>
               <Search
                 placeholder="поиск книги"
@@ -182,12 +219,7 @@ const Report = () => {
                     description={book.points ? `Баллы: ${book.points}` : ""}
                   />
                   <Form.Item name={book.id} noStyle>
-                    <InputNumber
-                      min={0}
-                      max={10000}
-                      onChange={onChange}
-                      style={{ width: 70 }}
-                    />
+                    <InputNumber min={0} max={10000} style={{ width: 70 }} />
                   </Form.Item>
                 </List.Item>
               )}
@@ -214,7 +246,6 @@ const Report = () => {
                       name={book.id}
                       min={0}
                       max={10000}
-                      onChange={onChange}
                       style={{ width: 70 }}
                     />
                   </Form.Item>
