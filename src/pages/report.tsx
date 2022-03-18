@@ -38,7 +38,13 @@ type FormValues = Record<number, number> & {
 
 const Report = () => {
   const auth = getAuth();
-  const { profile, favorite, toggleFavorite, loading: userLoading } = useUser();
+  const {
+    profile,
+    addStatistic,
+    favorite,
+    toggleFavorite,
+    loading: userLoading,
+  } = useUser();
   const [user, loading] = useAuthState(auth);
   const [searchString, setSearchString] = useState("");
   const [locationSearchString, setLocationSearchString] = useState("");
@@ -131,7 +137,10 @@ const Report = () => {
         isAuthorized: true,
       };
 
-      addOperation(operation).then(() => navigate(routes.root));
+      Promise.all([
+        addStatistic({ count: totalCount, points: totalPoints }),
+        addOperation(operation),
+      ]).then(() => navigate(routes.root));
     }
   }
 
