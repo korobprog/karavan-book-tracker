@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { getAuth, signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import { Button, Divider, Layout, PageHeader, Tooltip, Typography } from "antd";
 import {
   ReadOutlined,
@@ -13,18 +12,18 @@ import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
 import { Spinner } from "../shared/components/Spinner";
 import { useOperations } from "../firebase/useOperations";
+import { useUser } from "../firebase/useUser";
 
 const Home = () => {
-  const auth = getAuth();
-  const [user, loading] = useAuthState(auth);
+  const { auth, user, profile, userLoading } = useUser();
   const navigate = useNavigate();
   const { myOperationDocData } = useOperations();
 
   useEffect(() => {
-    if (!user && !loading) {
+    if (!user && !userLoading) {
       navigate(routes.auth);
     }
-  }, [user, loading, navigate]);
+  }, [user, userLoading, navigate]);
 
   if (!user) {
     return <Spinner />;
@@ -37,6 +36,8 @@ const Home = () => {
   const onLogout = () => {
     signOut(auth);
   };
+
+  const statistic2022 = profile.statistic?.[2022];
 
   const { Content, Footer, Header } = Layout;
   const { Title, Paragraph } = Typography;
@@ -64,7 +65,7 @@ const Home = () => {
       <Content>
         <div className="site-layout-content">
           <Title className="site-page-title" level={2}>
-            Привет, {user?.displayName || "друг"}
+            Привет, {profile.name || user?.displayName || "друг"}
           </Title>
           <Paragraph>Отметить распространненные книги</Paragraph>
           <Button
@@ -76,6 +77,12 @@ const Home = () => {
           >
             Отметить книги
           </Button>
+          {statistic2022 && (
+            <Paragraph>
+              В этом году вы распространили - книг:{" "}
+              {statistic2022.count}, баллов: {statistic2022.points}
+            </Paragraph>
+          )}
           {myOperationDocData && <Paragraph>Последние операции:</Paragraph>}
           {myOperationDocData?.map((operation, index) => {
             return (
