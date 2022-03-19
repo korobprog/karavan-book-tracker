@@ -94,7 +94,7 @@ const Home = () => {
           })}
           <Divider dashed />
           <Button
-            href="https://t.me/MonahiSborIstoriy_bot"
+            href="https://t.me/karavanBook_bot"
             target="_blank"
             block
             size="large"
