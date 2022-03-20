@@ -100,7 +100,7 @@ const Home = () => {
             size="large"
             icon={<MessageOutlined />}
           >
-            Отправить историю
+            Отправить историю / поддержка
           </Button>
           <Divider dashed />
           <Paragraph>Отправить полученные контакты</Paragraph>
