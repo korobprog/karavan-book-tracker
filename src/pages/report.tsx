@@ -228,7 +228,14 @@ const Report = () => {
                     description={book.points ? `Баллы: ${book.points}` : ""}
                   />
                   <Form.Item name={book.id} noStyle>
-                    <InputNumber min={0} max={10000} style={{ width: 70 }} />
+                    <InputNumber
+                      min={0}
+                      max={10000}
+                      style={{ width: 70 }}
+                      type="number"
+                      inputMode="numeric"
+                      pattern="\d*"
+                    />
                   </Form.Item>
                 </List.Item>
               )}
@@ -256,6 +263,9 @@ const Report = () => {
                       min={0}
                       max={10000}
                       style={{ width: 70 }}
+                      type="number"
+                      inputMode="numeric"
+                      pattern="\d*"
                     />
                   </Form.Item>
                 </List.Item>
