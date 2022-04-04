@@ -133,6 +133,14 @@ const Profile = () => {
               <Input />
             </Form.Item>
             <Form.Item
+              name="nameSpiritual"
+              label="Ваше духовное имя"
+              rules={[{ required: false }]}
+              initialValue={profile.name || user.displayName || ""}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
               name="city"
               label="Ваш город"
               rules={[{ required: true }]}
