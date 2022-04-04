@@ -15,7 +15,7 @@ import {
   Space,
   Form,
   Select,
-  
+  Checkbox,
 } from "antd";
 import { LogoutOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
 
@@ -61,6 +61,10 @@ const Report = () => {
   const { addLocation, locationsDocData } = useLocations({
     searchString: locationSearchString,
   });
+
+  function onChange() {
+   
+  }
 
   useEffect(() => {
     if (!user && !loading) {
@@ -152,6 +156,7 @@ const Report = () => {
   const { Search } = Input;
   const { Content, Footer, Header } = Layout;
   const { Title } = Typography;
+  
 
   return (
     <Layout>
@@ -193,7 +198,9 @@ const Report = () => {
               >
                 {locationOptions}
               </LocationSelect>
+              <Checkbox onChange={onChange} /> Online
             </Form.Item>
+
             <Space>
               <Search
                 placeholder="поиск книги"
