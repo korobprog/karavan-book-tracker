@@ -66,8 +66,8 @@ const Profile = () => {
     setLocationSearchString("");
   };
 
-  const onFinish = ({ name, phone, city, address = "" }: any) => {
-    setProfile({ name, phone, city, address }).then(() =>
+  const onFinish = ({ name, phone, city, address, nameSpiritual = "" }: any) => {
+    setProfile({ name, phone, city, address, nameSpiritual }).then(() =>
       navigate(routes.root)
     );
   };
@@ -136,7 +136,7 @@ const Profile = () => {
               name="nameSpiritual"
               label="Ваше духовное имя"
               rules={[{ required: false }]}
-              initialValue={profile.name || user.displayName || ""}
+              initialValue={profile.nameSpiritual || ""}
             >
               <Input />
             </Form.Item>

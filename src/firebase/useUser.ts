@@ -15,6 +15,7 @@ type StatisticType = {
 
 type UserDoc = {
   name?: string;
+  nameSpiritual?: string;
   phone?: string;
   address?: string;
   city?: string;
