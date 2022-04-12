@@ -113,7 +113,7 @@ const Profile = () => {
       <Content>
         <div className="site-layout-content">
           <Title className="site-page-title" level={2}>
-            Привет, {profile.name || user?.displayName || "друг"}
+            Привет, {profile.nameSpiritual || profile.name || user?.displayName || "друг"}
           </Title>
           <Form
             name="basic"

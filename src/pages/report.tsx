@@ -17,7 +17,12 @@ import {
   Select,
   Checkbox,
 } from "antd";
-import { LogoutOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
+import {
+  LogoutOutlined,
+  StarFilled,
+  StarOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 
 import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
@@ -167,6 +172,14 @@ const Report = () => {
           onBack={() => navigate(routes.root)}
           avatar={{ src: BbtLogo }}
           extra={[
+            <Tooltip title="Профиль" key="profile">
+              <Button
+                type="ghost"
+                shape="circle"
+                icon={<UserOutlined />}
+                onClick={() => navigate(routes.profile)}
+              />
+            </Tooltip>,
             <Tooltip title="Выйти" key="logout">
               <Button
                 type="ghost"
