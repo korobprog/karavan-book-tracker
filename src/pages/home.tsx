@@ -6,6 +6,7 @@ import {
   LogoutOutlined,
   UserAddOutlined,
   MessageOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import BbtLogo from "../images/bbt-logo.png";
 import { useNavigate } from "react-router-dom";
@@ -50,6 +51,14 @@ const Home = () => {
           className="page-header"
           avatar={{ src: BbtLogo }}
           extra={[
+            <Tooltip title="Профиль" key="profile">
+              <Button
+                type="ghost"
+                shape="circle"
+                icon={<UserOutlined />}
+                onClick={() => navigate(routes.profile)}
+              />
+            </Tooltip>,
             <Tooltip title="Выйти" key="logout">
               <Button
                 type="ghost"
@@ -65,7 +74,7 @@ const Home = () => {
       <Content>
         <div className="site-layout-content">
           <Title className="site-page-title" level={2}>
-            Привет, {profile.name || user?.displayName || "друг"}
+            Привет, {profile.nameSpiritual || profile.name || user?.displayName || "друг"}
           </Title>
           <Paragraph>Отметить распространненные книги</Paragraph>
           <Button
@@ -79,8 +88,8 @@ const Home = () => {
           </Button>
           {statistic2022 && (
             <Paragraph>
-              В этом году вы распространили - книг:{" "}
-              {statistic2022.count}, баллов: {statistic2022.points}
+              В этом году вы распространили - книг: {statistic2022.count},
+              баллов: {statistic2022.points}
             </Paragraph>
           )}
           {myOperationDocData && <Paragraph>Последние операции:</Paragraph>}
