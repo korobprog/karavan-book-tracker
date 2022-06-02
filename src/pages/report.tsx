@@ -16,6 +16,8 @@ import {
   Form,
   Select,
   Checkbox,
+  Row,
+  Col,
 } from "antd";
 import {
   LogoutOutlined,
@@ -211,9 +213,12 @@ const Report = () => {
               >
                 {locationOptions}
               </LocationSelect>
-              <Checkbox onChange={onChange} /> Online
             </Form.Item>
-
+            <Row>
+            <Col >
+              <Checkbox onChange={onChange} style={{ width: 20 }}  > Online </Checkbox> 
+              </Col>
+            </Row>
             <Space>
               <Search
                 placeholder="поиск книги"
@@ -226,7 +231,7 @@ const Report = () => {
                 Отправить
               </Button>
             </Space>
-
+            
             <List
               itemLayout="horizontal"
               dataSource={favoriteBooks}
