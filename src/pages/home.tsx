@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { signOut } from "firebase/auth";
 import { Button, Divider, Layout, PageHeader, Tooltip, Typography } from "antd";
 import {
@@ -11,24 +11,17 @@ import {
 import BbtLogo from "../images/bbt-logo.png";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
-import { Spinner } from "../shared/components/Spinner";
 import { useOperations } from "../firebase/useOperations";
-import { useUser } from "../firebase/useUser";
+import { CurrentUser } from "../firebase/useCurrentUser";
 
-const Home = () => {
-  const { auth, user, profile, userLoading } = useUser();
+type Props = {
+  currentUser: CurrentUser;
+};
+
+export const Home = ({ currentUser }: Props) => {
+  const { auth, user, profile } = currentUser;
   const navigate = useNavigate();
   const { myOperationDocData } = useOperations();
-
-  useEffect(() => {
-    if (!user && !userLoading) {
-      navigate(routes.auth);
-    }
-  }, [user, userLoading, navigate]);
-
-  if (!user) {
-    return <Spinner />;
-  }
 
   const onAddReport = () => {
     navigate(routes.report);
@@ -38,7 +31,7 @@ const Home = () => {
     signOut(auth);
   };
 
-  const statistic2022 = profile.statistic?.[2022];
+  const statistic2022 = profile?.statistic?.[2022];
 
   const { Content, Footer, Header } = Layout;
   const { Title, Paragraph } = Typography;
@@ -74,7 +67,11 @@ const Home = () => {
       <Content>
         <div className="site-layout-content">
           <Title className="site-page-title" level={2}>
-            Привет, {profile.nameSpiritual || profile.name || user?.displayName || "друг"}
+            Привет,{" "}
+            {profile?.nameSpiritual ||
+              profile?.name ||
+              user?.displayName ||
+              "друг"}
           </Title>
           <Paragraph>Отметить распространненные книги</Paragraph>
           <Button
@@ -128,5 +125,3 @@ const Home = () => {
     </Layout>
   );
 };
-
-export default Home;
