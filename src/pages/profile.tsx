@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
+import React, { useState } from "react";
 import { getAuth, signOut } from "firebase/auth";
 import {
   Button,
@@ -10,46 +9,43 @@ import {
   Form,
   Input,
   Select,
-
 } from "antd";
 import { LogoutOutlined } from "@ant-design/icons";
 import BbtLogo from "../images/bbt-logo.png";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
-import { Spinner } from "../shared/components/Spinner";
 import { useUser } from "../firebase/useUser";
 import { LocationSelect } from "../shared/components/LocationSelect";
 import { useLocations } from "../firebase/useLocations";
 import { useDebouncedCallback } from "use-debounce/lib";
+import { CurrentUser } from "../firebase/useCurrentUser";
 
-const Profile = () => {
-  const { profile, setProfile, loading: userLoading } = useUser();
+type Props = {
+  currentUser: CurrentUser;
+};
+
+const Profile = ({ currentUser }: Props) => {
+  const { profile, user } = currentUser;
+  const { setProfile } = useUser({ currentUser });
   const auth = getAuth();
-  const [user, loading] = useAuthState(auth);
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { Content, Footer, Header } = Layout;
   const { Title, Paragraph } = Typography;
   const { Option } = Select;
 
   const [locationSearchString, setLocationSearchString] = useState("");
-  const { addLocation, locationsDocData } = useLocations({
+  const {
+    addLocation,
+    locationsDocData,
+    loading: locationsLoading,
+  } = useLocations({
     searchString: locationSearchString,
   });
-
-  useEffect(() => {
-    if (!user && !loading) {
-      navigate(routes.auth);
-    }
-  }, [user, loading, navigate]);
 
   const onLocationChange = useDebouncedCallback((value: string) => {
     setLocationSearchString(value.charAt(0).toUpperCase() + value.slice(1));
   }, 1000);
-
-
-  if (!user || userLoading) {
-    return <Spinner />;
-  }
 
   const onLogout = () => {
     signOut(auth);
@@ -67,10 +63,14 @@ const Profile = () => {
     setLocationSearchString("");
   };
 
-  const onFinish = ({ name, phone, city, address, nameSpiritual = "" }: any) => {
-    setProfile({ name, phone, city, address, nameSpiritual }).then(() =>
-      navigate(routes.root)
-    );
+  const onFinish = ({ phone, prefix, ...formValues }: any) => {
+    setIsSubmitting(true);
+    setProfile({
+      ...formValues,
+      phone: `${prefix}${phone}`,
+    })
+      .then(() => navigate(routes.root))
+      .finally(() => setIsSubmitting(false));
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -113,7 +113,11 @@ const Profile = () => {
       <Content>
         <div className="site-layout-content">
           <Title className="site-page-title" level={2}>
-            Привет, {profile.nameSpiritual || profile.name || user?.displayName || "друг"}
+            Привет,{" "}
+            {profile?.nameSpiritual ||
+              profile?.name ||
+              user?.displayName ||
+              "друг"}
           </Title>
           <Form
             name="basic"
@@ -129,7 +133,7 @@ const Profile = () => {
               name="name"
               label="Ваше Ф.И.О"
               rules={[{ required: true }]}
-              initialValue={profile.name || user.displayName || ""}
+              initialValue={profile?.name || user?.displayName || ""}
             >
               <Input />
             </Form.Item>
@@ -137,7 +141,7 @@ const Profile = () => {
               name="nameSpiritual"
               label="Ваше духовное имя"
               rules={[{ required: false }]}
-              initialValue={profile.nameSpiritual || ""}
+              initialValue={profile?.nameSpiritual || ""}
             >
               <Input />
             </Form.Item>
@@ -145,12 +149,13 @@ const Profile = () => {
               name="city"
               label="Ваш город"
               rules={[{ required: true }]}
-              initialValue={profile.city || ""}
+              initialValue={profile?.city || ""}
             >
               <LocationSelect
                 onSearch={onLocationChange}
                 onAddNewLocation={onAddNewLocation}
                 locationSearchString={locationSearchString}
+                loading={locationsLoading}
               >
                 {locationOptions}
               </LocationSelect>
@@ -164,7 +169,7 @@ const Profile = () => {
                   message: "Пожалуйста, введите свой номер телефона!",
                 },
               ]}
-              initialValue={profile.phone || ""}
+              initialValue={profile?.phone || ""}
             >
               <Input addonBefore={prefixSelector} style={{ width: "100%" }} />
             </Form.Item>
@@ -172,12 +177,12 @@ const Profile = () => {
               name="address"
               label="Ваш адрес"
               rules={[{ required: false }]}
-              initialValue={profile.address || ""}
+              initialValue={profile?.address || ""}
             >
               <Input />
             </Form.Item>
             <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit" loading={isSubmitting}>
                 СОХРАНИТЬ
               </Button>
             </Form.Item>
