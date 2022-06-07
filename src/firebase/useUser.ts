@@ -1,19 +1,17 @@
-import { getAuth } from "firebase/auth";
 import {
   doc,
   DocumentReference,
   getFirestore,
   setDoc,
 } from "firebase/firestore";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useDocumentData } from "react-firebase-hooks/firestore";
+import { CurrentUser } from "./useCurrentUser";
 
-type StatisticType = {
+export type StatisticType = {
   count: number;
   points: number;
 };
 
-type UserDoc = {
+export type UserDoc = {
   name?: string;
   nameSpiritual?: string;
   phone?: string;
@@ -25,17 +23,16 @@ type UserDoc = {
   };
 };
 
-export const useUser = () => {
-  const auth = getAuth();
+type Params = {
+  currentUser: CurrentUser;
+};
+
+export const useUser = ({ currentUser }: Params) => {
+  const { user, profile, favorite } = currentUser;
   const db = getFirestore();
-  const [user, userLoading] = useAuthState(auth);
   const userRef = (
     user ? doc(db, "users", user?.uid) : null
   ) as DocumentReference<UserDoc> | null;
-
-  const [userDocData, userDocLoading] = useDocumentData<UserDoc>(userRef);
-  const profile = userDocData || {};
-  const favorite = profile?.favorite || [];
 
   const toggleFavorite = async (favoriteId: string) => {
     if (user && userRef) {
@@ -63,25 +60,17 @@ export const useUser = () => {
         ...profile,
         statistic: {
           "2022": {
-            count: (profile.statistic?.[2022].count || 0) + newBooks.count,
-            points: (profile.statistic?.[2022].points || 0) + newBooks.points,
+            count: (profile?.statistic?.[2022].count || 0) + newBooks.count,
+            points: (profile?.statistic?.[2022].points || 0) + newBooks.points,
           },
         },
       });
     }
   };
 
-  const loading = userLoading || userDocLoading;
-
   return {
-    auth,
-    user,
-    userLoading,
-    favorite,
     addStatistic,
     toggleFavorite,
-    loading,
     setProfile,
-    profile,
   };
 };
