@@ -15,6 +15,8 @@ import {
   Form,
   Select,
   Checkbox,
+  Row,
+  Col,
 } from "antd";
 import {
   LogoutOutlined,
@@ -187,6 +189,7 @@ export const Report = ({ currentUser }: Props) => {
             <Title className="site-page-title" level={4}>
               Отметить распространненные книги
             </Title>
+
             <Form.Item
               name="locationId"
               label="Место"
@@ -200,9 +203,10 @@ export const Report = ({ currentUser }: Props) => {
               >
                 {locationOptions}
               </LocationSelect>
+            </Form.Item>
+            <Form.Item>
               <Checkbox onChange={onChange} /> Online
             </Form.Item>
-
             <Space>
               <Search
                 placeholder="поиск книги"
