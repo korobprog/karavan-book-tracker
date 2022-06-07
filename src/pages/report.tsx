@@ -69,9 +69,7 @@ const Report = () => {
     searchString: locationSearchString,
   });
 
-  function onChange() {
-   
-  }
+  function onChange() {}
 
   useEffect(() => {
     if (!user && !loading) {
@@ -142,7 +140,7 @@ const Report = () => {
         userId: user?.uid,
         date: new Date().toISOString(),
         locationId,
-        userName: profile.name,
+        userName: profile?.name || "",
         books: operationBooks,
         totalCount,
         totalPoints,
@@ -163,7 +161,6 @@ const Report = () => {
   const { Search } = Input;
   const { Content, Footer, Header } = Layout;
   const { Title } = Typography;
-  
 
   return (
     <Layout>
@@ -200,6 +197,7 @@ const Report = () => {
             <Title className="site-page-title" level={4}>
               Отметить распространненные книги
             </Title>
+
             <Form.Item
               name="locationId"
               label="Место"
@@ -214,11 +212,9 @@ const Report = () => {
                 {locationOptions}
               </LocationSelect>
             </Form.Item>
-            <Row>
-            <Col >
-              <Checkbox onChange={onChange} style={{ width: 20 }}  > Online </Checkbox> 
-              </Col>
-            </Row>
+            <Form.Item>
+              <Checkbox onChange={onChange} /> Online
+            </Form.Item>
             <Space>
               <Search
                 placeholder="поиск книги"
@@ -231,7 +227,7 @@ const Report = () => {
                 Отправить
               </Button>
             </Space>
-            
+
             <List
               itemLayout="horizontal"
               dataSource={favoriteBooks}
