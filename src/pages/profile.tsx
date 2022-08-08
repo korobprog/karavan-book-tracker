@@ -20,9 +20,12 @@ import { useLocations } from "../firebase/useLocations";
 import { useDebouncedCallback } from "use-debounce/lib";
 import { CurrentUser } from "../firebase/useCurrentUser";
 
+
 type Props = {
   currentUser: CurrentUser;
 };
+
+
 
 const Profile = ({ currentUser }: Props) => {
   const { profile, user } = currentUser;
@@ -89,6 +92,10 @@ const Profile = ({ currentUser }: Props) => {
   const locationOptions = locationsDocData?.map((d) => (
     <Select.Option key={d.id}>{d.name}</Select.Option>
   ));
+  
+  const goHome = () => {
+    navigate("/");
+  };
 
   return (
     <Layout>
@@ -189,7 +196,7 @@ const Profile = ({ currentUser }: Props) => {
           </Form>
         </div>
       </Content>
-
+      <button onClick={goHome}>НАЗАД</button>
       <Footer></Footer>
     </Layout>
   );
