@@ -96,6 +96,7 @@ const Profile = ({ currentUser }: Props) => {
         <PageHeader
           title="УЧЕТ КНИГ"
           className="page-header"
+          onBack={() => navigate(routes.root)}
           avatar={{ src: BbtLogo }}
           extra={[
             <Tooltip title="Выйти" key="logout">
