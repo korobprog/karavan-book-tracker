@@ -190,7 +190,7 @@ const Profile = ({ currentUser }: Props) => {
           </Form>
         </div>
       </Content>
-      
+
       <Footer></Footer>
     </Layout>
   );
