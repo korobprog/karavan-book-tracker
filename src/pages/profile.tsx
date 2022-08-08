@@ -33,6 +33,7 @@ const Profile = ({ currentUser }: Props) => {
   const { Content, Footer, Header } = Layout;
   const { Title, Paragraph } = Typography;
   const { Option } = Select;
+
   const [locationSearchString, setLocationSearchString] = useState("");
   const {
     addLocation,
@@ -88,6 +89,7 @@ const Profile = ({ currentUser }: Props) => {
   const locationOptions = locationsDocData?.map((d) => (
     <Select.Option key={d.id}>{d.name}</Select.Option>
   ));
+
   return (
     <Layout>
       <Header className="site-page-header">
@@ -188,6 +190,7 @@ const Profile = ({ currentUser }: Props) => {
           </Form>
         </div>
       </Content>
+      
       <Footer></Footer>
     </Layout>
   );
