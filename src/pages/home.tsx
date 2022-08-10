@@ -7,6 +7,7 @@ import {
   UserAddOutlined,
   MessageOutlined,
   UserOutlined,
+  EnvironmentOutlined,
 } from "@ant-design/icons";
 import BbtLogo from "../images/bbt-logo.png";
 import { useNavigate } from "react-router-dom";
@@ -109,7 +110,17 @@ export const Home = ({ currentUser }: Props) => {
             Отправить историю / поддержка
           </Button>
           <Divider dashed />
-          <Paragraph>Отправить полученные контакты</Paragraph>
+          <Button
+            href="https://sankirtana-map.web.app"
+            target="_blank"
+            block
+            size="large"
+            icon={<EnvironmentOutlined />}
+          >
+            Общая статистика на карте
+          </Button>
+          <Divider dashed />
+          <Paragraph>Отправить полученные контакты:</Paragraph>
           <Button
             href="http://san.bhakti-vriksha.ru/"
             target="_blank"
@@ -119,6 +130,7 @@ export const Home = ({ currentUser }: Props) => {
           >
             Вторая волна
           </Button>
+          <Divider dashed />
         </div>
       </Content>
       <Footer></Footer>
