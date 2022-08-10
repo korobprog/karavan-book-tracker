@@ -110,8 +110,6 @@ export const Home = ({ currentUser }: Props) => {
             Отправить историю / поддержка
           </Button>
           <Divider dashed />
-          <Paragraph>Статистика:</Paragraph>
-          <Divider dashed />
           <Button
             href="https://sankirtana-map.web.app"
             target="_blank"
@@ -119,11 +117,10 @@ export const Home = ({ currentUser }: Props) => {
             size="large"
             icon={<EnvironmentOutlined />}
           >
-            Общая на карте
+            Общая статистика на карте
           </Button>
           <Divider dashed />
           <Paragraph>Отправить полученные контакты:</Paragraph>
-          <Divider dashed />
           <Button
             href="http://san.bhakti-vriksha.ru/"
             target="_blank"
