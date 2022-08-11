@@ -9906,7 +9906,7 @@
     "kleur" "^3.0.3"
     "sisteransi" "^1.0.5"
 
-"prop-types@^15.6.2", "prop-types@^15.7.2":
+"prop-types@^15.6.2":
   "integrity" "sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg=="
   "resolved" "https://registry.npmjs.org/prop-types/-/prop-types-15.8.1.tgz"
   "version" "15.8.1"
@@ -10508,13 +10508,6 @@
   "version" "6.0.0"
   dependencies:
     "firebaseui" "^6.0.0"
-
-"react-google-button@^0.7.2":
-  "integrity" "sha512-LPIqU2hIlc212kqks8MtKjRstquVkP3SIjxlK5B1nIfg2R7YqSusJAxZUkJA5dv/z6QeSuGyI9ujwV/VWMTyAA=="
-  "resolved" "https://registry.npmjs.org/react-google-button/-/react-google-button-0.7.2.tgz"
-  "version" "0.7.2"
-  dependencies:
-    "prop-types" "^15.7.2"
 
 "react-hook-form@^7.27.1":
   "integrity" "sha512-N3a7A6zIQ8DJeThisVZGtOUabTbJw+7DHJidmB9w8m3chckv2ZWKb5MHps9d2pPJqmCDoWe53Bos56bYmJms5w=="

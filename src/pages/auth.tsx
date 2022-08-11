@@ -9,13 +9,13 @@ import {
   Typography,
   Space,
 } from "antd";
-import GoogleButton from "react-google-button";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import BbtLogo from "../images/bbt-logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "../firebase/useCurrentUser";
+import { GoogleOutlined } from "@ant-design/icons";
 
 type Props = {
   currentUser: CurrentUser;
@@ -117,16 +117,12 @@ export const Auth = ({ currentUser }: Props) => {
                 <Link to={routes.registration}>Регистрация</Link>
               </Space>
             </Form.Item>
-            <GoogleButton
-              className="centred"
-              label="Войти через Google"
-              onClick={() => signInWithGoogle()}
-            />
-            {googleError && (
-              <Text type="danger">
-                При входе произошла ошибка: {googleError.message}
-              </Text>
-            )}
+            <Button 
+              className="centred" 
+              icon={<GoogleOutlined />}
+              type="primary" onClick={() => signInWithGoogle()}> 
+                Войти через Google
+              </Button>
           </Form>
         </div>
       </Content>
