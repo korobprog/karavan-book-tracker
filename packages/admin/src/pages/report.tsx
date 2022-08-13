@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import useGoogleSheets from "use-google-sheets";
 import {
   Button,
   Layout,
@@ -14,9 +13,6 @@ import {
   Space,
   Form,
   Select,
-  Checkbox,
-  Row,
-  Col,
 } from "antd";
 import {
   LogoutOutlined,
@@ -27,61 +23,62 @@ import {
 
 import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
-import { Book, getBooks } from "../shared/helpers/getBooks";
+import { Book, getBookPointsMap, useBooks } from "../shared/helpers/getBooks";
 import { useUser } from "../firebase/useUser";
 import {
+  addOperation,
   DistributedBook,
   OperationDoc,
-  useOperations,
 } from "../firebase/useOperations";
-import { useLocations } from "../firebase/useLocations";
+import { addLocation, useLocations } from "../firebase/useLocations";
 import { LocationSelect } from "../shared/components/LocationSelect";
-import { useDebouncedCallback } from "use-debounce/lib";
+import { useDebouncedCallback } from "use-debounce";
+import { UserSelect } from "../shared/components/UserSelect";
+import { useUsers } from "../firebase/useUsers";
 import { CurrentUser } from "../firebase/useCurrentUser";
+import { addOperationToLocationStatistic } from "../services/locations";
 
 type FormValues = Record<number, number> & {
   locationId: string;
+  userId: string;
 };
 
 type Props = {
   currentUser: CurrentUser;
 };
 
-export const Report = ({ currentUser }: Props) => {
-  const { auth, profile, favorite, user, loading } = currentUser;
+const Report = ({ currentUser }: Props) => {
+  const { auth, profile, user, favorite } = currentUser;
   const { addStatistic, toggleFavorite } = useUser({ currentUser });
+
   const [searchString, setSearchString] = useState("");
   const [locationSearchString, setLocationSearchString] = useState("");
+  const [userSearchString, setUserSearchString] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
 
-  const { data, loading: booksLoading } = useGoogleSheets({
-    apiKey: process.env.REACT_APP_GOOGLE_API_KEY as string,
-    sheetId: process.env.REACT_APP_GOOGLE_SHEETS_ID as string,
-  });
+  const { books, booksLoading } = useBooks();
 
-  const { addOperation } = useOperations();
-  const { addLocation, locationsDocData } = useLocations({
+  const { locations } = useLocations({
     searchString: locationSearchString,
   });
-
-  function onChange() {}
-
-  useEffect(() => {
-    if (!user && !loading) {
-      navigate(routes.auth);
-    }
-  }, [user, loading, navigate]);
+  const { usersDocData } = useUsers({
+    searchString: userSearchString,
+  });
 
   const onLocationChange = useDebouncedCallback((value: string) => {
     setLocationSearchString(value.charAt(0).toUpperCase() + value.slice(1));
+  }, 1000);
+
+  const onUserChange = useDebouncedCallback((value: string) => {
+    setUserSearchString(value);
   }, 1000);
 
   const onLogout = () => {
     signOut(auth);
   };
 
-  const books = getBooks(data);
   const { favoriteBooks, otherBooks } = books.reduce(
     ({ favoriteBooks, otherBooks }, book) => {
       if (book.name.toLowerCase().includes(searchString)) {
@@ -110,7 +107,8 @@ export const Report = ({ currentUser }: Props) => {
 
   function onFinish(formValues: FormValues) {
     if (user && profile?.name) {
-      const { locationId, ...bookIdsWithCounts } = formValues;
+      setIsSubmitting(true);
+      const { locationId, userId, ...bookIdsWithCounts } = formValues;
 
       let totalCount = 0;
       let totalPoints = 0;
@@ -129,10 +127,11 @@ export const Report = ({ currentUser }: Props) => {
       );
 
       const operation: OperationDoc = {
-        userId: user?.uid,
+        userId,
         date: new Date().toISOString(),
         locationId,
-        userName: profile?.name || '',
+        userName:
+          usersDocData?.find((value) => value.id === userId)?.name || "",
         books: operationBooks,
         totalCount,
         totalPoints,
@@ -140,14 +139,29 @@ export const Report = ({ currentUser }: Props) => {
       };
 
       Promise.all([
-        addStatistic({ count: totalCount, points: totalPoints }),
         addOperation(operation),
-      ]).then(() => navigate(routes.root));
+        // TODO: вынести в сервис services/user
+        operation.isAuthorized &&
+          addStatistic({ count: totalCount, points: totalPoints }, userId),
+        addOperationToLocationStatistic(
+          operation,
+          getBookPointsMap(books),
+          locations
+        ),
+      ])
+        .then(() => navigate(routes.reports))
+        .finally(() => setIsSubmitting(false));
     }
   }
 
-  const locationOptions = locationsDocData?.map((d) => (
+  const locationOptions = locations?.map((d) => (
     <Select.Option key={d.id}>{d.name}</Select.Option>
+  ));
+
+  const usersOptions = usersDocData?.map((d) => (
+    <Select.Option key={d.id}>
+      {d.name} {d.nameSpiritual}
+    </Select.Option>
   ));
 
   const { Search } = Input;
@@ -189,7 +203,19 @@ export const Report = ({ currentUser }: Props) => {
             <Title className="site-page-title" level={4}>
               Отметить распространненные книги
             </Title>
-
+            <Form.Item
+              name="userId"
+              label="Пользователь"
+              rules={[{ required: true }]}
+            >
+              <UserSelect
+                onSearch={onUserChange}
+                onAddNewUser={() => navigate(routes.usersNew)}
+                userSearchString={userSearchString}
+              >
+                {usersOptions}
+              </UserSelect>
+            </Form.Item>
             <Form.Item
               name="locationId"
               label="Место"
@@ -204,9 +230,7 @@ export const Report = ({ currentUser }: Props) => {
                 {locationOptions}
               </LocationSelect>
             </Form.Item>
-            <Form.Item>
-              <Checkbox onChange={onChange} /> Online
-            </Form.Item>
+
             <Space>
               <Search
                 placeholder="поиск книги"
@@ -215,7 +239,7 @@ export const Report = ({ currentUser }: Props) => {
                 value={searchString}
                 style={{ width: 170 }}
               />
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit" loading={isSubmitting}>
                 Отправить
               </Button>
             </Space>
@@ -223,7 +247,7 @@ export const Report = ({ currentUser }: Props) => {
             <List
               itemLayout="horizontal"
               dataSource={favoriteBooks}
-              loadMore={booksLoading}
+              loading={booksLoading}
               locale={{
                 emptyText: searchString
                   ? "Не найдено избранного"
@@ -294,3 +318,5 @@ export const Report = ({ currentUser }: Props) => {
     </Layout>
   );
 };
+
+export default Report;
