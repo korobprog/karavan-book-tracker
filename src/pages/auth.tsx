@@ -117,12 +117,19 @@ export const Auth = ({ currentUser }: Props) => {
                 <Link to={routes.registration}>Регистрация</Link>
               </Space>
             </Form.Item>
-            <Button 
-              className="centred" 
+            <Button
+              className="centred"
               icon={<GoogleOutlined />}
-              type="primary" onClick={() => signInWithGoogle()}> 
-                Войти через Google
-              </Button>
+              type="primary"
+              onClick={() => signInWithGoogle()}
+            >
+              Войти через Google
+            </Button>
+            {googleError && (
+              <Text type="danger">
+                При входе произошла ошибка: {googleError.message}
+              </Text>
+            )}
           </Form>
         </div>
       </Content>
