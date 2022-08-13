@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "karavan-book-tracker"
+  },
+  "targets": {
+    "karavan-book-tracker": {
+      "hosting": {
+        "admin": [
+          "karavan-book-tracker-admin"
+        ]
+      }
+    }
+  }
+}

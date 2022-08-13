@@ -1,0 +1,19 @@
+{
+  "name": "common",
+  "version": "1.0.0",
+  "description": "karavan-book-common",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/korobprog/karavan-book-tracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/korobprog/karavan-book-tracker/issues"
+  },
+  "homepage": "https://github.com/korobprog/karavan-book-tracker#readme"
+}

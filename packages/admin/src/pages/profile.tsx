@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getAuth, signOut } from "firebase/auth";
 import {
   Button,
@@ -16,8 +16,8 @@ import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
 import { useUser } from "../firebase/useUser";
 import { LocationSelect } from "../shared/components/LocationSelect";
-import { useLocations } from "../firebase/useLocations";
-import { useDebouncedCallback } from "use-debounce/lib";
+import { addLocation, useLocations } from "../firebase/useLocations";
+import { useDebouncedCallback } from "use-debounce";
 import { CurrentUser } from "../firebase/useCurrentUser";
 
 type Props = {
@@ -25,23 +25,24 @@ type Props = {
 };
 
 const Profile = ({ currentUser }: Props) => {
-  const { profile, user } = currentUser;
   const { setProfile } = useUser({ currentUser });
+  const { profile, loading, user } = currentUser;
   const auth = getAuth();
   const navigate = useNavigate();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const { Content, Footer, Header } = Layout;
   const { Title, Paragraph } = Typography;
   const { Option } = Select;
 
   const [locationSearchString, setLocationSearchString] = useState("");
-  const {
-    addLocation,
-    locationsDocData,
-    loading: locationsLoading,
-  } = useLocations({
+  const { locations } = useLocations({
     searchString: locationSearchString,
   });
+
+  useEffect(() => {
+    if (!user && !loading) {
+      navigate(routes.auth);
+    }
+  }, [user, loading, navigate]);
 
   const onLocationChange = useDebouncedCallback((value: string) => {
     setLocationSearchString(value.charAt(0).toUpperCase() + value.slice(1));
@@ -64,13 +65,10 @@ const Profile = ({ currentUser }: Props) => {
   };
 
   const onFinish = ({ phone, prefix, ...formValues }: any) => {
-    setIsSubmitting(true);
     setProfile({
       ...formValues,
       phone: `${prefix}${phone}`,
-    })
-      .then(() => navigate(routes.root))
-      .finally(() => setIsSubmitting(false));
+    }).then(() => navigate(routes.root));
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -86,7 +84,7 @@ const Profile = ({ currentUser }: Props) => {
     </Form.Item>
   );
 
-  const locationOptions = locationsDocData?.map((d) => (
+  const locationOptions = locations?.map((d) => (
     <Select.Option key={d.id}>{d.name}</Select.Option>
   ));
 
@@ -96,7 +94,6 @@ const Profile = ({ currentUser }: Props) => {
         <PageHeader
           title="УЧЕТ КНИГ"
           className="page-header"
-          onBack={() => navigate(routes.root)}
           avatar={{ src: BbtLogo }}
           extra={[
             <Tooltip title="Выйти" key="logout">
@@ -114,11 +111,7 @@ const Profile = ({ currentUser }: Props) => {
       <Content>
         <div className="site-layout-content">
           <Title className="site-page-title" level={2}>
-            Привет,{" "}
-            {profile?.nameSpiritual ||
-              profile?.name ||
-              user?.displayName ||
-              "друг"}
+            Привет, {profile?.name || user?.displayName || "друг"}
           </Title>
           <Form
             name="basic"
@@ -156,7 +149,6 @@ const Profile = ({ currentUser }: Props) => {
                 onSearch={onLocationChange}
                 onAddNewLocation={onAddNewLocation}
                 locationSearchString={locationSearchString}
-                loading={locationsLoading}
               >
                 {locationOptions}
               </LocationSelect>
@@ -183,7 +175,7 @@ const Profile = ({ currentUser }: Props) => {
               <Input />
             </Form.Item>
             <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-              <Button type="primary" htmlType="submit" loading={isSubmitting}>
+              <Button type="primary" htmlType="submit">
                 СОХРАНИТЬ
               </Button>
             </Form.Item>
