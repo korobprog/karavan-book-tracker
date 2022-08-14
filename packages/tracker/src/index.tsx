@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
-import "./firebase/clientApp";
+import "common/src/services/api/clientApp";
 
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";

@@ -9,7 +9,7 @@ import { Reports } from "./pages/reports";
 import { Locations } from "./pages/locations";
 import { Users } from "./pages/users";
 import { UsersNew } from "./pages/UsersNew";
-import { useCurrentUser } from "./firebase/useCurrentUser";
+import { useCurrentUser } from "common/src/services/api/useCurrentUser";
 import { Denied } from "./pages/denied";
 import { Loading } from "./pages/loading";
 

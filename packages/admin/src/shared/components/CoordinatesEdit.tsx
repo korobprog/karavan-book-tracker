@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, InputNumber, Space } from "antd";
-import { LocationDoc, setCoordinates } from "../../firebase/useLocations";
 import { CheckOutlined, EditOutlined } from "@ant-design/icons";
+import { LocationDoc, setCoordinates } from "common/src/services/api/locations";
 
 type CoordinatesEditProps = {
   location: LocationDoc & { key: string };

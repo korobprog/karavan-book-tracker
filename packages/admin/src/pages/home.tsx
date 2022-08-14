@@ -13,7 +13,7 @@ import {
 import BbtLogo from "../images/bbt-logo.png";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
-import { CurrentUser } from "../firebase/useCurrentUser";
+import { CurrentUser } from "common/src/services/api/useCurrentUser";
 
 type Props = {
   currentUser: CurrentUser;

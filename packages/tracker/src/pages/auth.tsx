@@ -14,7 +14,7 @@ import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import BbtLogo from "../images/bbt-logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
-import { CurrentUser } from "../firebase/useCurrentUser";
+import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { GoogleOutlined } from "@ant-design/icons";
 
 type Props = {

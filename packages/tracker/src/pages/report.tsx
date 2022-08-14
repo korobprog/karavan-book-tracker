@@ -26,16 +26,16 @@ import {
 import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
 import { Book, getBooks } from "../shared/helpers/getBooks";
-import { useUser } from "../firebase/useUser";
+import { useUser } from "common/src/services/api/useUser";
 import {
+  addOperation,
   DistributedBook,
   OperationDoc,
-  useOperations,
-} from "../firebase/useOperations";
-import { useLocations } from "../firebase/useLocations";
+} from "common/src/services/api/operations";
+import { addLocation, useLocations } from "common/src/services/api/locations";
 import { LocationSelect } from "../shared/components/LocationSelect";
 import { useDebouncedCallback } from "use-debounce";
-import { CurrentUser } from "../firebase/useCurrentUser";
+import { CurrentUser } from "common/src/services/api/useCurrentUser";
 
 type FormValues = Record<number, number> & {
   locationId: string;
@@ -58,8 +58,7 @@ export const Report = ({ currentUser }: Props) => {
     sheetId: process.env.REACT_APP_GOOGLE_SHEETS_ID as string,
   });
 
-  const { addOperation } = useOperations();
-  const { addLocation, locationsDocData } = useLocations({
+  const { locations } = useLocations({
     searchString: locationSearchString,
   });
 
@@ -144,7 +143,7 @@ export const Report = ({ currentUser }: Props) => {
     }
   }
 
-  const locationOptions = locationsDocData?.map((d) => (
+  const locationOptions = locations?.map((d) => (
     <Select.Option key={d.id}>{d.name}</Select.Option>
   ));
 

@@ -14,11 +14,11 @@ import { LogoutOutlined } from "@ant-design/icons";
 import BbtLogo from "../images/bbt-logo.png";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
-import { useUser } from "../firebase/useUser";
+import { useUser } from "common/src/services/api/useUser";
 import { LocationSelect } from "../shared/components/LocationSelect";
-import { useLocations } from "../firebase/useLocations";
+import { addLocation, useLocations } from "common/src/services/api/locations";
 import { useDebouncedCallback } from "use-debounce";
-import { CurrentUser } from "../firebase/useCurrentUser";
+import { CurrentUser } from "common/src/services/api/useCurrentUser";
 
 type Props = {
   currentUser: CurrentUser;
@@ -36,8 +36,7 @@ const Profile = ({ currentUser }: Props) => {
 
   const [locationSearchString, setLocationSearchString] = useState("");
   const {
-    addLocation,
-    locationsDocData,
+    locations,
     loading: locationsLoading,
   } = useLocations({
     searchString: locationSearchString,
@@ -86,7 +85,7 @@ const Profile = ({ currentUser }: Props) => {
     </Form.Item>
   );
 
-  const locationOptions = locationsDocData?.map((d) => (
+  const locationOptions = locations?.map((d) => (
     <Select.Option key={d.id}>{d.name}</Select.Option>
   ));
 

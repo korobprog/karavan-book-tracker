@@ -98,11 +98,14 @@ export const useUser = ({ currentUser }: Params) => {
         "users",
         selectedUserId
       ) as DocumentReference<UserDoc>;
+
       const selectedUser = (await getDoc(selectedUserRef)).data();
+
       await setDoc(
         selectedUserRef,
         rewriteUserStatistic(newBooks, selectedUser)
       );
+
       return;
     }
 

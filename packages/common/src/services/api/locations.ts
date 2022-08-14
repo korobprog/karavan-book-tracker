@@ -33,10 +33,6 @@ export type LocationDoc = {
   };
 };
 
-export type UseLocationsParams = {
-  searchString?: string;
-};
-
 const db = getFirestore();
 
 const locationsRef = collection(db, "locations").withConverter(
@@ -62,6 +58,10 @@ export const setCoordinates = (x: number, y: number, location: LocationDoc) => {
   if (id) {
     editLocation(id, newLocation);
   }
+};
+
+export type UseLocationsParams = {
+  searchString?: string;
 };
 
 export const useLocations = ({ searchString = "" }: UseLocationsParams) => {

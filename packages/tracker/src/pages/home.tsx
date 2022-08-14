@@ -12,8 +12,8 @@ import {
 import BbtLogo from "../images/bbt-logo.png";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
-import { useOperations } from "../firebase/useOperations";
-import { CurrentUser } from "../firebase/useCurrentUser";
+import { useMyOperations } from "common/src/services/api/operations";
+import { CurrentUser } from "common/src/services/api/useCurrentUser";
 
 type Props = {
   currentUser: CurrentUser;
@@ -22,7 +22,7 @@ type Props = {
 export const Home = ({ currentUser }: Props) => {
   const { auth, user, profile } = currentUser;
   const navigate = useNavigate();
-  const { myOperationDocData } = useOperations();
+  const { myOperationsDocData } = useMyOperations(user?.uid || '');
 
   const onAddReport = () => {
     navigate(routes.report);
@@ -90,8 +90,9 @@ export const Home = ({ currentUser }: Props) => {
               баллов: {statistic2022.points}
             </Paragraph>
           )}
-          {myOperationDocData && <Paragraph>Последние операции:</Paragraph>}
-          {myOperationDocData?.map((operation, index) => {
+          {/* TODO: переделать это */}
+          {myOperationsDocData && <Paragraph>Последние операции:</Paragraph>}
+          {myOperationsDocData?.map((operation, index) => {
             return (
               <Paragraph key={index}>
                 {new Date(operation.date).toLocaleDateString()} - книг:{" "}
