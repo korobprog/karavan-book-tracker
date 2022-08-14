@@ -19,6 +19,7 @@ import { LocationSelect } from "../shared/components/LocationSelect";
 import { addLocation, useLocations } from "common/src/services/api/locations";
 import { useDebouncedCallback } from "use-debounce";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
+import { phoneNumberPattern } from "common/src/utils/patterns";
 
 type Props = {
   currentUser: CurrentUser;
@@ -32,7 +33,6 @@ const Profile = ({ currentUser }: Props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { Content, Footer, Header } = Layout;
   const { Title, Paragraph } = Typography;
-  const { Option } = Select;
 
   const [locationSearchString, setLocationSearchString] = useState("");
   const {
@@ -62,11 +62,10 @@ const Profile = ({ currentUser }: Props) => {
     setLocationSearchString("");
   };
 
-  const onFinish = ({ phone, prefix, ...formValues }: any) => {
+  const onFinish = ({ ...formValues }: any) => {
     setIsSubmitting(true);
     setProfile({
       ...formValues,
-      phone: `${prefix}${phone}`,
     })
       .then(() => navigate(routes.root))
       .finally(() => setIsSubmitting(false));
@@ -75,15 +74,6 @@ const Profile = ({ currentUser }: Props) => {
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
-
-  const prefixSelector = (
-    <Form.Item name="prefix" noStyle initialValue="+7">
-      <Select style={{ width: 70 }}>
-        <Option value="7">+7</Option>
-        <Option value="3">+3</Option>
-      </Select>
-    </Form.Item>
-  );
 
   const locationOptions = locations?.map((d) => (
     <Select.Option key={d.id}>{d.name}</Select.Option>
@@ -168,10 +158,14 @@ const Profile = ({ currentUser }: Props) => {
                   required: true,
                   message: "Пожалуйста, введите свой номер телефона!",
                 },
+                {
+                  pattern: phoneNumberPattern,
+                  message: "Пожалуйста, введите корректный номер",
+                }
               ]}
               initialValue={profile?.phone || ""}
             >
-              <Input addonBefore={prefixSelector} style={{ width: "100%" }} />
+              <Input  />
             </Form.Item>
             <Form.Item
               name="address"
