@@ -23,7 +23,7 @@ import {
 
 import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
-import { Book, getBookPointsMap, useBooks } from "../shared/helpers/getBooks";
+import { Book, getBookPointsMap, useBooks } from "common/src/services/books";
 import { useUser } from "common/src/services/api/useUser";
 import {
   addOperation,

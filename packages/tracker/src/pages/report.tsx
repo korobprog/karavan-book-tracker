@@ -25,7 +25,6 @@ import {
 
 import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
-import { Book, getBooks } from "../shared/helpers/getBooks";
 import { useUser } from "common/src/services/api/useUser";
 import {
   addOperation,
@@ -36,6 +35,8 @@ import { addLocation, useLocations } from "common/src/services/api/locations";
 import { LocationSelect } from "../shared/components/LocationSelect";
 import { useDebouncedCallback } from "use-debounce";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
+import { addOperationToLocationStatistic } from "common/src/services/locations";
+import { Book, getBookPointsMap, getBooks } from "common/src/services/books";
 
 type FormValues = Record<number, number> & {
   locationId: string;
@@ -139,6 +140,11 @@ export const Report = ({ currentUser }: Props) => {
       Promise.all([
         addStatistic({ count: totalCount, points: totalPoints }),
         addOperation(operation),
+        addOperationToLocationStatistic(
+          operation,
+          getBookPointsMap(books),
+          locations
+        ),
       ]).then(() => navigate(routes.root));
     }
   }
