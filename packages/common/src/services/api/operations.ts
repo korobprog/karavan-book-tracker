@@ -8,6 +8,7 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  where,
 } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { idConverter } from "./utils";
@@ -58,4 +59,14 @@ export const useOperations = () => {
     );
 
   return { operationsDocData, loading };
+};
+
+  // TODO: add useUserOperationsCollection - firebase can't sort by time of one user
+export const useMyOperations = (userId: string) => {
+  const [myOperationsDocData, loading] =
+    useCollectionData<OperationDoc>(
+      query(operationsRef, where("userId", "==", userId || ""))
+    );
+
+  return { myOperationsDocData, loading };
 };

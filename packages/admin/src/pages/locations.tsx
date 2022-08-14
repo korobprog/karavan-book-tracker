@@ -6,12 +6,12 @@ import { CalculatorOutlined, LogoutOutlined } from "@ant-design/icons";
 
 import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
-import { LocationDoc, useLocations } from "../firebase/useLocations";
+import { LocationDoc, useLocations } from "common/src/services/api/locations";
 import { LocationStatistic } from "../shared/components/LocationStatistic";
-import { CurrentUser } from "../firebase/useCurrentUser";
+import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { getBookPointsMap, useBooks } from "../shared/helpers/getBooks";
 import { CoordinatesEdit } from "../shared/components/CoordinatesEdit";
-import { recalculateStatisticToLocations } from "../services/locations";
+import { recalculateStatisticToLocations } from "common/src/services/locations";
 
 type Props = {
   currentUser: CurrentUser;

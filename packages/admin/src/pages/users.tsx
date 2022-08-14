@@ -20,11 +20,11 @@ import {
 
 import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
-import { useUsers } from "../firebase/useUsers";
-import { LocationDoc, useLocations } from "../firebase/useLocations";
-import { mapDocsToHashTable } from "../firebase/utils";
-import { CurrentUser } from "../firebase/useCurrentUser";
-import { useUser } from "../firebase/useUser";
+import { useUsers } from "common/src/services/api/useUsers";
+import { LocationDoc, useLocations } from "common/src/services/api/locations";
+import { mapDocsToHashTable } from "common/src/services/api/utils";
+import { CurrentUser } from "common/src/services/api/useCurrentUser";
+import { useUser } from "common/src/services/api/useUser";
 
 type Props = {
   currentUser: CurrentUser;

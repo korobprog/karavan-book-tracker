@@ -21,9 +21,9 @@ import {
 
 import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
-import { deleteOperation, useOperations } from "../firebase/useOperations";
+import { deleteOperation, useOperations } from "common/src/services/api/operations";
 import moment from "moment";
-import { CurrentUser } from "../firebase/useCurrentUser";
+import { CurrentUser } from "common/src/services/api/useCurrentUser";
 
 type Props = {
   currentUser: CurrentUser;

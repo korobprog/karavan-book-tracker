@@ -1,5 +1,5 @@
-import { LocationsStatisticType } from "../firebase/useLocations";
-import { DistributedBook } from "../firebase/useOperations";
+import { LocationsStatisticType } from "../api/locations";
+import { DistributedBook } from "../api/operations";
 
 export const sumOperationStatistic = (
   prev: LocationsStatisticType,

@@ -8,7 +8,7 @@ import Profile from "./pages/profile";
 import { routes } from "././shared/routes";
 import { Loading } from "./pages/loading";
 import { Report } from "./pages/report";
-import { useCurrentUser } from "./firebase/useCurrentUser";
+import { useCurrentUser } from "common/src/services/api/useCurrentUser";
 
 import "./App.less";
 

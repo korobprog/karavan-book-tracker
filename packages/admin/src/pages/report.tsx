@@ -24,19 +24,19 @@ import {
 import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
 import { Book, getBookPointsMap, useBooks } from "../shared/helpers/getBooks";
-import { useUser } from "../firebase/useUser";
+import { useUser } from "common/src/services/api/useUser";
 import {
   addOperation,
   DistributedBook,
   OperationDoc,
-} from "../firebase/useOperations";
-import { addLocation, useLocations } from "../firebase/useLocations";
+} from "common/src/services/api/operations";
+import { addLocation, useLocations } from "common/src/services/api/locations";
 import { LocationSelect } from "../shared/components/LocationSelect";
 import { useDebouncedCallback } from "use-debounce";
 import { UserSelect } from "../shared/components/UserSelect";
-import { useUsers } from "../firebase/useUsers";
-import { CurrentUser } from "../firebase/useCurrentUser";
-import { addOperationToLocationStatistic } from "../services/locations";
+import { useUsers } from "common/src/services/api/useUsers";
+import { CurrentUser } from "common/src/services/api/useCurrentUser";
+import { addOperationToLocationStatistic } from "common/src/services/locations";
 
 type FormValues = Record<number, number> & {
   locationId: string;

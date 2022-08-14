@@ -3,13 +3,13 @@ import {
   getBookCountsMap,
   statsInitial,
   sumOperationStatistic,
-} from "./statistic";
-import { getOperations, OperationDoc } from "../firebase/useOperations";
+} from "../statistic";
+import { getOperations, OperationDoc } from "../api/operations";
 import {
   editLocation,
   LocationDoc,
   LocationsStatisticType,
-} from "../firebase/useLocations";
+} from "../api/locations";
 
 // TODO: get from operation date
 const CHANGED_YEAR = 2022;

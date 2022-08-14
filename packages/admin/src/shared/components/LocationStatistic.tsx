@@ -1,6 +1,6 @@
 import { Tag } from "antd";
 import React from "react";
-import { LocationDoc } from "../../firebase/useLocations";
+import { LocationDoc } from "common/src/services/api/locations";
 
 type LocationStatisticProps = {
   statistic: LocationDoc["statistic"];
