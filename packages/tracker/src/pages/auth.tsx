@@ -130,6 +130,14 @@ export const Auth = ({ currentUser }: Props) => {
                 При входе произошла ошибка: {googleError.message}
               </Text>
             )}
+               <Button
+              className="centred icons8-yandex-international"
+              icon={<GoogleOutlined />}
+              type="primary"
+              onClick={() => signInWithGoogle()}
+            >
+              Войти через Google
+            </Button>
           </Form>
         </div>
       </Content>

@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import useGoogleSheets from "use-google-sheets";
@@ -8,7 +7,6 @@ import {
   PageHeader,
   Tooltip,
   Table,
-  Tag,
   Divider,
   Space,
   TableColumnsType,
@@ -21,9 +19,13 @@ import {
 
 import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
-import { deleteOperation, useOperations } from "common/src/services/api/operations";
+import {
+  deleteOperation,
+  useOperations,
+} from "common/src/services/api/operations";
 import moment from "moment";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
+import { useLocations } from "common/src/services/api/locations";
 
 type Props = {
   currentUser: CurrentUser;
@@ -39,10 +41,7 @@ export const Reports = ({ currentUser }: Props) => {
     sheetId: process.env.REACT_APP_GOOGLE_SHEETS_ID as string,
   });
 
-  const {
-    operationsDocData,
-    loading: operationLoading,
-  } = useOperations();
+  const { operationsDocData, loading: operationLoading } = useOperations();
 
   const onLogout = () => {
     signOut(auth);
@@ -62,20 +61,12 @@ export const Reports = ({ currentUser }: Props) => {
       name: operation.userName,
       totalCount: operation.totalCount,
       books: operation.books,
+      location: operation.locationId,
     })) || [];
 
+  const { locations } = useLocations({});
+
   const columns: TableColumnsType<typeof data[0]> = [
-    {
-      title: "Статус",
-      dataIndex: "isAuthorized",
-      key: "isAuthorized",
-      render: (status: boolean) =>
-        status ? (
-          <Tag color="green">Подтвержден</Tag>
-        ) : (
-          <Tag color="processing">Ожидание</Tag>
-        ),
-    },
     {
       title: "Дата",
       dataIndex: "date",
@@ -92,6 +83,14 @@ export const Reports = ({ currentUser }: Props) => {
       title: "Всего книг",
       dataIndex: "totalCount",
       key: "totalCount",
+    },
+    {
+      title: "Город",
+      dataIndex: "location",
+      key: "location",
+      // TODO: refactor to hashmap
+      render: (locationId) =>
+        locations.find((location) => location.id === locationId)?.name,
     },
     // {
     //   title: "Книги",
@@ -116,9 +115,6 @@ export const Reports = ({ currentUser }: Props) => {
       key: "action",
       render: (text: string, record) => (
         <Space>
-          <Button>
-            {record.isAuthorized ? "Подтверждена" : "Подтвердить"}
-          </Button>
           <Button
             danger
             icon={<DeleteOutlined />}
