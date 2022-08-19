@@ -10,6 +10,7 @@ import {
   Divider,
   Space,
   TableColumnsType,
+  Tag,
 } from "antd";
 import {
   LogoutOutlined,
@@ -30,6 +31,7 @@ import { useLocations } from "common/src/services/api/locations";
 type Props = {
   currentUser: CurrentUser;
 };
+
 
 export const Reports = ({ currentUser }: Props) => {
   const { auth, loading } = currentUser;
@@ -67,6 +69,17 @@ export const Reports = ({ currentUser }: Props) => {
   const { locations } = useLocations({});
 
   const columns: TableColumnsType<typeof data[0]> = [
+    {
+      title: "Статус",
+      dataIndex: "isAuthorized",
+      key: "isAuthorized",
+      render: (status: boolean) =>
+        status ? (
+          <Tag color="green">Подтвержден</Tag>
+        ) : (
+          <Tag color="processing">Ожидание</Tag>
+        ),
+    },
     {
       title: "Дата",
       dataIndex: "date",
@@ -115,6 +128,9 @@ export const Reports = ({ currentUser }: Props) => {
       key: "action",
       render: (text: string, record) => (
         <Space>
+          <Button>
+            {record.isAuthorized ? "" : "Подтвердить"}
+          </Button>
           <Button
             danger
             icon={<DeleteOutlined />}
