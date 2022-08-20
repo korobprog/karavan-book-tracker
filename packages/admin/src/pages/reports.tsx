@@ -33,11 +33,8 @@ type Props = {
 };
 
 export const Reports = ({ currentUser }: Props) => {
- 
   const { auth, loading } = currentUser;
-  
   const navigate = useNavigate();
-  
   const { loading: booksLoading } = useGoogleSheets({
     apiKey: process.env.REACT_APP_GOOGLE_API_KEY as string,
     sheetId: process.env.REACT_APP_GOOGLE_SHEETS_ID as string,
@@ -53,7 +50,6 @@ export const Reports = ({ currentUser }: Props) => {
   };
 
   const { Content, Footer, Header } = Layout;
-
   const data =
     operationsDocData?.map((operation, index) => ({
       key: operation.id || index,
@@ -66,7 +62,6 @@ export const Reports = ({ currentUser }: Props) => {
     })) || [];
 
   const { locations } = useLocations({});
-
   const columns: TableColumnsType<typeof data[0]> = [
     {
       title: "Статус",
@@ -157,7 +152,6 @@ export const Reports = ({ currentUser }: Props) => {
           ]}
         />
       </Header>
-
       <Content>
         <div className="site-layout-content">
           <Button
