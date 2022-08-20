@@ -32,19 +32,18 @@ type Props = {
   currentUser: CurrentUser;
 };
 
-
 export const Reports = ({ currentUser }: Props) => {
+ 
   const { auth, loading } = currentUser;
-
+  
   const navigate = useNavigate();
-
+  
   const { loading: booksLoading } = useGoogleSheets({
     apiKey: process.env.REACT_APP_GOOGLE_API_KEY as string,
     sheetId: process.env.REACT_APP_GOOGLE_SHEETS_ID as string,
   });
 
   const { operationsDocData, loading: operationLoading } = useOperations();
-
   const onLogout = () => {
     signOut(auth);
   };
@@ -128,9 +127,6 @@ export const Reports = ({ currentUser }: Props) => {
       key: "action",
       render: (text: string, record) => (
         <Space>
-          <Button>
-            {record.isAuthorized ? "" : "Подтвердить"}
-          </Button>
           <Button
             danger
             icon={<DeleteOutlined />}
