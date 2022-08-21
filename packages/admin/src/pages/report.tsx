@@ -13,6 +13,7 @@ import {
   Space,
   Form,
   Select,
+  Checkbox,
 } from "antd";
 import {
   LogoutOutlined,
@@ -54,6 +55,7 @@ const Report = ({ currentUser }: Props) => {
   const [searchString, setSearchString] = useState("");
   const [locationSearchString, setLocationSearchString] = useState("");
   const [userSearchString, setUserSearchString] = useState("");
+  const [isOnline, setIsOnline] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
@@ -66,6 +68,10 @@ const Report = ({ currentUser }: Props) => {
   const { usersDocData } = useUsers({
     searchString: userSearchString,
   });
+
+  const onOnlineChange = () => {
+    setIsOnline(!isOnline);
+  };
 
   const onLocationChange = useDebouncedCallback((value: string) => {
     setLocationSearchString(value.charAt(0).toUpperCase() + value.slice(1));
@@ -126,6 +132,11 @@ const Report = ({ currentUser }: Props) => {
         [] as DistributedBook[]
       );
 
+      if (totalCount === 0) {
+        setIsSubmitting(false);
+        return;
+      }
+
       const operation: OperationDoc = {
         userId,
         date: new Date().toISOString(),
@@ -136,6 +147,7 @@ const Report = ({ currentUser }: Props) => {
         totalCount,
         totalPoints,
         isAuthorized: true,
+        isOnline,
       };
 
       Promise.all([
@@ -219,7 +231,12 @@ const Report = ({ currentUser }: Props) => {
             <Form.Item
               name="locationId"
               label="Место"
-              rules={[{ required: true }]}
+              rules={[
+                {
+                  required: true,
+                  message: "Выберите или создайте новое место",
+                },
+              ]}
             >
               <LocationSelect
                 onSearch={onLocationChange}
@@ -230,7 +247,11 @@ const Report = ({ currentUser }: Props) => {
                 {locationOptions}
               </LocationSelect>
             </Form.Item>
-
+            <Form.Item>
+              <Checkbox onChange={onOnlineChange} checked={isOnline}>
+                Онлайн-распространение
+              </Checkbox>
+            </Form.Item>
             <Space>
               <Search
                 placeholder="поиск книги"
@@ -240,7 +261,7 @@ const Report = ({ currentUser }: Props) => {
                 style={{ width: 170 }}
               />
               <Button type="primary" htmlType="submit" loading={isSubmitting}>
-                Отправить
+                {isSubmitting ? "Отправляем..." : "Отправить"}
               </Button>
             </Space>
 
