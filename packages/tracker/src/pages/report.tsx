@@ -51,6 +51,8 @@ export const Report = ({ currentUser }: Props) => {
   const { addStatistic, toggleFavorite } = useUser({ currentUser });
   const [searchString, setSearchString] = useState("");
   const [locationSearchString, setLocationSearchString] = useState("");
+  const [isOnline, setIsOnline] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
 
@@ -63,7 +65,9 @@ export const Report = ({ currentUser }: Props) => {
     searchString: locationSearchString,
   });
 
-  function onChange() {}
+  const onOnlineChange = () => {
+    setIsOnline(!isOnline);
+  };
 
   useEffect(() => {
     if (!user && !loading) {
@@ -108,6 +112,7 @@ export const Report = ({ currentUser }: Props) => {
 
   function onFinish(formValues: FormValues) {
     if (user && profile?.name) {
+      setIsSubmitting(true);
       const { locationId, ...bookIdsWithCounts } = formValues;
 
       let totalCount = 0;
@@ -126,6 +131,11 @@ export const Report = ({ currentUser }: Props) => {
         [] as DistributedBook[]
       );
 
+      if (totalCount === 0) {
+        setIsSubmitting(false);
+        return;
+      }
+
       const operation: OperationDoc = {
         userId: user?.uid,
         date: new Date().toISOString(),
@@ -135,6 +145,7 @@ export const Report = ({ currentUser }: Props) => {
         totalCount,
         totalPoints,
         isAuthorized: true,
+        isOnline,
       };
 
       Promise.all([
@@ -145,7 +156,9 @@ export const Report = ({ currentUser }: Props) => {
           getBookPointsMap(books),
           locations
         ),
-      ]).then(() => navigate(routes.root));
+      ])
+        .then(() => navigate(routes.root))
+        .finally(() => setIsSubmitting(false));
     }
   }
 
@@ -196,7 +209,12 @@ export const Report = ({ currentUser }: Props) => {
             <Form.Item
               name="locationId"
               label="Место"
-              rules={[{ required: true }]}
+              rules={[
+                {
+                  required: true,
+                  message: "Выберите или создайте новое место",
+                },
+              ]}
             >
               <LocationSelect
                 onSearch={onLocationChange}
@@ -208,7 +226,9 @@ export const Report = ({ currentUser }: Props) => {
               </LocationSelect>
             </Form.Item>
             <Form.Item>
-              <Checkbox onChange={onChange} /> Online
+              <Checkbox onChange={onOnlineChange} checked={isOnline}>
+                Онлайн-распространение
+              </Checkbox>
             </Form.Item>
             <Space>
               <Search
@@ -218,8 +238,8 @@ export const Report = ({ currentUser }: Props) => {
                 value={searchString}
                 style={{ width: 170 }}
               />
-              <Button type="primary" htmlType="submit">
-                Отправить
+              <Button type="primary" htmlType="submit" loading={isSubmitting}>
+                {isSubmitting ? "Отправляем..." : "Отправить"}
               </Button>
             </Space>
 
