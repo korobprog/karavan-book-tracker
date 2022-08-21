@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import useGoogleSheets from "use-google-sheets";
@@ -8,10 +7,10 @@ import {
   PageHeader,
   Tooltip,
   Table,
-  Tag,
   Divider,
   Space,
   TableColumnsType,
+  Tag,
 } from "antd";
 import {
   LogoutOutlined,
@@ -21,9 +20,13 @@ import {
 
 import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
-import { deleteOperation, useOperations } from "common/src/services/api/operations";
+import {
+  deleteOperation,
+  useOperations,
+} from "common/src/services/api/operations";
 import moment from "moment";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
+import { useLocations } from "common/src/services/api/locations";
 
 type Props = {
   currentUser: CurrentUser;
@@ -31,19 +34,13 @@ type Props = {
 
 export const Reports = ({ currentUser }: Props) => {
   const { auth, loading } = currentUser;
-
   const navigate = useNavigate();
-
   const { loading: booksLoading } = useGoogleSheets({
     apiKey: process.env.REACT_APP_GOOGLE_API_KEY as string,
     sheetId: process.env.REACT_APP_GOOGLE_SHEETS_ID as string,
   });
 
-  const {
-    operationsDocData,
-    loading: operationLoading,
-  } = useOperations();
-
+  const { operationsDocData, loading: operationLoading } = useOperations();
   const onLogout = () => {
     signOut(auth);
   };
@@ -53,7 +50,6 @@ export const Reports = ({ currentUser }: Props) => {
   };
 
   const { Content, Footer, Header } = Layout;
-
   const data =
     operationsDocData?.map((operation, index) => ({
       key: operation.id || index,
@@ -62,8 +58,10 @@ export const Reports = ({ currentUser }: Props) => {
       name: operation.userName,
       totalCount: operation.totalCount,
       books: operation.books,
+      location: operation.locationId,
     })) || [];
 
+  const { locations } = useLocations({});
   const columns: TableColumnsType<typeof data[0]> = [
     {
       title: "Статус",
@@ -93,6 +91,14 @@ export const Reports = ({ currentUser }: Props) => {
       dataIndex: "totalCount",
       key: "totalCount",
     },
+    {
+      title: "Город",
+      dataIndex: "location",
+      key: "location",
+      // TODO: refactor to hashmap
+      render: (locationId) =>
+        locations.find((location) => location.id === locationId)?.name,
+    },
     // {
     //   title: "Книги",
     //   dataIndex: "books",
@@ -116,9 +122,6 @@ export const Reports = ({ currentUser }: Props) => {
       key: "action",
       render: (text: string, record) => (
         <Space>
-          <Button>
-            {record.isAuthorized ? "Подтверждена" : "Подтвердить"}
-          </Button>
           <Button
             danger
             icon={<DeleteOutlined />}
@@ -149,7 +152,6 @@ export const Reports = ({ currentUser }: Props) => {
           ]}
         />
       </Header>
-
       <Content>
         <div className="site-layout-content">
           <Button
