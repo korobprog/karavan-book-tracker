@@ -35,10 +35,7 @@ const Profile = ({ currentUser }: Props) => {
   const { Title, Paragraph } = Typography;
 
   const [locationSearchString, setLocationSearchString] = useState("");
-  const {
-    locations,
-    loading: locationsLoading,
-  } = useLocations({
+  const { locations, loading: locationsLoading } = useLocations({
     searchString: locationSearchString,
   });
 
@@ -66,6 +63,7 @@ const Profile = ({ currentUser }: Props) => {
     setIsSubmitting(true);
     setProfile({
       ...formValues,
+      email: user?.email,
     })
       .then(() => navigate(routes.root))
       .finally(() => setIsSubmitting(false));
@@ -161,11 +159,18 @@ const Profile = ({ currentUser }: Props) => {
                 {
                   pattern: phoneNumberPattern,
                   message: "Пожалуйста, введите корректный номер",
-                }
+                },
               ]}
               initialValue={profile?.phone || ""}
             >
-              <Input  />
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="email"
+              label="Ваш email"
+              initialValue={user?.email || ""}
+            >
+              <Input disabled />
             </Form.Item>
             <Form.Item
               name="address"
