@@ -60,7 +60,7 @@ export const Users = ({ currentUser }: Props) => {
       name: user.name,
       count: user.statistic?.[2022].count,
       points: user.statistic?.[2022].points,
-      phone: user.phone,
+      contacts: { phone: user.phone, email: user.email },
       city: (user.city && locationsHashTable[user.city]?.name) || user.city,
       address: user.address,
       role: user.role,
@@ -88,9 +88,15 @@ export const Users = ({ currentUser }: Props) => {
       key: "points",
     },
     {
-      title: "Телефон",
-      dataIndex: "phone",
-      key: "phone",
+      title: "Контакты",
+      dataIndex: "contacts",
+      key: "contacts",
+      render: (contacts) => (
+        <div>
+          <div>{contacts.phone}</div>
+          <div>{contacts.email}</div>
+        </div>
+      ),
     },
     {
       title: "Город",
