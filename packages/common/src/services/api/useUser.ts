@@ -10,10 +10,20 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { StatisticType } from "./statistic";
-import { CurrentUser } from "./useCurrentUser";
 import { idConverter } from "./utils";
 
 export type UserRoles = "admin";
+
+export enum TeamMemberStatus {
+  admin = 'admin',
+  request = 'request',
+  member = 'member',
+}
+
+export type UserTeam = {
+  id: string;
+  status: TeamMemberStatus;
+};
 
 export type UserDoc = {
   id?: string;
@@ -29,38 +39,42 @@ export type UserDoc = {
   };
   email?: string;
   isUnattached?: boolean;
+  team?: UserTeam | null;
 };
 
 type Params = {
-  currentUser: CurrentUser;
+  profile?: UserDoc;
 };
 
-export const useUser = ({ currentUser }: Params) => {
-  const db = getFirestore();
-  const { user, favorite, profile } = currentUser;
-  const userRef = (
-    user ? doc(db, "users", user?.uid).withConverter(idConverter) : null
-  ) as DocumentReference<UserDoc> | null;
+const db = getFirestore();
+
+const getUserRef = (userId: string | undefined) => (
+  userId ? doc(db, "users", userId).withConverter(idConverter) : null
+) as DocumentReference<UserDoc> | null;
+
+export const useUser = ({ profile }: Params) => {
+  const userRef = getUserRef(profile?.id);
+
   const usersRef = (
-    user ? collection(db, "users").withConverter(idConverter) : null
+    collection(db, "users").withConverter(idConverter)
   ) as CollectionReference<UserDoc> | null;
 
   const toggleFavorite = async (favoriteId: string) => {
-    if (user && userRef) {
-      if (favorite.includes(favoriteId)) {
-        const filteredFavorite = favorite.filter(
+    if (userRef && profile?.favorite) {
+      if (profile.favorite.includes(favoriteId)) {
+        const filteredFavorite = profile.favorite.filter(
           (value) => value !== favoriteId
         );
         await setDoc(userRef, { ...profile, favorite: filteredFavorite });
       } else {
-        const newFavorite = [...favorite, favoriteId];
+        const newFavorite = [...profile.favorite, favoriteId];
         await setDoc(userRef, { ...profile, favorite: newFavorite });
       }
     }
   };
 
   const setProfile = async (newProfile: UserDoc) => {
-    if (user && userRef) {
+    if (profile && userRef) {
       await setDoc(userRef, { ...profile, ...newProfile });
     }
   };
@@ -73,7 +87,7 @@ export const useUser = ({ currentUser }: Params) => {
   };
 
   const addNewUnattachedProfile = async (newProfile: UserDoc) => {
-    if (user && usersRef) {
+    if (profile && usersRef) {
       await addDoc(usersRef, { ...newProfile, isUnattached: true });
     }
   };
@@ -109,12 +123,11 @@ export const useUser = ({ currentUser }: Params) => {
       return;
     }
 
-    if (user && userRef) {
+    if (profile && userRef) {
       await setDoc(userRef, rewriteUserStatistic(newBooks, profile));
       return;
     }
   };
-
 
   return {
     addStatistic,
@@ -123,4 +136,13 @@ export const useUser = ({ currentUser }: Params) => {
     deleteProfile,
     addNewUnattachedProfile,
   };
+};
+
+export const setUserTeam = async (team: UserTeam | null, profile?: UserDoc) => {
+  const userRef = getUserRef(profile?.id);
+
+  if (profile && userRef) {
+
+    await setDoc(userRef, { ...profile, team });
+  }
 };

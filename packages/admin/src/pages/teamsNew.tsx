@@ -5,26 +5,32 @@ import { LogoutOutlined } from "@ant-design/icons";
 import BbtLogo from "../images/bbt-logo.png";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
-import { useUser } from "common/src/services/api/useUser";
 import { LocationSelect } from "../shared/components/LocationSelect";
 import { addLocation, useLocations } from "common/src/services/api/locations";
 import { useDebouncedCallback } from "use-debounce";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
+import { addTeam } from "common/src/services/api/teams";
+import { UserSelect } from "../shared/components/UserSelect";
+import { useUsers } from "common/src/services/api/useUsers";
+import { setUserTeam, TeamMemberStatus } from "common/src/services/api/useUser";
 
 type Props = {
   currentUser: CurrentUser;
 };
 
-export const UsersNew = ({ currentUser }: Props) => {
-  const { addNewUnattachedProfile } = useUser({ profile: currentUser.profile });
+export const TeamsNew = ({ currentUser }: Props) => {
   const { auth } = currentUser;
   const navigate = useNavigate();
   const { Content, Footer, Header } = Layout;
 
   const [locationSearchString, setLocationSearchString] = useState("");
+  const [userSearchString, setUserSearchString] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { locations } = useLocations({
     searchString: locationSearchString,
+  });
+  const { usersDocData } = useUsers({
+    searchString: userSearchString,
   });
 
   const onLocationChange = useDebouncedCallback((value: string) => {
@@ -45,19 +51,52 @@ export const UsersNew = ({ currentUser }: Props) => {
     setLocationSearchString("");
   };
 
-  const onFinish = ({ phone, prefix, ...formValues }: any) => {
-    setIsSubmitting(true);
-    addNewUnattachedProfile({
-      ...formValues,
-      phone,
-    })
-      .then(() => navigate(routes.users))
-      .finally(() => setIsSubmitting(false));
+  const onUserChange = useDebouncedCallback((value: string) => {
+    setUserSearchString(value);
+  }, 1000);
+
+  const onFinish = ({ leaderId, ...formValues }: any) => {
+    if (!usersDocData) {
+      return;
+    }
+
+    const created = new Date().toISOString();
+    const leader = usersDocData.find((user) => user.id === leaderId);
+
+    // ! TODO: add founded date;
+    // ! TODO: Добавить - выбор родительской команды
+
+    if (leader) {
+      setIsSubmitting(true);
+
+      // TODO: Move to Service Layer
+      addTeam({
+        ...formValues,
+        created,
+        leader: {
+          id: leader.id,
+          name: leader.nameSpiritual || leader.name,
+        },
+        members: [leader.id],
+      })
+        .then((response) => {
+          setUserTeam({ id: response.id, status: TeamMemberStatus.admin }, leader)
+        }
+        )
+        .then(() => navigate(routes.teams))
+        .finally(() => setIsSubmitting(false));
+    }
   };
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
+
+  const usersOptions = usersDocData?.map((d) => (
+    <Select.Option key={d.id}>
+      {d.name} {d.nameSpiritual}
+    </Select.Option>
+  ));
 
   const locationOptions = locations?.map((d) => (
     <Select.Option key={d.id}>{d.name}</Select.Option>
@@ -67,9 +106,9 @@ export const UsersNew = ({ currentUser }: Props) => {
     <Layout>
       <Header className="site-page-header">
         <PageHeader
-          title="СОЗДАНИЕ НОВОГО ПОЛЬЗОВАТЕЛЯ"
+          title="СОЗДАНИЕ НОВОЙ КОМАНДЫ"
           className="page-header"
-          onBack={() => navigate(routes.users)}
+          onBack={() => navigate(routes.teams)}
           avatar={{ src: BbtLogo }}
           extra={[
             <Tooltip title="Выйти" key="logout">
@@ -96,24 +135,28 @@ export const UsersNew = ({ currentUser }: Props) => {
           >
             <Form.Item
               name="name"
-              label="Ф.И.О"
-              rules={[{ required: true }]}
+              label="Название"
+              rules={[{ required: true, message: "Введите название" }]}
               initialValue={""}
             >
               <Input />
             </Form.Item>
             <Form.Item
-              name="nameSpiritual"
-              label="Духовное имя"
-              rules={[{ required: false }]}
-              initialValue={""}
+              name="leaderId"
+              label="Лидер группы"
+              rules={[{ required: true, message: "Выберите лидера" }]}
             >
-              <Input />
+              <UserSelect
+                onSearch={onUserChange}
+                onAddNewUser={() => navigate(routes.usersNew)}
+                userSearchString={userSearchString}
+              >
+                {usersOptions}
+              </UserSelect>
             </Form.Item>
             <Form.Item
-              name="city"
-              label="Город"
-              rules={[{ required: true }]}
+              name="location"
+              label="Место базирования"
               initialValue={""}
             >
               <LocationSelect
@@ -125,43 +168,22 @@ export const UsersNew = ({ currentUser }: Props) => {
               </LocationSelect>
             </Form.Item>
             <Form.Item
-              name="phone"
-              label="Телефон"
-              rules={[
-                {
-                  required: true,
-                  message: "Пожалуйста, введите номер телефона!",
-                },
-              ]}
+              name="currentLocation"
+              label="Текущее место пребывания"
               initialValue={""}
             >
-              <Input style={{ width: "100%" }} />
-            </Form.Item>
-            <Form.Item
-              name="email"
-              label="email"
-              rules={[
-                {
-                  required: true,
-                  message: "Пожалуйста, введите email",
-                },
-              ]}
-              initialValue={""}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name="address"
-              label="Адрес"
-              rules={[{ required: false }]}
-              initialValue={""}
-            >
-              <Input />
+              <LocationSelect
+                onSearch={onLocationChange}
+                onAddNewLocation={onAddNewLocation}
+                locationSearchString={locationSearchString}
+              >
+                {locationOptions}
+              </LocationSelect>
             </Form.Item>
 
             <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
               <Button type="primary" htmlType="submit" loading={isSubmitting}>
-                ДОБАВИТЬ
+                СОХРАНИТЬ
               </Button>
             </Form.Item>
           </Form>

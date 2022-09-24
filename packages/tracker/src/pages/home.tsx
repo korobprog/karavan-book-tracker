@@ -8,6 +8,7 @@ import {
   MessageOutlined,
   UserOutlined,
   EnvironmentOutlined,
+  TrophyOutlined,
 } from "@ant-design/icons";
 import BbtLogo from "../images/bbt-logo.png";
 import { useNavigate } from "react-router-dom";
@@ -100,6 +101,15 @@ export const Home = ({ currentUser }: Props) => {
               </Paragraph>
             );
           })}
+          <Divider dashed />
+          <Button
+            block
+            size="large"
+            icon={<TrophyOutlined />}
+            onClick={() => navigate(routes.team)}
+          >
+            Моя команда
+          </Button>
           <Divider dashed />
           <Button
             href="https://t.me/karavanBook_bot"

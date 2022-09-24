@@ -27,7 +27,9 @@ type Props = {
 
 const Profile = ({ currentUser }: Props) => {
   const { profile, user } = currentUser;
-  const { setProfile } = useUser({ currentUser });
+  console.log("🚀 ~ currentUser", currentUser)
+  console.log("🚀 ~ profile", profile)
+  const { setProfile } = useUser({ profile });
   const auth = getAuth();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);

@@ -31,12 +31,12 @@ type Props = {
 };
 
 export const Users = ({ currentUser }: Props) => {
-  const { auth } = currentUser;
+  const { auth, profile } = currentUser;
 
   const navigate = useNavigate();
 
   const { usersDocData, usersDocLoading } = useUsers({});
-  const { deleteProfile } = useUser({ currentUser });
+  const { deleteProfile } = useUser({ profile });
   const { locations, loading: locationLoading } = useLocations({});
   const locationsHashTable = useMemo(
     () => mapDocsToHashTable<LocationDoc>(locations),
