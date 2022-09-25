@@ -24,7 +24,7 @@ export const useCurrentUser = () => {
     }
   }, [user, userLoading, userPreloaded]);
   
-  const profile = userDocData;
+  const profile = {...userDocData, id: user?.uid };
   const favorite = profile?.favorite || [];
 
   const loading = userLoading || userDocLoading || !userPreloaded;

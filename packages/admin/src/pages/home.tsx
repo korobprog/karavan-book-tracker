@@ -9,6 +9,7 @@ import {
   MessageOutlined,
   BookOutlined,
   EnvironmentOutlined,
+  TrophyOutlined,
 } from "@ant-design/icons";
 import BbtLogo from "../images/bbt-logo.png";
 import { useNavigate } from "react-router-dom";
@@ -117,6 +118,15 @@ const Home = ({ currentUser }: Props) => {
             onClick={onUsersSelect}
           >
             Пользователи
+          </Button>
+          <Divider dashed />
+          <Button
+            block
+            size="large"
+            icon={<TrophyOutlined />}
+            onClick={() => navigate(routes.teams)}
+          >
+            Команды
           </Button>
           <Divider dashed />
           <Button

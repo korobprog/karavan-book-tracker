@@ -8,6 +8,7 @@ import Profile from "./pages/profile";
 import { routes } from "././shared/routes";
 import { Loading } from "./pages/loading";
 import { Report } from "./pages/report";
+import { Team } from "./pages/team";
 import { useCurrentUser } from "common/src/services/api/useCurrentUser";
 
 import "./App.less";
@@ -59,6 +60,10 @@ function App() {
         <Route
           path={routes.profile}
           element={<Profile currentUser={currentUser} />}
+        />
+        <Route
+          path={routes.team}
+          element={<Team currentUser={currentUser} />}
         />
       </Routes>
     </div>

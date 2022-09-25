@@ -4,5 +4,5 @@ export const routes = {
     auth: '/auth',
     registration: '/registration',
     profile: '/profile',
+    team: '/team',
 };
-

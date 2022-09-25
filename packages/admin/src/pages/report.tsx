@@ -50,7 +50,7 @@ type Props = {
 
 const Report = ({ currentUser }: Props) => {
   const { auth, profile, user, favorite } = currentUser;
-  const { addStatistic, toggleFavorite } = useUser({ currentUser });
+  const { addStatistic, toggleFavorite } = useUser({ profile });
 
   const [searchString, setSearchString] = useState("");
   const [locationSearchString, setLocationSearchString] = useState("");

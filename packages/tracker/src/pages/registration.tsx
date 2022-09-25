@@ -102,7 +102,7 @@ export const Registration = ({ currentUser }: Props) => {
               name="password"
               rules={[
                 { required: true, message: "Пожалуйста, введите ваш пароль" },
-                { len: 6, message: "Пароль должен быть не менее 6 символов" },
+                { min: 6, message: "Пароль должен быть не менее 6 символов" },
               ]}
             >
               <Input.Password />

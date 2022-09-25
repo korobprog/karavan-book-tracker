@@ -48,7 +48,7 @@ type Props = {
 
 export const Report = ({ currentUser }: Props) => {
   const { auth, profile, favorite, user, loading } = currentUser;
-  const { addStatistic, toggleFavorite } = useUser({ currentUser });
+  const { addStatistic, toggleFavorite } = useUser({ profile });
   const [searchString, setSearchString] = useState("");
   const [locationSearchString, setLocationSearchString] = useState("");
   const [isOnline, setIsOnline] = useState(false);

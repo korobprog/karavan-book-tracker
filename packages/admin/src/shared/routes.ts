@@ -8,5 +8,7 @@ export const routes = {
     users: '/users',
     usersNew: '/users/new',
     locations: '/locations',
+    teams: '/teams',
+    teamsNew: '/teams/new',
 };
 

@@ -1,3 +1,4 @@
+import React from "react";
 import {
   collection,
   CollectionReference,
@@ -12,6 +13,7 @@ import {
 import { useCollectionData } from "react-firebase-hooks/firestore";
 
 import { idConverter } from "./utils";
+import { getHashMap } from "common/src/utils/getHashMap";
 
 export type LocationsStatisticType = {
   totalPoints: number;
@@ -64,7 +66,8 @@ export type UseLocationsParams = {
   searchString?: string;
 };
 
-export const useLocations = ({ searchString = "" }: UseLocationsParams) => {
+export const useLocations = (params?: UseLocationsParams) => {
+  const { searchString = "" } = params || {};
   const [locationsDocData, locationsDocLoading] =
     useCollectionData<LocationDoc>(
       searchString
@@ -76,8 +79,15 @@ export const useLocations = ({ searchString = "" }: UseLocationsParams) => {
         : locationsRef
     );
 
+  const locationsHashMap = React.useMemo(() => {
+    return locationsDocData
+      ? (getHashMap<LocationDoc>(locationsDocData))
+      : null;
+  }, [locationsDocData]);
+
   return {
     locations: locationsDocData || [],
+    locationsHashMap,
     loading: locationsDocLoading,
   };
 };

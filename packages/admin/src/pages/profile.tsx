@@ -26,7 +26,7 @@ type Props = {
 };
 
 const Profile = ({ currentUser }: Props) => {
-  const { setProfile } = useUser({ currentUser });
+  const { setProfile } = useUser({ profile: currentUser.profile });
   const { profile, loading, user } = currentUser;
   const auth = getAuth();
   const navigate = useNavigate();

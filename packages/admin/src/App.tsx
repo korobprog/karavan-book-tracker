@@ -12,6 +12,8 @@ import { UsersNew } from "./pages/UsersNew";
 import { useCurrentUser } from "common/src/services/api/useCurrentUser";
 import { Denied } from "./pages/denied";
 import { Loading } from "./pages/loading";
+import { Teams } from "./pages/teams";
+import { TeamsNew } from "./pages/teamsNew";
 
 import "./App.less";
 
@@ -83,6 +85,14 @@ function App() {
         <Route
           path={routes.usersNew}
           element={<UsersNew currentUser={currentUser} />}
+        />
+        <Route
+          path={routes.teams}
+          element={<Teams currentUser={currentUser} />}
+        />
+        <Route
+          path={routes.teamsNew}
+          element={<TeamsNew currentUser={currentUser} />}
         />
       </Routes>
     </div>
