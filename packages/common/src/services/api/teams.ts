@@ -9,7 +9,10 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { useCollectionData } from "react-firebase-hooks/firestore";
+import {
+  useCollectionData,
+  useDocumentData,
+} from "react-firebase-hooks/firestore";
 import { UserDoc } from "./useUser";
 
 import { idConverter } from "./utils";
@@ -18,7 +21,7 @@ export type TeamDoc = {
   id: string;
   name: string;
   parentId: string | null;
-  leader: { id: string; name: string };
+  leader: { id: string };
   members: string[];
   requests?: string[];
   created: string;
@@ -27,6 +30,8 @@ export type TeamDoc = {
   image?: string;
   currentLocation?: string;
 };
+
+export type EditTeamDoc = Omit<TeamDoc, "id">;
 
 const db = getFirestore();
 
@@ -37,12 +42,12 @@ const teamsRef = collection(db, "teams").withConverter(
 const getTeamRefById = (id: string) =>
   doc(db, "teams", id) as DocumentReference<TeamDoc>;
 
-export const addTeam = async (data: TeamDoc) => {
+export const addTeam = async (data: EditTeamDoc) => {
   return await addDoc(teamsRef, data);
 };
 
-export const editTeam = async (id: string, data: TeamDoc) => {
-  setDoc(getTeamRefById(id), data);
+export const setTeam = async (id: string, data: EditTeamDoc) => {
+  return await setDoc(getTeamRefById(id), data).then(() => ({ id, ...data }));
 };
 
 export type UseTeamsParams = {
@@ -67,6 +72,16 @@ export const useTeams = (params?: UseTeamsParams) => {
   };
 };
 
+export const useTeam = (id: string) => {
+  const teamRef = getTeamRefById(id);
+  const [teamDocData, teamsDocLoading] = useDocumentData<TeamDoc>(teamRef);
+
+  return {
+    team: teamDocData,
+    loading: teamsDocLoading,
+  };
+};
+
 const usersRef = collection(db, "users").withConverter(
   idConverter
 ) as CollectionReference<UserDoc>;
@@ -77,12 +92,9 @@ export type UseTeamsMembersParams = {
 
 export const useTeamMembers = (params: UseTeamsMembersParams) => {
   const { teamId = "" } = params;
-  
+
   const [teamMembers = [], loading] = useCollectionData<UserDoc>(
-    query(
-          usersRef,
-          where("team.id", "==", teamId)
-        )
+    query(usersRef, where("team.id", "==", teamId))
   );
 
   return { teamMembers, loading };

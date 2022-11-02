@@ -10,5 +10,6 @@ export const routes = {
     locations: '/locations',
     teams: '/teams',
     teamsNew: '/teams/new',
+    teamsEdit: '/teams/:teamId/edit',
 };
 

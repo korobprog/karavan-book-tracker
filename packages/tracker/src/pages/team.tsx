@@ -63,7 +63,7 @@ export const Team = ({ currentUser }: Props) => {
               size="large"
               icon={<CheckSquareOutlined />}
               onClick={() =>
-                setUserTeam({ id: team.id, status: TeamMemberStatus.request }, profile)
+                setUserTeam({ id: team.id, status: TeamMemberStatus.request }, profile.id)
               }
               style={{ marginLeft: "auto" }}
             >
@@ -108,7 +108,7 @@ export const Team = ({ currentUser }: Props) => {
               team={myTeam}
               locationsHashMap={locationsHashMap}
               myStatus={myStatus}
-              onLeaveTeam={() => setUserTeam(null, profile)}
+              onLeaveTeam={() => setUserTeam(null, profile.id)}
             />
           ) : (
             teamNoSelectedBlock

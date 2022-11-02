@@ -7,10 +7,15 @@ import {
   UserOutlined,
   StarTwoTone,
   CheckCircleOutlined,
+  EditOutlined,
 } from "@ant-design/icons";
 import { LocationDoc } from "../services/api/locations";
 import { HashMap } from "../utils/getHashMap";
-import { setUserTeam, TeamMemberStatus, UserDoc } from "../services/api/useUser";
+import {
+  setUserTeam,
+  TeamMemberStatus,
+  UserDoc,
+} from "../services/api/useUser";
 
 type Props = {
   team: TeamDoc;
@@ -18,6 +23,7 @@ type Props = {
   children?: React.ReactNode;
   myStatus?: TeamMemberStatus;
   onLeaveTeam?: () => void;
+  onTeamEdit?: (teamId: string) => void;
 };
 
 export const TeamCard = ({
@@ -25,6 +31,7 @@ export const TeamCard = ({
   myStatus,
   locationsHashMap,
   onLeaveTeam,
+  onTeamEdit,
   children,
 }: Props) => {
   const { name, location, currentLocation, leader } = team;
@@ -39,11 +46,14 @@ export const TeamCard = ({
       : "";
 
   const description = `${locationName} ${
-    currentLocationName ? `(сейчас в н.п. ${currentLocationName})` : ""
+    currentLocationName ? `(где сейчас: ${currentLocationName})` : ""
   }`;
 
   const onAcceptMember = (memberProfile: UserDoc) => {
-    setUserTeam({ id: team.id, status: TeamMemberStatus.member }, memberProfile)
+    setUserTeam(
+      { id: team.id, status: TeamMemberStatus.member },
+      memberProfile.id
+    );
   };
 
   const approvedTeamMembers = teamMembers?.filter((user) => {
@@ -56,19 +66,34 @@ export const TeamCard = ({
     return user.team?.status === TeamMemberStatus.request;
   });
 
+  const teamLeader = teamMembers?.filter((user) => {
+    return user.team?.status === TeamMemberStatus.admin;
+  });
+
   return (
     <>
       <Card style={{ marginTop: 16 }} actions={[children]}>
-        <Card.Meta
-          avatar={<TrophyOutlined />}
-          title={`${name} (${leader.name})`}
-          description={description}
-        />
+        <Space>
+          <Card.Meta
+            avatar={<TrophyOutlined />}
+            title={name}
+            description={description}
+          />
+          {onTeamEdit && (
+            <Button
+              size="middle"
+              type="primary"
+              icon={<EditOutlined />}
+              onClick={() => onTeamEdit(team.id)}
+              style={{ marginLeft: "auto" }}
+            ></Button>
+          )}
+        </Space>
         <div>
-          <Space style={{marginTop: 14}}>
+          <Space style={{ marginTop: 14 }}>
             Участники:
             <Avatar.Group>
-              <Tooltip title={leader.name} placement="top">
+              <Tooltip title={teamLeader[0]?.name} placement="top">
                 <Badge
                   count={<StarTwoTone twoToneColor="#e4db30" />}
                   offset={[-25, 5]}
@@ -92,7 +117,7 @@ export const TeamCard = ({
         </div>
         {myStatus === TeamMemberStatus.request && (
           <div className="site-page-title">
-            <Typography.Paragraph style={{marginTop: 14}}>
+            <Typography.Paragraph style={{ marginTop: 14 }}>
               Заявка на рассмотрении <ClockCircleOutlined />
             </Typography.Paragraph>
             {onLeaveTeam && (
@@ -110,34 +135,35 @@ export const TeamCard = ({
           </div>
         )}
 
-        {myStatus === TeamMemberStatus.admin && Boolean(requestTeamMembers?.length) && (
-          <div>
-            <Typography.Paragraph className="site-page-title">
-              Заявки в группу <ClockCircleOutlined />
-            </Typography.Paragraph>
+        {myStatus === TeamMemberStatus.admin &&
+          Boolean(requestTeamMembers?.length) && (
+            <div>
+              <Typography.Paragraph className="site-page-title">
+                Заявки в группу <ClockCircleOutlined />
+              </Typography.Paragraph>
 
-            {requestTeamMembers.map((requestMember) => (
-              <Space key={requestMember.id} style={{marginBottom: 8}}>
-                <Button
-                  size="small"
-                  type="dashed"
-                  icon={<CheckCircleOutlined />}
-                  onClick={() => onAcceptMember(requestMember)}
-                  style={{ marginLeft: "auto" }}
-                >
-                  Принять заявку
-                </Button>
-                <Avatar
-                  style={{ backgroundColor: "#87d068" }}
-                  icon={<UserOutlined />}
-                />
-                <Typography.Text>
-                  {requestMember.name} ({requestMember.nameSpiritual})
-                </Typography.Text>
-              </Space>
-            ))}
-          </div>
-        )}
+              {requestTeamMembers.map((requestMember) => (
+                <Space key={requestMember.id} style={{ marginBottom: 8 }}>
+                  <Button
+                    size="small"
+                    type="dashed"
+                    icon={<CheckCircleOutlined />}
+                    onClick={() => onAcceptMember(requestMember)}
+                    style={{ marginLeft: "auto" }}
+                  >
+                    Принять заявку
+                  </Button>
+                  <Avatar
+                    style={{ backgroundColor: "#87d068" }}
+                    icon={<UserOutlined />}
+                  />
+                  <Typography.Text>
+                    {requestMember.name} ({requestMember.nameSpiritual})
+                  </Typography.Text>
+                </Space>
+              ))}
+            </div>
+          )}
       </Card>
     </>
   );
