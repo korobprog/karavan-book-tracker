@@ -14,6 +14,7 @@ import { Denied } from "./pages/denied";
 import { Loading } from "./pages/loading";
 import { Teams } from "./pages/teams";
 import { TeamsNew } from "./pages/teamsNew";
+import { TeamsEdit } from "./pages/teamsEdit";
 
 import "./App.less";
 
@@ -93,6 +94,10 @@ function App() {
         <Route
           path={routes.teamsNew}
           element={<TeamsNew currentUser={currentUser} />}
+        />
+        <Route
+          path={routes.teamsEdit}
+          element={<TeamsEdit currentUser={currentUser} />}
         />
       </Routes>
     </div>

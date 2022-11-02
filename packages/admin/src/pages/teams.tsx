@@ -2,7 +2,7 @@ import { getAuth, signOut } from "firebase/auth";
 import { Button, Layout, PageHeader, Tooltip, Typography } from "antd";
 import { LogoutOutlined, UsergroupAddOutlined } from "@ant-design/icons";
 import BbtLogo from "../images/bbt-logo.png";
-import { useNavigate } from "react-router-dom";
+import { generatePath, useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { useTeams } from "common/src/services/api/teams";
@@ -23,6 +23,10 @@ export const Teams = ({ currentUser }: Props) => {
 
   const onTeamAdd = () => {
     navigate(routes.teamsNew);
+  };
+
+  const onTeamEdit = (teamId: string) => {
+    navigate(generatePath(routes.teamsEdit, { teamId }));
   };
 
   const onLogout = () => {
@@ -67,7 +71,7 @@ export const Teams = ({ currentUser }: Props) => {
 
           {teams.length === 0 && (
             <Title className="site-page-title" level={5}>
-              {loading ? 'Загрузка...' : 'Команд еще нет'}
+              {loading ? "Загрузка..." : "Команд еще нет"}
             </Title>
           )}
           {teams.map((team) => (
@@ -75,6 +79,7 @@ export const Teams = ({ currentUser }: Props) => {
               key={team.id}
               team={team}
               locationsHashMap={locationsHashMap}
+              onTeamEdit={onTeamEdit}
             />
           ))}
         </div>

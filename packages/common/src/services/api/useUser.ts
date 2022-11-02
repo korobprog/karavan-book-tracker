@@ -4,6 +4,7 @@ import {
   DocumentReference,
   getFirestore,
   setDoc,
+  updateDoc,
   addDoc,
   CollectionReference,
   getDoc,
@@ -138,11 +139,10 @@ export const useUser = ({ profile }: Params) => {
   };
 };
 
-export const setUserTeam = async (team: UserTeam | null, profile?: UserDoc) => {
-  const userRef = getUserRef(profile?.id);
+export const setUserTeam = async (team: UserTeam | null, userId?: string) => {
+  const userRef = getUserRef(userId);
 
-  if (profile && userRef) {
-
-    await setDoc(userRef, { ...profile, team });
+  if (userRef) {
+    await updateDoc(userRef, { team });
   }
 };
