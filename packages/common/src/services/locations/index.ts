@@ -60,11 +60,25 @@ export const recalculateStatisticToLocations = async (
       const operation = doc.data();
 
       if (operation.locationId) {
-        const newOperationStat = calculateOperationStatistic(
-          getBookCountsMap(operation.books),
-          bookPointsMap,
-          operation.isOnline
-        );
+        const { totalCount = 0, totalPoints = 0 } = operation;
+
+        let newOperationStat: LocationsStatisticType;
+
+        if (operation.isWithoutBookInformation) {
+          newOperationStat = {
+            totalPrimaryCount: operation.isOnline ? 0 : totalCount,
+            totalPoints: operation.isOnline ? 0 : totalPoints,
+            totalOnlineCount: operation.isOnline ? totalCount : 0,
+            totalOnlinePoints: operation.isOnline ? totalPoints : 0,
+            totalOtherCount: 0,
+          };
+        } else {
+          newOperationStat = calculateOperationStatistic(
+            getBookCountsMap(operation.books),
+            bookPointsMap,
+            operation.isOnline
+          );
+        }
 
         const prevStat = statsByLocations[operation.locationId] || statsInitial;
         statsByLocations[operation.locationId] = sumOperationStatistic(
@@ -85,7 +99,11 @@ export const recalculateStatisticToLocations = async (
     locationsIdsWithoutStatsMap.forEach(async (locationId) => {
       if (locationId) {
         const location = getLocationWithoutId(locationId, locations);
-        const promise = editLocationStatistic(locationId, location, statsInitial);
+        const promise = editLocationStatistic(
+          locationId,
+          location,
+          statsInitial
+        );
         promises.push(promise);
       }
     });

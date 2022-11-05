@@ -42,7 +42,7 @@ export const TeamCard = ({
     location && locationsHashMap ? locationsHashMap[location].name : "";
   const currentLocationName =
     currentLocation && locationsHashMap
-      ? locationsHashMap[currentLocation].name
+      ? locationsHashMap[currentLocation]?.name
       : "";
 
   const description = `${locationName} ${

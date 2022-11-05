@@ -29,6 +29,8 @@ export type OperationDoc = {
   books: DistributedBook[];
   isAuthorized?: boolean;
   isOnline?: boolean;
+  isWithoutBookInformation?: boolean;
+  isTeamOperation?: boolean;
 };
 
 const db = getFirestore();
