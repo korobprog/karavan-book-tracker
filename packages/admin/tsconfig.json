@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-  ]
+, "../common/src/components/forms", "../common/src/components/CoordinatesEdit.tsx"  ]
 }

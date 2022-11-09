@@ -7,10 +7,10 @@ import { CalculatorOutlined, LogoutOutlined } from "@ant-design/icons";
 import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
 import { LocationDoc, useLocations } from "common/src/services/api/locations";
-import { LocationStatistic } from "../shared/components/LocationStatistic";
+import { LocationStatistic } from "common/src/components/LocationStatistic";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { getBookPointsMap, useBooks } from "common/src/services/books";
-import { CoordinatesEdit } from "../shared/components/CoordinatesEdit";
+import { CoordinatesEdit } from "common/src/components/CoordinatesEdit";
 import { recalculateStatisticToLocations } from "common/src/services/locations";
 
 type Props = {

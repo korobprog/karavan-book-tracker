@@ -2,23 +2,24 @@ import { signOut } from "firebase/auth";
 import { Button, Layout, PageHeader, Tooltip } from "antd";
 import { LogoutOutlined } from "@ant-design/icons";
 import BbtLogo from "../images/bbt-logo.png";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { saveTeam, TeamFormValues } from "common/src/services/teams";
-import { TeamForm } from "common/src/components/forms/TeamForm";
+import { TeamForm } from "common/src//components/forms/TeamForm";
 import { useTeam } from "common/src/services/api/teams";
 
 type Props = {
   currentUser: CurrentUser;
 };
 
-export const TeamsEdit = ({ currentUser }: Props) => {
+export const TeamEdit = ({ currentUser }: Props) => {
   const { auth } = currentUser;
   const navigate = useNavigate();
   const { Content, Footer, Header } = Layout;
 
-  const { teamId } = useParams();
+  const teamId = currentUser.profile.team?.id;
+
   const { team, loading } = useTeam(teamId || "");
 
   const onLogout = () => {
@@ -27,7 +28,7 @@ export const TeamsEdit = ({ currentUser }: Props) => {
 
   const onFinish = async (formValues: TeamFormValues) => {
     await saveTeam({ team: formValues, teamId });
-    navigate(routes.teams);
+    navigate(routes.team);
   };
 
   const initialValues: TeamFormValues | null = team
@@ -45,7 +46,7 @@ export const TeamsEdit = ({ currentUser }: Props) => {
         <PageHeader
           title="РЕДАКТИРОВАНИЕ КОМАНДЫ"
           className="page-header"
-          onBack={() => navigate(routes.teams)}
+          onBack={() => navigate(routes.team)}
           avatar={{ src: BbtLogo }}
           extra={[
             <Tooltip title="Выйти" key="logout">

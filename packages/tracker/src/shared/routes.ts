@@ -5,4 +5,5 @@ export const routes = {
     registration: '/registration',
     profile: '/profile',
     team: '/team',
+    teamEdit: '/team/edit',
 };

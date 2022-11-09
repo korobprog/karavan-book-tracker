@@ -32,9 +32,9 @@ import {
   OperationDoc,
 } from "common/src/services/api/operations";
 import { addLocation, useLocations } from "common/src/services/api/locations";
-import { LocationSelect } from "../shared/components/LocationSelect";
+import { LocationSelect } from "common/src/components/LocationSelect";
 import { useDebouncedCallback } from "use-debounce";
-import { UserSelect } from "../shared/components/UserSelect";
+import { UserSelect } from "common/src/components/UserSelect";
 import { useUsers } from "common/src/services/api/useUsers";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { addOperationToLocationStatistic } from "common/src/services/locations";

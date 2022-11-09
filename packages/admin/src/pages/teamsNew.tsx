@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { saveTeam, TeamFormValues } from "common/src/services/teams";
-import { TeamForm } from "../shared/components/forms/TeamForm";
+import { TeamForm } from "common/src/components/forms/TeamForm";
 
 type Props = {
   currentUser: CurrentUser;

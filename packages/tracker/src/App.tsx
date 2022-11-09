@@ -9,6 +9,7 @@ import { routes } from "././shared/routes";
 import { Loading } from "./pages/loading";
 import { Report } from "./pages/report";
 import { Team } from "./pages/team";
+import { TeamEdit } from "./pages/teamEdit";
 import { useCurrentUser } from "common/src/services/api/useCurrentUser";
 
 import "./App.less";
@@ -64,6 +65,10 @@ function App() {
         <Route
           path={routes.team}
           element={<Team currentUser={currentUser} />}
+        />
+        <Route
+          path={routes.teamEdit}
+          element={<TeamEdit currentUser={currentUser} />}
         />
       </Routes>
     </div>

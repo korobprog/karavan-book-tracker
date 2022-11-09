@@ -35,6 +35,10 @@ export const Team = ({ currentUser }: Props) => {
     signOut(auth);
   };
 
+  const onTeamEdit = () => {
+    navigate(routes.teamEdit);
+  };
+
   const teamNoSelectedBlock = (
     <>
       {loading ? (
@@ -109,6 +113,7 @@ export const Team = ({ currentUser }: Props) => {
               locationsHashMap={locationsHashMap}
               myStatus={myStatus}
               onLeaveTeam={() => setUserTeam(null, profile.id)}
+              onTeamEdit={onTeamEdit}
             />
           ) : (
             teamNoSelectedBlock
