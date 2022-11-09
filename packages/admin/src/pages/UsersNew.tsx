@@ -6,7 +6,7 @@ import BbtLogo from "../images/bbt-logo.png";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
 import { useUser } from "common/src/services/api/useUser";
-import { LocationSelect } from "../shared/components/LocationSelect";
+import { LocationSelect } from "common/src/components/LocationSelect";
 import { addLocation, useLocations } from "common/src/services/api/locations";
 import { useDebouncedCallback } from "use-debounce";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";

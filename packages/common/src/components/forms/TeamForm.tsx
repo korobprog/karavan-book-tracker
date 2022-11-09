@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { addLocation, useLocations } from "common/src/services/api/locations";
 import { useDebouncedCallback } from "use-debounce";
 import { useUsers } from "common/src/services/api/useUsers";
-import { routes } from "../../routes";
-import { UserSelect } from "../UserSelect";
-import { LocationSelect } from "../LocationSelect";
+import { routes } from "../../../../admin/src/shared/routes";
+import { UserSelect } from "common/src/components/UserSelect";
+import { LocationSelect } from "common/src/components/LocationSelect";
 import { TeamFormValues } from "common/src/services/teams";
 import { removeEmptyFields } from "common/src/utils/objects";
 

@@ -1,3 +1,4 @@
+import React from "react";
 import { TeamDoc, useTeamMembers } from "common/src/services/api/teams";
 import { Card, Typography, Button, Avatar, Tooltip, Space, Badge } from "antd";
 import {
@@ -93,7 +94,7 @@ export const TeamCard = ({
           <Space style={{ marginTop: 14 }}>
             Участники:
             <Avatar.Group>
-              <Tooltip title={teamLeader[0]?.name} placement="top">
+              <Tooltip title={teamLeader[0]?.nameSpiritual || teamLeader[0]?.name} placement="top">
                 <Badge
                   count={<StarTwoTone twoToneColor="#e4db30" />}
                   offset={[-25, 5]}
