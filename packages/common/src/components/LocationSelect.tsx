@@ -17,6 +17,7 @@ export const LocationSelect: React.FC<LocationSelectProps> = (props) => {
       autoClearSearchValue={false}
       showArrow={false}
       filterOption={false}
+      allowClear
       notFoundContent={
         <>
           <Typography.Paragraph style={{ whiteSpace: "nowrap" }}>
