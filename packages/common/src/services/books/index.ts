@@ -16,12 +16,23 @@ export const getBooks = (data: Sheet[]) => {
   return data[0].data as Book[];
 };
 
+export const getBooksHashMap = (books: Book[]) => {
+  return books.reduce((acc, book) => {
+    acc[book.id] = book;
+    return acc;
+  }, {} as Record<string, Book>);
+};
+
 export const useBooks = () => {
   const { data, loading: booksLoading } = useGoogleSheets({
     apiKey: process.env.REACT_APP_GOOGLE_API_KEY as string,
     sheetId: process.env.REACT_APP_GOOGLE_SHEETS_ID as string,
   });
-  return { books: getBooks(data), booksLoading };
+
+  const books = getBooks(data);
+  const booksHashMap = getBooksHashMap(books);
+
+  return { books: getBooks(data), booksHashMap, booksLoading };
 };
 
 export const getBookPointsMap = (books: Book[]): Record<string, number> => {

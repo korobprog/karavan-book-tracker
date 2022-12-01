@@ -8,12 +8,12 @@ import {
   MessageOutlined,
   UserOutlined,
   EnvironmentOutlined,
-  TrophyOutlined,
+  BarChartOutlined,
+  TeamOutlined,
 } from "@ant-design/icons";
 import BbtLogo from "../images/bbt-logo.png";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
-import { useMyOperations } from "common/src/services/api/operations";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 
 type Props = {
@@ -23,7 +23,6 @@ type Props = {
 export const Home = ({ currentUser }: Props) => {
   const { auth, user, profile } = currentUser;
   const navigate = useNavigate();
-  const { myOperationsDocData } = useMyOperations(user?.uid || '');
 
   const onAddReport = () => {
     navigate(routes.report);
@@ -32,8 +31,6 @@ export const Home = ({ currentUser }: Props) => {
   const onLogout = () => {
     signOut(auth);
   };
-
-  const statistic2022 = profile?.statistic?.[2022];
 
   const { Content, Footer, Header } = Layout;
   const { Title, Paragraph } = Typography;
@@ -85,27 +82,20 @@ export const Home = ({ currentUser }: Props) => {
           >
             Отметить книги
           </Button>
-          {statistic2022 && (
-            <Paragraph>
-              В этом году вы распространили - книг: {statistic2022.count},
-              баллов: {statistic2022.points}
-            </Paragraph>
-          )}
-          {/* TODO: переделать это */}
-          {myOperationsDocData && <Paragraph>Последние операции:</Paragraph>}
-          {myOperationsDocData?.map((operation, index) => {
-            return (
-              <Paragraph key={index}>
-                {new Date(operation.date).toLocaleDateString()} - книг:{" "}
-                {operation.totalCount}, баллов: {operation.totalPoints}
-              </Paragraph>
-            );
-          })}
           <Divider dashed />
           <Button
             block
             size="large"
-            icon={<TrophyOutlined />}
+            icon={<BarChartOutlined />}
+            onClick={() => navigate(routes.statistic)}
+          >
+            Моя статискика
+          </Button>
+          <Divider dashed />
+          <Button
+            block
+            size="large"
+            icon={<TeamOutlined />}
             onClick={() => navigate(routes.team)}
           >
             Моя команда

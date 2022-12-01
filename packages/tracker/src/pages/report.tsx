@@ -157,7 +157,7 @@ export const Report = ({ currentUser }: Props) => {
           locations
         ),
       ])
-        .then(() => navigate(routes.root))
+        .then(() => navigate(routes.statistic))
         .finally(() => setIsSubmitting(false));
     }
   }
