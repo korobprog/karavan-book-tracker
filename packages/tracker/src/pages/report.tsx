@@ -14,6 +14,7 @@ import {
   Form,
   Select,
   Checkbox,
+  Row,
 } from "antd";
 import {
   StarFilled,
@@ -217,18 +218,18 @@ export const Report = ({ currentUser }: Props) => {
                 Онлайн-распространение
               </Checkbox>
             </Form.Item>
-            <Space>
+            <Row>
               <Search
                 placeholder="поиск книги"
                 allowClear
                 onChange={onSearchChange}
                 value={searchString}
-                style={{ width: 170 }}
+                style={{ flexGrow: 1 , width: 200, marginRight: 8 }}
               />
               <Button type="primary" htmlType="submit" loading={isSubmitting}>
                 {isSubmitting ? "Отправляем..." : "Отправить"}
               </Button>
-            </Space>
+            </Row>
 
             <List
               itemLayout="horizontal"
