@@ -44,7 +44,7 @@ type Props = {
 };
 
 export const Report = ({ currentUser }: Props) => {
-  const { profile, favorite, user, loading } = currentUser;
+  const { profile, favorite, user, loading, userDocLoading } = currentUser;
   const { addStatistic, toggleFavorite } = useUser({ profile });
   const [searchString, setSearchString] = useState("");
   const [locationSearchString, setLocationSearchString] = useState("");
@@ -219,7 +219,7 @@ export const Report = ({ currentUser }: Props) => {
                 value={searchString}
                 style={{ flexGrow: 1 , width: 200, marginRight: 8 }}
               />
-              <Button type="primary" htmlType="submit" loading={isSubmitting}>
+              <Button type="primary" htmlType="submit" loading={isSubmitting || userDocLoading}>
                 {isSubmitting ? "Отправляем..." : "Отправить"}
               </Button>
             </Row>
