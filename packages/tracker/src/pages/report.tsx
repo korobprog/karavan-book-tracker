@@ -7,10 +7,8 @@ import {
   List,
   PageHeader,
   Tooltip,
-  Typography,
   Input,
   InputNumber,
-  Space,
   Form,
   Select,
   Checkbox,
@@ -164,13 +162,12 @@ export const Report = ({ currentUser }: Props) => {
 
   const { Search } = Input;
   const { Content, Footer, Header } = Layout;
-  const { Title } = Typography;
 
   return (
     <Layout>
       <Header className="site-page-header">
         <PageHeader
-          title="УЧЕТ КНИГ"
+          title="ОТМЕТИТЬ КНИГИ"
           className="page-header"
           onBack={() => navigate(routes.root)}
           avatar={{ src: BbtLogo }}
@@ -190,10 +187,6 @@ export const Report = ({ currentUser }: Props) => {
       <Content>
         <div className="site-layout-content">
           <Form name="basic" onFinish={onFinish}>
-            <Title className="site-page-title" level={4}>
-              Отметить распространненные книги
-            </Title>
-
             <Form.Item
               name="locationId"
               label="Место"

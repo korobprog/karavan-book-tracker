@@ -103,11 +103,7 @@ const Profile = ({ currentUser }: Props) => {
       <Content>
         <div className="site-layout-content">
           <Title className="site-page-title" level={2}>
-            Привет,{" "}
-            {profile?.nameSpiritual ||
-              profile?.name ||
-              user?.displayName ||
-              "друг"}
+            Ваш профиль
           </Title>
           <Form
             name="basic"
