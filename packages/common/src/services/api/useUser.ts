@@ -61,14 +61,14 @@ export const useUser = ({ profile }: Params) => {
   ) as CollectionReference<UserDoc> | null;
 
   const toggleFavorite = async (favoriteId: string) => {
-    if (userRef && profile?.favorite) {
-      if (profile.favorite.includes(favoriteId)) {
+    if (userRef) {
+      if (profile?.favorite?.includes(favoriteId)) {
         const filteredFavorite = profile.favorite.filter(
           (value) => value !== favoriteId
         );
         await setDoc(userRef, { ...profile, favorite: filteredFavorite });
       } else {
-        const newFavorite = [...profile.favorite, favoriteId];
+        const newFavorite = [...profile?.favorite || [], favoriteId];
         await setDoc(userRef, { ...profile, favorite: newFavorite });
       }
     }
