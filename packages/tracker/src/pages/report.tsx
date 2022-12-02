@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signOut } from "firebase/auth";
 import useGoogleSheets from "use-google-sheets";
 import {
   Button,
@@ -17,7 +16,6 @@ import {
   Checkbox,
 } from "antd";
 import {
-  LogoutOutlined,
   StarFilled,
   StarOutlined,
   UserOutlined,
@@ -47,7 +45,7 @@ type Props = {
 };
 
 export const Report = ({ currentUser }: Props) => {
-  const { auth, profile, favorite, user, loading } = currentUser;
+  const { profile, favorite, user, loading } = currentUser;
   const { addStatistic, toggleFavorite } = useUser({ profile });
   const [searchString, setSearchString] = useState("");
   const [locationSearchString, setLocationSearchString] = useState("");
@@ -79,9 +77,6 @@ export const Report = ({ currentUser }: Props) => {
     setLocationSearchString(value.charAt(0).toUpperCase() + value.slice(1));
   }, 1000);
 
-  const onLogout = () => {
-    signOut(auth);
-  };
 
   const books = getBooks(data);
   const { favoriteBooks, otherBooks } = books.reduce(
@@ -185,14 +180,6 @@ export const Report = ({ currentUser }: Props) => {
                 shape="circle"
                 icon={<UserOutlined />}
                 onClick={() => navigate(routes.profile)}
-              />
-            </Tooltip>,
-            <Tooltip title="Выйти" key="logout">
-              <Button
-                type="ghost"
-                shape="circle"
-                icon={<LogoutOutlined />}
-                onClick={onLogout}
               />
             </Tooltip>,
           ]}
