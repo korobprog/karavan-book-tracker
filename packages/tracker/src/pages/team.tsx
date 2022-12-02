@@ -1,7 +1,6 @@
-import { getAuth, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { Button, Layout, PageHeader, Tooltip, Typography } from "antd";
-import { LogoutOutlined, CheckSquareOutlined } from "@ant-design/icons";
+import { Button, Layout, PageHeader, Typography } from "antd";
+import { CheckSquareOutlined } from "@ant-design/icons";
 
 import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
@@ -19,7 +18,6 @@ export const Team = ({ currentUser }: Props) => {
   const { profile } = currentUser;
   const { locationsHashMap } = useLocations();
 
-  const auth = getAuth();
   const navigate = useNavigate();
   const { teams, loading } = useTeams();
 
@@ -31,13 +29,11 @@ export const Team = ({ currentUser }: Props) => {
 
   const myTeam = teams.find((team) => team.id === myTeamId);
 
-  const onLogout = () => {
-    signOut(auth);
-  };
 
   const onTeamEdit = () => {
     navigate(routes.teamEdit);
   };
+
 
   const teamNoSelectedBlock = (
     <>
@@ -87,16 +83,6 @@ export const Team = ({ currentUser }: Props) => {
           className="page-header"
           onBack={() => navigate(routes.root)}
           avatar={{ src: BbtLogo }}
-          extra={[
-            <Tooltip title="Выйти" key="logout">
-              <Button
-                type="ghost"
-                shape="circle"
-                icon={<LogoutOutlined />}
-                onClick={onLogout}
-              />
-            </Tooltip>,
-          ]}
         />
       </Header>
 

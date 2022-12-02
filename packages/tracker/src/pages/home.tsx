@@ -1,9 +1,7 @@
 import React from "react";
-import { signOut } from "firebase/auth";
 import { Button, Divider, Layout, PageHeader, Tooltip, Typography } from "antd";
 import {
   ReadOutlined,
-  LogoutOutlined,
   UserAddOutlined,
   MessageOutlined,
   UserOutlined,
@@ -21,7 +19,7 @@ type Props = {
 };
 
 export const Home = ({ currentUser }: Props) => {
-  const { auth, user, profile } = currentUser;
+  const { user, profile } = currentUser;
   const navigate = useNavigate();
   const { myOperationsDocData } = useMyOperations(user?.uid || '');
 
@@ -29,9 +27,6 @@ export const Home = ({ currentUser }: Props) => {
     navigate(routes.report);
   };
 
-  const onLogout = () => {
-    signOut(auth);
-  };
 
   const statistic2022 = profile?.statistic?.[2022];
 
@@ -52,14 +47,6 @@ export const Home = ({ currentUser }: Props) => {
                 shape="circle"
                 icon={<UserOutlined />}
                 onClick={() => navigate(routes.profile)}
-              />
-            </Tooltip>,
-            <Tooltip title="Выйти" key="logout">
-              <Button
-                type="ghost"
-                shape="circle"
-                icon={<LogoutOutlined />}
-                onClick={onLogout}
               />
             </Tooltip>,
           ]}
