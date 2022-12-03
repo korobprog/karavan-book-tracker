@@ -15,7 +15,7 @@ type Props = {
 };
 
 export const Team = ({ currentUser }: Props) => {
-  const { profile } = currentUser;
+  const { profile, userDocLoading } = currentUser;
   const { locationsHashMap } = useLocations();
 
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ export const Team = ({ currentUser }: Props) => {
 
   const teamNoSelectedBlock = (
     <>
-      {loading ? (
+      {loading || userDocLoading ? (
         <Title className="site-page-title" level={5}>
           Загрузка...
         </Title>
@@ -66,6 +66,7 @@ export const Team = ({ currentUser }: Props) => {
                 setUserTeam({ id: team.id, status: TeamMemberStatus.request }, profile.id)
               }
               style={{ marginLeft: "auto" }}
+              loading={userDocLoading}
             >
               Подать заявку
             </Button>
@@ -90,6 +91,7 @@ export const Team = ({ currentUser }: Props) => {
                 shape="circle"
                 icon={<UserOutlined />}
                 onClick={() => navigate(routes.profile)}
+                disabled={userDocLoading}
               />
             </Tooltip>,
           ]}

@@ -183,7 +183,7 @@ const Profile = ({ currentUser }: Props) => {
                 <Input />
               </Form.Item>
               <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                <Button type="primary" htmlType="submit" loading={isSubmitting}>
+                <Button type="primary" htmlType="submit" loading={isSubmitting || userDocLoading}>
                   СОХРАНИТЬ
                 </Button>
               </Form.Item>

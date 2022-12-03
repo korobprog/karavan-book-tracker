@@ -239,6 +239,7 @@ export const Report = ({ currentUser }: Props) => {
                     <Button
                       onClick={() => toggleFavorite(book.id)}
                       icon={<StarFilled />}
+                      disabled={isSubmitting || userDocLoading}
                     ></Button>,
                   ]}
                 >
@@ -262,7 +263,7 @@ export const Report = ({ currentUser }: Props) => {
             <List
               itemLayout="horizontal"
               dataSource={otherBooks}
-              loading={booksLoading}
+              loading={booksLoading || userDocLoading}
               locale={{ emptyText: "Не найдено книг" }}
               renderItem={(book) => (
                 <List.Item
