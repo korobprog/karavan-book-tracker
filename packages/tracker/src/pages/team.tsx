@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { Button, Layout, PageHeader, Typography } from "antd";
-import { CheckSquareOutlined } from "@ant-design/icons";
+import { Button, Layout, PageHeader, Tooltip, Typography } from "antd";
+import { CheckSquareOutlined, UserOutlined } from "@ant-design/icons";
 
 import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
@@ -15,7 +15,7 @@ type Props = {
 };
 
 export const Team = ({ currentUser }: Props) => {
-  const { profile } = currentUser;
+  const { profile, userDocLoading } = currentUser;
   const { locationsHashMap } = useLocations();
 
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ export const Team = ({ currentUser }: Props) => {
 
   const teamNoSelectedBlock = (
     <>
-      {loading ? (
+      {loading || userDocLoading ? (
         <Title className="site-page-title" level={5}>
           Загрузка...
         </Title>
@@ -66,6 +66,7 @@ export const Team = ({ currentUser }: Props) => {
                 setUserTeam({ id: team.id, status: TeamMemberStatus.request }, profile.id)
               }
               style={{ marginLeft: "auto" }}
+              loading={userDocLoading}
             >
               Подать заявку
             </Button>
@@ -79,19 +80,26 @@ export const Team = ({ currentUser }: Props) => {
     <Layout>
       <Header className="site-page-header">
         <PageHeader
-          title="УЧЕТ КНИГ"
+          title="МОЯ КОМАНДА"
           className="page-header"
           onBack={() => navigate(routes.root)}
           avatar={{ src: BbtLogo }}
+          extra={[
+            <Tooltip title="Профиль" key="profile">
+              <Button
+                type="ghost"
+                shape="circle"
+                icon={<UserOutlined />}
+                onClick={() => navigate(routes.profile)}
+                disabled={userDocLoading}
+              />
+            </Tooltip>,
+          ]}
         />
       </Header>
 
       <Content>
         <div className="site-layout-content">
-          <Title className="site-page-title" level={2}>
-            Моя команда
-          </Title>
-
           {myTeam ? (
             <TeamCard
               key={myTeam.id}

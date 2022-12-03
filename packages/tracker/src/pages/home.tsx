@@ -18,14 +18,12 @@ type Props = {
   currentUser: CurrentUser;
 };
 
-export const Home = ({ currentUser }: Props) => {
-  const { user, profile } = currentUser;
+export const Home = (props: Props) => {
   const navigate = useNavigate();
 
   const onAddReport = () => {
     navigate(routes.report);
   };
-
 
   const { Content, Footer, Header } = Layout;
   const { Title, Paragraph } = Typography;
@@ -53,11 +51,7 @@ export const Home = ({ currentUser }: Props) => {
       <Content>
         <div className="site-layout-content">
           <Title className="site-page-title" level={2}>
-            Привет,{" "}
-            {profile?.nameSpiritual ||
-              profile?.name ||
-              user?.displayName ||
-              "друг"}
+            Удачи на марафоне!
           </Title>
           <Paragraph>Отметить распространненные книги</Paragraph>
           <Button

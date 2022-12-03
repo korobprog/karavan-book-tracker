@@ -7,10 +7,8 @@ import {
   List,
   PageHeader,
   Tooltip,
-  Typography,
   Input,
   InputNumber,
-  Space,
   Form,
   Select,
   Checkbox,
@@ -46,7 +44,7 @@ type Props = {
 };
 
 export const Report = ({ currentUser }: Props) => {
-  const { profile, favorite, user, loading } = currentUser;
+  const { profile, favorite, user, loading, userDocLoading } = currentUser;
   const { addStatistic, toggleFavorite } = useUser({ profile });
   const [searchString, setSearchString] = useState("");
   const [locationSearchString, setLocationSearchString] = useState("");
@@ -164,13 +162,12 @@ export const Report = ({ currentUser }: Props) => {
 
   const { Search } = Input;
   const { Content, Footer, Header } = Layout;
-  const { Title } = Typography;
 
   return (
     <Layout>
       <Header className="site-page-header">
         <PageHeader
-          title="УЧЕТ КНИГ"
+          title="ОТМЕТИТЬ КНИГИ"
           className="page-header"
           onBack={() => navigate(routes.root)}
           avatar={{ src: BbtLogo }}
@@ -190,10 +187,6 @@ export const Report = ({ currentUser }: Props) => {
       <Content>
         <div className="site-layout-content">
           <Form name="basic" onFinish={onFinish}>
-            <Title className="site-page-title" level={4}>
-              Отметить распространненные книги
-            </Title>
-
             <Form.Item
               name="locationId"
               label="Место"
@@ -226,7 +219,7 @@ export const Report = ({ currentUser }: Props) => {
                 value={searchString}
                 style={{ flexGrow: 1 , width: 200, marginRight: 8 }}
               />
-              <Button type="primary" htmlType="submit" loading={isSubmitting}>
+              <Button type="primary" htmlType="submit" loading={isSubmitting || userDocLoading}>
                 {isSubmitting ? "Отправляем..." : "Отправить"}
               </Button>
             </Row>
@@ -246,6 +239,7 @@ export const Report = ({ currentUser }: Props) => {
                     <Button
                       onClick={() => toggleFavorite(book.id)}
                       icon={<StarFilled />}
+                      disabled={isSubmitting || userDocLoading}
                     ></Button>,
                   ]}
                 >
@@ -269,7 +263,7 @@ export const Report = ({ currentUser }: Props) => {
             <List
               itemLayout="horizontal"
               dataSource={otherBooks}
-              loading={booksLoading}
+              loading={booksLoading || userDocLoading}
               locale={{ emptyText: "Не найдено книг" }}
               renderItem={(book) => (
                 <List.Item
