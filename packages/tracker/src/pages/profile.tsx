@@ -4,13 +4,13 @@ import { Button, Typography, Form, Input, Select, Tooltip } from "antd";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
 import { useUser } from "common/src/services/api/useUser";
-import { LocationSelect } from "../shared/components/LocationSelect";
 import { addLocation, useLocations } from "common/src/services/api/locations";
 import { useDebouncedCallback } from "use-debounce";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { phoneNumberPattern } from "common/src/utils/patterns";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { LogoutOutlined } from "@ant-design/icons";
+import { LocationSelect } from "common/src/components/LocationSelect";
 
 type Props = {
   currentUser: CurrentUser;
