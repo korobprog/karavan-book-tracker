@@ -8,8 +8,14 @@ import {
   Tag,
   Statistic as AntdStatistic,
   Row,
+  Popconfirm,
+  message,
 } from "antd";
-import { PlusCircleOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  PlusCircleOutlined,
+  DeleteOutlined,
+  ShareAltOutlined,
+} from "@ant-design/icons";
 
 import { routes } from "../shared/routes";
 import {
@@ -42,6 +48,27 @@ export const Statistic = ({ currentUser }: Props) => {
     navigate(routes.report);
   };
 
+  const shareOperation = async ({ totalCount, date, books }: DataType) => {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: "Отправить статистику",
+          text: `${moment(date).format("DD.MM.yyyy")} ${
+            profile.nameSpiritual || profile.name
+          }
+Распространено: ${totalCount} книг
+${books.map(
+  (book) => `
+${booksHashMap[book.bookId]?.name}: ${book.count}`
+)}
+`,
+        });
+      } else {
+        message.info("Делиться статистикой пока можно только с мобильного");
+      }
+    } catch (err) {}
+  };
+
   const data =
     myOperationsDocData
       ?.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0))
@@ -53,6 +80,8 @@ export const Statistic = ({ currentUser }: Props) => {
         books: operation.books,
         location: operation.locationId,
       })) || [];
+
+  type DataType = typeof data[0];
 
   const { locations } = useLocations({});
   const columns: TableColumnsType<typeof data[0]> = [
@@ -100,10 +129,18 @@ export const Statistic = ({ currentUser }: Props) => {
       render: (text: string, record) => (
         <Space>
           <Button
-            danger
-            icon={<DeleteOutlined />}
-            onClick={() => deleteOperation(record.key)}
+            icon={<ShareAltOutlined />}
+            onClick={() => shareOperation(record)}
+            type="default"
           />
+          <Popconfirm
+            title={`Удалить операцию?`}
+            onConfirm={() => {
+              deleteOperation(record.key);
+            }}
+          >
+            <Button danger icon={<DeleteOutlined />} />
+          </Popconfirm>
         </Space>
       ),
     },

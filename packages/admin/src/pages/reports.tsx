@@ -1,6 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import useGoogleSheets from "use-google-sheets";
-import { Button, Table, Divider, Space, TableColumnsType, Tag } from "antd";
+import {
+  Button,
+  Table,
+  Divider,
+  Space,
+  TableColumnsType,
+  Tag,
+  Popconfirm,
+} from "antd";
 import { PlusCircleOutlined, DeleteOutlined } from "@ant-design/icons";
 
 import { routes } from "../shared/routes";
@@ -103,11 +111,14 @@ export const Reports = ({ currentUser }: Props) => {
       key: "action",
       render: (text: string, record) => (
         <Space>
-          <Button
-            danger
-            icon={<DeleteOutlined />}
-            onClick={() => deleteOperation(record.key)}
-          />
+          <Popconfirm
+            title={`Удалить операцию?`}
+            onConfirm={() => {
+              deleteOperation(record.key);
+            }}
+          >
+            <Button danger icon={<DeleteOutlined />} />
+          </Popconfirm>
         </Space>
       ),
     },
