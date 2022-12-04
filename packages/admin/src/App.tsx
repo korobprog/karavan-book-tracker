@@ -11,10 +11,11 @@ import { Users } from "./pages/users";
 import { UsersNew } from "./pages/UsersNew";
 import { useCurrentUser } from "common/src/services/api/useCurrentUser";
 import { Denied } from "./pages/denied";
-import { Loading } from "./pages/loading";
+import { Loading } from "common/src/components/Loading";
 import { Teams } from "./pages/teams";
 import { TeamsNew } from "./pages/teamsNew";
 import { TeamsEdit } from "./pages/teamsEdit";
+import Profile from "./pages/profile";
 
 import "./App.less";
 
@@ -22,7 +23,7 @@ const routesWithoutRedirect = [routes.registration, routes.auth];
 
 function App() {
   const currentUser = useCurrentUser();
-  const { profile, loading, user } = currentUser;
+  const { profile, loading, user, userDocLoading } = currentUser;
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -44,7 +45,7 @@ function App() {
     }
   }, [loading, user, profile, navigate, location.pathname]);
 
-  if (currentUser.loading) {
+  if (loading || userDocLoading) {
     return <Loading currentUser={currentUser} />;
   }
 
@@ -66,6 +67,10 @@ function App() {
         <Route
           path={routes.registration}
           element={<Registration currentUser={currentUser} />}
+        />
+        <Route
+          path={routes.profile}
+          element={<Profile currentUser={currentUser} />}
         />
         <Route
           path={routes.reports}
