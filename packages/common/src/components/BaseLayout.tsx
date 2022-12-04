@@ -34,7 +34,7 @@ export const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
                   shape="circle"
                   icon={<UserOutlined />}
                   onClick={() => navigate("/profile")}
-                  disabled={userDocLoading}
+                  loading={userDocLoading}
                 />
               </Tooltip>,
             ]
