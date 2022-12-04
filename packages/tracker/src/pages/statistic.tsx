@@ -1,9 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import {
   Button,
-  Layout,
-  PageHeader,
-  Tooltip,
   Table,
   Divider,
   Space,
@@ -12,13 +9,8 @@ import {
   Statistic as AntdStatistic,
   Row,
 } from "antd";
-import {
-  PlusCircleOutlined,
-  DeleteOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { PlusCircleOutlined, DeleteOutlined } from "@ant-design/icons";
 
-import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
 import {
   deleteOperation,
@@ -29,13 +21,14 @@ import moment from "moment";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { useLocations } from "common/src/services/api/locations";
 import { useBooks } from "common/src/services/books";
+import { BaseLayout } from "common/src/components/BaseLayout";
 
 type Props = {
   currentUser: CurrentUser;
 };
 
 export const Statistic = ({ currentUser }: Props) => {
-  const { loading, profile, user } = currentUser;
+  const { loading, profile, user, userDocLoading } = currentUser;
   const navigate = useNavigate();
   const { booksHashMap, booksLoading } = useBooks();
 
@@ -44,13 +37,11 @@ export const Statistic = ({ currentUser }: Props) => {
   );
 
   const statistic2022 = profile?.statistic?.[2022];
-  console.log("🚀 ~ statistic2022", statistic2022);
 
   const onAddOperation = () => {
     navigate(routes.report);
   };
 
-  const { Content, Footer, Header } = Layout;
   const data =
     myOperationsDocData
       ?.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0))
@@ -130,65 +121,36 @@ export const Statistic = ({ currentUser }: Props) => {
   ];
 
   return (
-    <Layout>
-      <Header className="site-page-header">
-        <PageHeader
-          title="МОЯ СТАТИСТИКА"
-          className="page-header"
-          onBack={() => navigate(routes.root)}
-          avatar={{ src: BbtLogo }}
-          extra={[
-            <Tooltip title="Профиль" key="profile">
-              <Button
-                type="ghost"
-                shape="circle"
-                icon={<UserOutlined />}
-                onClick={() => navigate(routes.profile)}
-              />
-            </Tooltip>,
-          ]}
-        />
-      </Header>
-      <Content>
-        <div className="site-layout-content">
-          <Row justify="center" align="top">
-            <Space size="large" split={<Divider type="vertical" />}>
-              <AntdStatistic
-                title="Год"
-                value="2022"
-                groupSeparator=""
-              />
-              <AntdStatistic
-                title="Книг"
-                value={statistic2022?.count}
-              />
-              <AntdStatistic
-                title="Баллов"
-                value={statistic2022?.points}
-              />
-            </Space>
-          </Row>
-          <Divider dashed />
-          <Button
-            block
-            size="large"
-            type="primary"
-            icon={<PlusCircleOutlined />}
-            onClick={onAddOperation}
-          >
-            Добавить операцию
-          </Button>
-          <Divider dashed />
-          <Table
-            columns={columns}
-            dataSource={data}
-            loading={booksLoading || loading || myOperationsLoading}
-            scroll={{ x: true }}
-            pagination={{ pageSize: 100 }}
-          />
-        </div>
-      </Content>
-      <Footer></Footer>
-    </Layout>
+    <BaseLayout
+      title="МОЯ СТАТИСТИКА"
+      backPath={routes.root}
+      userDocLoading={userDocLoading}
+    >
+      <Row justify="center" align="top">
+        <Space size="large" split={<Divider type="vertical" />}>
+          <AntdStatistic title="Год" value="2022" groupSeparator="" />
+          <AntdStatistic title="Книг" value={statistic2022?.count} />
+          <AntdStatistic title="Баллов" value={statistic2022?.points} />
+        </Space>
+      </Row>
+      <Divider dashed />
+      <Button
+        block
+        size="large"
+        type="primary"
+        icon={<PlusCircleOutlined />}
+        onClick={onAddOperation}
+      >
+        Добавить операцию
+      </Button>
+      <Divider dashed />
+      <Table
+        columns={columns}
+        dataSource={data}
+        loading={booksLoading || loading || myOperationsLoading}
+        scroll={{ x: true }}
+        pagination={{ pageSize: 100 }}
+      />
+    </BaseLayout>
   );
 };
