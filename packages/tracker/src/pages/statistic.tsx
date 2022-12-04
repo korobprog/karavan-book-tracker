@@ -124,8 +124,20 @@ ${booksHashMap[book.bookId]?.name}: ${book.count}`
       ),
     },
     {
+      title: "Статус",
+      dataIndex: "isAuthorized",
+      key: "isAuthorized",
+      render: (status: boolean) =>
+        status ? (
+          <Tag color="green">Подтвержден</Tag>
+        ) : (
+          <Tag color="processing">Ожидание</Tag>
+        ),
+    },
+    {
       title: "Действие",
       key: "action",
+      fixed: "right",
       render: (text: string, record) => (
         <Space>
           <Button
@@ -143,17 +155,6 @@ ${booksHashMap[book.bookId]?.name}: ${book.count}`
           </Popconfirm>
         </Space>
       ),
-    },
-    {
-      title: "Статус",
-      dataIndex: "isAuthorized",
-      key: "isAuthorized",
-      render: (status: boolean) =>
-        status ? (
-          <Tag color="green">Подтвержден</Tag>
-        ) : (
-          <Tag color="processing">Ожидание</Tag>
-        ),
     },
   ];
 
