@@ -67,6 +67,7 @@ export const Home = (props: Props) => {
         block
         size="large"
         icon={<MessageOutlined />}
+        type="dashed"
       >
         Отправить историю / поддержка
       </Button>
@@ -77,6 +78,7 @@ export const Home = (props: Props) => {
         block
         size="large"
         icon={<EnvironmentOutlined />}
+        type="dashed"
       >
         Общая статистика на карте
       </Button>
@@ -88,6 +90,7 @@ export const Home = (props: Props) => {
         block
         size="large"
         icon={<UserAddOutlined />}
+        type="dashed"
       >
         Вторая волна
       </Button>
