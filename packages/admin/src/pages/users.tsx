@@ -1,37 +1,29 @@
 import React, { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import { signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom"
 import {
   Button,
-  Layout,
-  PageHeader,
-  Tooltip,
   Table,
   Divider,
   Space,
   TableColumnsType,
   Popconfirm,
 } from "antd";
-import {
-  DeleteOutlined,
-  LogoutOutlined,
-  UserAddOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, UserAddOutlined } from "@ant-design/icons";
 
-import BbtLogo from "../images/bbt-logo.png";
-import { routes } from "../shared/routes";
 import { useUsers } from "common/src/services/api/useUsers";
 import { LocationDoc, useLocations } from "common/src/services/api/locations";
 import { mapDocsToHashTable } from "common/src/services/api/utils";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { useUser } from "common/src/services/api/useUser";
+import { BaseLayout } from "common/src/components/BaseLayout";
+import { routes } from "../shared/routes";
 
 type Props = {
   currentUser: CurrentUser;
 };
 
 export const Users = ({ currentUser }: Props) => {
-  const { auth, profile } = currentUser;
+  const { profile } = currentUser;
 
   const navigate = useNavigate();
 
@@ -43,15 +35,9 @@ export const Users = ({ currentUser }: Props) => {
     [locations]
   );
 
-  const onLogout = () => {
-    signOut(auth);
-  };
-
   const onAddUser = () => {
     navigate(routes.usersNew);
   };
-
-  const { Content, Footer, Header } = Layout;
 
   const data =
     usersDocData?.map((user) => ({
@@ -132,47 +118,23 @@ export const Users = ({ currentUser }: Props) => {
   ];
 
   return (
-    <Layout>
-      <Header className="site-page-header">
-        <PageHeader
-          title="ПОЛЬЗОВАТЕЛИ"
-          className="page-header"
-          onBack={() => navigate(routes.root)}
-          avatar={{ src: BbtLogo }}
-          extra={[
-            <Tooltip title="Выйти" key="logout">
-              <Button
-                type="ghost"
-                shape="circle"
-                icon={<LogoutOutlined />}
-                onClick={onLogout}
-              />
-            </Tooltip>,
-          ]}
-        />
-      </Header>
-
-      <Content>
-        <div className="site-layout-content">
-          <Button
-            block
-            size="large"
-            type="primary"
-            icon={<UserAddOutlined />}
-            onClick={onAddUser}
-          >
-            Добавить пользователя
-          </Button>
-          <Divider dashed />
-          <Table
-            columns={columns}
-            dataSource={data}
-            scroll={{ x: true }}
-            loading={locationLoading || usersDocLoading}
-          />
-        </div>
-      </Content>
-      <Footer></Footer>
-    </Layout>
+    <BaseLayout title="ПОЛЬЗОВАТЕЛИ" backPath={routes.root}>
+      <Button
+        block
+        size="large"
+        type="primary"
+        icon={<UserAddOutlined />}
+        onClick={onAddUser}
+      >
+        Добавить пользователя
+      </Button>
+      <Divider dashed />
+      <Table
+        columns={columns}
+        dataSource={data}
+        scroll={{ x: true }}
+        loading={locationLoading || usersDocLoading}
+      />
+    </BaseLayout>
   );
 };

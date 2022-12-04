@@ -1,12 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signOut } from "firebase/auth";
 import {
   Button,
-  Layout,
   List,
-  PageHeader,
-  Tooltip,
   Typography,
   Input,
   InputNumber,
@@ -16,13 +12,10 @@ import {
   Checkbox,
 } from "antd";
 import {
-  LogoutOutlined,
   StarFilled,
-  StarOutlined,
-  UserOutlined,
+  StarOutlined
 } from "@ant-design/icons";
 
-import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
 import { Book, getBookPointsMap, useBooks } from "common/src/services/books";
 import { useUser } from "common/src/services/api/useUser";
@@ -38,6 +31,7 @@ import { UserSelect } from "common/src/components/UserSelect";
 import { useUsers } from "common/src/services/api/useUsers";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { addOperationToLocationStatistic } from "common/src/services/locations";
+import { BaseLayout } from "common/src/components/BaseLayout";
 
 type FormValues = Record<number, number> & {
   locationId: string;
@@ -49,7 +43,7 @@ type Props = {
 };
 
 const Report = ({ currentUser }: Props) => {
-  const { auth, profile, user, favorite } = currentUser;
+  const { profile, user, favorite } = currentUser;
   const { addStatistic, toggleFavorite } = useUser({ profile });
 
   const [searchString, setSearchString] = useState("");
@@ -80,10 +74,6 @@ const Report = ({ currentUser }: Props) => {
   const onUserChange = useDebouncedCallback((value: string) => {
     setUserSearchString(value);
   }, 1000);
-
-  const onLogout = () => {
-    signOut(auth);
-  };
 
   const { favoriteBooks, otherBooks } = books.reduce(
     ({ favoriteBooks, otherBooks }, book) => {
@@ -177,166 +167,133 @@ const Report = ({ currentUser }: Props) => {
   ));
 
   const { Search } = Input;
-  const { Content, Footer, Header } = Layout;
   const { Title } = Typography;
 
   return (
-    <Layout>
-      <Header className="site-page-header">
-        <PageHeader
-          title="УЧЕТ КНИГ"
-          className="page-header"
-          onBack={() => navigate(routes.root)}
-          avatar={{ src: BbtLogo }}
-          extra={[
-            <Tooltip title="Профиль" key="profile">
-              <Button
-                type="ghost"
-                shape="circle"
-                icon={<UserOutlined />}
-                onClick={() => navigate(routes.profile)}
-              />
-            </Tooltip>,
-            <Tooltip title="Выйти" key="logout">
-              <Button
-                type="ghost"
-                shape="circle"
-                icon={<LogoutOutlined />}
-                onClick={onLogout}
-              />
-            </Tooltip>,
+    <BaseLayout title="УЧЕТ КНИГ (АДМИН)" backPath={routes.root}>
+      <Form name="basic" onFinish={onFinish}>
+        <Title className="site-page-title" level={4}>
+          Отметить распространненные книги
+        </Title>
+        <Form.Item
+          name="userId"
+          label="Пользователь"
+          rules={[{ required: true }]}
+        >
+          <UserSelect
+            onSearch={onUserChange}
+            onAddNewUser={() => navigate(routes.usersNew)}
+            userSearchString={userSearchString}
+          >
+            {usersOptions}
+          </UserSelect>
+        </Form.Item>
+        <Form.Item
+          name="locationId"
+          label="Место"
+          rules={[
+            {
+              required: true,
+              message: "Выберите или создайте новое место",
+            },
           ]}
-        />
-      </Header>
+        >
+          <LocationSelect
+            onSearch={onLocationChange}
+            onAddNewLocation={onAddNewLocation}
+            locationSearchString={locationSearchString}
+            // TODO: add onChange add to localStorage
+          >
+            {locationOptions}
+          </LocationSelect>
+        </Form.Item>
+        <Form.Item>
+          <Checkbox onChange={onOnlineChange} checked={isOnline}>
+            Онлайн-распространение
+          </Checkbox>
+        </Form.Item>
+        <Space>
+          <Search
+            placeholder="поиск книги"
+            allowClear
+            onChange={onSearchChange}
+            value={searchString}
+            style={{ width: 170 }}
+          />
+          <Button type="primary" htmlType="submit" loading={isSubmitting}>
+            {isSubmitting ? "Отправляем..." : "Отправить"}
+          </Button>
+        </Space>
 
-      <Content>
-        <div className="site-layout-content">
-          <Form name="basic" onFinish={onFinish}>
-            <Title className="site-page-title" level={4}>
-              Отметить распространненные книги
-            </Title>
-            <Form.Item
-              name="userId"
-              label="Пользователь"
-              rules={[{ required: true }]}
-            >
-              <UserSelect
-                onSearch={onUserChange}
-                onAddNewUser={() => navigate(routes.usersNew)}
-                userSearchString={userSearchString}
-              >
-                {usersOptions}
-              </UserSelect>
-            </Form.Item>
-            <Form.Item
-              name="locationId"
-              label="Место"
-              rules={[
-                {
-                  required: true,
-                  message: "Выберите или создайте новое место",
-                },
+        <List
+          itemLayout="horizontal"
+          dataSource={favoriteBooks}
+          loading={booksLoading}
+          locale={{
+            emptyText: searchString
+              ? "Не найдено избранного"
+              : "Нажмите на ⭐, чтобы добавить в избранное",
+          }}
+          renderItem={(book) => (
+            <List.Item
+              actions={[
+                <Button
+                  onClick={() => toggleFavorite(book.id)}
+                  icon={<StarFilled />}
+                ></Button>,
               ]}
             >
-              <LocationSelect
-                onSearch={onLocationChange}
-                onAddNewLocation={onAddNewLocation}
-                locationSearchString={locationSearchString}
-                // TODO: add onChange add to localStorage
-              >
-                {locationOptions}
-              </LocationSelect>
-            </Form.Item>
-            <Form.Item>
-              <Checkbox onChange={onOnlineChange} checked={isOnline}>
-                Онлайн-распространение
-              </Checkbox>
-            </Form.Item>
-            <Space>
-              <Search
-                placeholder="поиск книги"
-                allowClear
-                onChange={onSearchChange}
-                value={searchString}
-                style={{ width: 170 }}
+              <List.Item.Meta
+                title={book.name}
+                description={book.points ? `Баллы: ${book.points}` : ""}
               />
-              <Button type="primary" htmlType="submit" loading={isSubmitting}>
-                {isSubmitting ? "Отправляем..." : "Отправить"}
-              </Button>
-            </Space>
-
-            <List
-              itemLayout="horizontal"
-              dataSource={favoriteBooks}
-              loading={booksLoading}
-              locale={{
-                emptyText: searchString
-                  ? "Не найдено избранного"
-                  : "Нажмите на ⭐, чтобы добавить в избранное",
-              }}
-              renderItem={(book) => (
-                <List.Item
-                  actions={[
-                    <Button
-                      onClick={() => toggleFavorite(book.id)}
-                      icon={<StarFilled />}
-                    ></Button>,
-                  ]}
-                >
-                  <List.Item.Meta
-                    title={book.name}
-                    description={book.points ? `Баллы: ${book.points}` : ""}
-                  />
-                  <Form.Item name={book.id} noStyle>
-                    <InputNumber
-                      min={0}
-                      max={10000}
-                      style={{ width: 70 }}
-                      type="number"
-                      inputMode="numeric"
-                      pattern="\d*"
-                    />
-                  </Form.Item>
-                </List.Item>
-              )}
-            />
-            <List
-              itemLayout="horizontal"
-              dataSource={otherBooks}
-              loading={booksLoading}
-              locale={{ emptyText: "Не найдено книг" }}
-              renderItem={(book) => (
-                <List.Item
-                  actions={[
-                    <Button
-                      onClick={() => toggleFavorite(book.id)}
-                      icon={<StarOutlined />}
-                    ></Button>,
-                  ]}
-                >
-                  <List.Item.Meta
-                    title={book.name}
-                    description={book.points ? `Баллы: ${book.points}` : ""}
-                  />
-                  <Form.Item name={book.id} noStyle>
-                    <InputNumber
-                      name={book.id}
-                      min={0}
-                      max={10000}
-                      style={{ width: 70 }}
-                      type="number"
-                      inputMode="numeric"
-                      pattern="\d*"
-                    />
-                  </Form.Item>
-                </List.Item>
-              )}
-            />
-          </Form>
-        </div>
-      </Content>
-      <Footer></Footer>
-    </Layout>
+              <Form.Item name={book.id} noStyle>
+                <InputNumber
+                  min={0}
+                  max={10000}
+                  style={{ width: 70 }}
+                  type="number"
+                  inputMode="numeric"
+                  pattern="\d*"
+                />
+              </Form.Item>
+            </List.Item>
+          )}
+        />
+        <List
+          itemLayout="horizontal"
+          dataSource={otherBooks}
+          loading={booksLoading}
+          locale={{ emptyText: "Не найдено книг" }}
+          renderItem={(book) => (
+            <List.Item
+              actions={[
+                <Button
+                  onClick={() => toggleFavorite(book.id)}
+                  icon={<StarOutlined />}
+                ></Button>,
+              ]}
+            >
+              <List.Item.Meta
+                title={book.name}
+                description={book.points ? `Баллы: ${book.points}` : ""}
+              />
+              <Form.Item name={book.id} noStyle>
+                <InputNumber
+                  name={book.id}
+                  min={0}
+                  max={10000}
+                  style={{ width: 70 }}
+                  type="number"
+                  inputMode="numeric"
+                  pattern="\d*"
+                />
+              </Form.Item>
+            </List.Item>
+          )}
+        />
+      </Form>
+    </BaseLayout>
   );
 };
 

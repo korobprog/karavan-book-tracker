@@ -1,24 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { signOut } from "firebase/auth";
 import useGoogleSheets from "use-google-sheets";
-import {
-  Button,
-  Layout,
-  PageHeader,
-  Tooltip,
-  Table,
-  Divider,
-  Space,
-  TableColumnsType,
-  Tag,
-} from "antd";
-import {
-  LogoutOutlined,
-  PlusCircleOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
+import { Button, Table, Divider, Space, TableColumnsType, Tag } from "antd";
+import { PlusCircleOutlined, DeleteOutlined } from "@ant-design/icons";
 
-import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
 import {
   deleteOperation,
@@ -27,13 +11,14 @@ import {
 import moment from "moment";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { useLocations } from "common/src/services/api/locations";
+import { BaseLayout } from "common/src/components/BaseLayout";
 
 type Props = {
   currentUser: CurrentUser;
 };
 
 export const Reports = ({ currentUser }: Props) => {
-  const { auth, loading } = currentUser;
+  const { loading } = currentUser;
   const navigate = useNavigate();
   const { loading: booksLoading } = useGoogleSheets({
     apiKey: process.env.REACT_APP_GOOGLE_API_KEY as string,
@@ -41,15 +26,11 @@ export const Reports = ({ currentUser }: Props) => {
   });
 
   const { operationsDocData, loading: operationLoading } = useOperations();
-  const onLogout = () => {
-    signOut(auth);
-  };
 
   const onAddOperation = () => {
     navigate(routes.report);
   };
 
-  const { Content, Footer, Header } = Layout;
   const data =
     operationsDocData?.map((operation, index) => ({
       key: operation.id || index,
@@ -133,46 +114,23 @@ export const Reports = ({ currentUser }: Props) => {
   ];
 
   return (
-    <Layout>
-      <Header className="site-page-header">
-        <PageHeader
-          title="ПОСЛЕДНИЕ ОПЕРАЦИИ"
-          className="page-header"
-          onBack={() => navigate(routes.root)}
-          avatar={{ src: BbtLogo }}
-          extra={[
-            <Tooltip title="Выйти" key="logout">
-              <Button
-                type="ghost"
-                shape="circle"
-                icon={<LogoutOutlined />}
-                onClick={onLogout}
-              />
-            </Tooltip>,
-          ]}
-        />
-      </Header>
-      <Content>
-        <div className="site-layout-content">
-          <Button
-            block
-            size="large"
-            type="primary"
-            icon={<PlusCircleOutlined />}
-            onClick={onAddOperation}
-          >
-            Добавить операцию
-          </Button>
-          <Divider dashed />
-          <Table
-            columns={columns}
-            dataSource={data}
-            loading={booksLoading || loading || operationLoading}
-            scroll={{ x: true }}
-          />
-        </div>
-      </Content>
-      <Footer></Footer>
-    </Layout>
+    <BaseLayout title="ПОСЛЕДНИЕ ОПЕРАЦИИ" backPath={routes.root}>
+      <Button
+        block
+        size="large"
+        type="primary"
+        icon={<PlusCircleOutlined />}
+        onClick={onAddOperation}
+      >
+        Добавить операцию
+      </Button>
+      <Divider dashed />
+      <Table
+        columns={columns}
+        dataSource={data}
+        loading={booksLoading || loading || operationLoading}
+        scroll={{ x: true }}
+      />
+    </BaseLayout>
   );
 };
