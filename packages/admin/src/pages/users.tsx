@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import {
   Button,
   Table,
@@ -134,6 +134,7 @@ export const Users = ({ currentUser }: Props) => {
         dataSource={data}
         scroll={{ x: true }}
         loading={locationLoading || usersDocLoading}
+        pagination={{ pageSize: 100 }}
       />
     </BaseLayout>
   );

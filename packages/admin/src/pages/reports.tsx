@@ -1,6 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import useGoogleSheets from "use-google-sheets";
-import { Button, Table, Divider, Space, TableColumnsType, Tag } from "antd";
+import {
+  Button,
+  Table,
+  Divider,
+  Space,
+  TableColumnsType,
+  Tag,
+  Pagination,
+} from "antd";
 import { PlusCircleOutlined, DeleteOutlined } from "@ant-design/icons";
 
 import { routes } from "../shared/routes";
@@ -130,6 +138,7 @@ export const Reports = ({ currentUser }: Props) => {
         dataSource={data}
         loading={booksLoading || loading || operationLoading}
         scroll={{ x: true }}
+        pagination={{ pageSize: 100 }}
       />
     </BaseLayout>
   );
