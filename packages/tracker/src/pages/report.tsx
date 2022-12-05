@@ -11,7 +11,7 @@ import {
   Checkbox,
   Row,
 } from "antd";
-import { StarFilled, StarOutlined } from "@ant-design/icons";
+import { PlusOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
 
 import { routes } from "../shared/routes";
 import { useUser } from "common/src/services/api/useUser";
@@ -154,13 +154,20 @@ export const Report = ({ currentUser }: Props) => {
 
   const { Search } = Input;
 
+  const [form] = Form.useForm();
+
+  function onPlusClick(bookId: string) {
+    const prevValue = form.getFieldValue(bookId) || 0;
+    form.setFieldsValue({ [bookId]: prevValue + 1 });
+  }
+
   return (
     <BaseLayout
       title="ОТМЕТИТЬ КНИГИ"
       backPath={routes.root}
       userDocLoading={userDocLoading}
     >
-      <Form name="basic" onFinish={onFinish}>
+      <Form name="basic" onFinish={onFinish} form={form}>
         <Form.Item
           name="locationId"
           label="Место"
@@ -225,6 +232,11 @@ export const Report = ({ currentUser }: Props) => {
                 title={book.name}
                 description={book.points ? `Баллы: ${book.points}` : ""}
               />
+                    <Button
+                  onClick={() => onPlusClick(book.id)}
+                  icon={<PlusOutlined />}
+                  style={{ margin: 8 }}
+                ></Button>
               <Form.Item name={book.id} noStyle>
                 <InputNumber
                   min={0}
@@ -256,6 +268,11 @@ export const Report = ({ currentUser }: Props) => {
                 title={book.name}
                 description={book.points ? `Баллы: ${book.points}` : ""}
               />
+                   <Button
+                  onClick={() => onPlusClick(book.id)}
+                  icon={<PlusOutlined />}
+                  style={{ margin: 8 }}
+                ></Button>
               <Form.Item name={book.id} noStyle>
                 <InputNumber
                   name={book.id}
