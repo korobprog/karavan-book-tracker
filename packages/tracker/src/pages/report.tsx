@@ -10,13 +10,13 @@ import {
   Typography,
   Input,
   InputNumber,
-  Space,
   Form,
   Select,
   Checkbox,
   Row,
 } from "antd";
 import {
+  PlusOutlined,
   StarFilled,
   StarOutlined,
   UserOutlined,
@@ -78,7 +78,6 @@ export const Report = ({ currentUser }: Props) => {
     setLocationSearchString(value.charAt(0).toUpperCase() + value.slice(1));
   }, 1000);
 
-
   const books = getBooks(data);
   const { favoriteBooks, otherBooks } = books.reduce(
     ({ favoriteBooks, otherBooks }, book) => {
@@ -136,7 +135,7 @@ export const Report = ({ currentUser }: Props) => {
         userId: user?.uid,
         date: new Date().toISOString(),
         locationId,
-        userName: profile?.name || '',
+        userName: profile?.name || "",
         books: operationBooks,
         totalCount,
         totalPoints,
@@ -166,6 +165,13 @@ export const Report = ({ currentUser }: Props) => {
   const { Content, Footer, Header } = Layout;
   const { Title } = Typography;
 
+  const [form] = Form.useForm();
+
+  function onPlusClick(bookId: string) {
+    const prevValue = form.getFieldValue(bookId) || 0;
+    form.setFieldsValue({ [bookId]: prevValue + 1 });
+  }
+
   return (
     <Layout>
       <Header className="site-page-header">
@@ -189,7 +195,7 @@ export const Report = ({ currentUser }: Props) => {
 
       <Content>
         <div className="site-layout-content">
-          <Form name="basic" onFinish={onFinish}>
+          <Form name="basic" onFinish={onFinish} form={form}>
             <Title className="site-page-title" level={4}>
               Отметить распространненные книги
             </Title>
@@ -224,7 +230,7 @@ export const Report = ({ currentUser }: Props) => {
                 allowClear
                 onChange={onSearchChange}
                 value={searchString}
-                style={{ flexGrow: 1 , width: 200, marginRight: 8 }}
+                style={{ flexGrow: 1, width: 200, marginRight: 8 }}
               />
               <Button type="primary" htmlType="submit" loading={isSubmitting}>
                 {isSubmitting ? "Отправляем..." : "Отправить"}
@@ -253,6 +259,11 @@ export const Report = ({ currentUser }: Props) => {
                     title={book.name}
                     description={book.points ? `Баллы: ${book.points}` : ""}
                   />
+                  <Button
+                    onClick={() => onPlusClick(book.id)}
+                    icon={<PlusOutlined style={{ color: "black" }} />}
+                    style={{ margin: 8 }}
+                  ></Button>
                   <Form.Item name={book.id} noStyle>
                     <InputNumber
                       min={0}
@@ -284,6 +295,11 @@ export const Report = ({ currentUser }: Props) => {
                     title={book.name}
                     description={book.points ? `Баллы: ${book.points}` : ""}
                   />
+                  <Button
+                    onClick={() => onPlusClick(book.id)}
+                    icon={<PlusOutlined style={{ color: "black" }} />}
+                    style={{ margin: 8 }}
+                  ></Button>
                   <Form.Item name={book.id} noStyle>
                     <InputNumber
                       name={book.id}
