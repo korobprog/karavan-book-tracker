@@ -15,6 +15,7 @@ import {
   Row,
 } from "antd";
 import {
+  PlusOutlined,
   StarFilled,
   StarOutlined,
   UserOutlined,
@@ -34,6 +35,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { addOperationToLocationStatistic } from "common/src/services/locations";
 import { Book, getBookPointsMap, getBooks } from "common/src/services/books";
+import form from "antd/lib/form";
 
 type FormValues = Record<number, number> & {
   locationId: string;
@@ -75,7 +77,6 @@ export const Report = ({ currentUser }: Props) => {
   const onLocationChange = useDebouncedCallback((value: string) => {
     setLocationSearchString(value.charAt(0).toUpperCase() + value.slice(1));
   }, 1000);
-
 
   const books = getBooks(data);
   const { favoriteBooks, otherBooks } = books.reduce(
@@ -134,7 +135,7 @@ export const Report = ({ currentUser }: Props) => {
         userId: user?.uid,
         date: new Date().toISOString(),
         locationId,
-        userName: profile?.name || '',
+        userName: profile?.name || "",
         books: operationBooks,
         totalCount,
         totalPoints,
@@ -163,6 +164,13 @@ export const Report = ({ currentUser }: Props) => {
   const { Search } = Input;
   const { Content, Footer, Header } = Layout;
 
+  const [form] = Form.useForm();
+
+  function onPlusClick(bookId: string) {
+    const prevValue = form.getFieldValue(bookId) || 0;
+    form.setFieldsValue({ [bookId]: prevValue + 1 });
+  }
+
   return (
     <Layout>
       <Header className="site-page-header">
@@ -186,7 +194,7 @@ export const Report = ({ currentUser }: Props) => {
 
       <Content>
         <div className="site-layout-content">
-          <Form name="basic" onFinish={onFinish}>
+          <Form name="basic" onFinish={onFinish} form={form}>
             <Form.Item
               name="locationId"
               label="Место"
@@ -217,9 +225,13 @@ export const Report = ({ currentUser }: Props) => {
                 allowClear
                 onChange={onSearchChange}
                 value={searchString}
-                style={{ flexGrow: 1 , width: 200, marginRight: 8 }}
+                style={{ flexGrow: 1, width: 200, marginRight: 8 }}
               />
-              <Button type="primary" htmlType="submit" loading={isSubmitting || userDocLoading}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={isSubmitting || userDocLoading}
+              >
                 {isSubmitting ? "Отправляем..." : "Отправить"}
               </Button>
             </Row>
@@ -240,6 +252,7 @@ export const Report = ({ currentUser }: Props) => {
                       onClick={() => toggleFavorite(book.id)}
                       icon={<StarFilled />}
                       disabled={isSubmitting || userDocLoading}
+                      style={{ flexGrow: 1 }}
                     ></Button>,
                   ]}
                 >
@@ -247,6 +260,11 @@ export const Report = ({ currentUser }: Props) => {
                     title={book.name}
                     description={book.points ? `Баллы: ${book.points}` : ""}
                   />
+                  <Button
+                    onClick={() => onPlusClick(book.id)}
+                    icon={<PlusOutlined style={{ color: "green" }} />}
+                    style={{ margin: 8 }}
+                  ></Button>
                   <Form.Item name={book.id} noStyle>
                     <InputNumber
                       min={0}
