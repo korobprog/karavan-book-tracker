@@ -262,7 +262,7 @@ export const Report = ({ currentUser }: Props) => {
                   />
                   <Button
                     onClick={() => onPlusClick(book.id)}
-                    icon={<PlusOutlined style={{ color: "green" }} />}
+                    icon={<PlusOutlined/>}
                     style={{ margin: 8 }}
                   ></Button>
                   <Form.Item name={book.id} noStyle>
@@ -296,6 +296,11 @@ export const Report = ({ currentUser }: Props) => {
                     title={book.name}
                     description={book.points ? `Баллы: ${book.points}` : ""}
                   />
+                     <Button
+                    onClick={() => onPlusClick(book.id)}
+                    icon={<PlusOutlined/>}
+                    style={{ margin: 8 }}
+                  ></Button>
                   <Form.Item name={book.id} noStyle>
                     <InputNumber
                       name={book.id}
