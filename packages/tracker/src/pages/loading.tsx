@@ -1,6 +1,6 @@
 import React from "react";
 import { Typography, Spin, Avatar, Space } from "antd";
-import BbtLogo from "../images/bbt-logo.png";
+import BbtLogo from "common/src/images/bbt-logo.png";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 
 type Props = {

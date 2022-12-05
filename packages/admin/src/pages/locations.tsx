@@ -1,10 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { signOut } from "firebase/auth";
-import { Button, Layout, PageHeader, Tooltip, Table, Divider } from "antd";
-import { CalculatorOutlined, LogoutOutlined } from "@ant-design/icons";
+import { Button, Table, Divider } from "antd";
+import { CalculatorOutlined } from "@ant-design/icons";
 
-import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
 import { LocationDoc, useLocations } from "common/src/services/api/locations";
 import { LocationStatistic } from "common/src/components/LocationStatistic";
@@ -12,29 +9,23 @@ import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { getBookPointsMap, useBooks } from "common/src/services/books";
 import { CoordinatesEdit } from "common/src/components/CoordinatesEdit";
 import { recalculateStatisticToLocations } from "common/src/services/locations";
+import { BaseLayout } from "common/src/components/BaseLayout";
 
 type Props = {
   currentUser: CurrentUser;
 };
 
 export const Locations = ({ currentUser }: Props) => {
-  const navigate = useNavigate();
   const { locations, loading: locationsLoading } = useLocations({});
 
   const { books } = useBooks();
   const [isCalculating, setIsCalculating] = useState(false);
-
-  const onLogout = () => {
-    signOut(currentUser.auth);
-  };
 
   const onCalculate = async () => {
     setIsCalculating(true);
     await recalculateStatisticToLocations(getBookPointsMap(books), locations);
     setIsCalculating(false);
   };
-
-  const { Content, Footer, Header } = Layout;
 
   const columns = [
     {
@@ -78,50 +69,27 @@ export const Locations = ({ currentUser }: Props) => {
     })) || [];
 
   return (
-    <Layout>
-      <Header className="site-page-header">
-        <PageHeader
-          title="ГОРОДА НА КАРТЕ"
-          className="page-header"
-          onBack={() => navigate(routes.root)}
-          avatar={{ src: BbtLogo }}
-          extra={[
-            <Tooltip title="Выйти" key="logout">
-              <Button
-                type="ghost"
-                shape="circle"
-                icon={<LogoutOutlined />}
-                onClick={onLogout}
-              />
-            </Tooltip>,
-          ]}
-        />
-      </Header>
+    <BaseLayout title="ГОРОДА НА КАРТЕ" backPath={routes.root}>
+      <Button
+        block
+        size="large"
+        type="primary"
+        icon={<CalculatorOutlined />}
+        onClick={onCalculate}
+        loading={isCalculating}
+      >
+        Пересчитать статистику
+      </Button>
 
-      <Content>
-        <div className="site-layout-content">
-          <Button
-            block
-            size="large"
-            type="primary"
-            icon={<CalculatorOutlined />}
-            onClick={onCalculate}
-            loading={isCalculating}
-          >
-            Пересчитать статистику
-          </Button>
+      <Divider dashed />
 
-          <Divider dashed />
-
-          <Table
-            columns={columns}
-            dataSource={data}
-            loading={locationsLoading}
-            scroll={{ x: true }}
-          />
-        </div>
-      </Content>
-      <Footer></Footer>
-    </Layout>
+      <Table
+        columns={columns}
+        dataSource={data}
+        loading={locationsLoading}
+        scroll={{ x: true }}
+        pagination={{ pageSize: 100 }}
+      />
+    </BaseLayout>
   );
 };

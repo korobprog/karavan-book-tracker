@@ -3,11 +3,7 @@ import { useNavigate } from "react-router-dom";
 import useGoogleSheets from "use-google-sheets";
 import {
   Button,
-  Layout,
   List,
-  PageHeader,
-  Tooltip,
-  Typography,
   Input,
   InputNumber,
   Form,
@@ -15,14 +11,8 @@ import {
   Checkbox,
   Row,
 } from "antd";
-import {
-  PlusOutlined,
-  StarFilled,
-  StarOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { PlusOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
 
-import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
 import { useUser } from "common/src/services/api/useUser";
 import {
@@ -31,11 +21,12 @@ import {
   OperationDoc,
 } from "common/src/services/api/operations";
 import { addLocation, useLocations } from "common/src/services/api/locations";
-import { LocationSelect } from "../shared/components/LocationSelect";
 import { useDebouncedCallback } from "use-debounce";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { addOperationToLocationStatistic } from "common/src/services/locations";
 import { Book, getBookPointsMap, getBooks } from "common/src/services/books";
+import { BaseLayout } from "common/src/components/BaseLayout";
+import { LocationSelect } from "common/src/components/LocationSelect";
 
 type FormValues = Record<number, number> & {
   locationId: string;
@@ -46,7 +37,7 @@ type Props = {
 };
 
 export const Report = ({ currentUser }: Props) => {
-  const { profile, favorite, user, loading } = currentUser;
+  const { profile, favorite, user, loading, userDocLoading } = currentUser;
   const { addStatistic, toggleFavorite } = useUser({ profile });
   const [searchString, setSearchString] = useState("");
   const [locationSearchString, setLocationSearchString] = useState("");
@@ -152,7 +143,7 @@ export const Report = ({ currentUser }: Props) => {
           locations
         ),
       ])
-        .then(() => navigate(routes.root))
+        .then(() => navigate(routes.statistic))
         .finally(() => setIsSubmitting(false));
     }
   }
@@ -162,8 +153,6 @@ export const Report = ({ currentUser }: Props) => {
   ));
 
   const { Search } = Input;
-  const { Content, Footer, Header } = Layout;
-  const { Title } = Typography;
 
   const [form] = Form.useForm();
 
@@ -173,151 +162,132 @@ export const Report = ({ currentUser }: Props) => {
   }
 
   return (
-    <Layout>
-      <Header className="site-page-header">
-        <PageHeader
-          title="УЧЕТ КНИГ"
-          className="page-header"
-          onBack={() => navigate(routes.root)}
-          avatar={{ src: BbtLogo }}
-          extra={[
-            <Tooltip title="Профиль" key="profile">
-              <Button
-                type="ghost"
-                shape="circle"
-                icon={<UserOutlined />}
-                onClick={() => navigate(routes.profile)}
-              />
-            </Tooltip>,
+    <BaseLayout
+      title="ОТМЕТИТЬ КНИГИ"
+      backPath={routes.root}
+      userDocLoading={userDocLoading}
+    >
+      <Form name="basic" onFinish={onFinish} form={form}>
+        <Form.Item
+          name="locationId"
+          label="Место"
+          rules={[
+            {
+              required: true,
+              message: "Выберите или создайте новое место",
+            },
           ]}
-        />
-      </Header>
+        >
+          <LocationSelect
+            onSearch={onLocationChange}
+            onAddNewLocation={onAddNewLocation}
+            locationSearchString={locationSearchString}
+            // TODO: add onChange add to localStorage
+          >
+            {locationOptions}
+          </LocationSelect>
+        </Form.Item>
+        <Form.Item>
+          <Checkbox onChange={onOnlineChange} checked={isOnline}>
+            Онлайн-распространение
+          </Checkbox>
+        </Form.Item>
+        <Row>
+          <Search
+            placeholder="поиск книги"
+            allowClear
+            onChange={onSearchChange}
+            value={searchString}
+            style={{ flexGrow: 1, width: 200, marginRight: 8 }}
+          />
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={isSubmitting || userDocLoading}
+          >
+            {isSubmitting ? "Отправляем..." : "Отправить"}
+          </Button>
+        </Row>
 
-      <Content>
-        <div className="site-layout-content">
-          <Form name="basic" onFinish={onFinish} form={form}>
-            <Title className="site-page-title" level={4}>
-              Отметить распространненные книги
-            </Title>
-
-            <Form.Item
-              name="locationId"
-              label="Место"
-              rules={[
-                {
-                  required: true,
-                  message: "Выберите или создайте новое место",
-                },
+        <List
+          itemLayout="horizontal"
+          dataSource={favoriteBooks}
+          loadMore={booksLoading}
+          locale={{
+            emptyText: searchString
+              ? "Не найдено избранного"
+              : "Нажмите на ⭐, чтобы добавить в избранное",
+          }}
+          renderItem={(book) => (
+            <List.Item
+              actions={[
+                <Button
+                  onClick={() => toggleFavorite(book.id)}
+                  icon={<StarFilled />}
+                  disabled={isSubmitting || userDocLoading}
+                ></Button>,
               ]}
             >
-              <LocationSelect
-                onSearch={onLocationChange}
-                onAddNewLocation={onAddNewLocation}
-                locationSearchString={locationSearchString}
-                // TODO: add onChange add to localStorage
-              >
-                {locationOptions}
-              </LocationSelect>
-            </Form.Item>
-            <Form.Item>
-              <Checkbox onChange={onOnlineChange} checked={isOnline}>
-                Онлайн-распространение
-              </Checkbox>
-            </Form.Item>
-            <Row>
-              <Search
-                placeholder="поиск книги"
-                allowClear
-                onChange={onSearchChange}
-                value={searchString}
-                style={{ flexGrow: 1, width: 200, marginRight: 8 }}
+              <List.Item.Meta
+                title={book.name}
+                description={book.points ? `Баллы: ${book.points}` : ""}
               />
-              <Button type="primary" htmlType="submit" loading={isSubmitting}>
-                {isSubmitting ? "Отправляем..." : "Отправить"}
-              </Button>
-            </Row>
-
-            <List
-              itemLayout="horizontal"
-              dataSource={favoriteBooks}
-              loadMore={booksLoading}
-              locale={{
-                emptyText: searchString
-                  ? "Не найдено избранного"
-                  : "Нажмите на ⭐, чтобы добавить в избранное",
-              }}
-              renderItem={(book) => (
-                <List.Item
-                  actions={[
-                    <Button
-                      onClick={() => toggleFavorite(book.id)}
-                      icon={<StarFilled />}
-                    ></Button>,
-                  ]}
-                >
-                  <List.Item.Meta
-                    title={book.name}
-                    description={book.points ? `Баллы: ${book.points}` : ""}
-                  />
-                  <Button
-                    onClick={() => onPlusClick(book.id)}
-                    icon={<PlusOutlined style={{ color: "black" }} />}
-                    style={{ margin: 8 }}
-                  ></Button>
-                  <Form.Item name={book.id} noStyle>
-                    <InputNumber
-                      min={0}
-                      max={10000}
-                      style={{ width: 70 }}
-                      type="number"
-                      inputMode="numeric"
-                      pattern="\d*"
-                    />
-                  </Form.Item>
-                </List.Item>
-              )}
-            />
-            <List
-              itemLayout="horizontal"
-              dataSource={otherBooks}
-              loading={booksLoading}
-              locale={{ emptyText: "Не найдено книг" }}
-              renderItem={(book) => (
-                <List.Item
-                  actions={[
-                    <Button
-                      onClick={() => toggleFavorite(book.id)}
-                      icon={<StarOutlined />}
-                    ></Button>,
-                  ]}
-                >
-                  <List.Item.Meta
-                    title={book.name}
-                    description={book.points ? `Баллы: ${book.points}` : ""}
-                  />
-                  <Button
-                    onClick={() => onPlusClick(book.id)}
-                    icon={<PlusOutlined style={{ color: "black" }} />}
-                    style={{ margin: 8 }}
-                  ></Button>
-                  <Form.Item name={book.id} noStyle>
-                    <InputNumber
-                      name={book.id}
-                      min={0}
-                      max={10000}
-                      style={{ width: 70 }}
-                      type="number"
-                      inputMode="numeric"
-                      pattern="\d*"
-                    />
-                  </Form.Item>
-                </List.Item>
-              )}
-            />
-          </Form>
-        </div>
-      </Content>
-      <Footer></Footer>
-    </Layout>
+              <Button
+                onClick={() => onPlusClick(book.id)}
+                icon={<PlusOutlined />}
+                style={{ margin: 8 }}
+              ></Button>
+              <Form.Item name={book.id} noStyle>
+                <InputNumber
+                  min={0}
+                  max={10000}
+                  style={{ width: 70 }}
+                  type="number"
+                  inputMode="numeric"
+                  pattern="\d*"
+                />
+              </Form.Item>
+            </List.Item>
+          )}
+        />
+        <List
+          itemLayout="horizontal"
+          dataSource={otherBooks}
+          loading={booksLoading || userDocLoading}
+          locale={{ emptyText: "Не найдено книг" }}
+          renderItem={(book) => (
+            <List.Item
+              actions={[
+                <Button
+                  onClick={() => toggleFavorite(book.id)}
+                  icon={<StarOutlined />}
+                ></Button>,
+              ]}
+            >
+              <List.Item.Meta
+                title={book.name}
+                description={book.points ? `Баллы: ${book.points}` : ""}
+              />
+              <Button
+                onClick={() => onPlusClick(book.id)}
+                icon={<PlusOutlined />}
+                style={{ margin: 8 }}
+              ></Button>
+              <Form.Item name={book.id} noStyle>
+                <InputNumber
+                  name={book.id}
+                  min={0}
+                  max={10000}
+                  style={{ width: 70 }}
+                  type="number"
+                  inputMode="numeric"
+                  pattern="\d*"
+                />
+              </Form.Item>
+            </List.Item>
+          )}
+        />
+      </Form>
+    </BaseLayout>
   );
 };

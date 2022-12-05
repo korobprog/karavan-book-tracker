@@ -6,8 +6,9 @@ import { Registration } from "./pages/registration";
 import { Home } from "./pages/home";
 import Profile from "./pages/profile";
 import { routes } from "././shared/routes";
-import { Loading } from "./pages/loading";
+import { Loading } from "common/src/components/Loading";
 import { Report } from "./pages/report";
+import { Statistic } from "./pages/statistic";
 import { Team } from "./pages/team";
 import { TeamEdit } from "./pages/teamEdit";
 import { useCurrentUser } from "common/src/services/api/useCurrentUser";
@@ -29,7 +30,12 @@ function App() {
         navigate(routes.auth);
       }
       // Авторизованный пользователь с незаполненым профилем
-      if (user && !profile && location.pathname !== routes.profile && !routesWithoutRedirect.includes(location.pathname)) {
+      if (
+        user &&
+        !profile &&
+        location.pathname !== routes.profile &&
+        !routesWithoutRedirect.includes(location.pathname)
+      ) {
         navigate(routes.profile);
       }
     }
@@ -49,6 +55,10 @@ function App() {
         <Route
           path={routes.report}
           element={<Report currentUser={currentUser} />}
+        />
+        <Route
+          path={routes.statistic}
+          element={<Statistic currentUser={currentUser} />}
         />
         <Route
           path={routes.auth}

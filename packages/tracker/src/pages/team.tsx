@@ -1,27 +1,26 @@
 import { useNavigate } from "react-router-dom";
-import { Button, Layout, PageHeader, Typography } from "antd";
+import { Button, Typography } from "antd";
 import { CheckSquareOutlined } from "@ant-design/icons";
 
-import BbtLogo from "../images/bbt-logo.png";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { useTeams } from "common/src/services/api/teams";
 import { TeamCard } from "common/src/components/TeamCard";
 import { useLocations } from "common/src/services/api/locations";
 import { TeamMemberStatus, setUserTeam } from "common/src/services/api/useUser";
+import { BaseLayout } from "common/src/components/BaseLayout";
 
 type Props = {
   currentUser: CurrentUser;
 };
 
 export const Team = ({ currentUser }: Props) => {
-  const { profile } = currentUser;
+  const { profile, userDocLoading } = currentUser;
   const { locationsHashMap } = useLocations();
 
   const navigate = useNavigate();
   const { teams, loading } = useTeams();
 
-  const { Content, Footer, Header } = Layout;
   const { Title, Paragraph } = Typography;
 
   const myTeamId = profile?.team?.id;
@@ -29,15 +28,13 @@ export const Team = ({ currentUser }: Props) => {
 
   const myTeam = teams.find((team) => team.id === myTeamId);
 
-
   const onTeamEdit = () => {
     navigate(routes.teamEdit);
   };
 
-
   const teamNoSelectedBlock = (
     <>
-      {loading ? (
+      {loading || userDocLoading ? (
         <Title className="site-page-title" level={5}>
           Загрузка...
         </Title>
@@ -63,9 +60,13 @@ export const Team = ({ currentUser }: Props) => {
               size="large"
               icon={<CheckSquareOutlined />}
               onClick={() =>
-                setUserTeam({ id: team.id, status: TeamMemberStatus.request }, profile.id)
+                setUserTeam(
+                  { id: team.id, status: TeamMemberStatus.request },
+                  profile.id
+                )
               }
               style={{ marginLeft: "auto" }}
+              loading={userDocLoading}
             >
               Подать заявку
             </Button>
@@ -76,38 +77,23 @@ export const Team = ({ currentUser }: Props) => {
   );
 
   return (
-    <Layout>
-      <Header className="site-page-header">
-        <PageHeader
-          title="УЧЕТ КНИГ"
-          className="page-header"
-          onBack={() => navigate(routes.root)}
-          avatar={{ src: BbtLogo }}
+    <BaseLayout
+      title="МОЯ КОМАНДА"
+      backPath={routes.root}
+      userDocLoading={userDocLoading}
+    >
+      {myTeam ? (
+        <TeamCard
+          key={myTeam.id}
+          team={myTeam}
+          locationsHashMap={locationsHashMap}
+          myStatus={myStatus}
+          onLeaveTeam={() => setUserTeam(null, profile.id)}
+          onTeamEdit={onTeamEdit}
         />
-      </Header>
-
-      <Content>
-        <div className="site-layout-content">
-          <Title className="site-page-title" level={2}>
-            Моя команда
-          </Title>
-
-          {myTeam ? (
-            <TeamCard
-              key={myTeam.id}
-              team={myTeam}
-              locationsHashMap={locationsHashMap}
-              myStatus={myStatus}
-              onLeaveTeam={() => setUserTeam(null, profile.id)}
-              onTeamEdit={onTeamEdit}
-            />
-          ) : (
-            teamNoSelectedBlock
-          )}
-        </div>
-      </Content>
-
-      <Footer></Footer>
-    </Layout>
+      ) : (
+        teamNoSelectedBlock
+      )}
+    </BaseLayout>
   );
 };

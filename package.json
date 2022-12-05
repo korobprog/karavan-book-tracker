@@ -20,5 +20,8 @@
     "packages/common",
     "packages/admin",
     "packages/tracker"
-  ]
+  ],
+  "dependencies": {
+    "firebase": "^9.14.0"
+  }
 }
