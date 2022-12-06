@@ -232,11 +232,11 @@ export const Report = ({ currentUser }: Props) => {
                 title={book.name}
                 description={book.points ? `Баллы: ${book.points}` : ""}
               />
-                    <Button
-                  onClick={() => onPlusClick(book.id)}
-                  icon={<PlusOutlined />}
-                  style={{ margin: 8 }}
-                ></Button>
+              <Button
+                onClick={() => onPlusClick(book.id)}
+                icon={<PlusOutlined />}
+                style={{ margin: 8 }}
+              ></Button>
               <Form.Item name={book.id} noStyle>
                 <InputNumber
                   min={0}
@@ -268,11 +268,11 @@ export const Report = ({ currentUser }: Props) => {
                 title={book.name}
                 description={book.points ? `Баллы: ${book.points}` : ""}
               />
-                   <Button
-                  onClick={() => onPlusClick(book.id)}
-                  icon={<PlusOutlined />}
-                  style={{ margin: 8 }}
-                ></Button>
+              <Button
+                onClick={() => onPlusClick(book.id)}
+                icon={<PlusOutlined />}
+                style={{ margin: 8 }}
+              ></Button>
               <Form.Item name={book.id} noStyle>
                 <InputNumber
                   name={book.id}

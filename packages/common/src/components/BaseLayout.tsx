@@ -45,7 +45,7 @@ export const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
       <Content>
         <div className="site-layout-content">{children}</div>
       </Content>
-      <Footer></Footer>
+      <Footer style={{ background: "white" }}></Footer>
     </Layout>
   );
 };
