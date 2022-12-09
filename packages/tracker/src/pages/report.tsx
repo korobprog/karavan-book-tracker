@@ -30,8 +30,11 @@ import { Book, getBookPointsMap, getBooks } from "common/src/services/books";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { LocationSelect } from "common/src/components/LocationSelect";
 
+import type { Moment } from "moment";
+
 type FormValues = Record<number, number> & {
   locationId: string;
+  date: Moment;
 };
 
 type Props = {
@@ -101,8 +104,8 @@ export const Report = ({ currentUser }: Props) => {
   function onFinish(formValues: FormValues) {
     if (user && profile?.name) {
       setIsSubmitting(true);
-      const { locationId, ...bookIdsWithCounts } = formValues;
-console.log(formValues)
+      const { locationId, date, ...bookIdsWithCounts } = formValues;
+      console.log(formValues, typeof date);
       let totalCount = 0;
       let totalPoints = 0;
       const operationBooks = Object.entries(bookIdsWithCounts).reduce(
@@ -126,7 +129,7 @@ console.log(formValues)
 
       const operation: OperationDoc = {
         userId: user?.uid,
-        date: new Date().toISOString(),
+        date: date.format(),
         locationId,
         userName: profile?.name || "",
         books: operationBooks,
@@ -189,14 +192,16 @@ console.log(formValues)
             {locationOptions}
           </LocationSelect>
         </Form.Item>
+        <Space style={{ flexGrow: 1, marginRight: 8 }} >
+        <Form.Item name="date">
+          <DatePicker />
+        </Form.Item>
         <Form.Item>
-          <Space style={{ flexGrow: 1, marginRight: 8 }}>
-            <DatePicker />
-          </Space>
           <Checkbox onChange={onOnlineChange} checked={isOnline}>
             Онлайн-распространение
           </Checkbox>
         </Form.Item>
+        </Space>
         <Row>
           <Search
             placeholder="поиск книги"
