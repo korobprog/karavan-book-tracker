@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useGoogleSheets from "use-google-sheets";
+import type { Moment } from "moment";
 import {
   Button,
   List,
@@ -29,8 +30,6 @@ import { addOperationToLocationStatistic } from "common/src/services/locations";
 import { Book, getBookPointsMap, getBooks } from "common/src/services/books";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { LocationSelect } from "common/src/components/LocationSelect";
-
-import type { Moment } from "moment";
 
 type FormValues = Record<number, number> & {
   locationId: string;
@@ -105,7 +104,7 @@ export const Report = ({ currentUser }: Props) => {
     if (user && profile?.name) {
       setIsSubmitting(true);
       const { locationId, date, ...bookIdsWithCounts } = formValues;
-      console.log(formValues, typeof date);
+
       let totalCount = 0;
       let totalPoints = 0;
       const operationBooks = Object.entries(bookIdsWithCounts).reduce(
@@ -192,15 +191,15 @@ export const Report = ({ currentUser }: Props) => {
             {locationOptions}
           </LocationSelect>
         </Form.Item>
-        <Space style={{ flexGrow: 1, marginRight: 8 }} >
-        <Form.Item name="date">
-          <DatePicker />
-        </Form.Item>
-        <Form.Item>
-          <Checkbox onChange={onOnlineChange} checked={isOnline}>
-            Онлайн-распространение
-          </Checkbox>
-        </Form.Item>
+        <Space style={{ flexGrow: 1, marginRight: 8 }}>
+          <Form.Item name="date">
+            <DatePicker />
+          </Form.Item>
+          <Form.Item>
+            <Checkbox onChange={onOnlineChange} checked={isOnline}>
+              Онлайн-распространение
+            </Checkbox>
+          </Form.Item>
         </Space>
         <Row>
           <Search
