@@ -10,6 +10,8 @@ import {
   Select,
   Checkbox,
   Row,
+  Space,
+  DatePicker,
 } from "antd";
 import { PlusOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
 
@@ -100,7 +102,7 @@ export const Report = ({ currentUser }: Props) => {
     if (user && profile?.name) {
       setIsSubmitting(true);
       const { locationId, ...bookIdsWithCounts } = formValues;
-
+console.log(formValues)
       let totalCount = 0;
       let totalPoints = 0;
       const operationBooks = Object.entries(bookIdsWithCounts).reduce(
@@ -188,6 +190,9 @@ export const Report = ({ currentUser }: Props) => {
           </LocationSelect>
         </Form.Item>
         <Form.Item>
+          <Space style={{ flexGrow: 1, marginRight: 8 }}>
+            <DatePicker />
+          </Space>
           <Checkbox onChange={onOnlineChange} checked={isOnline}>
             Онлайн-распространение
           </Checkbox>
