@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useGoogleSheets from "use-google-sheets";
+import type { Moment } from "moment";
 import {
   Button,
   List,
@@ -10,6 +11,8 @@ import {
   Select,
   Checkbox,
   Row,
+  Space,
+  DatePicker,
 } from "antd";
 import { PlusOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
 
@@ -30,6 +33,7 @@ import { LocationSelect } from "common/src/components/LocationSelect";
 
 type FormValues = Record<number, number> & {
   locationId: string;
+  date: Moment;
 };
 
 type Props = {
@@ -99,7 +103,7 @@ export const Report = ({ currentUser }: Props) => {
   function onFinish(formValues: FormValues) {
     if (user && profile?.name) {
       setIsSubmitting(true);
-      const { locationId, ...bookIdsWithCounts } = formValues;
+      const { locationId, date, ...bookIdsWithCounts } = formValues;
 
       let totalCount = 0;
       let totalPoints = 0;
@@ -124,7 +128,7 @@ export const Report = ({ currentUser }: Props) => {
 
       const operation: OperationDoc = {
         userId: user?.uid,
-        date: new Date().toISOString(),
+        date: date.format(),
         locationId,
         userName: profile?.name || "",
         books: operationBooks,
@@ -187,11 +191,16 @@ export const Report = ({ currentUser }: Props) => {
             {locationOptions}
           </LocationSelect>
         </Form.Item>
-        <Form.Item>
-          <Checkbox onChange={onOnlineChange} checked={isOnline}>
-            Онлайн-распространение
-          </Checkbox>
-        </Form.Item>
+        <Space style={{ flexGrow: 1, marginRight: 8 }}>
+          <Form.Item name="date">
+            <DatePicker />
+          </Form.Item>
+          <Form.Item>
+            <Checkbox onChange={onOnlineChange} checked={isOnline}>
+              Онлайн-распространение
+            </Checkbox>
+          </Form.Item>
+        </Space>
         <Row>
           <Search
             placeholder="поиск книги"
