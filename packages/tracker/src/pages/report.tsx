@@ -30,6 +30,7 @@ import { addOperationToLocationStatistic } from "common/src/services/locations";
 import { Book, getBookPointsMap, getBooks } from "common/src/services/books";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { LocationSelect } from "common/src/components/LocationSelect";
+import moment from "moment";
 
 type FormValues = Record<number, number> & {
   locationId: string;
@@ -193,7 +194,12 @@ export const Report = ({ currentUser }: Props) => {
         </Form.Item>
         <Space style={{ flexGrow: 1, marginRight: 8 }}>
           <Form.Item name="date">
-            <DatePicker />
+            <DatePicker
+              disabledDate={(current) => {
+                let customDate = moment().format("YYYY-MM-DD");
+                return current && current > moment(customDate, "YYYY-MM-DD");
+              }}
+            />
           </Form.Item>
           <Form.Item>
             <Checkbox onChange={onOnlineChange} checked={isOnline}>
