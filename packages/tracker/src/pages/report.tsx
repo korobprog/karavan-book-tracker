@@ -195,8 +195,9 @@ export const Report = ({ currentUser }: Props) => {
         <Space style={{ flexGrow: 1, marginRight: 8 }}>
           <Form.Item name="date">
             <DatePicker
+              defaultValue={moment(new Date(), "YYYY-MM-DD")}
               disabledDate={(current) => {
-                let customDate = moment().add(1, 'day').format("YYYY-MM-DD");
+                let customDate = moment().add(1, "day").format("YYYY-MM-DD");
                 return current && current > moment(customDate, "YYYY-MM-DD");
               }}
             />
