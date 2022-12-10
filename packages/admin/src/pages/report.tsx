@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import moment, { Moment } from "moment";
 import {
   Button,
   List,
@@ -10,11 +11,10 @@ import {
   Form,
   Select,
   Checkbox,
+  DatePicker,
+  Row,
 } from "antd";
-import {
-  StarFilled,
-  StarOutlined
-} from "@ant-design/icons";
+import { PlusOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
 
 import { routes } from "../shared/routes";
 import { Book, getBookPointsMap, useBooks } from "common/src/services/books";
@@ -36,6 +36,7 @@ import { BaseLayout } from "common/src/components/BaseLayout";
 type FormValues = Record<number, number> & {
   locationId: string;
   userId: string;
+  date: Moment;
 };
 
 type Props = {
@@ -104,7 +105,7 @@ const Report = ({ currentUser }: Props) => {
   function onFinish(formValues: FormValues) {
     if (user && profile?.name) {
       setIsSubmitting(true);
-      const { locationId, userId, ...bookIdsWithCounts } = formValues;
+      const { locationId, userId, date, ...bookIdsWithCounts } = formValues;
 
       let totalCount = 0;
       let totalPoints = 0;
@@ -129,7 +130,7 @@ const Report = ({ currentUser }: Props) => {
 
       const operation: OperationDoc = {
         userId,
-        date: new Date().toISOString(),
+        date: date.format(),
         locationId,
         userName:
           usersDocData?.find((value) => value.id === userId)?.name || "",
@@ -169,9 +170,16 @@ const Report = ({ currentUser }: Props) => {
   const { Search } = Input;
   const { Title } = Typography;
 
+  const [form] = Form.useForm();
+
+  function onPlusClick(bookId: string) {
+    const prevValue = form.getFieldValue(bookId) || 0;
+    form.setFieldsValue({ [bookId]: prevValue + 1 });
+  }
+
   return (
     <BaseLayout title="УЧЕТ КНИГ (АДМИН)" backPath={routes.root}>
-      <Form name="basic" onFinish={onFinish}>
+      <Form name="basic" onFinish={onFinish} form={form}>
         <Title className="site-page-title" level={4}>
           Отметить распространненные книги
         </Title>
@@ -207,23 +215,34 @@ const Report = ({ currentUser }: Props) => {
             {locationOptions}
           </LocationSelect>
         </Form.Item>
-        <Form.Item>
-          <Checkbox onChange={onOnlineChange} checked={isOnline}>
-            Онлайн-распространение
-          </Checkbox>
-        </Form.Item>
-        <Space>
+        <Space style={{ flexGrow: 1, marginRight: 8 }}>
+          <Form.Item name="date">
+            <DatePicker
+              defaultValue={moment(new Date(), "YYYY-MM-DD")}
+              disabledDate={(current) => {
+                let customDate = moment().add(1, "day").format("YYYY-MM-DD");
+                return current && current > moment(customDate, "YYYY-MM-DD");
+              }}
+            />
+          </Form.Item>
+          <Form.Item>
+            <Checkbox onChange={onOnlineChange} checked={isOnline}>
+              Онлайн-распространение
+            </Checkbox>
+          </Form.Item>
+        </Space>
+        <Row>
           <Search
             placeholder="поиск книги"
             allowClear
             onChange={onSearchChange}
             value={searchString}
-            style={{ width: 170 }}
+            style={{ flexGrow: 1, width: 200, marginRight: 8 }}
           />
           <Button type="primary" htmlType="submit" loading={isSubmitting}>
             {isSubmitting ? "Отправляем..." : "Отправить"}
           </Button>
-        </Space>
+        </Row>
 
         <List
           itemLayout="horizontal"
@@ -247,6 +266,11 @@ const Report = ({ currentUser }: Props) => {
                 title={book.name}
                 description={book.points ? `Баллы: ${book.points}` : ""}
               />
+                <Button
+                onClick={() => onPlusClick(book.id)}
+                icon={<PlusOutlined />}
+                style={{ margin: 8 }}
+              ></Button>
               <Form.Item name={book.id} noStyle>
                 <InputNumber
                   min={0}
@@ -278,6 +302,11 @@ const Report = ({ currentUser }: Props) => {
                 title={book.name}
                 description={book.points ? `Баллы: ${book.points}` : ""}
               />
+              <Button
+                onClick={() => onPlusClick(book.id)}
+                icon={<PlusOutlined />}
+                style={{ margin: 8 }}
+              ></Button>
               <Form.Item name={book.id} noStyle>
                 <InputNumber
                   name={book.id}
