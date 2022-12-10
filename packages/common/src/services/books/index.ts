@@ -9,6 +9,8 @@ export type Book = {
   points?: string;
 };
 
+export type BooksHashMap = Record<string, Book>;
+
 export const getBooks = (data: Sheet[]) => {
   if (!data[0]) {
     return [];
@@ -20,7 +22,7 @@ export const getBooksHashMap = (books: Book[]) => {
   return books.reduce((acc, book) => {
     acc[book.id] = book;
     return acc;
-  }, {} as Record<string, Book>);
+  }, {} as BooksHashMap);
 };
 
 export const useBooks = () => {

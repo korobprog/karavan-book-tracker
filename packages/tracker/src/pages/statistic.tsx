@@ -9,7 +9,6 @@ import {
   Statistic as AntdStatistic,
   Row,
   Popconfirm,
-  message,
 } from "antd";
 import {
   PlusCircleOutlined,
@@ -23,6 +22,7 @@ import {
   OperationDoc,
   useMyOperations,
 } from "common/src/services/api/operations";
+import { shareOperation } from "common/src/services/share";
 import moment from "moment";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { useLocations } from "common/src/services/api/locations";
@@ -42,31 +42,19 @@ export const Statistic = ({ currentUser }: Props) => {
     user?.uid || ""
   );
 
+  const { locations, locationsHashMap } = useLocations({});
+
   const statistic2022 = profile?.statistic?.[2022];
 
   const onAddOperation = () => {
     navigate(routes.report);
   };
 
-  const shareOperation = async ({ totalCount, date, books }: DataType) => {
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: "Отправить статистику",
-          text: `${moment(date).format("DD.MM.yyyy")} ${
-            profile.nameSpiritual || profile.name
-          }
-Распространено: ${totalCount} книг
-${books.map(
-  (book) => `
-${booksHashMap[book.bookId]?.name}: ${book.count}`
-)}
-`,
-        });
-      } else {
-        message.info("Делиться статистикой пока можно только с мобильного");
-      }
-    } catch (err) {}
+  const share = ({ totalCount, date, books, location }: DataType) => {
+    const locationName = locationsHashMap?.[location]?.name || "";
+    const total = totalCount;
+    const params = { total, date, books, locationName, profile, booksHashMap };
+    shareOperation(params);
   };
 
   const data =
@@ -83,7 +71,6 @@ ${booksHashMap[book.bookId]?.name}: ${book.count}`
 
   type DataType = typeof data[0];
 
-  const { locations } = useLocations({});
   const columns: TableColumnsType<typeof data[0]> = [
     {
       title: "Дата",
@@ -142,7 +129,7 @@ ${booksHashMap[book.bookId]?.name}: ${book.count}`
         <Space>
           <Button
             icon={<ShareAltOutlined />}
-            onClick={() => shareOperation(record)}
+            onClick={() => share(record)}
             type="default"
           />
           <Popconfirm
