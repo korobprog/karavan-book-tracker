@@ -2,17 +2,20 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useGoogleSheets from "use-google-sheets";
 import type { Moment } from "moment";
+import 'moment/locale/ru';
+import ru_RU from "antd/lib/locale/ru_RU";
 import {
   Button,
   List,
   Input,
-  InputNumber,
+  InputNumber,  
   Form,
   Select,
   Checkbox,
   Row,
   Space,
   DatePicker,
+  ConfigProvider,
 } from "antd";
 import { PlusOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
 
@@ -31,6 +34,8 @@ import { Book, getBookPointsMap, getBooks } from "common/src/services/books";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { LocationSelect } from "common/src/components/LocationSelect";
 import moment from "moment";
+
+moment.locale("ru");
 
 type FormValues = Record<number, number> & {
   locationId: string;
@@ -191,22 +196,24 @@ export const Report = ({ currentUser }: Props) => {
           >
             {locationOptions}
           </LocationSelect>
-        </Form.Item >
+        </Form.Item>
+        <ConfigProvider locale={ru_RU}>
         <Space style={{ flexGrow: 1, marginRight: 8 }}>
-          <Form.Item name="date">
-            <DatePicker 
-            disabledDate={(current) => {
-              let customDate = moment().format("YYYY-MM-DD");
-              return current && current > moment(customDate, "YYYY-MM-DD");
-            }}
-             />
-          </Form.Item>
-          <Form.Item>
-            <Checkbox onChange={onOnlineChange} checked={isOnline}>
-              Онлайн-распространение
-            </Checkbox>
-          </Form.Item>
+            <Form.Item name="date">
+              <DatePicker
+                disabledDate={(current) => {
+                  let customDate = moment().format("YYYY-MM-DD");
+                  return current && current > moment(customDate, "YYYY-MM-DD");
+                }}
+              />
+            </Form.Item>
+            <Form.Item>
+              <Checkbox onChange={onOnlineChange} checked={isOnline}>
+                Онлайн-распространение
+              </Checkbox>
+            </Form.Item>
         </Space>
+      </ConfigProvider>
         <Row>
           <Search
             placeholder="поиск книги"
