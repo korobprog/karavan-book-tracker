@@ -196,7 +196,7 @@ export const Report = ({ currentUser }: Props) => {
           <Form.Item name="date">
             <DatePicker
               disabledDate={(current) => {
-                let customDate = moment().format("YYYY-MM-DD");
+                let customDate = moment().add(1, 'day').format("YYYY-MM-DD");
                 return current && current > moment(customDate, "YYYY-MM-DD");
               }}
             />
