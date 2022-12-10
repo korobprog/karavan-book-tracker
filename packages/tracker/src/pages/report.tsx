@@ -191,6 +191,7 @@ export const Report = ({ currentUser }: Props) => {
           >
             {locationOptions}
           </LocationSelect>
+
         </Form.Item >
         <Space style={{ flexGrow: 1, marginRight: 8 }}>
           <Form.Item name="date">
@@ -200,6 +201,11 @@ export const Report = ({ currentUser }: Props) => {
               return current && current > moment(customDate, "YYYY-MM-DD");
             }}
              />
+        </Form.Item>
+        <Space style={{ flexGrow: 1, marginRight: 8 }}>
+          <Form.Item name="date">
+            <DatePicker />
+
           </Form.Item>
           <Form.Item>
             <Checkbox onChange={onOnlineChange} checked={isOnline}>
