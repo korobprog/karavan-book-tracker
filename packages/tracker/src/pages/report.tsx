@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useGoogleSheets from "use-google-sheets";
 import type { Moment } from "moment";
-import 'moment/locale/ru';
+import "moment/locale/ru";
 import ru_RU from "antd/lib/locale/ru_RU";
 import {
   Button,
   List,
   Input,
-  InputNumber,  
+  InputNumber,
   Form,
   Select,
   Checkbox,
@@ -198,7 +198,7 @@ export const Report = ({ currentUser }: Props) => {
           </LocationSelect>
         </Form.Item>
         <ConfigProvider locale={ru_RU}>
-        <Space style={{ flexGrow: 1, marginRight: 8 }}>
+          <Space style={{ flexGrow: 1, marginRight: 8 }}>
             <Form.Item name="date">
               <DatePicker
                 disabledDate={(current) => {
@@ -212,8 +212,8 @@ export const Report = ({ currentUser }: Props) => {
                 Онлайн-распространение
               </Checkbox>
             </Form.Item>
-        </Space>
-      </ConfigProvider>
+          </Space>
+        </ConfigProvider>
         <Row>
           <Search
             placeholder="поиск книги"
