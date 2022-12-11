@@ -10,7 +10,8 @@ import "moment/locale/ru";
 import moment from "moment";
 import { ConfigProvider } from "antd";
 
-moment().locale("ru");
+
+moment.locale("ru");
 
 ReactDOM.render(
   <React.StrictMode>

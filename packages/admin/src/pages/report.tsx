@@ -109,6 +109,7 @@ const Report = ({ currentUser }: Props) => {
 
       let totalCount = 0;
       let totalPoints = 0;
+
       const operationBooks = Object.entries(bookIdsWithCounts).reduce(
         (acc, [id, count]) => {
           if (count) {
@@ -179,7 +180,12 @@ const Report = ({ currentUser }: Props) => {
 
   return (
     <BaseLayout title="УЧЕТ КНИГ (АДМИН)" backPath={routes.root}>
-      <Form name="basic" onFinish={onFinish} form={form}>
+      <Form
+        name="basic"
+        onFinish={onFinish}
+        form={form}
+        initialValues={{ date: moment() }}
+      >
         <Title className="site-page-title" level={4}>
           Отметить распространненные книги
         </Title>
@@ -218,7 +224,6 @@ const Report = ({ currentUser }: Props) => {
         <Space style={{ flexGrow: 1, marginRight: 8 }}>
           <Form.Item name="date">
             <DatePicker
-              defaultValue={moment(new Date(), "YYYY-MM-DD")}
               disabledDate={(current) => {
                 let customDate = moment().add(1, "day").format("YYYY-MM-DD");
                 return current && current > moment(customDate, "YYYY-MM-DD");
@@ -243,7 +248,6 @@ const Report = ({ currentUser }: Props) => {
             {isSubmitting ? "Отправляем..." : "Отправить"}
           </Button>
         </Row>
-
         <List
           itemLayout="horizontal"
           dataSource={favoriteBooks}
