@@ -266,7 +266,7 @@ const Report = ({ currentUser }: Props) => {
                 title={book.name}
                 description={book.points ? `Баллы: ${book.points}` : ""}
               />
-                <Button
+              <Button
                 onClick={() => onPlusClick(book.id)}
                 icon={<PlusOutlined />}
                 style={{ margin: 8 }}
