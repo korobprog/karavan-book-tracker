@@ -172,7 +172,12 @@ export const Report = ({ currentUser }: Props) => {
       backPath={routes.root}
       userDocLoading={userDocLoading}
     >
-      <Form name="basic" onFinish={onFinish} form={form}>
+      <Form 
+      name="basic" 
+      onFinish={onFinish} 
+      form={form}
+      initialValues={{ date: moment() }}
+      >
         <Form.Item
           name="locationId"
           label="Место"
@@ -195,7 +200,6 @@ export const Report = ({ currentUser }: Props) => {
         <Space style={{ flexGrow: 1, marginRight: 8 }}>
           <Form.Item name="date">
             <DatePicker
-              defaultValue={moment(new Date(), "YYYY-MM-DD")}
               disabledDate={(current) => {
                 let customDate = moment().add(1, "day").format("YYYY-MM-DD");
                 return current && current > moment(customDate, "YYYY-MM-DD");
