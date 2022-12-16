@@ -84,14 +84,15 @@ export const Locations = ({ currentUser }: Props) => {
       </Button>
 
       <Divider dashed />
-
-      <Table
-        columns={columns}
-        dataSource={dataWithoutCoords}
-        loading={locationsLoading}
-        scroll={{ x: true }}
-        pagination={{ pageSize: 100 }}
-      />
+      {dataWithoutCoords.length > 0 && (
+        <Table
+          columns={columns}
+          dataSource={dataWithoutCoords}
+          loading={locationsLoading}
+          scroll={{ x: true }}
+          pagination={{ pageSize: 100 }}
+        />
+      )}
       <Table
         columns={columns}
         dataSource={data}
