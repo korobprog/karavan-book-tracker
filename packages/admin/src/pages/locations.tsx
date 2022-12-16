@@ -92,6 +92,13 @@ export const Locations = ({ currentUser }: Props) => {
         scroll={{ x: true }}
         pagination={{ pageSize: 100 }}
       />
+      <Table
+        columns={columns}
+        dataSource={data}
+        loading={locationsLoading}
+        scroll={{ x: true }}
+        pagination={{ pageSize: 100 }}
+      />
     </BaseLayout>
   );
 };
