@@ -1,17 +1,13 @@
 import {
-  collection,
-  CollectionReference,
-  getFirestore,
   addDoc,
   query,
   orderBy,
   deleteDoc,
-  doc,
   getDocs,
   where,
 } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import { idConverter } from "./utils";
+import { apiRefs } from "./refs";
 
 export type DistributedBook = {
   bookId: number;
@@ -33,42 +29,32 @@ export type OperationDoc = {
   isTeamOperation?: boolean;
 };
 
-const db = getFirestore();
-
-const operationsRef = collection(db, "operations").withConverter(
-  idConverter
-) as CollectionReference<OperationDoc>;
-
 export const getOperations = async () => {
-  return await getDocs(operationsRef);
+  return await getDocs(apiRefs.operations);
 };
 
 export const addOperation = async (params: OperationDoc) => {
-  addDoc(operationsRef, params);
+  addDoc(apiRefs.operations, params);
 };
 
-export const deleteOperation = async (id?: string | number) => {
-  if (id) {
-    const operationRef = doc(db, "operations", String(id));
-    deleteDoc(operationRef);
-  }
+// unused
+export const deleteOperation = async (id: string) => {
+  deleteDoc(apiRefs.operation(id));
 };
 
 export const useOperations = () => {
-  const [operationsDocData, loading] =
-    useCollectionData<OperationDoc>(
-      query(operationsRef, orderBy("date", "desc"))
-    );
+  const [operationsDocData, loading] = useCollectionData<OperationDoc>(
+    query(apiRefs.operations, orderBy("date", "desc"))
+  );
 
   return { operationsDocData, loading };
 };
 
-  // TODO: add useUserOperationsCollection - firebase can't sort by time of one user
+// TODO: add useUserOperationsCollection - firebase can't sort by time of one user
 export const useMyOperations = (userId: string) => {
-  const [myOperationsDocData, loading] =
-    useCollectionData<OperationDoc>(
-      query(operationsRef, where("userId", "==", userId || ""))
-    );
+  const [myOperationsDocData, loading] = useCollectionData<OperationDoc>(
+    query(apiRefs.operations, where("userId", "==", userId || ""))
+  );
 
   return { myOperationsDocData, loading };
 };

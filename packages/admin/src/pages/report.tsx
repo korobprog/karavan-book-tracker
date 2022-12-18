@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useStore } from "effector-react";
 import { useNavigate } from "react-router-dom";
 import moment, { Moment } from "moment";
 import {
@@ -17,7 +18,7 @@ import {
 import { PlusOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
 
 import { routes } from "../shared/routes";
-import { Book, getBookPointsMap, useBooks } from "common/src/services/books";
+import { $books, $booksLoading, Book } from "common/src/services/books";
 import { useUser } from "common/src/services/api/useUser";
 import {
   addOperation,
@@ -55,7 +56,8 @@ const Report = ({ currentUser }: Props) => {
 
   const navigate = useNavigate();
 
-  const { books, booksLoading } = useBooks();
+  const books = useStore($books);
+  const booksLoading = useStore($booksLoading);
 
   const { locations } = useLocations({
     searchString: locationSearchString,
@@ -144,14 +146,10 @@ const Report = ({ currentUser }: Props) => {
 
       Promise.all([
         addOperation(operation),
-        // TODO: вынести в сервис services/user
+        // TODO: вынести в transactions
         operation.isAuthorized &&
           addStatistic({ count: totalCount, points: totalPoints }, userId),
-        addOperationToLocationStatistic(
-          operation,
-          getBookPointsMap(books),
-          locations
-        ),
+        addOperationToLocationStatistic(operation, locations),
       ])
         .then(() => navigate(routes.reports))
         .finally(() => setIsSubmitting(false));

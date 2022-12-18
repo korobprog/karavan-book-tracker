@@ -16,6 +16,7 @@ import {
   setUserTeam,
   TeamMemberStatus,
   UserDoc,
+  UserDocWithId,
 } from "../services/api/useUser";
 
 type Props = {
@@ -50,7 +51,7 @@ export const TeamCard = ({
     currentLocationName ? `(где сейчас: ${currentLocationName})` : ""
   }`;
 
-  const onAcceptMember = (memberProfile: UserDoc) => {
+  const onAcceptMember = (memberProfile: UserDocWithId) => {
     setUserTeam(
       { id: team.id, status: TeamMemberStatus.member },
       memberProfile.id
@@ -94,7 +95,10 @@ export const TeamCard = ({
           <Space style={{ marginTop: 14 }}>
             Участники:
             <Avatar.Group>
-              <Tooltip title={teamLeader[0]?.nameSpiritual || teamLeader[0]?.name} placement="top">
+              <Tooltip
+                title={teamLeader[0]?.nameSpiritual || teamLeader[0]?.name}
+                placement="top"
+              >
                 <Badge
                   count={<StarTwoTone twoToneColor="#e4db30" />}
                   offset={[-25, 5]}

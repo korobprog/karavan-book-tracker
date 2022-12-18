@@ -12,6 +12,7 @@ import { UsersNew } from "./pages/UsersNew";
 import { useCurrentUser } from "common/src/services/api/useCurrentUser";
 import { Denied } from "./pages/denied";
 import { Loading } from "common/src/components/Loading";
+import { useBooks } from "common/src/services/books";
 import { Teams } from "./pages/teams";
 import { TeamsNew } from "./pages/teamsNew";
 import { TeamsEdit } from "./pages/teamsEdit";
@@ -26,9 +27,10 @@ function App() {
   const { profile, loading, user, userDocLoading } = currentUser;
   const navigate = useNavigate();
   const location = useLocation();
+  useBooks();
 
   useEffect(() => {
-    if (!loading) {
+    if (!loading && !userDocLoading) {
       // Пользователь не авторизован
       if (!user && !routesWithoutRedirect.includes(location.pathname)) {
         navigate(routes.auth);
@@ -43,7 +45,7 @@ function App() {
         navigate(routes.profile);
       }
     }
-  }, [loading, user, profile, navigate, location.pathname]);
+  }, [loading, user, profile, navigate, location.pathname, userDocLoading]);
 
   if (loading || userDocLoading) {
     return <Loading currentUser={currentUser} />;

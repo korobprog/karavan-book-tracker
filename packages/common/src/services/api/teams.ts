@@ -1,21 +1,9 @@
-import {
-  collection,
-  CollectionReference,
-  getFirestore,
-  addDoc,
-  setDoc,
-  doc,
-  DocumentReference,
-  query,
-  where,
-} from "firebase/firestore";
+import { addDoc, setDoc, query, where } from "firebase/firestore";
 import {
   useCollectionData,
   useDocumentData,
 } from "react-firebase-hooks/firestore";
-import { UserDoc } from "./useUser";
-
-import { idConverter } from "./utils";
+import { apiRefs } from "./refs";
 
 export type TeamDoc = {
   id: string;
@@ -33,21 +21,12 @@ export type TeamDoc = {
 
 export type EditTeamDoc = Omit<TeamDoc, "id">;
 
-const db = getFirestore();
-
-const teamsRef = collection(db, "teams").withConverter(
-  idConverter
-) as CollectionReference<TeamDoc>;
-
-const getTeamRefById = (id: string) =>
-  doc(db, "teams", id) as DocumentReference<TeamDoc>;
-
 export const addTeam = async (data: EditTeamDoc) => {
-  return await addDoc(teamsRef, data);
+  return await addDoc(apiRefs.teams, data);
 };
 
 export const setTeam = async (id: string, data: EditTeamDoc) => {
-  return await setDoc(getTeamRefById(id), data).then(() => ({ id, ...data }));
+  return await setDoc(apiRefs.team(id), data).then(() => ({ id, ...data }));
 };
 
 export type UseTeamsParams = {
@@ -59,11 +38,11 @@ export const useTeams = (params?: UseTeamsParams) => {
   const [teamsDocData, teamsDocLoading] = useCollectionData<TeamDoc>(
     searchString
       ? query(
-          teamsRef,
+          apiRefs.teams,
           where("name", ">=", searchString),
           where("name", "<=", searchString + "\uf8ff")
         )
-      : teamsRef
+      : apiRefs.teams
   );
 
   return {
@@ -73,18 +52,15 @@ export const useTeams = (params?: UseTeamsParams) => {
 };
 
 export const useTeam = (id: string) => {
-  const teamRef = getTeamRefById(id);
-  const [teamDocData, teamsDocLoading] = useDocumentData<TeamDoc>(teamRef);
+  const [teamDocData, teamsDocLoading] = useDocumentData<TeamDoc>(
+    apiRefs.team(id)
+  );
 
   return {
     team: teamDocData,
     loading: teamsDocLoading,
   };
 };
-
-const usersRef = collection(db, "users").withConverter(
-  idConverter
-) as CollectionReference<UserDoc>;
 
 export type UseTeamsMembersParams = {
   teamId?: string;
@@ -93,8 +69,8 @@ export type UseTeamsMembersParams = {
 export const useTeamMembers = (params: UseTeamsMembersParams) => {
   const { teamId = "" } = params;
 
-  const [teamMembers = [], loading] = useCollectionData<UserDoc>(
-    query(usersRef, where("team.id", "==", teamId))
+  const [teamMembers = [], loading] = useCollectionData(
+    query(apiRefs.users, where("team.id", "==", teamId))
   );
 
   return { teamMembers, loading };

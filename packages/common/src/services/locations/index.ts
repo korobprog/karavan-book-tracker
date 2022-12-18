@@ -1,15 +1,13 @@
-import {
-  calculateOperationStatistic,
-  getBookCountsMap,
-  statsInitial,
-  sumOperationStatistic,
-} from "../statistic";
+import { getLocationStat } from "../statistic";
 import { getOperations, OperationDoc } from "../api/operations";
 import {
+  defaultYearLocationStatistic,
   editLocation,
   LocationDoc,
   LocationsStatisticType,
 } from "../api/locations";
+import { calcObjectFields } from "../../utils/objects";
+import moment from "moment";
 
 // TODO: get from operation date
 const CHANGED_YEAR = 2022;
@@ -21,7 +19,7 @@ const getLocationWithoutId = (locationId: string, locations: LocationDoc[]) => {
 
   if (currentLocationWithId) {
     const { id: _omitKey, ...newLocation } = currentLocationWithId;
-    return newLocation;
+    return newLocation as LocationDoc;
   }
 
   return null;
@@ -47,7 +45,6 @@ const editLocationStatistic = (
 };
 
 export const recalculateStatisticToLocations = async (
-  bookPointsMap: Record<string, number>,
   locations: LocationDoc[]
 ) => {
   try {
@@ -58,31 +55,16 @@ export const recalculateStatisticToLocations = async (
 
     operationsSnapshot.forEach((doc) => {
       const operation = doc.data();
+      const { locationId } = operation;
 
-      if (operation.locationId) {
-        const { totalCount = 0, totalPoints = 0 } = operation;
+      if (locationId) {
+        const newOperationStat = getLocationStat(operation);
 
-        let newOperationStat: LocationsStatisticType;
-
-        if (operation.isWithoutBookInformation) {
-          newOperationStat = {
-            totalPrimaryCount: operation.isOnline ? 0 : totalCount,
-            totalPoints: operation.isOnline ? 0 : totalPoints,
-            totalOnlineCount: operation.isOnline ? totalCount : 0,
-            totalOnlinePoints: operation.isOnline ? totalPoints : 0,
-            totalOtherCount: 0,
-          };
-        } else {
-          newOperationStat = calculateOperationStatistic(
-            getBookCountsMap(operation.books),
-            bookPointsMap,
-            operation.isOnline
-          );
-        }
-
-        const prevStat = statsByLocations[operation.locationId] || statsInitial;
-        statsByLocations[operation.locationId] = sumOperationStatistic(
+        const prevStat =
+          statsByLocations[locationId] || defaultYearLocationStatistic;
+        statsByLocations[locationId] = calcObjectFields(
           prevStat,
+          "+",
           newOperationStat
         );
       }
@@ -102,7 +84,7 @@ export const recalculateStatisticToLocations = async (
         const promise = editLocationStatistic(
           locationId,
           location,
-          statsInitial
+          defaultYearLocationStatistic
         );
         promises.push(promise);
       }
@@ -116,23 +98,19 @@ export const recalculateStatisticToLocations = async (
 
 export const addOperationToLocationStatistic = async (
   operation: OperationDoc,
-  bookPointsMap: Record<string, number>,
   locations: LocationDoc[]
 ) => {
-  const { locationId, isOnline, isAuthorized } = operation;
+  const { locationId, isAuthorized, date } = operation;
   if (!isAuthorized) {
     return;
   }
-
-  const newStatisticYearData = calculateOperationStatistic(
-    getBookCountsMap(operation.books),
-    bookPointsMap,
-    isOnline
-  );
+  const newStatYearData = getLocationStat(operation);
+  const operationYear = moment(date).year();
 
   const location = getLocationWithoutId(locationId, locations);
-  const prevStat = location?.statistic?.[CHANGED_YEAR] || statsInitial;
-  const newStatistic = sumOperationStatistic(prevStat, newStatisticYearData);
+  const prevStat =
+    location?.statistic?.[operationYear] || defaultYearLocationStatistic;
+  const newStat = calcObjectFields(prevStat, "+", newStatYearData);
 
-  editLocationStatistic(locationId, location, newStatistic);
+  editLocationStatistic(locationId, location, newStat);
 };

@@ -27,7 +27,7 @@ import { addLocation, useLocations } from "common/src/services/api/locations";
 import { useDebouncedCallback } from "use-debounce";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { addOperationToLocationStatistic } from "common/src/services/locations";
-import { Book, getBookPointsMap, getBooks } from "common/src/services/books";
+import { Book, getBooks } from "common/src/services/books";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { LocationSelect } from "common/src/components/LocationSelect";
 import moment from "moment";
@@ -142,11 +142,7 @@ export const Report = ({ currentUser }: Props) => {
       Promise.all([
         addStatistic({ count: totalCount, points: totalPoints }),
         addOperation(operation),
-        addOperationToLocationStatistic(
-          operation,
-          getBookPointsMap(books),
-          locations
-        ),
+        addOperationToLocationStatistic(operation, locations),
       ])
         .then(() => navigate(routes.statistic))
         .finally(() => setIsSubmitting(false));

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useStore } from "effector-react";
 import { Button, Table, Divider } from "antd";
 import { CalculatorOutlined } from "@ant-design/icons";
 
@@ -6,7 +7,7 @@ import { routes } from "../shared/routes";
 import { LocationDoc, useLocations } from "common/src/services/api/locations";
 import { LocationStatistic } from "common/src/components/LocationStatistic";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import { getBookPointsMap, useBooks } from "common/src/services/books";
+import { $booksLoading } from "common/src/services/books";
 import { CoordinatesEdit } from "common/src/components/CoordinatesEdit";
 import { recalculateStatisticToLocations } from "common/src/services/locations";
 import { BaseLayout } from "common/src/components/BaseLayout";
@@ -18,12 +19,12 @@ type Props = {
 export const Locations = ({ currentUser }: Props) => {
   const { locations, loading: locationsLoading } = useLocations({});
 
-  const { books } = useBooks();
+  const booksLoading = useStore($booksLoading);
   const [isCalculating, setIsCalculating] = useState(false);
 
   const onCalculate = async () => {
     setIsCalculating(true);
-    await recalculateStatisticToLocations(getBookPointsMap(books), locations);
+    await recalculateStatisticToLocations(locations);
     setIsCalculating(false);
   };
 
@@ -76,7 +77,7 @@ export const Locations = ({ currentUser }: Props) => {
         type="primary"
         icon={<CalculatorOutlined />}
         onClick={onCalculate}
-        loading={isCalculating}
+        loading={isCalculating || booksLoading}
       >
         Пересчитать статистику
       </Button>

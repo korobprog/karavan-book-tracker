@@ -1,20 +1,16 @@
 import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
-import { doc, DocumentReference, getFirestore } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { UserDoc } from "./useUser";
-import { idConverter } from "./utils";
+import { apiRefs } from "./refs";
 
 export const useCurrentUser = () => {
   const auth = getAuth();
-  const db = getFirestore();
   const [user, userLoading] = useAuthState(auth);
   const [userPreloaded, setUserPreloaded] = useState(false);
 
-  const userRef = (
-    user ? doc(db, "users", user?.uid).withConverter(idConverter) : null
-  ) as DocumentReference<UserDoc> | null;
+  const userRef = user ? apiRefs.user(user?.uid) : null;
 
   const [userDocData, userDocLoading] = useDocumentData<UserDoc>(userRef);
 
@@ -24,7 +20,9 @@ export const useCurrentUser = () => {
     }
   }, [user, userLoading, userPreloaded]);
 
-  const profile = {...userDocData, id: user?.uid };
+  const profile =
+    user && userDocData ? { ...userDocData, id: user?.uid } : null;
+
   const favorite = profile?.favorite || [];
 
   const loading = userLoading || !userPreloaded;
