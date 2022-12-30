@@ -169,9 +169,9 @@ export const Statistic = ({ currentUser }: Props) => {
     >
       <Row justify="center" align="top">
         <Space size="large" split={<Divider type="vertical" />}>
-          <AntdStatistic title="Год" value="2022" groupSeparator="" />
-          <AntdStatistic title="Книг" value={statistic2022?.count} />
-          <AntdStatistic title="Баллов" value={statistic2022?.points} />
+          <AntdStatistic title="Год" value="2022" groupSeparator="" loading={userDocLoading} />
+          <AntdStatistic title="Книг" value={statistic2022?.count} loading={userDocLoading} />
+          <AntdStatistic title="Баллов" value={statistic2022?.points} loading={userDocLoading} />
         </Space>
       </Row>
       <Divider dashed />

@@ -168,11 +168,11 @@ export const Report = ({ currentUser }: Props) => {
       backPath={routes.root}
       userDocLoading={userDocLoading}
     >
-      <Form
-        name="basic"
-        onFinish={onFinish}
-        form={form}
-        initialValues={{ date: moment() }}
+      <Form 
+      name="basic" 
+      onFinish={onFinish} 
+      form={form}
+      initialValues={{ date: moment() }}
       >
         <Form.Item
           name="locationId"
