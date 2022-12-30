@@ -11,15 +11,14 @@ import {
 } from "antd";
 import { PlusCircleOutlined, DeleteOutlined } from "@ant-design/icons";
 
+import { removeOperationTransaction } from "common/src/services/api/transactions";
 import { routes } from "../shared/routes";
-import {
-  deleteOperation,
-  useOperations,
-} from "common/src/services/api/operations";
+import { useOperations } from "common/src/services/api/operations";
 import moment from "moment";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { useLocations } from "common/src/services/api/locations";
 import { BaseLayout } from "common/src/components/BaseLayout";
+import { useState } from "react";
 
 type Props = {
   currentUser: CurrentUser;
@@ -37,6 +36,13 @@ export const Reports = ({ currentUser }: Props) => {
 
   const onAddOperation = () => {
     navigate(routes.report);
+  };
+
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const onRemoveOperation = async (operationId: string) => {
+    setDeleteLoading(true);
+    await removeOperationTransaction(operationId);
+    setDeleteLoading(false);
   };
 
   const data =
@@ -113,11 +119,9 @@ export const Reports = ({ currentUser }: Props) => {
         <Space>
           <Popconfirm
             title={`Удалить операцию?`}
-            onConfirm={() => {
-              deleteOperation(record.key);
-            }}
+            onConfirm={() => onRemoveOperation(String(record.key))}
           >
-            <Button danger icon={<DeleteOutlined />} />
+            <Button danger icon={<DeleteOutlined />} loading={deleteLoading} />
           </Popconfirm>
         </Space>
       ),

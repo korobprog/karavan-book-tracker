@@ -1,23 +1,21 @@
-import { collection, getFirestore, query, where } from "firebase/firestore";
+import { query, where } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import { UserDoc } from "./useUser";
-import { idConverter } from "./utils";
+import { apiRefs } from "./refs";
+import { UserDocWithId } from "./useUser";
 
 export type UseUserParams = {
   searchString?: string;
 };
 
 export const useUsers = ({ searchString = "" }: UseUserParams) => {
-  const db = getFirestore();
-  const usersRef = collection(db, "users").withConverter(idConverter);
-  const [usersDocData, usersDocLoading] = useCollectionData<UserDoc>(
+  const [usersDocData, usersDocLoading] = useCollectionData<UserDocWithId>(
     searchString
       ? query(
-        usersRef,
+          apiRefs.users,
           where("name", ">=", searchString),
           where("name", "<=", searchString + "\uf8ff")
         )
-      : usersRef
+      : apiRefs.users
   );
 
   return {

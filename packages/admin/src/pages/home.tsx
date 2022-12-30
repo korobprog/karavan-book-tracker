@@ -36,7 +36,7 @@ const Home = ({ currentUser }: Props) => {
   return (
     <BaseLayout title="УЧЕТ КНИГ (АДМИН)">
       <Title className="site-page-title" level={2}>
-        Привет, {profile.name || user?.displayName || "друг"}
+        Привет, {profile?.name || user?.displayName || "друг"}
       </Title>
       <Button
         type="primary"

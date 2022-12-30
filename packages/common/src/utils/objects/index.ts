@@ -7,3 +7,16 @@ export const removeEmptyFields = (obj: Record<string, any>): any => {
   });
   return newObj;
 };
+
+export const calcObjectFields = <Obj extends Record<string, any>>(
+  prev: Obj,
+  operator: "+" | "-",
+  next: Obj
+): Obj => {
+  const result = { ...prev } as Record<string, any>;
+  for (const key in result) {
+    if (operator === "+") result[key] += next[key] || 0;
+    if (operator === "-") result[key] -= next[key] || 0;
+  }
+  return result as Obj;
+};

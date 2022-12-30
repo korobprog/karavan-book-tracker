@@ -1,4 +1,4 @@
-export type StatisticType = {
+export type UserStatisticType = {
   count: number;
   points: number;
 };

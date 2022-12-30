@@ -1,24 +1,19 @@
 import {
-  doc,
-  collection,
-  DocumentReference,
-  getFirestore,
   setDoc,
   updateDoc,
   addDoc,
-  CollectionReference,
   getDoc,
   deleteDoc,
 } from "firebase/firestore";
-import { StatisticType } from "./statistic";
-import { idConverter } from "./utils";
+import { apiRefs } from "./refs";
+import { UserStatisticType } from "./statistic";
 
 export type UserRoles = "admin";
 
 export enum TeamMemberStatus {
-  admin = 'admin',
-  request = 'request',
-  member = 'member',
+  admin = "admin",
+  request = "request",
+  member = "member",
 }
 
 export type UserTeam = {
@@ -27,7 +22,6 @@ export type UserTeam = {
 };
 
 export type UserDoc = {
-  id?: string;
   name?: string;
   nameSpiritual?: string;
   phone?: string;
@@ -35,97 +29,90 @@ export type UserDoc = {
   city?: string;
   favorite?: string[];
   role?: UserRoles;
-  statistic?: {
-    "2022": StatisticType;
-  };
+  statistic?: Record<number, UserStatisticType>;
   email?: string;
   isUnattached?: boolean;
   team?: UserTeam | null;
 };
 
-type Params = {
-  profile?: UserDoc;
+export type UserDocWithId = UserDoc & {
+  id: string;
 };
 
-const db = getFirestore();
-
-const getUserRef = (userId: string | undefined) => (
-  userId ? doc(db, "users", userId).withConverter(idConverter) : null
-) as DocumentReference<UserDoc> | null;
+type Params = {
+  profile: UserDocWithId | null;
+};
 
 export const useUser = ({ profile }: Params) => {
-  const userRef = getUserRef(profile?.id);
-
-  const usersRef = (
-    collection(db, "users").withConverter(idConverter)
-  ) as CollectionReference<UserDoc> | null;
+  const id = profile?.id;
 
   const toggleFavorite = async (favoriteId: string) => {
-    if (userRef) {
+    if (id) {
       if (profile?.favorite?.includes(favoriteId)) {
         const filteredFavorite = profile.favorite.filter(
           (value) => value !== favoriteId
         );
-        await setDoc(userRef, { ...profile, favorite: filteredFavorite });
+        await setDoc(apiRefs.user(id), {
+          ...profile,
+          favorite: filteredFavorite,
+        });
       } else {
-        const newFavorite = [...profile?.favorite || [], favoriteId];
-        await setDoc(userRef, { ...profile, favorite: newFavorite });
+        const newFavorite = [...(profile?.favorite || []), favoriteId];
+        await setDoc(apiRefs.user(id), {
+          ...profile,
+          favorite: newFavorite,
+        });
       }
     }
   };
 
   const setProfile = async (newProfile: UserDoc) => {
-    if (profile && userRef) {
-      await setDoc(userRef, { ...profile, ...newProfile });
+    if (profile && id) {
+      await setDoc(apiRefs.user(id), { ...profile, ...newProfile });
     }
   };
 
-  const deleteProfile = async (id?: string) => {
-    if (id) {
-      const operationRef = doc(db, "users", id);
-      await deleteDoc(operationRef);
-    }
+  const deleteProfile = async (id: string) => {
+    const operationRef = apiRefs.user(id);
+    await deleteDoc(operationRef);
   };
 
   const addNewUnattachedProfile = async (newProfile: UserDoc) => {
-    if (profile && usersRef) {
-      await addDoc(usersRef, { ...newProfile, isUnattached: true });
+    if (profile) {
+      await addDoc(apiRefs.addUser, { ...newProfile, isUnattached: true });
     }
   };
 
-  const rewriteUserStatistic = (newBooks: StatisticType, user?: UserDoc) => ({
+  const rewriteUserStatistic = (newBooks: UserStatisticType, user?: UserDoc) => ({
     ...user,
     statistic: {
       "2022": {
-        count: (user?.statistic?.[2022].count || 0) + newBooks.count,
-        points: (user?.statistic?.[2022].points || 0) + newBooks.points,
+        count: (user?.statistic?.[2022]?.count || 0) + newBooks.count,
+        points: (user?.statistic?.[2022]?.points || 0) + newBooks.points,
       },
     },
   });
 
   const addStatistic = async (
-    newBooks: StatisticType,
+    newBooks: UserStatisticType,
     selectedUserId?: string
   ) => {
     if (selectedUserId) {
-      const selectedUserRef = doc(
-        db,
-        "users",
-        selectedUserId
-      ) as DocumentReference<UserDoc>;
-
-      const selectedUser = (await getDoc(selectedUserRef)).data();
+      const selectedUser = (await getDoc(apiRefs.user(selectedUserId))).data();
 
       await setDoc(
-        selectedUserRef,
+        apiRefs.user(selectedUserId),
         rewriteUserStatistic(newBooks, selectedUser)
       );
 
       return;
     }
 
-    if (profile && userRef) {
-      await setDoc(userRef, rewriteUserStatistic(newBooks, profile));
+    if (profile) {
+      await setDoc(
+        apiRefs.user(profile.id),
+        rewriteUserStatistic(newBooks, profile)
+      );
       return;
     }
   };
@@ -140,9 +127,7 @@ export const useUser = ({ profile }: Params) => {
 };
 
 export const setUserTeam = async (team: UserTeam | null, userId?: string) => {
-  const userRef = getUserRef(userId);
-
-  if (userRef) {
-    await updateDoc(userRef, { team });
+  if (userId) {
+    await updateDoc(apiRefs.user(userId), { team });
   }
 };

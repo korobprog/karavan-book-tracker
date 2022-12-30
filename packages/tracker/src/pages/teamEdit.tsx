@@ -14,7 +14,7 @@ export const TeamEdit = ({ currentUser }: Props) => {
   const { userDocLoading } = currentUser;
   const navigate = useNavigate();
 
-  const teamId = currentUser.profile.team?.id;
+  const teamId = currentUser.profile?.team?.id;
 
   const { team, loading } = useTeam(teamId || "");
 

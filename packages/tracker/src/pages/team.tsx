@@ -62,7 +62,7 @@ export const Team = ({ currentUser }: Props) => {
               onClick={() =>
                 setUserTeam(
                   { id: team.id, status: TeamMemberStatus.request },
-                  profile.id
+                  profile?.id
                 )
               }
               style={{ marginLeft: "auto" }}
@@ -88,7 +88,7 @@ export const Team = ({ currentUser }: Props) => {
           team={myTeam}
           locationsHashMap={locationsHashMap}
           myStatus={myStatus}
-          onLeaveTeam={() => setUserTeam(null, profile.id)}
+          onLeaveTeam={() => setUserTeam(null, profile?.id)}
           onTeamEdit={onTeamEdit}
         />
       ) : (

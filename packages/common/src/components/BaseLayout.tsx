@@ -14,7 +14,7 @@ type BaseLayoutProps = {
 
 export const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
   const { children, title, backPath, headerActions, userDocLoading } = props;
-  const { Content, Footer, Header } = Layout;
+  const { Content, Header } = Layout;
   const navigate = useNavigate();
   const onBack = backPath ? () => navigate(backPath) : undefined;
 
@@ -45,7 +45,6 @@ export const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
       <Content>
         <div className="site-layout-content">{children}</div>
       </Content>
-      <Footer style={{ background: "white" }}></Footer>
     </Layout>
   );
 };

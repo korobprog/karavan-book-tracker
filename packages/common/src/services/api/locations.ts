@@ -1,19 +1,9 @@
 import React from "react";
-import {
-  collection,
-  CollectionReference,
-  getFirestore,
-  addDoc,
-  query,
-  where,
-  setDoc,
-  doc,
-  DocumentReference,
-} from "firebase/firestore";
+import { addDoc, query, where, setDoc } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 
-import { idConverter } from "./utils";
 import { getHashMap } from "common/src/utils/getHashMap";
+import { apiRefs } from "./refs";
 
 export type LocationsStatisticType = {
   totalPoints: number;
@@ -23,33 +13,29 @@ export type LocationsStatisticType = {
   totalOnlinePoints: number;
 };
 
+export const defaultYearLocationStatistic = {
+  totalPoints: 0,
+  totalPrimaryCount: 0,
+  totalOnlineCount: 0,
+  totalOnlinePoints: 0,
+  totalOtherCount: 0,
+};
+
 export type LocationDoc = {
   id?: string;
   name: string;
   country?: string;
   coordinates?: number[];
   image?: string;
-  statistic?: {
-    "2022"?: LocationsStatisticType;
-    "2023"?: LocationsStatisticType;
-  };
+  statistic?: Record<number, LocationsStatisticType>;
 };
 
-const db = getFirestore();
-
-const locationsRef = collection(db, "locations").withConverter(
-  idConverter
-) as CollectionReference<LocationDoc>;
-
-const getLocationRefById = (id: string) =>
-  doc(db, "locations", id) as DocumentReference<LocationDoc>;
-
 export const addLocation = async (data: LocationDoc) => {
-  addDoc(locationsRef, data);
+  addDoc(apiRefs.locations, data);
 };
 
 export const editLocation = async (id: string, data: LocationDoc) => {
-  setDoc(getLocationRefById(id), data);
+  setDoc(apiRefs.location(id), data);
 };
 
 export const setCoordinates = (x: number, y: number, location: LocationDoc) => {
@@ -72,17 +58,15 @@ export const useLocations = (params?: UseLocationsParams) => {
     useCollectionData<LocationDoc>(
       searchString
         ? query(
-            locationsRef,
+            apiRefs.locations,
             where("name", ">=", searchString),
             where("name", "<=", searchString + "\uf8ff")
           )
-        : locationsRef
+        : apiRefs.locations
     );
 
   const locationsHashMap = React.useMemo(() => {
-    return locationsDocData
-      ? (getHashMap<LocationDoc>(locationsDocData))
-      : null;
+    return locationsDocData ? getHashMap<LocationDoc>(locationsDocData) : null;
   }, [locationsDocData]);
 
   return {

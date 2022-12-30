@@ -15,19 +15,21 @@ import {
   DeleteOutlined,
   ShareAltOutlined,
 } from "@ant-design/icons";
+import { useStore } from "effector-react";
 
 import { routes } from "../shared/routes";
 import {
-  deleteOperation,
   OperationDoc,
   useMyOperations,
 } from "common/src/services/api/operations";
+import { removeOperationTransaction } from "common/src/services/api/transactions";
 import { shareOperation } from "common/src/services/share";
 import moment from "moment";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { useLocations } from "common/src/services/api/locations";
-import { useBooks } from "common/src/services/books";
+import { $booksHashMap, $booksLoading } from "common/src/services/books";
 import { BaseLayout } from "common/src/components/BaseLayout";
+import { useState } from "react";
 
 type Props = {
   currentUser: CurrentUser;
@@ -36,7 +38,8 @@ type Props = {
 export const Statistic = ({ currentUser }: Props) => {
   const { loading, profile, user, userDocLoading } = currentUser;
   const navigate = useNavigate();
-  const { booksHashMap, booksLoading } = useBooks();
+  const booksHashMap = useStore($booksHashMap);
+  const booksLoading = useStore($booksLoading);
 
   const { myOperationsDocData, loading: myOperationsLoading } = useMyOperations(
     user?.uid || ""
@@ -49,12 +52,27 @@ export const Statistic = ({ currentUser }: Props) => {
   const onAddOperation = () => {
     navigate(routes.report);
   };
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const onRemoveOperation = async (operationId: string) => {
+    setDeleteLoading(true);
+    await removeOperationTransaction(operationId);
+    setDeleteLoading(false);
+  };
 
   const share = ({ totalCount, date, books, location }: DataType) => {
     const locationName = locationsHashMap?.[location]?.name || "";
     const total = totalCount;
-    const params = { total, date, books, locationName, profile, booksHashMap };
-    shareOperation(params);
+    if (profile) {
+      const params = {
+        total,
+        date,
+        books,
+        locationName,
+        profile,
+        booksHashMap,
+      };
+      shareOperation(params);
+    }
   };
 
   const data =
@@ -134,11 +152,9 @@ export const Statistic = ({ currentUser }: Props) => {
           />
           <Popconfirm
             title={`Удалить операцию?`}
-            onConfirm={() => {
-              deleteOperation(record.key);
-            }}
+            onConfirm={() => onRemoveOperation(String(record.key))}
           >
-            <Button danger icon={<DeleteOutlined />} />
+            <Button danger icon={<DeleteOutlined />} loading={deleteLoading} />
           </Popconfirm>
         </Space>
       ),
