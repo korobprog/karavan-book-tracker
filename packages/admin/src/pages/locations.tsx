@@ -69,6 +69,8 @@ export const Locations = ({ currentUser }: Props) => {
       key: location.id || String(index),
     })) || [];
 
+  const dataWithoutCoords = data.filter((location) => !location.coordinates);
+
   return (
     <BaseLayout title="ГОРОДА НА КАРТЕ" backPath={routes.root}>
       <Button
@@ -83,7 +85,15 @@ export const Locations = ({ currentUser }: Props) => {
       </Button>
 
       <Divider dashed />
-
+      {dataWithoutCoords.length > 0 && (
+        <Table
+          columns={columns}
+          dataSource={dataWithoutCoords}
+          loading={locationsLoading}
+          scroll={{ x: true }}
+          pagination={{ pageSize: 100 }}
+        />
+      )}
       <Table
         columns={columns}
         dataSource={data}
