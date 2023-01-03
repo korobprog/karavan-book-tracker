@@ -1,3 +1,4 @@
+import { User } from "firebase/auth";
 import {
   setDoc,
   updateDoc,
@@ -41,10 +42,11 @@ export type UserDocWithId = UserDoc & {
 
 type Params = {
   profile: UserDocWithId | null;
+  user?: User | null;
 };
 
-export const useUser = ({ profile }: Params) => {
-  const id = profile?.id;
+export const useUser = ({ profile, user }: Params) => {
+  const id = profile?.id || user?.uid;
 
   const toggleFavorite = async (favoriteId: string) => {
     if (id) {
@@ -67,7 +69,7 @@ export const useUser = ({ profile }: Params) => {
   };
 
   const setProfile = async (newProfile: UserDoc) => {
-    if (profile && id) {
+    if (id) {
       await setDoc(apiRefs.user(id), { ...profile, ...newProfile });
     }
   };
