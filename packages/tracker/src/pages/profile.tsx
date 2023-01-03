@@ -19,7 +19,7 @@ type Props = {
 const Profile = ({ currentUser }: Props) => {
   const { profile, user, userDocLoading } = currentUser;
 
-  const { setProfile } = useUser({ profile });
+  const { setProfile } = useUser({ profile, user });
   const auth = getAuth();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
