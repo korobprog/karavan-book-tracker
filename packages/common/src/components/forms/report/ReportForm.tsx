@@ -61,7 +61,7 @@ export const ReportForm = (props: Props) => {
 
   const initialValues = {
     date: moment(),
-    location: storage.getLocationId(),
+    locationId: storage.getLocationId(),
     ...initialValuesProps,
   };
 
@@ -221,6 +221,7 @@ export const ReportForm = (props: Props) => {
               let customDate = moment().add(1, "day").format("YYYY-MM-DD");
               return current && current > moment(customDate, "YYYY-MM-DD");
             }}
+            format="DD.MM.YYYY"
           />
         </Form.Item>
         <Form.Item>
