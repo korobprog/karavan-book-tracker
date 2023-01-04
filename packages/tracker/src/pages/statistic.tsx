@@ -14,6 +14,7 @@ import {
   PlusCircleOutlined,
   DeleteOutlined,
   ShareAltOutlined,
+  EditOutlined,
 } from "@ant-design/icons";
 import { useStore } from "effector-react";
 
@@ -52,6 +53,11 @@ export const Statistic = ({ currentUser }: Props) => {
   const onAddOperation = () => {
     navigate(routes.report);
   };
+
+  const onEditOperation = (id: string) => {
+    navigate(routes.reportEdit(id));
+  };
+
   const [deleteLoading, setDeleteLoading] = useState(false);
   const onRemoveOperation = async (operationId: string) => {
     setDeleteLoading(true);
@@ -150,6 +156,11 @@ export const Statistic = ({ currentUser }: Props) => {
             onClick={() => share(record)}
             type="default"
           />
+          <Button
+            icon={<EditOutlined />}
+            loading={deleteLoading}
+            onClick={() => onEditOperation(String(record.key))}
+          />
           <Popconfirm
             title={`Удалить операцию?`}
             onConfirm={() => onRemoveOperation(String(record.key))}
@@ -169,9 +180,22 @@ export const Statistic = ({ currentUser }: Props) => {
     >
       <Row justify="center" align="top">
         <Space size="large" split={<Divider type="vertical" />}>
-          <AntdStatistic title="Год" value="2022" groupSeparator="" loading={userDocLoading} />
-          <AntdStatistic title="Книг" value={statistic2022?.count} loading={userDocLoading} />
-          <AntdStatistic title="Баллов" value={statistic2022?.points} loading={userDocLoading} />
+          <AntdStatistic
+            title="Год"
+            value="2022"
+            groupSeparator=""
+            loading={userDocLoading}
+          />
+          <AntdStatistic
+            title="Книг"
+            value={statistic2022?.count}
+            loading={userDocLoading}
+          />
+          <AntdStatistic
+            title="Баллов"
+            value={statistic2022?.points}
+            loading={userDocLoading}
+          />
         </Space>
       </Row>
       <Divider dashed />

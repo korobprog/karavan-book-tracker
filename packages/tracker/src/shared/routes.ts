@@ -1,12 +1,13 @@
 export const routes = {
-    root: '/',
-    auth: '/auth',
-    registration: '/registration',
-    profile: '/profile',
+  root: "/",
+  auth: "/auth",
+  registration: "/registration",
+  profile: "/profile",
 
-    report: '/report',
+  report: "/report",
+  reportEdit: (id?: string) => `/report/${id || ":id"}`,
 
-    statistic: '/statistic',
-    team: '/team',
-    teamEdit: '/team/edit',
+  statistic: "/statistic",
+  team: "/team",
+  teamEdit: "/team/edit",
 };

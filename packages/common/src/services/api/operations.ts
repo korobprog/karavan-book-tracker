@@ -5,8 +5,12 @@ import {
   deleteDoc,
   getDocs,
   where,
+  getDoc,
 } from "firebase/firestore";
-import { useCollectionData } from "react-firebase-hooks/firestore";
+import {
+  useCollectionData,
+  useDocumentData,
+} from "react-firebase-hooks/firestore";
 import { apiRefs } from "./refs";
 
 export type DistributedBook = {
@@ -31,6 +35,18 @@ export type OperationDoc = {
 
 export const getOperations = async () => {
   return await getDocs(apiRefs.operations);
+};
+
+export const getOperation = async (id: string) => {
+  return await getDoc(apiRefs.operation(id));
+};
+
+export const useOperation = (id: string) => {
+  const [operationDocData, loading] = useDocumentData<OperationDoc>(
+    apiRefs.operation(id)
+  );
+
+  return { operationDocData, loading };
 };
 
 export const addOperation = async (params: OperationDoc) => {
