@@ -8,9 +8,7 @@ import {
 import { DistributedBook, OperationDoc } from "../api/operations";
 import { $booksPointsMap } from "../books";
 
-export const getBookCountsMap = (
-  books?: DistributedBook[]
-): Record<string, number> => {
+export const getBookCountsMap = (books?: DistributedBook[]): Record<string, number> => {
   return (
     books?.reduce((acc, book) => {
       acc[book.bookId] = book.count ? Number(book.count) : 0;
@@ -20,28 +18,21 @@ export const getBookCountsMap = (
 };
 
 export const calcLocationStat = (
-  prev: LocationDoc,
+  prev: LocationDoc["statistic"],
   operator: "+" | "-",
   operation: OperationDoc
 ) => {
   const operationYear = moment(operation.date).year();
-  const prevLocationStat = prev.statistic || {};
-  const prevLocationYearStat =
-    prevLocationStat?.[operationYear] || defaultYearLocationStatistic;
+  const prevLocationStat = prev || {};
+  const prevLocationYearStat = prevLocationStat?.[operationYear] || defaultYearLocationStatistic;
   const operationStat = getLocationStat(operation);
   const newLocationStat = { ...prevLocationStat };
 
-  newLocationStat[operationYear] = calcObjectFields(
-    prevLocationYearStat,
-    operator,
-    operationStat
-  );
+  newLocationStat[operationYear] = calcObjectFields(prevLocationYearStat, operator, operationStat);
   return newLocationStat;
 };
 
-export const getLocationStat = (
-  operation: OperationDoc
-): LocationsStatisticType => {
+export const getLocationStat = (operation: OperationDoc): LocationsStatisticType => {
   if (operation.isWithoutBookInformation) {
     const { totalCount = 0, totalPoints = 0, isOnline } = operation;
 

@@ -30,3 +30,11 @@ export const calcBooksCountsFromValues = (formValues: ReportFormValues) => {
 
   return { operationBooks, totalCount, totalPoints };
 };
+
+export const calcFormValuesFromBooks = (books: DistributedBook[]) => {
+  return books.reduce((acc, book) => {
+    acc[book.bookId] = book.count;
+
+    return acc;
+  }, {} as Record<number, number>);
+};

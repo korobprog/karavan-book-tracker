@@ -13,12 +13,7 @@ import {
   DatePicker,
   Typography,
 } from "antd";
-import {
-  PlusOutlined,
-  MinusOutlined,
-  StarFilled,
-  StarOutlined,
-} from "@ant-design/icons";
+import { PlusOutlined, MinusOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
 
 import { useUser } from "common/src/services/api/useUser";
 import * as storage from "common/src/services/localStorage/reportBooks";
@@ -28,7 +23,7 @@ import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { $books, $booksLoading, Book } from "common/src/services/books";
 import { LocationSelect } from "common/src/components/LocationSelect";
 import moment from "moment";
-import { calcBooksCountsFromValues, ReportFormValues } from "./helpers";
+import { calcBooksCountsFromValues, calcFormValuesFromBooks, ReportFormValues } from "./helpers";
 
 type Props = {
   currentUser: CurrentUser;
@@ -37,6 +32,7 @@ type Props = {
   isOnline: boolean;
   setIsOnline: (isOnline: boolean) => void;
   userSelect?: React.ReactNode;
+  initialValues?: ReportFormValues;
 };
 
 export const ReportForm = (props: Props) => {
@@ -47,6 +43,7 @@ export const ReportForm = (props: Props) => {
     isOnline,
     setIsOnline,
     userSelect,
+    initialValues: initialValuesProps,
   } = props;
   const { profile, favorite, userDocLoading } = currentUser;
   const { toggleFavorite } = useUser({ profile });
@@ -60,26 +57,29 @@ export const ReportForm = (props: Props) => {
     searchString: locationSearchString,
   });
 
-  const booksInitialValues = {
-    ...storage.getReportBooks().reduce((acc, book) => {
-      acc[book.bookId] = book.count;
-      return acc;
-    }, {} as Record<number, number>),
-  };
-
-  console.log(booksInitialValues);
+  const booksStorageInitialValues = calcFormValuesFromBooks(storage.getReportBooks());
 
   const initialValues = {
     date: moment(),
     location: storage.getLocationId(),
+    ...initialValuesProps,
   };
 
   useEffect(() => {
-    form.setFieldsValue(booksInitialValues);
+    if (!initialValuesProps) {
+      form.setFieldsValue(booksStorageInitialValues);
+    }
   }, []);
 
+  const { date, locationId, userId, ...booksPropsInitialValues } =
+    initialValuesProps || ({} as ReportFormValues);
+
+  const getInitialBooks = (booksValues: Record<number, number>) => {
+    return Object.values(booksValues).reduce((acc, value) => acc + value, 0);
+  };
+
   const [totalBooksCount, setTotalBooksCount] = useState(
-    Object.values(booksInitialValues).reduce((acc, value) => acc + value, 0)
+    getInitialBooks(booksPropsInitialValues) || getInitialBooks(booksStorageInitialValues)
   );
 
   // TODO: make uncontrolled
@@ -93,12 +93,10 @@ export const ReportForm = (props: Props) => {
 
   const { favoriteBooks, otherBooks } = books.reduce(
     ({ favoriteBooks, otherBooks }, book) => {
-      if (book.name.toLowerCase().includes(searchString)) {
-        if (favorite.includes(book.id)) {
-          favoriteBooks.push(book);
-        } else {
-          otherBooks.push(book);
-        }
+      if (favorite.includes(book.id)) {
+        favoriteBooks.push(book);
+      } else {
+        otherBooks.push(book);
       }
 
       return { favoriteBooks, otherBooks };
@@ -119,8 +117,7 @@ export const ReportForm = (props: Props) => {
 
   const onValuesChange = () => {
     const formValues: ReportFormValues = form.getFieldsValue();
-    const { totalCount, operationBooks } =
-      calcBooksCountsFromValues(formValues);
+    const { totalCount, operationBooks } = calcBooksCountsFromValues(formValues);
     setTotalBooksCount(totalCount);
     storage.setReportBooks(operationBooks);
     storage.setLocationId(formValues.locationId);
@@ -128,13 +125,13 @@ export const ReportForm = (props: Props) => {
 
   const onBooksReset = () => {
     form.resetFields();
-    setTotalBooksCount(0);
+    const formValues: ReportFormValues = form.getFieldsValue();
+    const { totalCount } = calcBooksCountsFromValues(formValues);
+    setTotalBooksCount(totalCount);
     storage.setReportBooks([]);
   };
 
-  const locationOptions = locations?.map((d) => (
-    <Select.Option key={d.id}>{d.name}</Select.Option>
-  ));
+  const locationOptions = locations?.map((d) => <Select.Option key={d.id}>{d.name}</Select.Option>);
 
   const { Search } = Input;
 
@@ -148,12 +145,14 @@ export const ReportForm = (props: Props) => {
 
   const onMinusClick = (bookId: string) => {
     const prevValue = form.getFieldValue(bookId) || 0;
-    form.setFieldsValue({ [bookId]: prevValue - 1 });
-    onValuesChange();
+    if (prevValue !== 0) {
+      form.setFieldsValue({ [bookId]: prevValue - 1 });
+      onValuesChange();
+    }
   };
 
   const renderBookItem = (book: Book, isFavorite: boolean) => {
-    return (
+    return book.name.toLowerCase().includes(searchString) ? (
       <List.Item
         actions={[
           <Button
@@ -168,14 +167,8 @@ export const ReportForm = (props: Props) => {
           description={book.points ? `Баллы: ${book.points}` : ""}
         />
         <Space>
-          <Button
-            onClick={() => onMinusClick(book.id)}
-            icon={<MinusOutlined />}
-          />
-          <Button
-            onClick={() => onPlusClick(book.id)}
-            icon={<PlusOutlined />}
-          />
+          <Button onClick={() => onMinusClick(book.id)} icon={<MinusOutlined />} />
+          <Button onClick={() => onPlusClick(book.id)} icon={<PlusOutlined />} />
           <Form.Item name={book.id} noStyle>
             <InputNumber
               min={0}
@@ -188,6 +181,8 @@ export const ReportForm = (props: Props) => {
           </Form.Item>
         </Space>
       </List.Item>
+    ) : (
+      <Form.Item name={book.id} noStyle />
     );
   };
 

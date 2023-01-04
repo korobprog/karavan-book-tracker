@@ -46,8 +46,7 @@ const Report = ({ currentUser }: Props) => {
       setIsSubmitting(true);
       const { locationId, userId, date } = formValues;
 
-      const { operationBooks, totalCount, totalPoints } =
-        calcBooksCountsFromValues(formValues);
+      const { operationBooks, totalCount, totalPoints } = calcBooksCountsFromValues(formValues);
 
       if (totalCount === 0) {
         setIsSubmitting(false);
@@ -58,8 +57,7 @@ const Report = ({ currentUser }: Props) => {
         userId,
         date: date.format(),
         locationId,
-        userName:
-          usersDocData?.find((value) => value.id === userId)?.name || "",
+        userName: usersDocData?.find((value) => value.id === userId)?.name || "",
         books: operationBooks,
         totalCount,
         totalPoints,
@@ -70,8 +68,7 @@ const Report = ({ currentUser }: Props) => {
       Promise.all([
         addOperation(operation),
         // TODO: вынести в transactions
-        operation.isAuthorized &&
-          addStatistic({ count: totalCount, points: totalPoints }, userId),
+        operation.isAuthorized && addStatistic({ count: totalCount, points: totalPoints }, userId),
         addOperationToLocationStatistic(operation, locations),
       ])
         .then(() => navigate(routes.reports))
@@ -100,11 +97,7 @@ const Report = ({ currentUser }: Props) => {
             <Title className="site-page-title" level={4}>
               Отметить распространненные книги
             </Title>
-            <Form.Item
-              name="userId"
-              label="Пользователь"
-              rules={[{ required: true }]}
-            >
+            <Form.Item name="userId" label="Пользователь" rules={[{ required: true }]}>
               <UserSelect
                 onSearch={onUserChange}
                 onAddNewUser={() => navigate(routes.usersNew)}

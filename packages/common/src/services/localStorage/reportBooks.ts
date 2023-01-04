@@ -9,7 +9,6 @@ export const setReportBooks = (books: DistributedBook[]) => {
 
 export const getReportBooks = () => {
   const loc = storage.local.getItem(booksKey);
-  console.log("🚀 ~ loc", loc);
   const books: DistributedBook[] = loc ? JSON.parse(loc) : [];
   return books;
 };
