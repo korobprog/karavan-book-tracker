@@ -1,5 +1,5 @@
 import { getLocationStat } from "../statistic";
-import { getOperations, OperationDoc } from "../api/operations";
+import { getOperations } from "../api/operations";
 import {
   defaultYearLocationStatistic,
   editLocation,
@@ -7,15 +7,12 @@ import {
   LocationsStatisticType,
 } from "../api/locations";
 import { calcObjectFields } from "../../utils/objects";
-import moment from "moment";
 
 // TODO: get from operation date
 const CHANGED_YEAR = 2022;
 
 const getLocationWithoutId = (locationId: string, locations: LocationDoc[]) => {
-  const currentLocationWithId = locations.find(
-    (location) => location.id === locationId
-  );
+  const currentLocationWithId = locations.find((location) => location.id === locationId);
 
   if (currentLocationWithId) {
     const { id: _omitKey, ...newLocation } = currentLocationWithId;
@@ -44,9 +41,7 @@ const editLocationStatistic = (
   return editLocation(locationId, { ...newLocation, statistic });
 };
 
-export const recalculateStatisticToLocations = async (
-  locations: LocationDoc[]
-) => {
+export const recalculateStatisticToLocations = async (locations: LocationDoc[]) => {
   try {
     const operationsSnapshot = await getOperations();
     const locationsIdsWithoutStatsMap = new Set(locations.map((loc) => loc.id));
@@ -60,13 +55,8 @@ export const recalculateStatisticToLocations = async (
       if (locationId) {
         const newOperationStat = getLocationStat(operation);
 
-        const prevStat =
-          statsByLocations[locationId] || defaultYearLocationStatistic;
-        statsByLocations[locationId] = calcObjectFields(
-          prevStat,
-          "+",
-          newOperationStat
-        );
+        const prevStat = statsByLocations[locationId] || defaultYearLocationStatistic;
+        statsByLocations[locationId] = calcObjectFields(prevStat, "+", newOperationStat);
       }
     });
 
@@ -81,11 +71,7 @@ export const recalculateStatisticToLocations = async (
     locationsIdsWithoutStatsMap.forEach(async (locationId) => {
       if (locationId) {
         const location = getLocationWithoutId(locationId, locations);
-        const promise = editLocationStatistic(
-          locationId,
-          location,
-          defaultYearLocationStatistic
-        );
+        const promise = editLocationStatistic(locationId, location, defaultYearLocationStatistic);
         promises.push(promise);
       }
     });
@@ -94,23 +80,4 @@ export const recalculateStatisticToLocations = async (
   } catch (e) {
     console.error(e);
   }
-};
-
-export const addOperationToLocationStatistic = async (
-  operation: OperationDoc,
-  locations: LocationDoc[]
-) => {
-  const { locationId, isAuthorized, date } = operation;
-  if (!isAuthorized) {
-    return;
-  }
-  const newStatYearData = getLocationStat(operation);
-  const operationYear = moment(date).year();
-
-  const location = getLocationWithoutId(locationId, locations);
-  const prevStat =
-    location?.statistic?.[operationYear] || defaultYearLocationStatistic;
-  const newStat = calcObjectFields(prevStat, "+", newStatYearData);
-
-  editLocationStatistic(locationId, location, newStat);
 };

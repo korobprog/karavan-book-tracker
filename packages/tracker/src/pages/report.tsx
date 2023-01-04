@@ -2,17 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { routes } from "../shared/routes";
-import { useUser } from "common/src/services/api/useUser";
-import { addOperation, OperationDoc } from "common/src/services/api/operations";
-import { useLocations } from "common/src/services/api/locations";
+import { OperationDoc } from "common/src/services/api/operations";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import { addOperationToLocationStatistic } from "common/src/services/locations";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import {
   calcBooksCountsFromValues,
   ReportForm,
   ReportFormValues,
 } from "common/src/components/forms/report";
+import { addOperationTransaction } from "common/src/services/api/transactions";
 
 type Props = {
   currentUser: CurrentUser;
@@ -20,13 +18,10 @@ type Props = {
 
 export const Report = ({ currentUser }: Props) => {
   const { profile, user, loading, userDocLoading } = currentUser;
-  const { addStatistic } = useUser({ profile });
   const [isOnline, setIsOnline] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
-
-  const { locations } = useLocations({});
 
   useEffect(() => {
     if (!user && !loading) {
@@ -37,8 +32,7 @@ export const Report = ({ currentUser }: Props) => {
   function onFinish(formValues: ReportFormValues) {
     if (user && profile?.name) {
       setIsSubmitting(true);
-      const { operationBooks, totalCount, totalPoints } =
-        calcBooksCountsFromValues(formValues);
+      const { operationBooks, totalCount, totalPoints } = calcBooksCountsFromValues(formValues);
       const { locationId, date } = formValues;
 
       if (totalCount === 0) {
@@ -58,22 +52,14 @@ export const Report = ({ currentUser }: Props) => {
         isOnline,
       };
 
-      Promise.all([
-        addStatistic({ count: totalCount, points: totalPoints }),
-        addOperation(operation),
-        addOperationToLocationStatistic(operation, locations),
-      ])
+      addOperationTransaction(operation)
         .then(() => navigate(routes.statistic))
         .finally(() => setIsSubmitting(false));
     }
   }
 
   return (
-    <BaseLayout
-      title="ОТМЕТИТЬ КНИГИ"
-      backPath={routes.root}
-      userDocLoading={userDocLoading}
-    >
+    <BaseLayout title="ОТМЕТИТЬ КНИГИ" backPath={routes.root} userDocLoading={userDocLoading}>
       <ReportForm
         currentUser={currentUser}
         onFinish={onFinish}
