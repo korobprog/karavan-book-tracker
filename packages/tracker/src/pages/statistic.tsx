@@ -16,8 +16,6 @@ import {
   DeleteOutlined,
   ShareAltOutlined,
   EditOutlined,
-  LeftOutlined,
-  RightOutlined,
 } from "@ant-design/icons";
 import { useStore } from "effector-react";
 
@@ -29,8 +27,9 @@ import moment from "moment";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { useLocations } from "common/src/services/api/locations";
 import { $booksHashMap, $booksLoading } from "common/src/services/books";
-import { getIsNowYear, getIsStartYear, nowYear } from "common/src/services/year";
+import { nowYear } from "common/src/services/year";
 import { BaseLayout } from "common/src/components/BaseLayout";
+import { YearSwitch } from "common/src/components/YearSwitch";
 
 type Props = {
   currentUser: CurrentUser;
@@ -166,21 +165,7 @@ export const Statistic = ({ currentUser }: Props) => {
     <BaseLayout title="МОЯ СТАТИСТИКА" backPath={routes.root} userDocLoading={userDocLoading}>
       <Row justify="center" align="middle">
         <Space split={<Divider type="vertical" />}>
-          <Space size="small">
-            <Button
-              icon={<LeftOutlined />}
-              onClick={() => setSelectedYear(selectedYear - 1)}
-              disabled={getIsStartYear(selectedYear)}
-              size="small"
-            />
-            <AntdStatistic title="Год" value={selectedYear} groupSeparator="" />
-            <Button
-              icon={<RightOutlined />}
-              onClick={() => setSelectedYear(selectedYear + 1)}
-              disabled={getIsNowYear(selectedYear)}
-              size="small"
-            />
-          </Space>
+          <YearSwitch selectedYear={selectedYear} setSelectedYear={setSelectedYear} />
           <AntdStatistic title="Книг" value={statistic?.count} loading={userDocLoading} />
           <AntdStatistic title="Баллов" value={statistic?.points} loading={userDocLoading} />
         </Space>
