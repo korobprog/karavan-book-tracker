@@ -209,7 +209,6 @@ export const ReportForm = (props: Props) => {
           onSearch={onLocationChange}
           onAddNewLocation={onAddNewLocation}
           locationSearchString={locationSearchString}
-          // TODO: add onChange add to localStorage
         >
           {locationOptions}
         </LocationSelect>
