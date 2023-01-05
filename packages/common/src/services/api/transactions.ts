@@ -1,7 +1,6 @@
 import { getFirestore, runTransaction } from "firebase/firestore";
 
 import { calcLocationStat, calcUserStat } from "../statistic";
-import { LocationDoc } from "./locations";
 import { OperationDoc } from "./operations";
 import { apiRefs } from "./refs";
 
