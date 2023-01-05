@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Table, Divider, Space, TableColumnsType, Popconfirm, Typography } from "antd";
-import { DeleteOutlined, UserAddOutlined } from "@ant-design/icons";
+import { CalculatorOutlined, DeleteOutlined, UserAddOutlined } from "@ant-design/icons";
 
 import { useUsers } from "common/src/services/api/useUsers";
 import { LocationDoc, useLocations } from "common/src/services/api/locations";
@@ -12,6 +12,7 @@ import { BaseLayout } from "common/src/components/BaseLayout";
 import { nowYear } from "common/src/services/year";
 import { YearSwitch } from "common/src/components/YearSwitch";
 import { routes } from "../shared/routes";
+import { recalculateStatisticToUsers } from "common/src/services/statistic/user";
 
 type Props = {
   currentUser: CurrentUser;
@@ -26,6 +27,15 @@ export const Users = ({ currentUser }: Props) => {
   const { deleteProfile } = useUser({ profile });
   const { locations, loading: locationLoading } = useLocations({});
   const locationsHashTable = useMemo(() => mapDocsToHashTable<LocationDoc>(locations), [locations]);
+
+  const [isCalculating, setIsCalculating] = useState(false);
+  const onCalculate = async () => {
+    setIsCalculating(true);
+    if (usersDocData) {
+      await recalculateStatisticToUsers(usersDocData);
+    }
+    setIsCalculating(false);
+  };
 
   const onAddUser = () => {
     navigate(routes.usersNew);
@@ -116,6 +126,18 @@ export const Users = ({ currentUser }: Props) => {
       <Button block size="large" type="primary" icon={<UserAddOutlined />} onClick={onAddUser}>
         Добавить пользователя
       </Button>
+      <Divider dashed />
+      <Button
+        block
+        size="large"
+        type="primary"
+        icon={<CalculatorOutlined />}
+        onClick={onCalculate}
+        loading={isCalculating || usersDocLoading || locationLoading}
+      >
+        Пересчитать статистику
+      </Button>
+
       <Divider dashed />
       <Space>
         <Typography.Text>Статистика за</Typography.Text>

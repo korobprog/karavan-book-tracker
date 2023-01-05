@@ -39,6 +39,10 @@ type Params = {
   user?: User | null;
 };
 
+export const updateProfile = async (id: string, profile: Partial<UserDoc>) => {
+  await updateDoc(apiRefs.user(id), profile);
+};
+
 export const useUser = ({ profile, user }: Params) => {
   const id = profile?.id || user?.uid;
 
