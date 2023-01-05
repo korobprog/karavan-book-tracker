@@ -3,20 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { Typography, Form, Select } from "antd";
 
 import { routes } from "../shared/routes";
-import { useUser } from "common/src/services/api/useUser";
-import { addOperation, OperationDoc } from "common/src/services/api/operations";
-import { useLocations } from "common/src/services/api/locations";
+import { OperationDoc } from "common/src/services/api/operations";
 import { useDebouncedCallback } from "use-debounce";
 import { UserSelect } from "common/src/components/UserSelect";
 import { useUsers } from "common/src/services/api/useUsers";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import { addOperationToLocationStatistic } from "common/src/services/locations";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import {
   calcBooksCountsFromValues,
   ReportForm,
   ReportFormValues,
 } from "common/src/components/forms/report";
+import { addOperationTransaction } from "common/src/services/api/transactions";
 
 type Props = {
   currentUser: CurrentUser;
@@ -24,7 +22,6 @@ type Props = {
 
 const Report = ({ currentUser }: Props) => {
   const { profile, user } = currentUser;
-  const { addStatistic } = useUser({ profile });
 
   const [userSearchString, setUserSearchString] = useState("");
   const [isOnline, setIsOnline] = useState(false);
@@ -32,7 +29,6 @@ const Report = ({ currentUser }: Props) => {
 
   const navigate = useNavigate();
 
-  const { locations } = useLocations({});
   const { usersDocData } = useUsers({
     searchString: userSearchString,
   });
@@ -65,12 +61,7 @@ const Report = ({ currentUser }: Props) => {
         isOnline,
       };
 
-      Promise.all([
-        addOperation(operation),
-        // TODO: вынести в transactions
-        operation.isAuthorized && addStatistic({ count: totalCount, points: totalPoints }, userId),
-        addOperationToLocationStatistic(operation, locations),
-      ])
+      addOperationTransaction(operation)
         .then(() => navigate(routes.reports))
         .finally(() => setIsSubmitting(false));
     }

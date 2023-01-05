@@ -6,6 +6,38 @@ import { apiRefs } from "./refs";
 
 const db = getFirestore();
 
+export const addOperationTransaction = async (newOperation: OperationDoc) => {
+  try {
+    await runTransaction(db, async (transaction) => {
+      const userRef = apiRefs.user(newOperation.userId);
+      const locationRef = apiRefs.location(newOperation.locationId);
+
+      const [userDoc, locationDoc] = await Promise.all([
+        transaction.get(userRef),
+        transaction.get(locationRef),
+      ]);
+
+      if (!userDoc.exists() || !locationDoc.exists()) {
+        throw "Document does not exist!";
+      }
+
+      const prevUserStat = userDoc.data().statistic || {};
+      const newUserStat = calcUserStat(prevUserStat, "+", newOperation);
+      transaction.update(userRef, { statistic: newUserStat });
+
+      // TODO: add isAuthorized to other transactions
+      if (newOperation.isAuthorized) {
+        const prevLocationStat = locationDoc.data().statistic;
+        const newLocationStat = calcLocationStat(prevLocationStat, "+", newOperation);
+        transaction.update(locationRef, { statistic: newLocationStat });
+      }
+    });
+    console.log("Transaction successfully committed!");
+  } catch (e) {
+    console.log("Transaction failed: ", e);
+  }
+};
+
 export const removeOperationTransaction = async (operationId: string) => {
   try {
     await runTransaction(db, async (transaction) => {

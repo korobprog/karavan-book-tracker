@@ -67,7 +67,7 @@ export const ReportEdit = ({ currentUser }: Props) => {
         isOnline,
       };
 
-      Promise.all([editOperationTransaction(id, operation)])
+      editOperationTransaction(id, operation)
         .then(() => navigate(routes.statistic))
         .finally(() => setIsSubmitting(false));
     }

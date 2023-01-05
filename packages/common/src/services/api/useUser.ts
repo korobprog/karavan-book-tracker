@@ -1,11 +1,5 @@
 import { User } from "firebase/auth";
-import {
-  setDoc,
-  updateDoc,
-  addDoc,
-  getDoc,
-  deleteDoc,
-} from "firebase/firestore";
+import { setDoc, updateDoc, addDoc, deleteDoc } from "firebase/firestore";
 import { apiRefs } from "./refs";
 import { UserStatisticType } from "./statistic";
 
@@ -51,9 +45,7 @@ export const useUser = ({ profile, user }: Params) => {
   const toggleFavorite = async (favoriteId: string) => {
     if (id) {
       if (profile?.favorite?.includes(favoriteId)) {
-        const filteredFavorite = profile.favorite.filter(
-          (value) => value !== favoriteId
-        );
+        const filteredFavorite = profile.favorite.filter((value) => value !== favoriteId);
         await setDoc(apiRefs.user(id), {
           ...profile,
           favorite: filteredFavorite,
@@ -85,42 +77,7 @@ export const useUser = ({ profile, user }: Params) => {
     }
   };
 
-  const rewriteUserStatistic = (newBooks: UserStatisticType, user?: UserDoc) => ({
-    ...user,
-    statistic: {
-      "2022": {
-        count: (user?.statistic?.[2022]?.count || 0) + newBooks.count,
-        points: (user?.statistic?.[2022]?.points || 0) + newBooks.points,
-      },
-    },
-  });
-
-  const addStatistic = async (
-    newBooks: UserStatisticType,
-    selectedUserId?: string
-  ) => {
-    if (selectedUserId) {
-      const selectedUser = (await getDoc(apiRefs.user(selectedUserId))).data();
-
-      await setDoc(
-        apiRefs.user(selectedUserId),
-        rewriteUserStatistic(newBooks, selectedUser)
-      );
-
-      return;
-    }
-
-    if (profile) {
-      await setDoc(
-        apiRefs.user(profile.id),
-        rewriteUserStatistic(newBooks, profile)
-      );
-      return;
-    }
-  };
-
   return {
-    addStatistic,
     toggleFavorite,
     setProfile,
     deleteProfile,

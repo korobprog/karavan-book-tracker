@@ -4,12 +4,13 @@ import { LocationDoc } from "common/src/services/api/locations";
 
 type LocationStatisticProps = {
   statistic: LocationDoc["statistic"];
+  year: number;
 };
 
 export const LocationStatistic: React.FC<LocationStatisticProps> = (props) => {
-  const { statistic } = props;
+  const { statistic, year } = props;
 
-  if (!statistic?.[2022]) {
+  if (!statistic?.[year]) {
     return null;
   }
 
@@ -19,7 +20,7 @@ export const LocationStatistic: React.FC<LocationStatisticProps> = (props) => {
     totalOnlineCount,
     totalOnlinePoints,
     totalPoints,
-  } = statistic[2022];
+  } = statistic[year];
 
   return (
     <>

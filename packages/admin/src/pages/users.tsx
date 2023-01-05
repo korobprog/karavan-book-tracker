@@ -1,13 +1,6 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Button,
-  Table,
-  Divider,
-  Space,
-  TableColumnsType,
-  Popconfirm,
-} from "antd";
+import { Button, Table, Divider, Space, TableColumnsType, Popconfirm, Typography } from "antd";
 import { DeleteOutlined, UserAddOutlined } from "@ant-design/icons";
 
 import { useUsers } from "common/src/services/api/useUsers";
@@ -16,6 +9,8 @@ import { mapDocsToHashTable } from "common/src/services/api/utils";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { useUser } from "common/src/services/api/useUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
+import { nowYear } from "common/src/services/year";
+import { YearSwitch } from "common/src/components/YearSwitch";
 import { routes } from "../shared/routes";
 
 type Props = {
@@ -30,22 +25,21 @@ export const Users = ({ currentUser }: Props) => {
   const { usersDocData, usersDocLoading } = useUsers({});
   const { deleteProfile } = useUser({ profile });
   const { locations, loading: locationLoading } = useLocations({});
-  const locationsHashTable = useMemo(
-    () => mapDocsToHashTable<LocationDoc>(locations),
-    [locations]
-  );
+  const locationsHashTable = useMemo(() => mapDocsToHashTable<LocationDoc>(locations), [locations]);
 
   const onAddUser = () => {
     navigate(routes.usersNew);
   };
+
+  const [selectedYear, setSelectedYear] = useState(nowYear);
 
   const data =
     usersDocData?.map((user) => ({
       key: user.id,
       nameSpiritual: user.nameSpiritual,
       name: user.name,
-      count: user.statistic?.[2022]?.count,
-      points: user.statistic?.[2022]?.points,
+      count: user.statistic?.[selectedYear]?.count,
+      points: user.statistic?.[selectedYear]?.points,
       contacts: { phone: user.phone, email: user.email },
       city: (user.city && locationsHashTable[user.city]?.name) || user.city,
       address: user.address,
@@ -119,15 +113,14 @@ export const Users = ({ currentUser }: Props) => {
 
   return (
     <BaseLayout title="ПОЛЬЗОВАТЕЛИ" backPath={routes.root}>
-      <Button
-        block
-        size="large"
-        type="primary"
-        icon={<UserAddOutlined />}
-        onClick={onAddUser}
-      >
+      <Button block size="large" type="primary" icon={<UserAddOutlined />} onClick={onAddUser}>
         Добавить пользователя
       </Button>
+      <Divider dashed />
+      <Space>
+        <Typography.Text>Статистика за</Typography.Text>
+        <YearSwitch selectedYear={selectedYear} setSelectedYear={setSelectedYear} />
+      </Space>
       <Divider dashed />
       <Table
         columns={columns}
