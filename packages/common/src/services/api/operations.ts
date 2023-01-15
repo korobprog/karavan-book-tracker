@@ -49,7 +49,6 @@ export const useOperation = (id: string) => {
   return { operationDocData, loading };
 };
 
-// unused
 export const addOperation = async (params: OperationDoc) => {
   addDoc(apiRefs.operations, params);
 };

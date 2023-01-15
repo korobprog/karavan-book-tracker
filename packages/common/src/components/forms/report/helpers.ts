@@ -10,7 +10,7 @@ export type ReportFormValues = Record<number, number> & {
 };
 
 export const calcBooksCountsFromValues = (formValues: ReportFormValues) => {
-  const { locationId, date, ...bookIdsWithCounts } = formValues;
+  const { locationId, date, userId, ...bookIdsWithCounts } = formValues;
 
   const books = $books.getState();
   let totalCount = 0;
