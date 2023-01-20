@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Button,
@@ -14,22 +15,21 @@ import {
   PlusCircleOutlined,
   DeleteOutlined,
   ShareAltOutlined,
+  EditOutlined,
 } from "@ant-design/icons";
 import { useStore } from "effector-react";
 
 import { routes } from "../shared/routes";
-import {
-  OperationDoc,
-  useMyOperations,
-} from "common/src/services/api/operations";
+import { OperationDoc, useMyOperations } from "common/src/services/api/operations";
 import { removeOperationTransaction } from "common/src/services/api/transactions";
 import { shareOperation } from "common/src/services/share";
 import moment from "moment";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { useLocations } from "common/src/services/api/locations";
 import { $booksHashMap, $booksLoading } from "common/src/services/books";
+import { nowYear } from "common/src/services/year";
 import { BaseLayout } from "common/src/components/BaseLayout";
-import { useState } from "react";
+import { YearSwitch } from "common/src/components/YearSwitch";
 
 type Props = {
   currentUser: CurrentUser;
@@ -41,17 +41,21 @@ export const Statistic = ({ currentUser }: Props) => {
   const booksHashMap = useStore($booksHashMap);
   const booksLoading = useStore($booksLoading);
 
-  const { myOperationsDocData, loading: myOperationsLoading } = useMyOperations(
-    user?.uid || ""
-  );
+  const { myOperationsDocData, loading: myOperationsLoading } = useMyOperations(user?.uid || "");
 
   const { locations, locationsHashMap } = useLocations({});
 
-  const statistic2022 = profile?.statistic?.[2022];
+  const [selectedYear, setSelectedYear] = useState(nowYear);
+  const statistic = profile?.statistic?.[selectedYear];
 
   const onAddOperation = () => {
     navigate(routes.report);
   };
+
+  const onEditOperation = (id: string) => {
+    navigate(routes.reportEdit(id));
+  };
+
   const [deleteLoading, setDeleteLoading] = useState(false);
   const onRemoveOperation = async (operationId: string) => {
     setDeleteLoading(true);
@@ -106,8 +110,7 @@ export const Statistic = ({ currentUser }: Props) => {
       dataIndex: "location",
       key: "location",
       // TODO: refactor to hashmap
-      render: (locationId) =>
-        locations.find((location) => location.id === locationId)?.name,
+      render: (locationId) => locations.find((location) => location.id === locationId)?.name,
     },
     {
       title: "Книги",
@@ -133,11 +136,7 @@ export const Statistic = ({ currentUser }: Props) => {
       dataIndex: "isAuthorized",
       key: "isAuthorized",
       render: (status: boolean) =>
-        status ? (
-          <Tag color="green">Подтвержден</Tag>
-        ) : (
-          <Tag color="processing">Ожидание</Tag>
-        ),
+        status ? <Tag color="green">Подтвержден</Tag> : <Tag color="processing">Ожидание</Tag>,
     },
     {
       title: "Действие",
@@ -145,10 +144,11 @@ export const Statistic = ({ currentUser }: Props) => {
       fixed: "right",
       render: (text: string, record) => (
         <Space>
+          <Button icon={<ShareAltOutlined />} onClick={() => share(record)} type="default" />
           <Button
-            icon={<ShareAltOutlined />}
-            onClick={() => share(record)}
-            type="default"
+            icon={<EditOutlined />}
+            loading={deleteLoading}
+            onClick={() => onEditOperation(String(record.key))}
           />
           <Popconfirm
             title={`Удалить операцию?`}
@@ -162,16 +162,12 @@ export const Statistic = ({ currentUser }: Props) => {
   ];
 
   return (
-    <BaseLayout
-      title="МОЯ СТАТИСТИКА"
-      backPath={routes.root}
-      userDocLoading={userDocLoading}
-    >
-      <Row justify="center" align="top">
-        <Space size="large" split={<Divider type="vertical" />}>
-          <AntdStatistic title="Год" value="2022" groupSeparator="" loading={userDocLoading} />
-          <AntdStatistic title="Книг" value={statistic2022?.count} loading={userDocLoading} />
-          <AntdStatistic title="Баллов" value={statistic2022?.points} loading={userDocLoading} />
+    <BaseLayout title="МОЯ СТАТИСТИКА" backPath={routes.root} userDocLoading={userDocLoading}>
+      <Row justify="center" align="middle">
+        <Space split={<Divider type="vertical" />}>
+          <YearSwitch selectedYear={selectedYear} setSelectedYear={setSelectedYear} />
+          <AntdStatistic title="Книг" value={statistic?.count} loading={userDocLoading} />
+          <AntdStatistic title="Баллов" value={statistic?.points} loading={userDocLoading} />
         </Space>
       </Row>
       <Divider dashed />

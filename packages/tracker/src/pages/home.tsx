@@ -25,13 +25,10 @@ export const Home = (props: Props) => {
     navigate(routes.report);
   };
 
-  const { Title, Paragraph } = Typography;
+  const { Paragraph } = Typography;
 
   return (
     <BaseLayout title="УЧЕТ КНИГ" userDocLoading={userDocLoading}>
-      <Title className="site-page-title" level={2}>
-        Удачи на марафоне!
-      </Title>
       <Paragraph>Отметить распространненные книги</Paragraph>
       <Button
         type="primary"

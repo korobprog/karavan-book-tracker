@@ -1,5 +1,5 @@
 import React from "react";
-import { addDoc, query, where, setDoc } from "firebase/firestore";
+import { addDoc, query, where, setDoc, updateDoc } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 
 import { getHashMap } from "common/src/utils/getHashMap";
@@ -38,6 +38,10 @@ export const editLocation = async (id: string, data: LocationDoc) => {
   setDoc(apiRefs.location(id), data);
 };
 
+export const updateLocation = async (id: string, data: Partial<LocationDoc>) => {
+  updateDoc(apiRefs.location(id), data);
+};
+
 export const setCoordinates = (x: number, y: number, location: LocationDoc) => {
   const { id, ...newLocation }: LocationDoc = {
     ...location,
@@ -54,16 +58,15 @@ export type UseLocationsParams = {
 
 export const useLocations = (params?: UseLocationsParams) => {
   const { searchString = "" } = params || {};
-  const [locationsDocData, locationsDocLoading] =
-    useCollectionData<LocationDoc>(
-      searchString
-        ? query(
-            apiRefs.locations,
-            where("name", ">=", searchString),
-            where("name", "<=", searchString + "\uf8ff")
-          )
-        : apiRefs.locations
-    );
+  const [locationsDocData, locationsDocLoading] = useCollectionData<LocationDoc>(
+    searchString
+      ? query(
+          apiRefs.locations,
+          where("name", ">=", searchString),
+          where("name", "<=", searchString + "\uf8ff")
+        )
+      : apiRefs.locations
+  );
 
   const locationsHashMap = React.useMemo(() => {
     return locationsDocData ? getHashMap<LocationDoc>(locationsDocData) : null;

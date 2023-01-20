@@ -9,6 +9,7 @@ import Profile from "./pages/profile";
 import { routes } from "././shared/routes";
 import { Loading } from "common/src/components/Loading";
 import { Report } from "./pages/report";
+import { ReportEdit } from "./pages/reportEdit";
 import { Statistic } from "./pages/statistic";
 import { Team } from "./pages/team";
 import { TeamEdit } from "./pages/teamEdit";
@@ -87,6 +88,15 @@ function App() {
           path={routes.teamEdit}
           element={<TeamEdit currentUser={currentUser} />}
         />
+        <Route path={routes.root} element={<Home currentUser={currentUser} />} />
+        <Route path={routes.report} element={<Report currentUser={currentUser} />} />
+        <Route path={routes.reportEdit()} element={<ReportEdit currentUser={currentUser} />} />
+        <Route path={routes.statistic} element={<Statistic currentUser={currentUser} />} />
+        <Route path={routes.auth} element={<Auth currentUser={currentUser} />} />
+        <Route path={routes.registration} element={<Registration currentUser={currentUser} />} />
+        <Route path={routes.profile} element={<Profile currentUser={currentUser} />} />
+        <Route path={routes.team} element={<Team currentUser={currentUser} />} />
+        <Route path={routes.teamEdit} element={<TeamEdit currentUser={currentUser} />} />
       </Routes>
     </div>
   );
