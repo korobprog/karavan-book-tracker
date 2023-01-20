@@ -3,9 +3,10 @@ export const routes = {
     auth: '/auth',
     registration: '/registration',
     profile: '/profile',
+
     report: '/report',
+
     statistic: '/statistic',
     team: '/team',
     teamEdit: '/team/edit',
-    resetpassemail: '/resetpassemail'
 };

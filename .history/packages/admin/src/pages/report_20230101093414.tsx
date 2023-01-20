@@ -65,7 +65,6 @@ const Report = ({ currentUser }: Props) => {
   const { usersDocData } = useUsers({
     searchString: userSearchString,
   });
-  console.log(useUsers)
 
   const onOnlineChange = () => {
     setIsOnline(!isOnline);
@@ -77,8 +76,8 @@ const Report = ({ currentUser }: Props) => {
 
   const onUserChange = useDebouncedCallback((value: string) => {
     setUserSearchString(value);
-    
   }, 1000);
+
   const { favoriteBooks, otherBooks } = books.reduce(
     ({ favoriteBooks, otherBooks }, book) => {
       if (book.name.toLowerCase().includes(searchString)) {
@@ -137,7 +136,7 @@ const Report = ({ currentUser }: Props) => {
         date: date.format(),
         locationId,
         userName:
-          usersDocData?.find((value) => value.id === userId)?.name && usersDocData?.find((value) => value.id === userId)?.nameSpiritual  || "",
+          usersDocData?.find((value) => value.id === userId)?.name || "",
         books: operationBooks,
         totalCount,
         totalPoints,
@@ -163,7 +162,7 @@ const Report = ({ currentUser }: Props) => {
 
   const usersOptions = usersDocData?.map((d) => (
     <Select.Option key={d.id}>
-     {d.name} {d.nameSpiritual}
+      {d.name} {d.nameSpiritual}
     </Select.Option>
   ));
 

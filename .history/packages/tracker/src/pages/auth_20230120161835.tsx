@@ -97,7 +97,7 @@ export const Auth = ({ currentUser }: Props) => {
               Войти
             </Button>
             <Link to={routes.registration}>Регистрация</Link>
-            <Link to={routes.resetpassemail}>Восстановить пароль</Link>
+            <Link to={routes.passwordrecovery}>Восстановить пароль</Link>
           </Space>
         </Form.Item>
         <Button

@@ -106,7 +106,7 @@ const Report = ({ currentUser }: Props) => {
   };
 
   function onFinish(formValues: FormValues) {
-    if (user && profile?.name) {
+    if (user && profile?.name && profile?.nameSpiritual) {
       setIsSubmitting(true);
       const { locationId, userId, date, ...bookIdsWithCounts } = formValues;
 
@@ -137,7 +137,7 @@ const Report = ({ currentUser }: Props) => {
         date: date.format(),
         locationId,
         userName:
-          usersDocData?.find((value) => value.id === userId)?.name && usersDocData?.find((value) => value.id === userId)?.nameSpiritual  || "",
+          usersDocData?.find((value) => value.id === userId)?.name || usersDocData?.find((value) => value.id === userId)?.nameSpiritual  || "",
         books: operationBooks,
         totalCount,
         totalPoints,

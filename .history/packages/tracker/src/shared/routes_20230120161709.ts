@@ -7,5 +7,5 @@ export const routes = {
     statistic: '/statistic',
     team: '/team',
     teamEdit: '/team/edit',
-    resetpassemail: '/resetpassemail'
+    reset: '/passwordrecovery'
 };

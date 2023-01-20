@@ -19,7 +19,7 @@ type Props = {
   currentUser: CurrentUser;
 };
 
-export const Auth = ({ currentUser }: Props) => {
+export const Reset = ({ currentUser }: Props) => {
   const { auth, user } = currentUser;
   const [signInWithGoogle, , , googleError] = useSignInWithGoogle(auth);
   const [signInWithEmailAndPassword, , , emailError] =
@@ -72,47 +72,6 @@ export const Auth = ({ currentUser }: Props) => {
         >
           <Input />
         </Form.Item>
-        <Form.Item
-          label="Пароль"
-          name="password"
-          rules={[{ required: true, message: "Пожалуйста, введите пароль" }]}
-        >
-          <Input.Password />
-        </Form.Item>
-        <Form.Item
-          name="remember"
-          valuePropName="checked"
-          wrapperCol={{ offset: 8, span: 16 }}
-        >
-          <Checkbox>Запомни меня</Checkbox>
-        </Form.Item>
-        <Form.Item
-          wrapperCol={{ offset: 8, span: 16 }}
-          help={
-            emailError && <Text type="danger">Неверный логин или пароль</Text>
-          }
-        >
-          <Space>
-            <Button type="primary" htmlType="submit" loading={isSubmitting}>
-              Войти
-            </Button>
-            <Link to={routes.registration}>Регистрация</Link>
-            <Link to={routes.resetpassemail}>Восстановить пароль</Link>
-          </Space>
-        </Form.Item>
-        <Button
-          className="centred"
-          icon={<GoogleOutlined />}
-          type="primary"
-          onClick={() => signInWithGoogle()}
-        >
-          Войти через Google
-        </Button>
-        {googleError && (
-          <Text type="danger">
-            При входе произошла ошибка: {googleError.message}
-          </Text>
-        )}
       </Form>
     </BaseLayout>
   );

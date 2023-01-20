@@ -19,7 +19,7 @@ type Props = {
   currentUser: CurrentUser;
 };
 
-export const Auth = ({ currentUser }: Props) => {
+export const Reset = ({ currentUser }: Props) => {
   const { auth, user } = currentUser;
   const [signInWithGoogle, , , googleError] = useSignInWithGoogle(auth);
   const [signInWithEmailAndPassword, , , emailError] =
@@ -97,7 +97,7 @@ export const Auth = ({ currentUser }: Props) => {
               Войти
             </Button>
             <Link to={routes.registration}>Регистрация</Link>
-            <Link to={routes.resetpassemail}>Восстановить пароль</Link>
+            <Link to={routes.passwordrecovery}>Восстановить пароль</Link>
           </Space>
         </Form.Item>
         <Button

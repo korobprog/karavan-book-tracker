@@ -17,7 +17,7 @@ import { useBooks } from "common/src/services/books";
 
 import "./App.less";
 
-const routesWithoutRedirect = [routes.registration, routes.auth, routes.resetpassemail];
+const routesWithoutRedirect = [routes.registration, routes.auth];
 
 function App() {
   const currentUser = useCurrentUser();
@@ -72,7 +72,7 @@ function App() {
           element={<Registration currentUser={currentUser} />}
         />
           <Route
-          path={routes.resetpassemail}
+          path={routes.passwordrecovery}
           element={<Reset currentUser={currentUser} />}
         />
         <Route

@@ -79,6 +79,7 @@ const Report = ({ currentUser }: Props) => {
     setUserSearchString(value);
     
   }, 1000);
+console.log(useDebouncedCallback)
   const { favoriteBooks, otherBooks } = books.reduce(
     ({ favoriteBooks, otherBooks }, book) => {
       if (book.name.toLowerCase().includes(searchString)) {
@@ -137,7 +138,7 @@ const Report = ({ currentUser }: Props) => {
         date: date.format(),
         locationId,
         userName:
-          usersDocData?.find((value) => value.id === userId)?.name && usersDocData?.find((value) => value.id === userId)?.nameSpiritual  || "",
+          usersDocData?.find((value) => value.id === userId)?.name || "",
         books: operationBooks,
         totalCount,
         totalPoints,
@@ -163,7 +164,7 @@ const Report = ({ currentUser }: Props) => {
 
   const usersOptions = usersDocData?.map((d) => (
     <Select.Option key={d.id}>
-     {d.name} {d.nameSpiritual}
+      {d.name} {d.nameSpiritual}
     </Select.Option>
   ));
 

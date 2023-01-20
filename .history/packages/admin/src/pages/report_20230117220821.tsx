@@ -106,7 +106,7 @@ const Report = ({ currentUser }: Props) => {
   };
 
   function onFinish(formValues: FormValues) {
-    if (user && profile?.name) {
+    if (user && profile?.name && profile?.nameSpiritual) {
       setIsSubmitting(true);
       const { locationId, userId, date, ...bookIdsWithCounts } = formValues;
 

@@ -3,7 +3,6 @@ import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 import { Auth } from "./pages/auth";
 import { Registration } from "./pages/registration";
-import { Reset } from "./pages/resetpass";
 import { Home } from "./pages/home";
 import Profile from "./pages/profile";
 import { routes } from "././shared/routes";
@@ -17,7 +16,7 @@ import { useBooks } from "common/src/services/books";
 
 import "./App.less";
 
-const routesWithoutRedirect = [routes.registration, routes.auth, routes.resetpassemail];
+const routesWithoutRedirect = [routes.registration, routes.auth];
 
 function App() {
   const currentUser = useCurrentUser();
@@ -70,10 +69,6 @@ function App() {
         <Route
           path={routes.registration}
           element={<Registration currentUser={currentUser} />}
-        />
-          <Route
-          path={routes.resetpassemail}
-          element={<Reset currentUser={currentUser} />}
         />
         <Route
           path={routes.profile}

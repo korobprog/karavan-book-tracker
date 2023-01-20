@@ -12,16 +12,14 @@ import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import { GoogleOutlined } from "@ant-design/icons";
 import { BaseLayout } from "common/src/components/BaseLayout";
 
 type Props = {
   currentUser: CurrentUser;
 };
 
-export const Auth = ({ currentUser }: Props) => {
+export const Reset = ({ currentUser }: Props) => {
   const { auth, user } = currentUser;
-  const [signInWithGoogle, , , googleError] = useSignInWithGoogle(auth);
   const [signInWithEmailAndPassword, , , emailError] =
     useSignInWithEmailAndPassword(auth);
   const navigate = useNavigate();
@@ -47,7 +45,7 @@ export const Auth = ({ currentUser }: Props) => {
   const { Title, Text } = Typography;
 
   return (
-    <BaseLayout title="УЧЕТ КНИГ" headerActions={[]}>
+    <BaseLayout title="ВОСТАНОВЛЕНИ ПАРОЛЯ" headerActions={[]}>
       <Title className="site-page-title" level={2}>
         ВХОД В УЧЕТ КНИГ
       </Title>
@@ -72,47 +70,6 @@ export const Auth = ({ currentUser }: Props) => {
         >
           <Input />
         </Form.Item>
-        <Form.Item
-          label="Пароль"
-          name="password"
-          rules={[{ required: true, message: "Пожалуйста, введите пароль" }]}
-        >
-          <Input.Password />
-        </Form.Item>
-        <Form.Item
-          name="remember"
-          valuePropName="checked"
-          wrapperCol={{ offset: 8, span: 16 }}
-        >
-          <Checkbox>Запомни меня</Checkbox>
-        </Form.Item>
-        <Form.Item
-          wrapperCol={{ offset: 8, span: 16 }}
-          help={
-            emailError && <Text type="danger">Неверный логин или пароль</Text>
-          }
-        >
-          <Space>
-            <Button type="primary" htmlType="submit" loading={isSubmitting}>
-              Войти
-            </Button>
-            <Link to={routes.registration}>Регистрация</Link>
-            <Link to={routes.resetpassemail}>Восстановить пароль</Link>
-          </Space>
-        </Form.Item>
-        <Button
-          className="centred"
-          icon={<GoogleOutlined />}
-          type="primary"
-          onClick={() => signInWithGoogle()}
-        >
-          Войти через Google
-        </Button>
-        {googleError && (
-          <Text type="danger">
-            При входе произошла ошибка: {googleError.message}
-          </Text>
-        )}
       </Form>
     </BaseLayout>
   );
