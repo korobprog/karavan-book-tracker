@@ -3,6 +3,7 @@ export const routes = {
   auth: "/auth",
   registration: "/registration",
   profile: "/profile",
+  resetpassemail:"/resetpassemail",
 
   report: "/report",
   reportEdit: (id?: string) => `/report/${id || ":id"}`,
