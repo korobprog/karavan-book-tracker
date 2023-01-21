@@ -6,14 +6,12 @@ import {
   Typography,
   Row,
   notification,
-  Tooltip,
 } from "antd";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
-import { LogoutOutlined } from "@ant-design/icons";
 
 type Props = {
   currentUser: CurrentUser;
@@ -57,15 +55,6 @@ export const Reset = ({ currentUser }: Props) => {
     <BaseLayout
       title="УЧЕТ КНИГ"
       backPath={routes.auth}
-      headerActions={[
-        <Tooltip title="Выйти" key="logout">
-          <Button
-            type="ghost"
-            shape="circle"
-            icon={<LogoutOutlined />}
-          />
-        </Tooltip>,
-      ]}
     >
       <Title className="site-page-title" level={4}>
         ВВЕДИТЕ СВОЙ EMAIL ДЛЯ СБРОСА ПАРОЛЯ
