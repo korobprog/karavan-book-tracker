@@ -1,6 +1,7 @@
 {
   "projects": {
-    "default": "karavan-book-tracker"
+    "default": "karavan-book-tracker",
+    "staging": "karavan-book-tracker-test"
   },
   "targets": {
     "karavan-book-tracker": {
@@ -9,6 +10,14 @@
           "karavan-book-tracker-admin"
         ]
       }
+    },
+    "karavan-book-tracker-test": {
+      "hosting": {
+        "admin": [
+          "karavan-book-tracker-admin-test"
+        ]
+      }
     }
-  }
+  },
+  "etags": {}
 }

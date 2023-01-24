@@ -21,7 +21,7 @@ You can get it from maintainer by request
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-### `npm run tracker:build` and `npm run tracker:deploy`
+### `npm run tracker:build:prod` and `npm run tracker:deploy:prod`
 
 Builds and deploys app on firebase hosting
 
@@ -32,6 +32,6 @@ Builds and deploys app on firebase hosting
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-### `npm run admin:build` and `npm run admin:deploy`
+### `npm run admin:build:prod` and `npm run admin:deploy:prod`
 
 Builds and deploys app on firebase hosting

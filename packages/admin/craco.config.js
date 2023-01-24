@@ -1,6 +1,7 @@
 const CracoLessPlugin = require('craco-less');
 const fs = require('fs');
 const path = require('path');
+const CracoEnvPlugin = require('craco-plugin-env')
 
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
@@ -27,5 +28,11 @@ module.exports = {
 				includes: [resolveApp('../common')],
 			},
 		},
+    {
+      plugin: CracoEnvPlugin,
+      options: {
+        variables: {}
+      }
+    }
   ],
 };
