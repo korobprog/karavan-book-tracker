@@ -4,11 +4,18 @@
   "private": true,
   "scripts": {
     "tracker": "npm run start -w tracker",
-    "tracker:build": "npm run build -w tracker",
-    "tracker:deploy": "npm run deploy -w tracker",
+    "tracker:prod": "npm run start:prod -w tracker",
+    "tracker:build:staging": "npm run build:staging -w tracker",
+    "tracker:deploy:staging": "npm run deploy:staging -w tracker",
+    "tracker:build:prod": "npm run build:prod -w tracker",
+    "tracker:deploy:prod": "npm run deploy:prod -w tracker",
+
     "admin": "npm run start -w admin",
-    "admin:build": "npm run build -w admin",
-    "admin:deploy": "npm run deploy -w admin"
+    "admin:prod": "npm run start:prod -w admin",
+    "admin:build:staging": "npm run build:staging -w admin",
+    "admin:deploy:staging": "npm run deploy:staging -w admin",
+    "admin:build:prod": "npm run build:prod -w admin",
+    "admin:deploy:prod": "npm run deploy:prod -w admin"
   },
   "eslintConfig": {
     "extends": [
@@ -23,5 +30,8 @@
   ],
   "dependencies": {
     "firebase": "^9.14.0"
+  },
+  "devDependencies": {
+    "craco-plugin-env": "^1.0.5"
   }
 }

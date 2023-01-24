@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "karavan-book-tracker",
   "scripts": {
-    "start": "craco start",
-    "build": "craco build",
-    "deploy": "firebase deploy",
+    "start": "craco start --mode staging",
+    "build:staging": "craco build --mode staging",
+    "deploy:staging": "firebase deploy -P staging",
+    "start:prod": "craco start --mode prod",
+    "build:prod": "craco build --mode prod",
+    "deploy:prod": "firebase deploy -P default",
     "test": "craco test"
   },
   "author": "",
