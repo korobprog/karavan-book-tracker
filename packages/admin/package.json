@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "karavan-book-admin",
   "scripts": {
-    "start": "craco start --mode dev",
+    "start": "craco start --mode staging",
     "build:staging": "craco build --mode staging",
     "deploy:staging": "firebase deploy -P staging",
     "start:prod": "craco start --mode prod",
