@@ -1,7 +1,7 @@
 import { getFirestore, runTransaction } from "firebase/firestore";
 
 import { calcLocationStat, calcUserStat } from "../statistic";
-import { OperationDoc } from "./operations";
+import { addOperation, OperationDoc } from "./operations";
 import { apiRefs } from "./refs";
 
 const db = getFirestore();
@@ -31,6 +31,8 @@ export const addOperationTransaction = async (newOperation: OperationDoc) => {
         const newLocationStat = calcLocationStat(prevLocationStat, "+", newOperation);
         transaction.update(locationRef, { statistic: newLocationStat });
       }
+
+      addOperation(newOperation);
     });
     console.log("Transaction successfully committed!");
   } catch (e) {

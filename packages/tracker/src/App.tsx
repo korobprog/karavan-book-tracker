@@ -14,10 +14,12 @@ import { Team } from "./pages/team";
 import { TeamEdit } from "./pages/teamEdit";
 import { useCurrentUser } from "common/src/services/api/useCurrentUser";
 import { useBooks } from "common/src/services/books";
+import { Reset } from "./pages/resetpass";
 
 import "./App.less";
 
-const routesWithoutRedirect = [routes.registration, routes.auth];
+
+const routesWithoutRedirect = [routes.registration, routes.auth, routes.resetpassemail];
 
 function App() {
   const currentUser = useCurrentUser();
@@ -58,6 +60,7 @@ function App() {
         <Route path={routes.auth} element={<Auth currentUser={currentUser} />} />
         <Route path={routes.registration} element={<Registration currentUser={currentUser} />} />
         <Route path={routes.profile} element={<Profile currentUser={currentUser} />} />
+        <Route path={routes.resetpassemail} element={<Reset currentUser={currentUser} />} />
         <Route path={routes.team} element={<Team currentUser={currentUser} />} />
         <Route path={routes.teamEdit} element={<TeamEdit currentUser={currentUser} />} />
       </Routes>

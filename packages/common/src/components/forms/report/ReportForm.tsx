@@ -151,6 +151,11 @@ export const ReportForm = (props: Props) => {
     }
   };
 
+  const onFinishHandler = (formValues: ReportFormValues) => {
+    onFinish(formValues);
+    storage.setReportBooks([]);
+  }
+
   const renderBookItem = (book: Book, isFavorite: boolean) => {
     return book.name.toLowerCase().includes(searchString) ? (
       <List.Item
@@ -189,7 +194,7 @@ export const ReportForm = (props: Props) => {
   return (
     <Form
       name="basic"
-      onFinish={onFinish}
+      onFinish={onFinishHandler}
       onFieldsChange={onValuesChange}
       form={form}
       initialValues={initialValues}
