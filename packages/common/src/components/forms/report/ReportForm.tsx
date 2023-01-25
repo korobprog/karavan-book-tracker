@@ -255,6 +255,7 @@ export const ReportForm = (props: Props) => {
           </Button>
         </Space>
       </Form.Item>
+
       <Row>
         <Search
           placeholder="поиск книги"
@@ -264,6 +265,7 @@ export const ReportForm = (props: Props) => {
           style={{ flexGrow: 1, width: 200, marginRight: 8 }}
         />
       </Row>
+      
       <List
         itemLayout="horizontal"
         dataSource={favoriteBooks}
