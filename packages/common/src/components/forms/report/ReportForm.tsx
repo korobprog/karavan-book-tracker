@@ -158,22 +158,19 @@ export const ReportForm = (props: Props) => {
 
   const renderBookItem = (book: Book, isFavorite: boolean) => {
     return book.name.toLowerCase().includes(searchString) ? (
-      <List.Item
-        actions={[
-          <Button
+      <List.Item>
+            <Button
             onClick={() => toggleFavorite(book.id)}
             icon={isFavorite ? <StarFilled /> : <StarOutlined />}
             disabled={isSubmitting || userDocLoading}
-          ></Button>,
-        ]}
-      >
+            style={{ marginRight: 8 }}
+          />
         <List.Item.Meta
           title={book.name}
           description={book.points ? `Баллы: ${book.points}` : ""}
         />
         <Space>
           <Button onClick={() => onMinusClick(book.id)} icon={<MinusOutlined />} />
-          <Button onClick={() => onPlusClick(book.id)} icon={<PlusOutlined />} />
           <Form.Item name={book.id} noStyle>
             <InputNumber
               min={0}
@@ -184,11 +181,12 @@ export const ReportForm = (props: Props) => {
               pattern="\d*"
             />
           </Form.Item>
+        <Button onClick={() => onPlusClick(book.id)} icon={<PlusOutlined />} />
         </Space>
       </List.Item>
     ) : (
       <Form.Item name={book.id} noStyle />
-    );
+      );
   };
 
   return (
@@ -257,7 +255,6 @@ export const ReportForm = (props: Props) => {
           </Button>
         </Space>
       </Form.Item>
-
       <Row>
         <Search
           placeholder="поиск книги"
@@ -267,7 +264,6 @@ export const ReportForm = (props: Props) => {
           style={{ flexGrow: 1, width: 200, marginRight: 8 }}
         />
       </Row>
-
       <List
         itemLayout="horizontal"
         dataSource={favoriteBooks}
