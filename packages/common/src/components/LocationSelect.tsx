@@ -23,6 +23,8 @@ export const LocationSelect: React.FC<LocationSelectProps> = (props) => {
           <Typography.Paragraph style={{ whiteSpace: "nowrap" }}>
             Такого места пока нет, можете его добавить
           </Typography.Paragraph>
+          {/* ! TODO: в оффлайне лучше не разрешать добавлять новые места */}
+          {/* Иначе могут получиться несколько одинаковых локаций с разными id */}
           <Typography.Link
             onClick={onAddNewLocation}
             style={{ whiteSpace: "nowrap" }}

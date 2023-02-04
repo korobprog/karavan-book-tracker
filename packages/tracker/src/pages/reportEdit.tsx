@@ -12,7 +12,7 @@ import {
   ReportFormValues,
 } from "common/src/components/forms/report";
 import { calcFormValuesFromBooks } from "common/src/components/forms/report/helpers";
-import { editOperationTransaction } from "common/src/services/api/transactions";
+import { editOperationMultiAction } from "common/src/services/api/multiactions";
 
 type Props = {
   currentUser: CurrentUser;
@@ -67,7 +67,7 @@ export const ReportEdit = ({ currentUser }: Props) => {
         isOnline,
       };
 
-      editOperationTransaction(id, operation)
+      editOperationMultiAction(id, operation)
         .then(() => navigate(routes.statistic))
         .finally(() => setIsSubmitting(false));
     }
