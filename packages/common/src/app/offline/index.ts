@@ -1,2 +1,3 @@
-export { Offline } from './Offline';
-export { register, unregister } from './serviceWorkerRegistration';
+export { Offline } from "./Offline";
+export { $isOnline } from "./lib/isOnlineStore";
+export { register, unregister } from "./serviceWorkerRegistration";
