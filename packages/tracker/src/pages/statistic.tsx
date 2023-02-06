@@ -21,7 +21,7 @@ import { useStore } from "effector-react";
 
 import { routes } from "../shared/routes";
 import { OperationDoc, useMyOperations } from "common/src/services/api/operations";
-import { removeOperationTransaction } from "common/src/services/api/transactions";
+import { removeOperationMultiAction } from "common/src/services/api/multiactions";
 import { shareOperation } from "common/src/services/share";
 import moment from "moment";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
@@ -59,7 +59,7 @@ export const Statistic = ({ currentUser }: Props) => {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const onRemoveOperation = async (operationId: string) => {
     setDeleteLoading(true);
-    await removeOperationTransaction(operationId);
+    await removeOperationMultiAction(operationId);
     setDeleteLoading(false);
   };
 

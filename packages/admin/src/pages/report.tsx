@@ -14,7 +14,7 @@ import {
   ReportForm,
   ReportFormValues,
 } from "common/src/components/forms/report";
-import { addOperationTransaction } from "common/src/services/api/transactions";
+import { addOperationMultiAction } from "common/src/services/api/multiactions";
 
 type Props = {
   currentUser: CurrentUser;
@@ -61,7 +61,7 @@ const Report = ({ currentUser }: Props) => {
         isOnline,
       };
 
-      addOperationTransaction(operation)
+      addOperationMultiAction(operation)
         .then(() => navigate(routes.reports))
         .finally(() => setIsSubmitting(false));
     }

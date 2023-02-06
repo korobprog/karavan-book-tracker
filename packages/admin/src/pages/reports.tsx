@@ -11,7 +11,7 @@ import {
 } from "antd";
 import { PlusCircleOutlined, DeleteOutlined } from "@ant-design/icons";
 
-import { removeOperationTransaction } from "common/src/services/api/transactions";
+import { removeOperationMultiAction } from "common/src/services/api/multiactions";
 import { routes } from "../shared/routes";
 import { useOperations } from "common/src/services/api/operations";
 import moment from "moment";
@@ -41,7 +41,7 @@ export const Reports = ({ currentUser }: Props) => {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const onRemoveOperation = async (operationId: string) => {
     setDeleteLoading(true);
-    await removeOperationTransaction(operationId);
+    await removeOperationMultiAction(operationId);
     setDeleteLoading(false);
   };
 

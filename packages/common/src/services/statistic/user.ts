@@ -1,6 +1,8 @@
+import { getDocs } from "firebase/firestore";
 import moment from "moment";
 import { calcObjectFields } from "../../utils/objects";
-import { getOperations, OperationDoc } from "../api/operations";
+import { OperationDoc } from "../api/operations";
+import { apiRefs } from "../api/refs";
 import { defaultYearUserStatistic, UserStatisticType } from "../api/statistic";
 import { updateProfile, UserDoc, UserDocWithId } from "../api/useUser";
 
@@ -27,7 +29,7 @@ export const calcUserStat = (
 
 export const recalculateStatisticToUsers = async (users: UserDocWithId[]) => {
   try {
-    const operationsSnapshot = await getOperations();
+    const operationsSnapshot = await getDocs(apiRefs.operations);;
     const userIdsWithoutStatsMap = new Set(users.map((user) => user.id));
 
     const statsByUsers = {} as Record<string, UserDoc["statistic"]>;

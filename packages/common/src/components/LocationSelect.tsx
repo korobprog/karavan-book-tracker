@@ -1,6 +1,8 @@
 import React from "react";
+import { useStore } from "effector-react";
 import { PlusOutlined } from "@ant-design/icons";
 import { Select, SelectProps, Typography } from "antd";
+import { $isOnline } from "../app/offline/lib/isOnlineStore";
 
 type LocationSelectProps = SelectProps & {
   onAddNewLocation: () => void;
@@ -9,6 +11,8 @@ type LocationSelectProps = SelectProps & {
 
 export const LocationSelect: React.FC<LocationSelectProps> = (props) => {
   const { onAddNewLocation, locationSearchString, children, ...restProps } = props;
+  const isOnline = useStore($isOnline);
+
   return (
     <Select
       showSearch
@@ -21,15 +25,20 @@ export const LocationSelect: React.FC<LocationSelectProps> = (props) => {
       notFoundContent={
         <>
           <Typography.Paragraph style={{ whiteSpace: "nowrap" }}>
-            Такого места пока нет, можете его добавить
+            Такого места пока нет
           </Typography.Paragraph>
-          <Typography.Link
-            onClick={onAddNewLocation}
-            style={{ whiteSpace: "nowrap" }}
-          >
-            <PlusOutlined />
-            Добавить "{locationSearchString}"
-          </Typography.Link>
+
+          {isOnline ? (
+            <Typography.Link onClick={onAddNewLocation} style={{ whiteSpace: "nowrap" }}>
+              <PlusOutlined />
+              Добавить "{locationSearchString}"
+            </Typography.Link>
+          ) : (
+            <Typography.Text>
+              Пока вы оффлайн нельзя добавить город, подключите интернет и проверьте, возможно такой
+              город уже есть в базе
+            </Typography.Text>
+          )}
         </>
       }
       {...restProps}
