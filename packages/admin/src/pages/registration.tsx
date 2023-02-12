@@ -45,7 +45,7 @@ const Registration = ({ currentUser }: Props) => {
 
   const onFinish = ({ email, password }: any) => {
     setIsSubmitting(true);
-    createUserWithEmailAndPassword(email, password).then(() => {
+    createUserWithEmailAndPassword(email.trim(), password).then(() => {
       setIsSubmitting(false);
     });
   };

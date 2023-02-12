@@ -46,7 +46,7 @@ export const Home = (props: Props) => {
         icon={<BarChartOutlined />}
         onClick={() => navigate(routes.statistic)}
       >
-        Моя статискика
+        Моя статистика
       </Button>
       <Divider dashed />
       <Button
