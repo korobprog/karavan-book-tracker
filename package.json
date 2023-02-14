@@ -9,7 +9,6 @@
     "tracker:deploy:staging": "npm run deploy:staging -w tracker",
     "tracker:build:prod": "npm run build:prod -w tracker",
     "tracker:deploy:prod": "npm run deploy:prod -w tracker",
-
     "admin": "npm run start -w admin",
     "admin:prod": "npm run start:prod -w admin",
     "admin:build:staging": "npm run build:staging -w admin",
@@ -29,6 +28,8 @@
     "packages/tracker"
   ],
   "dependencies": {
+    "exceljs": "^4.3.0",
+    "file-saver": "^2.0.5",
     "firebase": "^9.14.0"
   },
   "devDependencies": {

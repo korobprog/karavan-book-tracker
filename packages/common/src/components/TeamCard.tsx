@@ -170,7 +170,7 @@ export const TeamCard = ({
               ))}
             </div>
           )}
-        <UsersStatistic></UsersStatistic>
+        <UsersStatistic />
       </Card>
     </>
   );
