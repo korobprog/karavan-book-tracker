@@ -18,6 +18,7 @@ import {
   UserDoc,
   UserDocWithId,
 } from "../services/api/useUser";
+import { UsersStatistic } from "common/src/features/downloadUsersStatistic/index";
 
 type Props = {
   team: TeamDoc;
@@ -169,6 +170,7 @@ export const TeamCard = ({
               ))}
             </div>
           )}
+        <UsersStatistic></UsersStatistic>
       </Card>
     </>
   );
