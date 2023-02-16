@@ -2,7 +2,6 @@ import React, { Fragment, useState } from "react";
 import { Button, DatePicker, Typography } from "antd";
 import { AppleOutlined } from "@ant-design/icons";
 import { getFirestore } from "firebase/firestore";
-// import { db } from "common/src/services/api/clientApp";
 import { collection, getDocs } from "firebase/firestore";
 import { $booksHashMap } from "common/src/services/books/index";
 // @ts-ignore
@@ -38,41 +37,20 @@ export const UsersStatistic = () => {
         const year = new Date(date).getFullYear() === undefined ? "Unknown" : new Date(date).getFullYear();
         const month = months[new Date(date).getMonth()] === undefined ? "Unknown" : months[new Date(date).getMonth()];
         const bookHashMap = $booksHashMap.getState();
-        if (result[year] === undefined) {
-          result[year] = {};
-        }
-        if (result[year][month] === undefined) {
-          result[year][month] = {};
-        }
-        if (result[year][month][userName] === undefined) {
-          result[year][month][userName] = {};
-        }
-        if (result[year][month][userName]["Количество книг"] === undefined) {
-          result[year][month][userName]["Количество книг"] = totalCount;
-        } else {
-          result[year][month][userName]["Количество книг"] =
-            result[year][month][userName]["Количество книг"] + totalCount;
-        }
-        if (result[year][month][userName]["Количество очков"] === undefined) {
-          result[year][month][userName]["Количество очков"] = totalPoints;
-        } else {
-          result[year][month][userName]["Количество очков"] =
-            result[year][month][userName]["Количество очков"] + totalPoints;
-        }
+        result[year] = result?.[year] ?? {};
+        result[year][month] = result?.[year]?.[month] ?? {};
+        result[year][month][userName] = result?.[year]?.[month]?.[userName] ?? {};
+        result[year][month][userName]["Количество книг"] = result?.[year]?.[month]?.[userName]?.["Количество книг"] ? result?.[year]?.[month]?.[userName]?.["Количество книг"] + totalCount : totalCount;
+        result[year][month][userName]["Количество очков"] = result?.[year]?.[month]?.[userName]?.["Количество очков"] ? result?.[year]?.[month]?.[userName]?.["Количество очков"] + totalPoints : totalPoints;
         if (books !== undefined) {
           for (let i = 0; i < books.length; i++) {
             const { bookId, count } = books[i];
             const category = bookHashMap[bookId].category.trim();
             operationsHeaders.add(category);
-            if (result[year][month][userName][category] === undefined) {
-              result[year][month][userName][category] = count;
-            } else {
-              result[year][month][userName][category] = result[year][month][userName][category] + count;
-            }
+            result[year][month][userName][category] = result?.[year]?.[month]?.[userName]?.[category] ? result?.[year]?.[month]?.[userName]?.[category] + count : count;
           }
         }
       });
-  
       const pickedYear = selectedYear;
       const pickedMonth = months[selectedMonth - 1];
   
