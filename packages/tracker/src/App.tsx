@@ -18,7 +18,6 @@ import { Reset } from "./pages/resetpass";
 
 import "./App.less";
 
-
 const routesWithoutRedirect = [routes.registration, routes.auth, routes.resetpassemail];
 
 function App() {

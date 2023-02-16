@@ -11,28 +11,26 @@ import { TeamDoc } from "./teams";
 import { UserDoc, UserDocWithId } from "./useUser";
 import { idConverter } from "./utils";
 
-export const db = getFirestore();
+const db = getFirestore();
 
-const getCollection = <Doc>(collectionName: string) =>
-  collection(db, collectionName).withConverter(
-    idConverter
-  ) as CollectionReference<Doc>;
+const getCollectionRef = <Doc>(collectionName: string) =>
+  collection(db, collectionName).withConverter(idConverter) as CollectionReference<Doc>;
 
-const getDoc = <Doc>(id: string, collectionName: string) =>
+const getDocRef = <Doc>(id: string, collectionName: string) =>
   doc(db, collectionName, id) as DocumentReference<Doc>;
 
-const user = (id: string) => getDoc<UserDoc>(id, "users");
-const addUser = getCollection<UserDoc>("users");
-const users = getCollection<UserDocWithId>("users");
+const user = (id: string) => getDocRef<UserDoc>(id, "users");
+const addUser = getCollectionRef<UserDoc>("users");
+const users = getCollectionRef<UserDocWithId>("users");
 
-const operation = (id: string) => getDoc<OperationDoc>(id, "operations");
-const operations = getCollection<OperationDoc>("operations");
+const operation = (id: string) => getDocRef<OperationDoc>(id, "operations");
+const operations = getCollectionRef<OperationDoc>("operations");
 
-const location = (id: string) => getDoc<LocationDoc>(id, "locations");
-const locations = getCollection<LocationDoc>("locations");
+const location = (id: string) => getDocRef<LocationDoc>(id, "locations");
+const locations = getCollectionRef<LocationDoc>("locations");
 
-const team = (id: string) => getDoc<TeamDoc>(id, "teams");
-const teams = getCollection<TeamDoc>("teams");
+const team = (id: string) => getDocRef<TeamDoc>(id, "teams");
+const teams = getCollectionRef<TeamDoc>("teams");
 
 export const apiRefs = {
   user,

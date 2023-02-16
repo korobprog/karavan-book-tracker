@@ -1,9 +1,10 @@
 import moment from "moment";
 import { getLocationStat } from "../statistic";
-import { getOperations } from "../api/operations";
 import { defaultYearLocationStatistic, LocationDoc, updateLocation } from "../api/locations";
 import { calcObjectFields } from "../../utils/objects";
 import { nowYear } from "../year";
+import { getDocs } from "firebase/firestore";
+import { apiRefs } from "../api/refs";
 
 const editLocationStatistic = (locationId: string, statistic: LocationDoc["statistic"]) => {
   return updateLocation(locationId, { statistic });
@@ -11,7 +12,7 @@ const editLocationStatistic = (locationId: string, statistic: LocationDoc["stati
 
 export const recalculateStatisticToLocations = async (locations: LocationDoc[]) => {
   try {
-    const operationsSnapshot = await getOperations();
+    const operationsSnapshot = await getDocs(apiRefs.operations);
     const locationsIdsWithoutStatsMap = new Set(locations.map((loc) => loc.id));
 
     const statsByLocations = {} as Record<string, LocationDoc["statistic"]>;

@@ -1,16 +1,5 @@
-import {
-  addDoc,
-  query,
-  orderBy,
-  deleteDoc,
-  getDocs,
-  where,
-  getDoc,
-} from "firebase/firestore";
-import {
-  useCollectionData,
-  useDocumentData,
-} from "react-firebase-hooks/firestore";
+import { query, orderBy, where } from "firebase/firestore";
+import { useCollectionData, useDocumentData } from "react-firebase-hooks/firestore";
 import { apiRefs } from "./refs";
 
 export type DistributedBook = {
@@ -33,29 +22,10 @@ export type OperationDoc = {
   isTeamOperation?: boolean;
 };
 
-export const getOperations = async () => {
-  return await getDocs(apiRefs.operations);
-};
-
-export const getOperation = async (id: string) => {
-  return await getDoc(apiRefs.operation(id));
-};
-
 export const useOperation = (id: string) => {
-  const [operationDocData, loading] = useDocumentData<OperationDoc>(
-    apiRefs.operation(id)
-  );
+  const [operationDocData, loading] = useDocumentData<OperationDoc>(apiRefs.operation(id));
 
   return { operationDocData, loading };
-};
-
-export const addOperation = async (params: OperationDoc) => {
-  addDoc(apiRefs.operations, params);
-};
-
-// unused
-export const deleteOperation = async (id: string) => {
-  deleteDoc(apiRefs.operation(id));
 };
 
 export const useOperations = () => {
