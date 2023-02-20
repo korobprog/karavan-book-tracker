@@ -9,23 +9,24 @@ import { saveAs } from "file-saver";
 // @ts-ignore
 import * as ExcelJS from "exceljs";
 
-export const db = getFirestore();
+const db = getFirestore();
 const months = [ "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь" ];
 const monthFormat = "MM.YYYY";
-let buttonDisabled = true;
 
 export const UsersStatistic = () => {
   const [selectedYear, setSelectedYear] = useState(0);
   const [selectedMonth, setSelectedMonth] = useState(0);
+  const [buttonDisabled, setButtonDisabled] = useState(true);
   const { Title } = Typography;
   
   const downloadStatistic = async () => {
-    let hdr = [ "Имя", "Количество книг", "maha_big", "big", "medium", "small", "goswamibooks", "other", "Количество очков" ];
+    let sortedHeader = [ "Имя", "Количество книг", "maha_big", "big", "medium", "small", "goswamibooks", "other", "Количество очков" ];
     let operationsHeaders = new Set<string>(["Имя", "Количество книг", "Количество очков"]);
     try{
       const operations = await getDocs(collection(db, "operations"));
-      let result: any = {};
+      let monthlyBooks: any = {};
       let exportTable: any = [];
+      const pickedMonth = months[selectedMonth - 1];
       operations.forEach((doc) => {
         const {
           date,
@@ -34,49 +35,42 @@ export const UsersStatistic = () => {
           totalCount = 0,
           totalPoints = 0,
           } = doc.data();
-        const year = new Date(date).getFullYear() === undefined ? "Unknown" : new Date(date).getFullYear();
-        const month = months[new Date(date).getMonth()] === undefined ? "Unknown" : months[new Date(date).getMonth()];
+        const year = new Date(date).getFullYear() ?? "Unknown";
+        const month = new Date(date).getMonth() ?? "Unknown";
         const bookHashMap = $booksHashMap.getState();
-        result[year] = result?.[year] ?? {};
-        result[year][month] = result?.[year]?.[month] ?? {};
-        result[year][month][userName] = result?.[year]?.[month]?.[userName] ?? {};
-        result[year][month][userName]["Количество книг"] = result?.[year]?.[month]?.[userName]?.["Количество книг"] ? result?.[year]?.[month]?.[userName]?.["Количество книг"] + totalCount : totalCount;
-        result[year][month][userName]["Количество очков"] = result?.[year]?.[month]?.[userName]?.["Количество очков"] ? result?.[year]?.[month]?.[userName]?.["Количество очков"] + totalPoints : totalPoints;
-        if (books !== undefined) {
-          for (let i = 0; i < books.length; i++) {
-            const { bookId, count } = books[i];
-            const category = bookHashMap[bookId].category.trim();
-            operationsHeaders.add(category);
-            result[year][month][userName][category] = result?.[year]?.[month]?.[userName]?.[category] ? result?.[year]?.[month]?.[userName]?.[category] + count : count;
+        if(year === selectedYear || month === (Number(selectedMonth) - 1)){
+          monthlyBooks[userName] = monthlyBooks?.[userName] ?? {};
+          monthlyBooks[userName]["Количество книг"] = (monthlyBooks?.[userName]?.["Количество книг"] || 0) + totalCount;
+          monthlyBooks[userName]["Количество очков"] = (monthlyBooks?.[userName]?.["Количество очков"] || 0) + totalPoints;
+          monthlyBooks[userName]["Имя"] = monthlyBooks?.[userName]?.["Имя"] || userName;
+          if (books !== undefined) {
+            for (let i = 0; i < books.length; i++) {
+              const { bookId, count } = books[i];
+              const category = bookHashMap[bookId].category;
+              operationsHeaders.add(category);
+              monthlyBooks[userName][category] = (monthlyBooks?.[userName]?.[category] ?? 0) + count;
+            }
           }
         }
       });
-      const pickedYear = selectedYear;
-      const pickedMonth = months[selectedMonth - 1];
-  
-      const k = Object.keys(result[pickedYear][pickedMonth]);
-      for (const i of k) {
-        let tempWrapper: any = {};
-        tempWrapper = Object.assign({}, { Имя: i }, result[pickedYear][pickedMonth][i]);
-        exportTable.push(tempWrapper);
-      }
-      hdr = hdr.filter((word) => Array.from(operationsHeaders.values()).includes(word));
+      exportTable = Object.values(monthlyBooks);
+      sortedHeader = sortedHeader.filter((word) => Array.from(operationsHeaders.values()).includes(word));
   
       // creating excel file using exceljs library
       let ExcelJSWorkbook = new ExcelJS.Workbook();
       let worksheet = ExcelJSWorkbook.addWorksheet(selectedMonth + "." + selectedYear);
-      worksheet.columns = hdr.map((value) => {
+      worksheet.columns = sortedHeader.map((value) => {
         return { header: value, key: value, width: 20 };
       });
       worksheet.addRows(exportTable);
       // inserting row with month and year
-      const insertedRow = worksheet.insertRow(1, [pickedMonth + " " + pickedYear]);
-      worksheet.mergeCells(1, 1, 1, hdr.length);
+      const insertedRow = worksheet.insertRow(1, [pickedMonth + " " + selectedYear]);
+      worksheet.mergeCells(1, 1, 1, sortedHeader.length);
       worksheet.getCell("A1").alignment = { vertical: "middle", horizontal: "center" };
       worksheet.getCell("A1").font = { size: 12, bold: true };
       insertedRow.height = 27.5;
       // applying styles to table
-      let rows = worksheet.getRows(2, exportTable.length + 1);
+      const rows = worksheet.getRows(2, exportTable.length + 1);
       rows?.forEach((row: any) => {
         for (const i of row._cells) {
           if (i) {
@@ -122,7 +116,7 @@ export const UsersStatistic = () => {
     const [month, year] = dateString.split(".");
     setSelectedMonth(month);
     setSelectedYear(year);
-    buttonDisabled = false;
+    setButtonDisabled(false);
   };
 
   return (
@@ -132,7 +126,6 @@ export const UsersStatistic = () => {
       </Title>
       <DatePicker onChange={onChange} format={monthFormat} picker="month" />
       <Button
-        target="_blank"
         disabled = {buttonDisabled}
         icon={<AppleOutlined />}
         onClick={() => {
