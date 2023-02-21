@@ -1,7 +1,7 @@
-import React, { Fragment, useState } from "react";
-import { Button, DatePicker, Typography } from "antd";
+import React, { useState } from "react";
+import { Space, Button, DatePicker, Typography } from "antd";
 import { AppleOutlined } from "@ant-design/icons";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, query, where } from "firebase/firestore";
 import { collection, getDocs } from "firebase/firestore";
 import { $booksHashMap } from "common/src/services/books/index";
 // @ts-ignore
@@ -13,7 +13,7 @@ const db = getFirestore();
 const months = [ "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь" ];
 const monthFormat = "MM.YYYY";
 
-export const UsersStatistic = () => {
+export const UsersStatistic = (props: any) => {
   const [selectedYear, setSelectedYear] = useState(0);
   const [selectedMonth, setSelectedMonth] = useState(0);
   const [buttonDisabled, setButtonDisabled] = useState(true);
@@ -23,7 +23,8 @@ export const UsersStatistic = () => {
     let sortedHeader = [ "Имя", "Количество книг", "maha_big", "big", "medium", "small", "goswamibooks", "other", "Количество очков" ];
     let operationsHeaders = new Set<string>(["Имя", "Количество книг", "Количество очков"]);
     try{
-      const operations = await getDocs(collection(db, "operations"));
+      const operationsQuery = query(collection(db, "operations"), where("userId", "in", props.teamMembers));
+      const operations = await getDocs(operationsQuery);
       let monthlyBooks: any = {};
       let exportTable: any = [];
       const pickedMonth = months[selectedMonth - 1];
@@ -42,7 +43,7 @@ export const UsersStatistic = () => {
           monthlyBooks[userName] = monthlyBooks?.[userName] ?? {};
           monthlyBooks[userName]["Количество книг"] = (monthlyBooks?.[userName]?.["Количество книг"] || 0) + totalCount;
           monthlyBooks[userName]["Количество очков"] = (monthlyBooks?.[userName]?.["Количество очков"] || 0) + totalPoints;
-          monthlyBooks[userName]["Имя"] = monthlyBooks?.[userName]?.["Имя"] || userName;
+          monthlyBooks[userName]["Имя"] = monthlyBooks?.[userName]?.["Имя"] ?? userName;
           if (books !== undefined) {
             for (let i = 0; i < books.length; i++) {
               const { bookId, count } = books[i];
@@ -124,16 +125,18 @@ export const UsersStatistic = () => {
       <Title level={5}>
         Статистика за месяц
       </Title>
-      <DatePicker onChange={onChange} format={monthFormat} picker="month" />
-      <Button
-        disabled = {buttonDisabled}
-        icon={<AppleOutlined />}
-        onClick={() => {
-          downloadStatistic();
-        }}
-      >
-        Скачать
-      </Button>
+      <Space>
+        <DatePicker onChange={onChange} format={monthFormat} picker="month" />
+        <Button
+          disabled = {buttonDisabled}
+          icon={<AppleOutlined />}
+          onClick={() => {
+            downloadStatistic();
+          }}
+        >
+          Скачать
+        </Button>
+      </Space>
     </>
   );
 };

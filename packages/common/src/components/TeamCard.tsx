@@ -187,7 +187,7 @@ export const TeamCard = ({
             ))}
           </div>
         )}
-        <UsersStatistic />
+        {(myStatus === TeamMemberStatus.admin || myStatus === TeamMemberStatus.member) && (<UsersStatistic teamMembers={team.members}/>)}
       </Card>
     </>
   );
