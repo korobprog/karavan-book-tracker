@@ -12,6 +12,7 @@ import * as ExcelJS from "exceljs";
 const db = getFirestore();
 const months = [ "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь" ];
 const monthFormat = "MM.YYYY";
+const headersTranslation: any = { "Имя": "Имя", "Количество книг": "Количество книг", "maha_big": "МахаБиг", "big": "Биг", "medium": "Средние", "small": "Маленькие", "goswamibooks": "Книги Госвами", "other": "Другие", "Количество очков": "Количество очков" };
 
 type Props = {
   teamMembers: string[];
@@ -65,7 +66,7 @@ export const UsersStatistic = (props: Props) => {
       let ExcelJSWorkbook = new ExcelJS.Workbook();
       let worksheet = ExcelJSWorkbook.addWorksheet(selectedMonth + "." + selectedYear);
       worksheet.columns = sortedHeader.map((value) => {
-        return { header: value, key: value, width: 20 };
+        return { header: headersTranslation[value], key: value, width: 20 };
       });
       worksheet.addRows(exportTable);
       // inserting row with month and year
