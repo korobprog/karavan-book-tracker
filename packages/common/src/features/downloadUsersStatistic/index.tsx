@@ -13,7 +13,11 @@ const db = getFirestore();
 const months = [ "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь" ];
 const monthFormat = "MM.YYYY";
 
-export const UsersStatistic = (props: any) => {
+type Props = {
+  teamMembers: string[];
+};
+
+export const UsersStatistic = (props: Props) => {
   const [selectedYear, setSelectedYear] = useState(0);
   const [selectedMonth, setSelectedMonth] = useState(0);
   const [buttonDisabled, setButtonDisabled] = useState(true);

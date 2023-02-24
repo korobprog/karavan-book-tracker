@@ -187,7 +187,7 @@ export const TeamCard = ({
             ))}
           </div>
         )}
-        {(myStatus === TeamMemberStatus.admin || myStatus === TeamMemberStatus.member) && (<UsersStatistic teamMembers={team.members}/>)}
+        {(myStatus === TeamMemberStatus.admin || myStatus === TeamMemberStatus.member) && (<UsersStatistic teamMembers={teamMembers.map((member) => member.id)} />)}
       </Card>
     </>
   );
