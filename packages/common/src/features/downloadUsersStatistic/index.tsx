@@ -60,6 +60,7 @@ export const UsersStatistic = (props: Props) => {
         }
       });
       exportTable = Object.values(monthlyBooks);
+      exportTable.sort((a: any, b: any) => b['Количество очков'] - a['Количество очков']);
       sortedHeader = sortedHeader.filter((word) => Array.from(operationsHeaders.values()).includes(word));
   
       // creating excel file using exceljs library
