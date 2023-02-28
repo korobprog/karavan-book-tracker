@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Input, Space } from "antd";
-import { CheckOutlined, EditOutlined } from "@ant-design/icons";
+import { CheckOutlined, EditOutlined, CloseOutlined } from "@ant-design/icons";
 import { LocationDoc, updateLocation } from "common/src/services/api/locations";
 
 type CityEditProps = {
@@ -11,9 +11,11 @@ export const CityNameEdit: React.FC<CityEditProps> = (props) => {
   const { name, ...cityData } = props.cityData;
   const [isEdit, setIsEdit] = useState(false);
   const [cityName, setcityName] = useState(name);
+  let previousName = name;
 
   const saveCityName = async () => {
-    if(cityData.id && (name !== cityName)){
+    if(cityData.id && (previousName !== cityName)){
+      previousName = cityName;
       await updateLocation(cityData.id, { name: cityName });
     }
     setIsEdit(false);
@@ -27,12 +29,13 @@ export const CityNameEdit: React.FC<CityEditProps> = (props) => {
     <>
       {isEdit ? (
         <Space>
-          <Input defaultValue={cityName} onChange={(value) => setcityName(value.target.value)} onPressEnter={saveCityName} />
+          <Input defaultValue={previousName} onChange={(value) => setcityName(value.target.value)} onPressEnter={saveCityName} />
           <Button icon={<CheckOutlined />} onClick={saveCityName}></Button>
+          <Button icon={<CloseOutlined />} onClick={toggleEdit}></Button>
         </Space>
       ) : (
         <Space>
-          {cityName}
+          {previousName}
           <Button icon={<EditOutlined />} onClick={toggleEdit}></Button>
         </Space>
       )}
