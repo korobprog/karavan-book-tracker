@@ -11,11 +11,9 @@ export const CityNameEdit: React.FC<CityEditProps> = (props) => {
   const { name, ...cityData } = props.cityData;
   const [isEdit, setIsEdit] = useState(false);
   const [cityName, setcityName] = useState(name);
-  let previousName = name;
 
   const saveCityName = async () => {
-    if(cityData.id && (previousName !== cityName)){
-      previousName = cityName;
+    if(cityData.id && (name !== cityName)){
       await updateLocation(cityData.id, { name: cityName });
     }
     setIsEdit(false);
@@ -29,13 +27,13 @@ export const CityNameEdit: React.FC<CityEditProps> = (props) => {
     <>
       {isEdit ? (
         <Space>
-          <Input defaultValue={previousName} onChange={(value) => setcityName(value.target.value)} onPressEnter={saveCityName} />
+          <Input defaultValue={name} onChange={(value) => setcityName(value.target.value)} onPressEnter={saveCityName} />
           <Button icon={<CheckOutlined />} onClick={saveCityName}></Button>
           <Button icon={<CloseOutlined />} onClick={toggleEdit}></Button>
         </Space>
       ) : (
         <Space>
-          {previousName}
+          {name}
           <Button icon={<EditOutlined />} onClick={toggleEdit}></Button>
         </Space>
       )}
