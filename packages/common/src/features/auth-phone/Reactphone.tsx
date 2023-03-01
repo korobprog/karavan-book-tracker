@@ -6,11 +6,16 @@ import PhoneInput from 'react-phone-number-input'
 import ru from 'react-phone-number-input/locale/ru'
 import '../../../../tracker/src/App.less'
 
-export const Reactphone = () => {
+type Props = {
+  value:string
+  setValue:(value:string) => void
+};
+
+export const Reactphone = (props: Props) => {
   // `value` will be the parsed phone number in E.164 format.
   // Example: "+12133734253".
-  const [value, setValue] = useState('')
-  const onchange = (value: string) => { setValue(value) }
+  const {value, setValue} = props
+  const onchange = (value:string) => { setValue(value) }
   return (
     <div>
       <PhoneInput
