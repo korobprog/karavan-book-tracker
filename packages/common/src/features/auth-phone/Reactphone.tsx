@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
@@ -24,7 +24,6 @@ export const Reactphone = (props: Props) => {
         placeholder="Ваш телефон"
         value={value}
         onChange={onchange} />
-      {value}
     </div>
   )
 }
