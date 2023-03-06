@@ -37,12 +37,12 @@ export const CoordinatesEdit: React.FC<CoordinatesEditProps> = (props) => {
         <Space>
           <InputNumber defaultValue={x} onChange={(value) =>setX(value || 0)} />
           <InputNumber defaultValue={y} onChange={(value) =>setY(value || 0)} />
-          <Button icon={<CheckOutlined />} onClick={saveCoordinates}></Button>
+          <Button icon={<CheckOutlined />} onClick={saveCoordinates} />
         </Space>
       ) : (
         <Space>
           {displayedCoordinates}
-          <Button icon={<EditOutlined />} onClick={toggleEdit}></Button>
+          <Button icon={<EditOutlined />} onClick={toggleEdit} />
         </Space>
       )}
     </>
