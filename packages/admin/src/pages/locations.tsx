@@ -9,6 +9,7 @@ import { LocationStatistic } from "common/src/components/LocationStatistic";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { $booksLoading } from "common/src/services/books";
 import { CoordinatesEdit } from "common/src/components/CoordinatesEdit";
+import { LocationNameEdit } from "common/src/components/LocationNameEdit";
 import { recalculateStatisticToLocations } from "common/src/services/locations";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { YearSwitch } from "common/src/components/YearSwitch";
@@ -36,6 +37,7 @@ export const Locations = ({ currentUser }: Props) => {
       title: "Населенный пункт",
       dataIndex: "name",
       key: "name",
+      render: (_stat: LocationDoc["name"], locationData: LocationDoc & { key: string }) => (<LocationNameEdit locationData={locationData}/>),
     },
     {
       title: "Страна",
