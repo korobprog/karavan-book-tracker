@@ -9,13 +9,14 @@ type ShareOperation = {
   total: number;
   date: string;
   locationName: string;
+  isOnline?: boolean;
   books: DistributedBook[];
   profile: UserDoc;
   booksHashMap: BooksHashMap;
 };
 
 export const shareOperation = async (params: ShareOperation) => {
-  const { total, date, books, profile, booksHashMap, locationName } = params;
+  const { isOnline, total, date, books, profile, booksHashMap, locationName } = params;
 
   const formattedDate = moment(date).format("DD.MM.yyyy");
   const name = profile.nameSpiritual || profile.name;
@@ -32,7 +33,7 @@ ${booksHashMap[book.bookId]?.name}: ${book.count}`
   const text = `
 ${formattedDate} ${name}
 ${locationName}
-Распространено: ${total} ${bookDeclension}
+Распространено${isOnline ? ' онлайн' : ''}: ${total} ${bookDeclension}
 ${getBookStrings()}
 `;
 

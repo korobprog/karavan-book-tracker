@@ -63,11 +63,12 @@ export const Statistic = ({ currentUser }: Props) => {
     setDeleteLoading(false);
   };
 
-  const share = ({ totalCount, date, books, location }: DataType) => {
+  const share = ({ isOnline, totalCount, date, books, location }: DataType) => {
     const locationName = locationsHashMap?.[location]?.name || "";
     const total = totalCount;
     if (profile) {
       const params = {
+        isOnline,
         total,
         date,
         books,
@@ -88,6 +89,7 @@ export const Statistic = ({ currentUser }: Props) => {
         isAuthorized: operation.isAuthorized,
         totalCount: operation.totalCount,
         books: operation.books,
+        isOnline: operation.isOnline,
         location: operation.locationId,
       })) || [];
 
