@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Table, Divider, Space, TableColumnsType, Popconfirm, Typography } from "antd";
 import { CalculatorOutlined, DeleteOutlined, UserAddOutlined } from "@ant-design/icons";
@@ -18,17 +18,25 @@ type Props = {
   currentUser: CurrentUser;
 };
 
+type Sorter = {
+  columnKey?: String;
+  field?: String;
+  order?: String;
+}
+
 export const Users = ({ currentUser }: Props) => {
   const { profile } = currentUser;
 
   const navigate = useNavigate();
 
   const { usersDocData, usersDocLoading } = useUsers({});
+  // console.log('usersDocData\n', usersDocData);
   const { deleteProfile } = useUser({ profile });
   const { locations, loading: locationLoading } = useLocations({});
   const locationsHashTable = useMemo(() => mapDocsToHashTable<LocationDoc>(locations), [locations]);
 
   const [isCalculating, setIsCalculating] = useState(false);
+  const [sortedInfo, setSortedInfo] = useState<Sorter>({});
   const onCalculate = async () => {
     setIsCalculating(true);
     if (usersDocData) {
@@ -48,8 +56,8 @@ export const Users = ({ currentUser }: Props) => {
       key: user.id,
       nameSpiritual: user.nameSpiritual,
       name: user.name,
-      count: user.statistic?.[selectedYear]?.count,
-      points: user.statistic?.[selectedYear]?.points,
+      count: user.statistic?.[selectedYear]?.count || 0,
+      points: user.statistic?.[selectedYear]?.points || 0,
       contacts: { phone: user.phone, email: user.email },
       city: (user.city && locationsHashTable[user.city]?.name) || user.city,
       address: user.address,
@@ -61,21 +69,29 @@ export const Users = ({ currentUser }: Props) => {
       title: "Духовное имя",
       dataIndex: "nameSpiritual",
       key: "nameSpiritual",
+      sortOrder: sortedInfo.columnKey === 'nameSpiritual' ? sortedInfo?.order : null,
+      sorter: (a: any, b: any) => a.nameSpiritual.localeCompare(b.nameSpiritual),
     },
     {
       title: "ФИО",
       dataIndex: "name",
       key: "name",
+      sortOrder: sortedInfo.columnKey === 'name' ? sortedInfo?.order : null,
+      sorter: (a: any, b: any) => a.name.localeCompare(b.name),
     },
     {
       title: "Книг",
       dataIndex: "count",
       key: "count",
+      sortOrder: sortedInfo.columnKey === 'count' ? sortedInfo?.order : null,
+      sorter: (a: any, b: any) => a.count - b.count,
     },
     {
       title: "Баллов",
       dataIndex: "points",
       key: "points",
+      sortOrder: sortedInfo.columnKey === 'points' ? sortedInfo?.order : null,
+      sorter: (a: any, b: any) => a.points - b.points,
     },
     {
       title: "Контакты",
@@ -92,6 +108,7 @@ export const Users = ({ currentUser }: Props) => {
       title: "Город",
       dataIndex: "city",
       key: "city",
+      sorter: (a: any, b: any) => a.city.localeCompare(b.city),
     },
     {
       title: "Адрес",
@@ -120,7 +137,28 @@ export const Users = ({ currentUser }: Props) => {
       ),
     },
   ];
+  
+  useEffect(() => {
+    console.log(JSON.parse(localStorage.getItem('admin-users-sort-key') || ''));
+    if(localStorage.getItem('admin-users-sort-key')){
+      console.log('localStorage');
+      setSortedInfo(JSON.parse(localStorage.getItem('admin-users-sort-key') || ''));
+    }
+  }, []);
 
+  const onChange = (pagination: any, filters: any, sorter: any, extra: any) => {
+    console.log('sorter\n', sorter);
+    localStorage.setItem('admin-users-sort-key', JSON.stringify(sorter));
+    console.log('localStorage');
+    console.log(JSON.parse(localStorage.getItem('admin-users-sort-key') || ''));
+  };
+
+  const test = () => {
+    console.log('SortedInfo\n', sortedInfo);
+    console.log('SortedInfo\n', sortedInfo.columnKey);
+    console.log('SortedInfo\n', sortedInfo.order);
+  };
+  
   return (
     <BaseLayout title="ПОЛЬЗОВАТЕЛИ" backPath={routes.root}>
       <Button block size="large" type="primary" icon={<UserAddOutlined />} onClick={onAddUser}>
@@ -144,11 +182,13 @@ export const Users = ({ currentUser }: Props) => {
         <YearSwitch selectedYear={selectedYear} setSelectedYear={setSelectedYear} />
       </Space>
       <Divider dashed />
+      <Button onClick={test}>test</Button>
       <Table
         columns={columns}
         dataSource={data}
         scroll={{ x: true }}
         loading={locationLoading || usersDocLoading}
+        onChange={onChange}
         pagination={{ pageSize: 100 }}
       />
     </BaseLayout>
