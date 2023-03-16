@@ -13,15 +13,16 @@ import { nowYear } from "common/src/services/year";
 import { YearSwitch } from "common/src/components/YearSwitch";
 import { routes } from "../shared/routes";
 import { recalculateStatisticToUsers } from "common/src/services/statistic/user";
+import { SortOrder } from "antd/lib/table/interface";
 
 type Props = {
   currentUser: CurrentUser;
 };
 
 type Sorter = {
-  columnKey?: String;
-  field?: String;
-  order?: String;
+  columnKey?: string;
+  field?: string;
+  order?: SortOrder;
 }
 
 export const Users = ({ currentUser }: Props) => {
@@ -30,7 +31,6 @@ export const Users = ({ currentUser }: Props) => {
   const navigate = useNavigate();
 
   const { usersDocData, usersDocLoading } = useUsers({});
-  // console.log('usersDocData\n', usersDocData);
   const { deleteProfile } = useUser({ profile });
   const { locations, loading: locationLoading } = useLocations({});
   const locationsHashTable = useMemo(() => mapDocsToHashTable<LocationDoc>(locations), [locations]);
@@ -69,29 +69,29 @@ export const Users = ({ currentUser }: Props) => {
       title: "Духовное имя",
       dataIndex: "nameSpiritual",
       key: "nameSpiritual",
-      sortOrder: sortedInfo.columnKey === 'nameSpiritual' ? sortedInfo?.order : null,
       sorter: (a: any, b: any) => a.nameSpiritual.localeCompare(b.nameSpiritual),
+      sortOrder: sortedInfo.columnKey === 'nameSpiritual' ? sortedInfo.order : null,
     },
     {
       title: "ФИО",
       dataIndex: "name",
       key: "name",
-      sortOrder: sortedInfo.columnKey === 'name' ? sortedInfo?.order : null,
       sorter: (a: any, b: any) => a.name.localeCompare(b.name),
+      sortOrder: sortedInfo.columnKey === 'name' ? sortedInfo.order : null,
     },
     {
       title: "Книг",
       dataIndex: "count",
       key: "count",
-      sortOrder: sortedInfo.columnKey === 'count' ? sortedInfo?.order : null,
       sorter: (a: any, b: any) => a.count - b.count,
+      sortOrder: sortedInfo.columnKey === 'count' ? sortedInfo.order : null,
     },
     {
       title: "Баллов",
       dataIndex: "points",
       key: "points",
-      sortOrder: sortedInfo.columnKey === 'points' ? sortedInfo?.order : null,
       sorter: (a: any, b: any) => a.points - b.points,
+      sortOrder: sortedInfo.columnKey === 'points' ? sortedInfo.order : null,
     },
     {
       title: "Контакты",
@@ -109,6 +109,7 @@ export const Users = ({ currentUser }: Props) => {
       dataIndex: "city",
       key: "city",
       sorter: (a: any, b: any) => a.city.localeCompare(b.city),
+      sortOrder: sortedInfo.columnKey === 'city' ? sortedInfo.order : null,
     },
     {
       title: "Адрес",
@@ -139,24 +140,14 @@ export const Users = ({ currentUser }: Props) => {
   ];
   
   useEffect(() => {
-    console.log(JSON.parse(localStorage.getItem('admin-users-sort-key') || ''));
     if(localStorage.getItem('admin-users-sort-key')){
-      console.log('localStorage');
       setSortedInfo(JSON.parse(localStorage.getItem('admin-users-sort-key') || ''));
     }
   }, []);
 
   const onChange = (pagination: any, filters: any, sorter: any, extra: any) => {
-    console.log('sorter\n', sorter);
+    setSortedInfo(sorter);
     localStorage.setItem('admin-users-sort-key', JSON.stringify(sorter));
-    console.log('localStorage');
-    console.log(JSON.parse(localStorage.getItem('admin-users-sort-key') || ''));
-  };
-
-  const test = () => {
-    console.log('SortedInfo\n', sortedInfo);
-    console.log('SortedInfo\n', sortedInfo.columnKey);
-    console.log('SortedInfo\n', sortedInfo.order);
   };
   
   return (
@@ -182,7 +173,6 @@ export const Users = ({ currentUser }: Props) => {
         <YearSwitch selectedYear={selectedYear} setSelectedYear={setSelectedYear} />
       </Space>
       <Divider dashed />
-      <Button onClick={test}>test</Button>
       <Table
         columns={columns}
         dataSource={data}
