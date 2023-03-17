@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Table, Divider, Space, TableColumnsType, Popconfirm, Typography } from "antd";
 import { CalculatorOutlined, DeleteOutlined, UserAddOutlined } from "@ant-design/icons";
@@ -13,10 +13,17 @@ import { nowYear } from "common/src/services/year";
 import { YearSwitch } from "common/src/components/YearSwitch";
 import { routes } from "../shared/routes";
 import { recalculateStatisticToUsers } from "common/src/services/statistic/user";
+import { SortOrder } from "antd/lib/table/interface";
 
 type Props = {
   currentUser: CurrentUser;
 };
+
+type Sorter = {
+  columnKey?: string;
+  field?: string;
+  order?: SortOrder;
+}
 
 export const Users = ({ currentUser }: Props) => {
   const { profile } = currentUser;
@@ -29,6 +36,7 @@ export const Users = ({ currentUser }: Props) => {
   const locationsHashTable = useMemo(() => mapDocsToHashTable<LocationDoc>(locations), [locations]);
 
   const [isCalculating, setIsCalculating] = useState(false);
+  const [sortedInfo, setSortedInfo] = useState<Sorter>({});
   const onCalculate = async () => {
     setIsCalculating(true);
     if (usersDocData) {
@@ -48,8 +56,8 @@ export const Users = ({ currentUser }: Props) => {
       key: user.id,
       nameSpiritual: user.nameSpiritual,
       name: user.name,
-      count: user.statistic?.[selectedYear]?.count,
-      points: user.statistic?.[selectedYear]?.points,
+      count: user.statistic?.[selectedYear]?.count || 0,
+      points: user.statistic?.[selectedYear]?.points || 0,
       contacts: { phone: user.phone, email: user.email },
       city: (user.city && locationsHashTable[user.city]?.name) || user.city,
       address: user.address,
@@ -61,21 +69,29 @@ export const Users = ({ currentUser }: Props) => {
       title: "Духовное имя",
       dataIndex: "nameSpiritual",
       key: "nameSpiritual",
+      sorter: (a: any, b: any) => a.nameSpiritual.localeCompare(b.nameSpiritual),
+      sortOrder: sortedInfo.columnKey === 'nameSpiritual' ? sortedInfo.order : null,
     },
     {
       title: "ФИО",
       dataIndex: "name",
       key: "name",
+      sorter: (a: any, b: any) => a.name.localeCompare(b.name),
+      sortOrder: sortedInfo.columnKey === 'name' ? sortedInfo.order : null,
     },
     {
       title: "Книг",
       dataIndex: "count",
       key: "count",
+      sorter: (a: any, b: any) => a.count - b.count,
+      sortOrder: sortedInfo.columnKey === 'count' ? sortedInfo.order : null,
     },
     {
       title: "Баллов",
       dataIndex: "points",
       key: "points",
+      sorter: (a: any, b: any) => a.points - b.points,
+      sortOrder: sortedInfo.columnKey === 'points' ? sortedInfo.order : null,
     },
     {
       title: "Контакты",
@@ -92,6 +108,8 @@ export const Users = ({ currentUser }: Props) => {
       title: "Город",
       dataIndex: "city",
       key: "city",
+      sorter: (a: any, b: any) => a.city.localeCompare(b.city),
+      sortOrder: sortedInfo.columnKey === 'city' ? sortedInfo.order : null,
     },
     {
       title: "Адрес",
@@ -120,7 +138,18 @@ export const Users = ({ currentUser }: Props) => {
       ),
     },
   ];
+  
+  useEffect(() => {
+    if(localStorage.getItem('admin-users-sort-key')){
+      setSortedInfo(JSON.parse(localStorage.getItem('admin-users-sort-key') || ''));
+    }
+  }, []);
 
+  const onChange = (pagination: any, filters: any, sorter: any, extra: any) => {
+    setSortedInfo(sorter);
+    localStorage.setItem('admin-users-sort-key', JSON.stringify(sorter));
+  };
+  
   return (
     <BaseLayout title="ПОЛЬЗОВАТЕЛИ" backPath={routes.root}>
       <Button block size="large" type="primary" icon={<UserAddOutlined />} onClick={onAddUser}>
@@ -149,6 +178,7 @@ export const Users = ({ currentUser }: Props) => {
         dataSource={data}
         scroll={{ x: true }}
         loading={locationLoading || usersDocLoading}
+        onChange={onChange}
         pagination={{ pageSize: 100 }}
       />
     </BaseLayout>
