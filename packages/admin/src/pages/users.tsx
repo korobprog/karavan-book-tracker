@@ -1,13 +1,13 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Table, Divider, Space, TableColumnsType, Popconfirm, Typography } from "antd";
+import { Select, Button, Table, Divider, Space, TableColumnsType, Popconfirm, Typography } from "antd";
 import { CalculatorOutlined, DeleteOutlined, UserAddOutlined } from "@ant-design/icons";
 
 import { useUsers } from "common/src/services/api/useUsers";
 import { LocationDoc, useLocations } from "common/src/services/api/locations";
 import { mapDocsToHashTable } from "common/src/services/api/utils";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import { useUser } from "common/src/services/api/useUser";
+import { useUser, updateProfile } from "common/src/services/api/useUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { nowYear } from "common/src/services/year";
 import { YearSwitch } from "common/src/components/YearSwitch";
@@ -52,17 +52,17 @@ export const Users = ({ currentUser }: Props) => {
   const [selectedYear, setSelectedYear] = useState(nowYear);
 
   const data =
-    usersDocData?.map((user) => ({
-      key: user.id,
-      nameSpiritual: user.nameSpiritual,
-      name: user.name,
-      count: user.statistic?.[selectedYear]?.count || 0,
-      points: user.statistic?.[selectedYear]?.points || 0,
-      contacts: { phone: user.phone, email: user.email },
-      city: (user.city && locationsHashTable[user.city]?.name) || user.city,
-      address: user.address,
-      role: user.role,
-    })) || [];
+  usersDocData?.map((user) => ({
+    key: user.id,
+    nameSpiritual: user.nameSpiritual,
+    name: user.name,
+    count: user.statistic?.[selectedYear]?.count || 0,
+    points: user.statistic?.[selectedYear]?.points || 0,
+    contacts: { phone: user.phone, email: user.email },
+    city: (user.city && locationsHashTable[user.city]?.name) || user.city,
+    address: user.address,
+    role: user.role,
+  })) || [];
 
   const columns: TableColumnsType<typeof data[0]> = [
     {
@@ -120,6 +120,22 @@ export const Users = ({ currentUser }: Props) => {
       title: "Роль",
       dataIndex: "role",
       key: "role",
+      render: (_, record) => (
+        <Select
+        mode="multiple"
+        style={{ width: '100%' }}
+        placeholder="Выберите роли"
+        defaultValue={() =>{
+          if(record.role){
+            return String(record?.role).split(',').map((role: any) => ({ 'label': role, 'value': role }));
+          }
+        }}
+        onChange={(event) =>{
+          handleRoleChange(event, record.key);
+        }}
+        options={rolesDropDown.map((role: any) => ({ 'label': role, 'value': role }))}
+        />
+      ),
     },
     {
       title: "Действие",
@@ -138,6 +154,13 @@ export const Users = ({ currentUser }: Props) => {
       ),
     },
   ];
+
+  const rolesDropDown = ['admin', 'authorized'];
+
+  const handleRoleChange = (role: any, userId: any) => {
+    const roles = role.join(',');
+    updateProfile(userId, { role: roles })
+  };
   
   useEffect(() => {
     if(localStorage.getItem('admin-users-sort-key')){
