@@ -52,17 +52,17 @@ export const Users = ({ currentUser }: Props) => {
   const [selectedYear, setSelectedYear] = useState(nowYear);
 
   const data =
-  usersDocData?.map((user) => ({
-    key: user.id,
-    nameSpiritual: user.nameSpiritual,
-    name: user.name,
-    count: user.statistic?.[selectedYear]?.count || 0,
-    points: user.statistic?.[selectedYear]?.points || 0,
-    contacts: { phone: user.phone, email: user.email },
-    city: (user.city && locationsHashTable[user.city]?.name) || user.city,
-    address: user.address,
-    role: user.role,
-  })) || [];
+    usersDocData?.map((user) => ({
+      key: user.id,
+      nameSpiritual: user.nameSpiritual,
+      name: user.name,
+      count: user.statistic?.[selectedYear]?.count || 0,
+      points: user.statistic?.[selectedYear]?.points || 0,
+      contacts: { phone: user.phone, email: user.email },
+      city: (user.city && locationsHashTable[user.city]?.name) || user.city,
+      address: user.address,
+      role: user.role,
+    })) || [];
 
   const columns: TableColumnsType<typeof data[0]> = [
     {
