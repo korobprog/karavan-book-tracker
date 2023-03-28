@@ -51,7 +51,7 @@ function App() {
     return <Loading currentUser={currentUser} />;
   }
 
-  if (currentUser.user && currentUser.profile?.role !== "admin") {
+  if (currentUser.user && !currentUser.profile?.role?.includes("admin")) {
     return <Denied currentUser={currentUser} />;
   }
 

@@ -12,6 +12,7 @@ import {
   Space,
   DatePicker,
   Typography,
+  message,
 } from "antd";
 import { PlusOutlined, MinusOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
 
@@ -152,6 +153,16 @@ export const ReportForm = (props: Props) => {
   };
 
   const onFinishHandler = (formValues: ReportFormValues) => {
+    if(totalBooksCount > 100 && !profile?.role?.includes('authorized')){
+      message.warning({
+        content: 'Спасибо, ваша операция добавлена, но еще не подтверждена. Мы свяжемся с вами в ближайшее время для подтверждения.',
+        duration: 5,
+        style: {
+          marginTop: '10vh',
+          fontSize: 'medium',
+        },
+      });
+    }
     onFinish(formValues);
     storage.setReportBooks([]);
   }

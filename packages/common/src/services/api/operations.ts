@@ -1,4 +1,4 @@
-import { query, orderBy, where } from "firebase/firestore";
+import { query, orderBy, where, updateDoc } from "firebase/firestore";
 import { useCollectionData, useDocumentData } from "react-firebase-hooks/firestore";
 import { apiRefs } from "./refs";
 
@@ -20,6 +20,10 @@ export type OperationDoc = {
   isOnline?: boolean;
   isWithoutBookInformation?: boolean;
   isTeamOperation?: boolean;
+};
+
+export const updateOperation = async (id: string, data: Partial<OperationDoc>) => {
+  updateDoc(apiRefs.operation(id), data);
 };
 
 export const useOperation = (id: string) => {

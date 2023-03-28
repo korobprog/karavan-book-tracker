@@ -3,7 +3,7 @@ import { setDoc, updateDoc, addDoc, deleteDoc } from "firebase/firestore";
 import { apiRefs } from "./refs";
 import { UserStatisticType } from "./statistic";
 
-export type UserRoles = "admin";
+export type UserRoles = "admin" | "authorized";
 
 export enum TeamMemberStatus {
   admin = "admin",
@@ -23,7 +23,7 @@ export type UserDoc = {
   address?: string;
   city?: string;
   favorite?: string[];
-  role?: UserRoles;
+  role?: UserRoles[];
   statistic?: Record<number, UserStatisticType>;
   email?: string;
   isUnattached?: boolean;
