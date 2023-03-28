@@ -48,7 +48,7 @@ export const Report = ({ currentUser }: Props) => {
         books: operationBooks,
         totalCount,
         totalPoints,
-        isAuthorized: (totalCount <= 100 ? true : profile?.role?.includes('authorized') ? true : false),
+        isAuthorized: totalCount <= 100 || profile?.role?.includes('authorized') ? true : false,
         isOnline,
       };
 
