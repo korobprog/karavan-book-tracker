@@ -122,18 +122,18 @@ export const Users = ({ currentUser }: Props) => {
       key: "role",
       render: (_, record) => (
         <Select
-        mode="multiple"
-        style={{ width: '100%' }}
-        placeholder="Выберите роли"
-        defaultValue={() =>{
-          if(record.role){
-            return String(record?.role).split(',').map((role: any) => ({ 'label': role, 'value': role }));
-          }
-        }}
-        onChange={(event) =>{
-          handleRoleChange(event, record.key);
-        }}
-        options={rolesDropDown.map((role: any) => ({ 'label': role, 'value': role }))}
+          mode="multiple"
+          style={{ width: '100%' }}
+          placeholder="Выберите роли"
+          defaultValue={() =>{
+            if(record.role){
+              return String(record?.role).split(',').map((role: any) => ({ 'label': role, 'value': role }));
+            }
+          }}
+          onChange={(event) =>{
+            handleRoleChange(event, record.key);
+          }}
+          options={rolesDropDown.map((role: any) => ({ 'label': role, 'value': role }))}
         />
       ),
     },
@@ -158,8 +158,7 @@ export const Users = ({ currentUser }: Props) => {
   const rolesDropDown = ['admin', 'authorized'];
 
   const handleRoleChange = (role: any, userId: any) => {
-    const roles = role.join(',');
-    updateProfile(userId, { role: roles })
+    updateProfile(userId, { role: role })
   };
   
   useEffect(() => {

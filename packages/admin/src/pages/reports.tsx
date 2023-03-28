@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import useGoogleSheets from "use-google-sheets";
 import {
+  Select,
   Button,
   Table,
   Divider,
   Space,
   TableColumnsType,
-  Tag,
   Popconfirm,
 } from "antd";
 import { PlusCircleOutlined, DeleteOutlined } from "@ant-design/icons";
@@ -18,6 +18,7 @@ import moment from "moment";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { useLocations } from "common/src/services/api/locations";
 import { BaseLayout } from "common/src/components/BaseLayout";
+import { updateOperation } from "common/src/services/api/operations";
 import { useState } from "react";
 
 type Props = {
@@ -45,6 +46,10 @@ export const Reports = ({ currentUser }: Props) => {
     setDeleteLoading(false);
   };
 
+  const handleStatusChange = (status: boolean, operationId: string) => {
+    updateOperation(operationId, { isAuthorized: status });
+  };
+
   const data =
     operationsDocData?.map((operation, index) => ({
       key: operation.id || index,
@@ -57,17 +62,28 @@ export const Reports = ({ currentUser }: Props) => {
     })) || [];
 
   const { locations } = useLocations({});
+  const statusDropDown = [true, false];
   const columns: TableColumnsType<typeof data[0]> = [
     {
       title: "Статус",
       dataIndex: "isAuthorized",
       key: "isAuthorized",
-      render: (status: boolean) =>
-        status ? (
-          <Tag color="green">Подтвержден</Tag>
-        ) : (
-          <Tag color="processing">Ожидание</Tag>
-        ),
+      render: (status: boolean, record) =>
+        <Select
+          style={{
+            width: '100%',
+            color: status ? 'green' : 'red',
+          }}
+          status={status ? '' : 'error'}
+          placeholder="Выберите статус"
+          defaultValue={() =>{
+            return { 'label': status ? 'Подтвержден' : 'Ожидание', 'value': status  };
+          }}
+          onChange={(status) =>{
+            handleStatusChange(Boolean(status), String(record?.key));
+          }}
+          options={statusDropDown.map((status: any) => ({ 'label': (status ? 'Подтвержден' : 'Ожидание'), 'value': status }))}
+        />
     },
     {
       title: "Дата",
