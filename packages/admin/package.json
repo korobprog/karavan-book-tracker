@@ -1,6 +1,6 @@
 {
   "name": "admin",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "karavan-book-admin",
   "scripts": {
     "start": "craco start --mode staging",

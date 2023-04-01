@@ -22,19 +22,18 @@ export const shareOperation = async (params: ShareOperation) => {
   const name = profile.nameSpiritual || profile.name;
 
   const getBookStrings = () =>
-    books.map(
-      (book) => `
-${booksHashMap[book.bookId]?.name}: ${book.count}`
-    );
+    books.map((book) => `${booksHashMap[book.bookId]?.short_name} ${book.count}`).join(`\n`);
 
   const title = "Отправить статистику";
-  const bookDeclension = getBookDeclensions(total);
 
   const text = `
-${formattedDate} ${name}
+${name}
 ${locationName}
-Распространено${isOnline ? ' онлайн' : ''}: ${total} ${bookDeclension}
+${formattedDate}
+
 ${getBookStrings()}
+
+Итого${isOnline ? " (онлайн)" : ""}: ${total}
 `;
 
   try {
