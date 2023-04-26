@@ -23,6 +23,7 @@ const Profile = ({ currentUser }: Props) => {
   const auth = getAuth();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [registrationDate, setregistrationDate] = useState(false);
   const { Title, Paragraph } = Typography;
 
   const [locationSearchString, setLocationSearchString] = useState("");
@@ -52,21 +53,23 @@ const Profile = ({ currentUser }: Props) => {
 
   const onFinish = ({ ...formValues }: any) => {
     setIsSubmitting(true);
+    setregistrationDate(true);
     setProfile({
       ...formValues,
       email: user?.email,
     })
       .then(() => navigate(routes.root))
-      .finally(() => setIsSubmitting(false));
+      .finally(() => {
+        setIsSubmitting(false);
+        setregistrationDate(false);
+      });
   };
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
 
-  const locationOptions = locations?.map((d) => (
-    <Select.Option key={d.id}>{d.name}</Select.Option>
-  ));
+  const locationOptions = locations?.map((d) => <Select.Option key={d.id}>{d.name}</Select.Option>);
 
   return (
     <BaseLayout
@@ -75,12 +78,7 @@ const Profile = ({ currentUser }: Props) => {
       userDocLoading={userDocLoading}
       headerActions={[
         <Tooltip title="Выйти" key="logout">
-          <Button
-            type="ghost"
-            shape="circle"
-            icon={<LogoutOutlined />}
-            onClick={onLogout}
-          />
+          <Button type="ghost" shape="circle" icon={<LogoutOutlined />} onClick={onLogout} />
         </Tooltip>,
       ]}
     >
@@ -150,11 +148,7 @@ const Profile = ({ currentUser }: Props) => {
           >
             <Input />
           </Form.Item>
-          <Form.Item
-            name="email"
-            label="Ваш email"
-            initialValue={user?.email || ""}
-          >
+          <Form.Item name="email" label="Ваш email" initialValue={user?.email || ""}>
             <Input disabled />
           </Form.Item>
           <Form.Item
@@ -166,11 +160,7 @@ const Profile = ({ currentUser }: Props) => {
             <Input />
           </Form.Item>
           <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={isSubmitting || userDocLoading}
-            >
+            <Button type="primary" htmlType="submit" loading={isSubmitting || userDocLoading}>
               СОХРАНИТЬ
             </Button>
           </Form.Item>

@@ -28,6 +28,7 @@ export type UserDoc = {
   email?: string;
   isUnattached?: boolean;
   team?: UserTeam | null;
+  registrationDate?: string;
 };
 
 export type UserDocWithId = UserDoc & {
