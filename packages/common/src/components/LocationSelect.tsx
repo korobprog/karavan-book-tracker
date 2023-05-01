@@ -1,17 +1,17 @@
 import React from "react";
-import { useStore } from "effector-react";
 import { PlusOutlined } from "@ant-design/icons";
 import { Select, SelectProps, Typography } from "antd";
-import { $isOnline } from "../app/offline/lib/isOnlineStore";
 
 type LocationSelectProps = SelectProps & {
   onAddNewLocation: () => void;
   locationSearchString: string;
+  isOnline?: boolean;
+  loading?: boolean;
 };
 
 export const LocationSelect: React.FC<LocationSelectProps> = (props) => {
-  const { onAddNewLocation, locationSearchString, children, ...restProps } = props;
-  const isOnline = useStore($isOnline);
+  const { onAddNewLocation, locationSearchString, children, isOnline, loading, ...restProps } =
+    props;
 
   return (
     <Select
@@ -23,7 +23,7 @@ export const LocationSelect: React.FC<LocationSelectProps> = (props) => {
       filterOption={false}
       allowClear
       notFoundContent={
-        <>
+        !loading && <>
           <Typography.Paragraph style={{ whiteSpace: "nowrap" }}>
             Такого места пока нет
           </Typography.Paragraph>

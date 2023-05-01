@@ -4,6 +4,7 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 
 import { getHashMap } from "common/src/utils/getHashMap";
 import { apiRefs } from "./refs";
+import { usePreloadedData } from "../../utils/memo/usePreloadedData";
 
 export type LocationsStatisticType = {
   totalPoints: number;
@@ -58,6 +59,7 @@ export type UseLocationsParams = {
 
 export const useLocations = (params?: UseLocationsParams) => {
   const { searchString = "" } = params || {};
+
   const [locationsDocData, locationsDocLoading] = useCollectionData<LocationDoc>(
     searchString
       ? query(
@@ -68,12 +70,14 @@ export const useLocations = (params?: UseLocationsParams) => {
       : apiRefs.locations
   );
 
+  const locations = usePreloadedData(locationsDocData, locationsDocLoading);
+
   const locationsHashMap = React.useMemo(() => {
-    return locationsDocData ? getHashMap<LocationDoc>(locationsDocData) : null;
-  }, [locationsDocData]);
+    return locations ? getHashMap<LocationDoc>(locations) : null;
+  }, [locations]);
 
   return {
-    locations: locationsDocData || [],
+    locations: locations || [],
     locationsHashMap,
     loading: locationsDocLoading,
   };
