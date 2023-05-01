@@ -1,5 +1,5 @@
 import React from "react";
-import { addDoc, query, where, setDoc, updateDoc } from "firebase/firestore";
+import { addDoc, query, where, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 
 import { getHashMap } from "common/src/utils/getHashMap";
@@ -41,6 +41,10 @@ export const editLocation = async (id: string, data: LocationDoc) => {
 
 export const updateLocation = async (id: string, data: Partial<LocationDoc>) => {
   updateDoc(apiRefs.location(id), data);
+};
+
+export const deleteLocation = async (id: string) => {
+  deleteDoc(apiRefs.location(id));
 };
 
 export const setCoordinates = (x: number, y: number, location: LocationDoc) => {

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useStore } from "effector-react";
-import { Button, Table, Divider, Space, Typography } from "antd";
-import { CalculatorOutlined } from "@ant-design/icons";
+import { Button, Table, Divider, Space, Typography, Popconfirm, TableColumnsType } from "antd";
+import { CalculatorOutlined, DeleteOutlined } from "@ant-design/icons";
 
 import { routes } from "../shared/routes";
-import { LocationDoc, useLocations } from "common/src/services/api/locations";
+import { LocationDoc, deleteLocation, useLocations } from "common/src/services/api/locations";
 import { LocationStatistic } from "common/src/components/LocationStatistic";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { $booksLoading } from "common/src/services/books";
@@ -32,7 +32,22 @@ export const Locations = ({ currentUser }: Props) => {
     setIsCalculating(false);
   };
 
-  const columns = [
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const onRemoveLocation = async (locationId: string) => {
+    setDeleteLoading(true);
+    await deleteLocation(locationId);
+    setDeleteLoading(false);
+  };
+
+  const data =
+  locations?.map((location, index) => ({
+    ...location,
+    key: location.id || String(index),
+  })) || [];
+
+const dataWithoutCoords = data.filter((location) => !location.coordinates);
+
+  const columns: TableColumnsType<typeof data[0]>  = [
     {
       title: "Населенный пункт",
       dataIndex: "name",
@@ -60,20 +75,21 @@ export const Locations = ({ currentUser }: Props) => {
         <LocationStatistic statistic={stat} year={selectedYear} />
       ),
     },
-    // {
-    //   title: "Действие",
-    //   key: "action",
-    //   render: (text: string, record: any) => <Button>Сделать что-то</Button>,
-    // },
+    {
+      title: "Действие",
+      key: "action",
+      render: (text: string, record) => (
+        <Space>
+         <Popconfirm
+            title={`Удалить локацию?`}
+            onConfirm={() => onRemoveLocation(String(record.key))}
+          >
+            <Button danger icon={<DeleteOutlined />} loading={deleteLoading} />
+          </Popconfirm>
+        </Space>
+      ),
+    },
   ];
-
-  const data =
-    locations?.map((location, index) => ({
-      ...location,
-      key: location.id || String(index),
-    })) || [];
-
-  const dataWithoutCoords = data.filter((location) => !location.coordinates);
 
   return (
     <BaseLayout title="ГОРОДА НА КАРТЕ" backPath={routes.root}>
