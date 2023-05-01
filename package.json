@@ -30,7 +30,7 @@
   "dependencies": {
     "exceljs": "^4.3.0",
     "file-saver": "^2.0.5",
-    "firebase": "^9.14.0"
+    "firebase": "^9.21.0"
   },
   "devDependencies": {
     "craco-plugin-env": "^1.0.5"
