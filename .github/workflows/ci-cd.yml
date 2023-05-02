@@ -37,11 +37,11 @@ jobs:
         with:
           name: admin-dist
           path: packages/admin/build
-      - name: Archive Production Artifact Tracker
-        uses: actions/upload-artifact@master
-        with:
-          name: tracker-dist
-          path: packages/tracker/build
+      # - name: Archive Production Artifact Tracker
+      #   uses: actions/upload-artifact@master
+      #   with:
+      #     name: tracker-dist
+      #     path: packages/tracker/build
 
   deploy:
     name: Deploy
