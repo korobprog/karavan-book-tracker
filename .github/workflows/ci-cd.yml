@@ -11,8 +11,6 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
-      - name: GitHub Action for Firebase
-        uses: w9jds/firebase-action@v11.24.1
       - name: Use Node.js 18.x
         uses: actions/setup-node@v3
         with:
