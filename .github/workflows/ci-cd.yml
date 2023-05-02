@@ -1,5 +1,16 @@
 name: NodeJS with Webpack
 
+env:
+  REACT_APP_FIREBASE_API_KEY: ${{ vars.REACT_APP_FIREBASE_API_KEY }}
+  REACT_APP_FIREBASE_AUTH_DOMAIN: ${{ vars.REACT_APP_FIREBASE_AUTH_DOMAIN }}
+  REACT_APP_FIREBASE_DATABASE_URL: ${{ vars.REACT_APP_FIREBASE_DATABASE_URL }}
+  REACT_APP_FIREBASE_PROJECT_ID: ${{ vars.REACT_APP_FIREBASE_PROJECT_ID }}
+  REACT_APP_FIREBASE_STORAGE_BUCKET: ${{ vars.REACT_APP_FIREBASE_STORAGE_BUCKET }}
+  REACT_APP_FIREBASE_MESSAGING_SENDER_ID: ${{ vars.REACT_APP_FIREBASE_MESSAGING_SENDER_ID }}
+  REACT_APP_FIREBASE_APP_ID: ${{ vars.REACT_APP_FIREBASE_APP_ID }}
+  REACT_APP_GOOGLE_API_KEY: ${{ vars.REACT_APP_GOOGLE_API_KEY }}
+  REACT_APP_GOOGLE_SHEETS_ID: ${{ vars.REACT_APP_GOOGLE_SHEETS_ID }}
+
 on:
   push:
     branches: [ "master", "ci-cd" ]
@@ -16,12 +27,12 @@ jobs:
         with:
           node-version: 18.x
       - name: Install Dependencies
-        run: npm install
-        # run: echo ${{ env.REACT_APP_FIREBASE_API_KEY }}
+        # run: npm install
+        run: echo ${{ vars.REACT_APP_FIREBASE_API_KEY }}
       # - name: Build tracker
       #   run: npm run tracker:build:prod
-      - name: Build admin
-        run: npm run admin:build:prod
+      # - name: Build admin
+      #   run: npm run admin:build:prod
       - name: Archive Production Artifact Admin
         uses: actions/upload-artifact@master
         with:
