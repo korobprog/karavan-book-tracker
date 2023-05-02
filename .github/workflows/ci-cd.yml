@@ -16,7 +16,8 @@ jobs:
         with:
           node-version: 18.x
       - name: Install Dependencies
-        run: npm install
+        # run: npm install
+        run: echo ${{ env.REACT_APP_FIREBASE_API_KEY }}
       # - name: Build tracker
       #   run: npm run tracker:build:prod
       - name: Build admin
