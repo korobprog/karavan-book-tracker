@@ -41,7 +41,6 @@ jobs:
         uses: actions/checkout@master
       - name: Download Artifact Admin
         uses: actions/download-artifact@master
-        working-directory: packages/admin
         with:
           name: admin-dist
           path: dist
