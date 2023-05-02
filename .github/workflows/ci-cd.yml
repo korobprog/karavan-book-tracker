@@ -2,28 +2,74 @@ name: NodeJS with Webpack
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "ci-cd" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+      - name: GitHub Action for Firebase
+        uses: w9jds/firebase-action@v11.24.1
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - name: Install Dependencies
+        run: npm install
+      - name: Build tracker
+        run: npm run tracker:build:prod
+      - name: Build admin
+        run: npm run admin:build:prod
+      - name: Archive Production Artifact Admin
+        uses: actions/upload-artifact@master
+        with:
+          name: admin-dist
+          path: packages/admin/build
+      - name: Archive Production Artifact Tracker
+        uses: actions/upload-artifact@master
+        with:
+          name: tracker-dist
+          path: packages/tracker/build
 
-    - name: Use Node.js 18.x
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18.x
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+      - name: go admin directory
+        run: cd 
+      - name: Download Artifact Admin
+        uses: actions/download-artifact@master
+        working-directory: ./packages/admin
+        with:
+          name: admin-dist
+          path: dist
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        working-directory: ./packages/admin
+        with:
+          args: deploy --only hosting -P default
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
 
-    - name: Build
-      run: |
-        npm install
-        npm run tracker:build:prod
-        npm run admin:build:prod
-
-    - name: Deploy
-      run: |
-        npm install
-        npm run tracker:deploy:prod
-        npm run admin:deploy:prod
+     - name: Download Artifact Tracker
+        uses: actions/download-artifact@master
+        with:
+          name: tracker-dist
+          path: dist
+        working-directory: ./packages/tracker
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        working-directory: ./packages/tracker
+        with:
+          args: deploy --only hosting -P default
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
