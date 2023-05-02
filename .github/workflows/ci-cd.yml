@@ -31,3 +31,24 @@ jobs:
         with:
           name: tracker-dist
           path: packages/tracker/build
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+      - name: Download Artifact Admin
+        uses: actions/download-artifact@master
+        working-directory: packages/admin
+        with:
+          name: admin-dist
+          path: dist
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        working-directory: packages/admin
+        with:
+          args: deploy --only hosting -P default
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
