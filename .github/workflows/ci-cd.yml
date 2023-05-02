@@ -6,9 +6,6 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
-    steps:
     name: Build
     runs-on: ubuntu-latest
     steps:
