@@ -47,8 +47,8 @@ jobs:
           path: dist
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
-        working-directory: packages/admin
         with:
           args: deploy --only hosting -P default
         env:
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+          PROJECT_PATH: packages/admin
