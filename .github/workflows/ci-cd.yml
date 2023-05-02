@@ -27,12 +27,11 @@ jobs:
         with:
           node-version: 18.x
       - name: Install Dependencies
-        # run: npm install
-        run: echo ${{ vars.REACT_APP_FIREBASE_API_KEY }}
+        run: npm install
       # - name: Build tracker
       #   run: npm run tracker:build:prod
-      # - name: Build admin
-      #   run: npm run admin:build:prod
+      - name: Build admin
+        run: npm run admin:build:prod
       - name: Archive Production Artifact Admin
         uses: actions/upload-artifact@master
         with:
