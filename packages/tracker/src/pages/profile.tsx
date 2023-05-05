@@ -1,16 +1,14 @@
 import React, { useState } from "react";
 import { getAuth, signOut } from "firebase/auth";
-import { Button, Typography, Form, Input, Select, Tooltip } from "antd";
+import { Button, Typography, Form, Input, Tooltip } from "antd";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
 import { useUser } from "common/src/services/api/useUser";
-import { addLocation, useLocations } from "common/src/services/api/locations";
-import { useDebouncedCallback } from "use-debounce";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { phoneNumberPattern } from "common/src/utils/patterns";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { LogoutOutlined } from "@ant-design/icons";
-import { LocationSelect } from "common/src/components/LocationSelect";
+import { SelectLocation } from "common/src/features/select-location/SelectLocation";
 
 type Props = {
   currentUser: CurrentUser;
@@ -25,15 +23,6 @@ const Profile = ({ currentUser }: Props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { Title, Paragraph } = Typography;
 
-  const [locationSearchString, setLocationSearchString] = useState("");
-  const { locations, loading: locationsLoading } = useLocations({
-    searchString: locationSearchString,
-  });
-
-  const onLocationChange = useDebouncedCallback((value: string) => {
-    setLocationSearchString(value.charAt(0).toUpperCase() + value.slice(1));
-  }, 1000);
-
   const onLogout = () => {
     signOut(auth);
   };
@@ -41,13 +30,6 @@ const Profile = ({ currentUser }: Props) => {
   const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
-  };
-
-  const onAddNewLocation = () => {
-    addLocation({
-      name: locationSearchString,
-    });
-    setLocationSearchString("");
   };
 
   const onFinish = ({ ...formValues }: any) => {
@@ -63,10 +45,6 @@ const Profile = ({ currentUser }: Props) => {
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
-
-  const locationOptions = locations?.map((d) => (
-    <Select.Option key={d.id}>{d.name}</Select.Option>
-  ));
 
   return (
     <BaseLayout
@@ -124,14 +102,7 @@ const Profile = ({ currentUser }: Props) => {
             rules={[{ required: true }]}
             initialValue={profile?.city || ""}
           >
-            <LocationSelect
-              onSearch={onLocationChange}
-              onAddNewLocation={onAddNewLocation}
-              locationSearchString={locationSearchString}
-              loading={locationsLoading}
-            >
-              {locationOptions}
-            </LocationSelect>
+            <SelectLocation />
           </Form.Item>
           <Form.Item
             name="phone"

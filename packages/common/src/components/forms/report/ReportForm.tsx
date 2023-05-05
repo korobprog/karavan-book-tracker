@@ -6,7 +6,6 @@ import {
   Input,
   InputNumber,
   Form,
-  Select,
   Checkbox,
   Row,
   Space,
@@ -18,13 +17,11 @@ import { PlusOutlined, MinusOutlined, StarFilled, StarOutlined } from "@ant-desi
 
 import { useUser } from "common/src/services/api/useUser";
 import * as storage from "common/src/services/localStorage/reportBooks";
-import { addLocation, useLocations } from "common/src/services/api/locations";
-import { useDebouncedCallback } from "use-debounce";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { $books, $booksLoading, Book } from "common/src/services/books";
-import { LocationSelect } from "common/src/components/LocationSelect";
 import moment from "moment";
 import { calcBooksCountsFromValues, calcFormValuesFromBooks, ReportFormValues } from "./helpers";
+import { SelectLocation } from "../../../features/select-location/SelectLocation";
 
 type Props = {
   currentUser: CurrentUser;
@@ -49,14 +46,9 @@ export const ReportForm = (props: Props) => {
   const { profile, favorite, userDocLoading } = currentUser;
   const { toggleFavorite } = useUser({ profile });
   const [searchString, setSearchString] = useState("");
-  const [locationSearchString, setLocationSearchString] = useState("");
 
   const books = useStore($books);
   const booksLoading = useStore($booksLoading);
-
-  const { locations } = useLocations({
-    searchString: locationSearchString,
-  });
 
   const booksStorageInitialValues = calcFormValuesFromBooks(storage.getReportBooks());
 
@@ -88,10 +80,6 @@ export const ReportForm = (props: Props) => {
     setIsOnline(!isOnline);
   };
 
-  const onLocationChange = useDebouncedCallback((value: string) => {
-    setLocationSearchString(value.charAt(0).toUpperCase() + value.slice(1));
-  }, 1000);
-
   const { favoriteBooks, otherBooks } = books.reduce(
     ({ favoriteBooks, otherBooks }, book) => {
       if (favorite.includes(book.id)) {
@@ -104,13 +92,6 @@ export const ReportForm = (props: Props) => {
     },
     { favoriteBooks: [] as Book[], otherBooks: [] as Book[] }
   );
-
-  const onAddNewLocation = () => {
-    addLocation({
-      name: locationSearchString,
-    });
-    setLocationSearchString("");
-  };
 
   const onSearchChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setSearchString(e.target.value.toLowerCase());
@@ -131,8 +112,6 @@ export const ReportForm = (props: Props) => {
     setTotalBooksCount(totalCount);
     storage.setReportBooks([]);
   };
-
-  const locationOptions = locations?.map((d) => <Select.Option key={d.id}>{d.name}</Select.Option>);
 
   const { Search } = Input;
 
@@ -219,13 +198,7 @@ export const ReportForm = (props: Props) => {
           },
         ]}
       >
-        <LocationSelect
-          onSearch={onLocationChange}
-          onAddNewLocation={onAddNewLocation}
-          locationSearchString={locationSearchString}
-        >
-          {locationOptions}
-        </LocationSelect>
+        <SelectLocation />
       </Form.Item>
       <Space style={{ flexGrow: 1, marginRight: 8 }}>
         <Form.Item name="date">

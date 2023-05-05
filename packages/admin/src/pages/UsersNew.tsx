@@ -1,13 +1,11 @@
 import { useState } from "react";
-import { Button, Form, Input, Select } from "antd";
+import { Button, Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
 import { useUser } from "common/src/services/api/useUser";
-import { LocationSelect } from "common/src/components/LocationSelect";
-import { addLocation, useLocations } from "common/src/services/api/locations";
-import { useDebouncedCallback } from "use-debounce";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
+import { SelectLocation } from "common/src/features/select-location/SelectLocation";
 
 type Props = {
   currentUser: CurrentUser;
@@ -17,24 +15,11 @@ export const UsersNew = ({ currentUser }: Props) => {
   const { addNewUnattachedProfile } = useUser({ profile: currentUser.profile });
   const navigate = useNavigate();
 
-  const [locationSearchString, setLocationSearchString] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { locations } = useLocations({
-    searchString: locationSearchString,
-  });
-
-  const onLocationChange = useDebouncedCallback((value: string) => {
-    setLocationSearchString(value.charAt(0).toUpperCase() + value.slice(1));
-  }, 1000);
 
   const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
-  };
-
-  const onAddNewLocation = () => {
-    addLocation({ name: locationSearchString });
-    setLocationSearchString("");
   };
 
   const onFinish = ({ phone, prefix, ...formValues }: any) => {
@@ -50,10 +35,6 @@ export const UsersNew = ({ currentUser }: Props) => {
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
-
-  const locationOptions = locations?.map((d) => (
-    <Select.Option key={d.id}>{d.name}</Select.Option>
-  ));
 
   return (
     <BaseLayout title="СОЗДАНИЕ НОВОГО ПОЛЬЗОВАТЕЛЯ" backPath={routes.users}>
@@ -87,13 +68,7 @@ export const UsersNew = ({ currentUser }: Props) => {
           rules={[{ required: true }]}
           initialValue={""}
         >
-          <LocationSelect
-            onSearch={onLocationChange}
-            onAddNewLocation={onAddNewLocation}
-            locationSearchString={locationSearchString}
-          >
-            {locationOptions}
-          </LocationSelect>
+          <SelectLocation />
         </Form.Item>
         <Form.Item
           name="phone"
