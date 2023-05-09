@@ -19,15 +19,16 @@ export type UserTeam = {
 export type UserDoc = {
   name?: string;
   nameSpiritual?: string;
-  phone?: string;
-  address?: string;
-  city?: string;
-  favorite?: string[];
+  phone?: string; // Контактный номер телефона
+  address?: string; // Адрес, куда высылать подарки
+  city?: string; // Текущее местоположение
+  yatraLocationId?: string; // К какой ятре прикреплен
+  favorite?: string[]; // Избранные книги
   role?: UserRoles[];
   statistic?: Record<number, UserStatisticType>;
   email?: string;
-  isUnattached?: boolean;
-  team?: UserTeam | null;
+  isUnattached?: boolean; // Профиль не привязан к конкретному аккаунту
+  team?: UserTeam | null; // Членство в передвижной команде
 };
 
 export type UserDocWithId = UserDoc & {

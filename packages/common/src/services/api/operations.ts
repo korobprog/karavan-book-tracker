@@ -16,6 +16,8 @@ export type OperationDoc = {
   totalCount: number;
   totalPoints: number;
   books: DistributedBook[];
+  teamId?: number;
+  yatraLocationId?: string;
   isAuthorized?: boolean;
   isOnline?: boolean;
   isWithoutBookInformation?: boolean;
