@@ -16,13 +16,12 @@ type Props = {
   onFinish: (newProfile: UserDoc) => Promise<void>;
   initialValues?: ProfileFormValues;
   isLoading?: boolean;
+  isEmailEditable?: boolean;
 };
 
 export const ProfileForm = (props: Props) => {
-  const { onFinish, initialValues, isLoading } = props;
-
+  const { onFinish, initialValues, isLoading, isEmailEditable } = props;
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { Paragraph } = Typography;
 
   const onFinishHandler = ({ ...formValues }: UserDoc) => {
     setIsSubmitting(true);
@@ -42,7 +41,7 @@ export const ProfileForm = (props: Props) => {
       autoComplete="off"
       {...layout}
     >
-      <Paragraph>Обязательно заполните Ваш профиль</Paragraph>
+      <Typography.Paragraph>Обязательно заполните профиль</Typography.Paragraph>
 
       <Form.Item name="name" label="Ваше Ф.И.О" rules={[{ required: true }]}>
         <Input />
@@ -63,8 +62,14 @@ export const ProfileForm = (props: Props) => {
       >
         <Input />
       </Form.Item>
-      <Form.Item name="email" label="Ваш email">
-        <Input disabled />
+      <Form.Item
+        name="email"
+        label="email"
+        rules={
+          isEmailEditable ? [{ required: true, message: "Пожалуйста, введите email" }] : undefined
+        }
+      >
+        <Input disabled={!isEmailEditable} />
       </Form.Item>
       <Form.Item name="address" label="Ваш адрес" rules={[{ required: false }]}>
         <Input />
