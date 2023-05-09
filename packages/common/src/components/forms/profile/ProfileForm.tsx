@@ -3,6 +3,7 @@ import { Button, Typography, Form, Input } from "antd";
 import { UserDoc } from "common/src/services/api/useUser";
 import { phoneNumberPattern } from "common/src/utils/patterns";
 import { SelectLocation } from "common/src/features/select-location/SelectLocation";
+import { removeEmptyFields } from "../../../utils/objects";
 
 const layout = {
   labelCol: { span: 8 },
@@ -25,7 +26,7 @@ export const ProfileForm = (props: Props) => {
 
   const onFinishHandler = ({ ...formValues }: UserDoc) => {
     setIsSubmitting(true);
-    onFinish(formValues).finally(() => setIsSubmitting(false));
+    onFinish(removeEmptyFields(formValues)).finally(() => setIsSubmitting(false));
   };
 
   const onFinishFailed = (errorInfo: any) => {
