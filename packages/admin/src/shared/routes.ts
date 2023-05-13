@@ -6,6 +6,7 @@ export const routes = {
 
     report: '/report',
     reports: '/reports',
+    reportsEdit: '/reports/:operationId/edit',
 
     users: '/users',
     usersNew: '/users/new',

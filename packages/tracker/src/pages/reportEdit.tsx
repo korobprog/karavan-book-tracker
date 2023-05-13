@@ -21,8 +21,8 @@ type Props = {
 export const ReportEdit = ({ currentUser }: Props) => {
   const { profile, user, loading, userDocLoading } = currentUser;
 
-  const { id = "" } = useParams<{ id: string }>();
-  const { operationDocData, loading: operationLoading } = useOperation(id);
+  const { operationId } = useParams<{ operationId: string }>();
+  const { operationDocData, loading: operationLoading } = useOperation(operationId);
 
   const [isOnline, setIsOnline] = useState(operationDocData?.isOnline || false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -45,7 +45,7 @@ export const ReportEdit = ({ currentUser }: Props) => {
   }, [user, loading, navigate]);
 
   function onFinish(formValues: ReportFormValues) {
-    if (user && profile?.name) {
+    if (user && profile?.name && operationId) {
       setIsSubmitting(true);
       const { operationBooks, totalCount, totalPoints } = calcBooksCountsFromValues(formValues);
       const { locationId, date } = formValues;
@@ -67,7 +67,7 @@ export const ReportEdit = ({ currentUser }: Props) => {
         isOnline,
       };
 
-      editOperationMultiAction(id, operation)
+      editOperationMultiAction(operationId, operation)
         .then(() => navigate(routes.statistic))
         .finally(() => setIsSubmitting(false));
     }
