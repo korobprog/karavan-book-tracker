@@ -6,7 +6,7 @@ import {
   getFirestore,
 } from "firebase/firestore";
 import { LocationDoc } from "./locations";
-import { OperationDoc } from "./operations";
+import { OperationDoc, OperationDocWithId } from "./operations";
 import { TeamDoc } from "./teams";
 import { UserDoc, UserDocWithId } from "./useUser";
 import { idConverter } from "./utils";
@@ -24,7 +24,7 @@ const addUser = getCollectionRef<UserDoc>("users");
 const users = getCollectionRef<UserDocWithId>("users");
 
 const operation = (id: string) => getDocRef<OperationDoc>(id, "operations");
-const operations = getCollectionRef<OperationDoc>("operations");
+const operations = getCollectionRef<OperationDocWithId>("operations");
 
 const location = (id: string) => getDocRef<LocationDoc>(id, "locations");
 const locations = getCollectionRef<LocationDoc>("locations");

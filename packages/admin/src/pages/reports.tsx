@@ -1,15 +1,7 @@
-import { useNavigate } from "react-router-dom";
+import { generatePath, useNavigate } from "react-router-dom";
 import useGoogleSheets from "use-google-sheets";
-import {
-  Select,
-  Button,
-  Table,
-  Divider,
-  Space,
-  TableColumnsType,
-  Popconfirm,
-} from "antd";
-import { PlusCircleOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Select, Button, Table, Divider, Space, TableColumnsType, Popconfirm } from "antd";
+import { PlusCircleOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 import { removeOperationMultiAction } from "common/src/services/api/multiactions";
 import { routes } from "../shared/routes";
@@ -39,6 +31,10 @@ export const Reports = ({ currentUser }: Props) => {
     navigate(routes.report);
   };
 
+  const onEditOperation = (operationId: string) => {
+    navigate(generatePath(routes.reportsEdit, { operationId }));
+  };
+
   const [deleteLoading, setDeleteLoading] = useState(false);
   const onRemoveOperation = async (operationId: string) => {
     setDeleteLoading(true);
@@ -51,8 +47,9 @@ export const Reports = ({ currentUser }: Props) => {
   };
 
   const data =
-    operationsDocData?.map((operation, index) => ({
-      key: operation.id || index,
+    operationsDocData?.map((operation) => ({
+      key: operation.id,
+      id: operation.id,
       date: operation.date,
       isAuthorized: operation.isAuthorized,
       name: operation.userName,
@@ -63,27 +60,31 @@ export const Reports = ({ currentUser }: Props) => {
 
   const { locations } = useLocations({});
   const statusDropDown = [true, false];
-  const columns: TableColumnsType<typeof data[0]> = [
+  const columns: TableColumnsType<(typeof data)[0]> = [
     {
       title: "Статус",
       dataIndex: "isAuthorized",
       key: "isAuthorized",
-      render: (status: boolean, record) =>
+      render: (status: boolean, record) => (
         <Select
           style={{
-            width: '100%',
-            color: status ? 'green' : 'red',
+            width: "100%",
+            color: status ? "green" : "red",
           }}
-          status={status ? '' : 'error'}
+          status={status ? "" : "error"}
           placeholder="Выберите статус"
-          defaultValue={() =>{
-            return { 'label': status ? 'Подтвержден' : 'Ожидание', 'value': status  };
+          defaultValue={() => {
+            return { label: status ? "Подтвержден" : "Ожидание", value: status };
           }}
-          onChange={(status) =>{
+          onChange={(status) => {
             handleStatusChange(Boolean(status), String(record?.key));
           }}
-          options={statusDropDown.map((status: any) => ({ 'label': (status ? 'Подтвержден' : 'Ожидание'), 'value': status }))}
+          options={statusDropDown.map((status: any) => ({
+            label: status ? "Подтвержден" : "Ожидание",
+            value: status,
+          }))}
         />
+      ),
     },
     {
       title: "Дата",
@@ -107,8 +108,7 @@ export const Reports = ({ currentUser }: Props) => {
       dataIndex: "location",
       key: "location",
       // TODO: refactor to hashmap
-      render: (locationId) =>
-        locations.find((location) => location.id === locationId)?.name,
+      render: (locationId) => locations.find((location) => location.id === locationId)?.name,
     },
     // {
     //   title: "Книги",
@@ -133,6 +133,7 @@ export const Reports = ({ currentUser }: Props) => {
       key: "action",
       render: (text: string, record) => (
         <Space>
+          <Button icon={<EditOutlined />} onClick={() => onEditOperation(record.id)} />
           <Popconfirm
             title={`Удалить операцию?`}
             onConfirm={() => onRemoveOperation(String(record.key))}
