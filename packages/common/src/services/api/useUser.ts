@@ -1,3 +1,4 @@
+import { useDocumentData } from "react-firebase-hooks/firestore";
 import { User } from "firebase/auth";
 import { setDoc, updateDoc, addDoc, deleteDoc } from "firebase/firestore";
 import { apiRefs } from "./refs";
@@ -42,6 +43,11 @@ type Params = {
 
 export const updateProfile = async (id: string, profile: Partial<UserDoc>) => {
   await updateDoc(apiRefs.user(id), profile);
+};
+
+export const useProfileById = (id?: string) => {
+  const [profile, loading] = useDocumentData<UserDoc>(id ? apiRefs.user(id) : null);
+  return { profile, loading };
 };
 
 export const useUser = ({ profile, user }: Params) => {
