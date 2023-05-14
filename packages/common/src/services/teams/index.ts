@@ -8,7 +8,6 @@ export type TeamFormValues = {
   currentLocation?: string;
   //   parentId: string | null;
   //   leader: { id: string; name: string };
-  //   members: string[];
   //   requests?: string[];
   //   created: string;
   //   founded?: string;
@@ -30,7 +29,6 @@ export const saveTeam = ({ teamId, team }: SaveTeamParams) => {
     leader: {
       id: team.leaderId,
     },
-    members: [team.leaderId],
   };
 
   const editTeamMethod = teamId

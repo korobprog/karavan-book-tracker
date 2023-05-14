@@ -1,3 +1,4 @@
+import { useDocumentData } from "react-firebase-hooks/firestore";
 import { User } from "firebase/auth";
 import { setDoc, updateDoc, addDoc, deleteDoc } from "firebase/firestore";
 import { apiRefs } from "./refs";
@@ -19,16 +20,22 @@ export type UserTeam = {
 export type UserDoc = {
   name?: string;
   nameSpiritual?: string;
-  phone?: string;
-  address?: string;
-  city?: string;
-  favorite?: string[];
+  phone?: string; // Контактный номер телефона
+  address?: string; // Адрес, куда высылать подарки
+  city?: string; // Текущее местоположение
+  yatraLocationId?: string; // К какой ятре прикреплен
+  favorite?: string[]; // Избранные книги
   role?: UserRoles[];
   statistic?: Record<number, UserStatisticType>;
   email?: string;
+<<<<<<< HEAD
   isUnattached?: boolean;
   team?: UserTeam | null;
   registrationDate?: string;
+=======
+  isUnattached?: boolean; // Профиль не привязан к конкретному аккаунту
+  team?: UserTeam | null; // Членство в передвижной команде
+>>>>>>> origin/master
 };
 
 export type UserDocWithId = UserDoc & {
@@ -42,6 +49,11 @@ type Params = {
 
 export const updateProfile = async (id: string, profile: Partial<UserDoc>) => {
   await updateDoc(apiRefs.user(id), profile);
+};
+
+export const useProfileById = (id?: string) => {
+  const [profile, loading] = useDocumentData<UserDoc>(id ? apiRefs.user(id) : null);
+  return { profile, loading };
 };
 
 export const useUser = ({ profile, user }: Params) => {

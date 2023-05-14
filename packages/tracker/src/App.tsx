@@ -54,7 +54,7 @@ function App() {
       <Routes>
         <Route path={routes.root} element={<Home currentUser={currentUser} />} />
         <Route path={routes.report} element={<Report currentUser={currentUser} />} />
-        <Route path={routes.reportEdit()} element={<ReportEdit currentUser={currentUser} />} />
+        <Route path={routes.reportEdit} element={<ReportEdit currentUser={currentUser} />} />
         <Route path={routes.statistic} element={<Statistic currentUser={currentUser} />} />
         <Route path={routes.auth} element={<Auth currentUser={currentUser} />} />
         <Route path={routes.registration} element={<Registration currentUser={currentUser} />} />

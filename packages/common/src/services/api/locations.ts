@@ -1,9 +1,10 @@
 import React from "react";
-import { addDoc, query, where, setDoc, updateDoc } from "firebase/firestore";
+import { addDoc, query, where, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 
 import { getHashMap } from "common/src/utils/getHashMap";
 import { apiRefs } from "./refs";
+import { usePreloadedData } from "../../utils/memo/usePreloadedData";
 
 export type LocationsStatisticType = {
   totalPoints: number;
@@ -42,6 +43,10 @@ export const updateLocation = async (id: string, data: Partial<LocationDoc>) => 
   updateDoc(apiRefs.location(id), data);
 };
 
+export const deleteLocation = async (id: string) => {
+  deleteDoc(apiRefs.location(id));
+};
+
 export const setCoordinates = (x: number, y: number, location: LocationDoc) => {
   const { id, ...newLocation }: LocationDoc = {
     ...location,
@@ -58,6 +63,7 @@ export type UseLocationsParams = {
 
 export const useLocations = (params?: UseLocationsParams) => {
   const { searchString = "" } = params || {};
+
   const [locationsDocData, locationsDocLoading] = useCollectionData<LocationDoc>(
     searchString
       ? query(
@@ -68,12 +74,14 @@ export const useLocations = (params?: UseLocationsParams) => {
       : apiRefs.locations
   );
 
+  const locations = usePreloadedData(locationsDocData, locationsDocLoading);
+
   const locationsHashMap = React.useMemo(() => {
-    return locationsDocData ? getHashMap<LocationDoc>(locationsDocData) : null;
-  }, [locationsDocData]);
+    return locations ? getHashMap<LocationDoc>(locations) : null;
+  }, [locations]);
 
   return {
-    locations: locationsDocData || [],
+    locations: locations || [],
     locationsHashMap,
     loading: locationsDocLoading,
   };

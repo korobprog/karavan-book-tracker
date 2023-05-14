@@ -6,9 +6,11 @@ import Home from "./pages/home";
 import Report from "./pages/report";
 import { routes } from "././shared/routes";
 import { Reports } from "./pages/reports";
+import { ReportsEdit } from "./pages/reportsEdit";
 import { Locations } from "./pages/locations";
 import { Users } from "./pages/users";
 import { UsersNew } from "./pages/UsersNew";
+import { UsersEdit } from "./pages/usersEdit";
 import { useCurrentUser } from "common/src/services/api/useCurrentUser";
 import { Denied } from "./pages/denied";
 import { Loading } from "common/src/components/Loading";
@@ -58,54 +60,24 @@ function App() {
   return (
     <div>
       <Routes>
-        <Route
-          path={routes.root}
-          element={<Home currentUser={currentUser} />}
-        />
-        <Route
-          path={routes.auth}
-          element={<Auth currentUser={currentUser} />}
-        />
-        <Route
-          path={routes.registration}
-          element={<Registration currentUser={currentUser} />}
-        />
-        <Route
-          path={routes.profile}
-          element={<Profile currentUser={currentUser} />}
-        />
-        <Route
-          path={routes.reports}
-          element={<Reports currentUser={currentUser} />}
-        />
-        <Route
-          path={routes.report}
-          element={<Report currentUser={currentUser} />}
-        />
-        <Route
-          path={routes.locations}
-          element={<Locations currentUser={currentUser} />}
-        />
-        <Route
-          path={routes.users}
-          element={<Users currentUser={currentUser} />}
-        />
-        <Route
-          path={routes.usersNew}
-          element={<UsersNew currentUser={currentUser} />}
-        />
-        <Route
-          path={routes.teams}
-          element={<Teams currentUser={currentUser} />}
-        />
-        <Route
-          path={routes.teamsNew}
-          element={<TeamsNew currentUser={currentUser} />}
-        />
-        <Route
-          path={routes.teamsEdit}
-          element={<TeamsEdit currentUser={currentUser} />}
-        />
+        <Route path={routes.root} element={<Home currentUser={currentUser} />} />
+        <Route path={routes.auth} element={<Auth currentUser={currentUser} />} />
+        <Route path={routes.registration} element={<Registration currentUser={currentUser} />} />
+        <Route path={routes.profile} element={<Profile currentUser={currentUser} />} />
+
+        <Route path={routes.reports} element={<Reports currentUser={currentUser} />} />
+        <Route path={routes.report} element={<Report currentUser={currentUser} />} />
+        <Route path={routes.reportsEdit} element={<ReportsEdit currentUser={currentUser} />} />
+
+        <Route path={routes.locations} element={<Locations currentUser={currentUser} />} />
+
+        <Route path={routes.users} element={<Users currentUser={currentUser} />} />
+        <Route path={routes.usersNew} element={<UsersNew currentUser={currentUser} />} />
+        <Route path={routes.usersEdit} element={<UsersEdit />} />
+
+        <Route path={routes.teams} element={<Teams currentUser={currentUser} />} />
+        <Route path={routes.teamsNew} element={<TeamsNew currentUser={currentUser} />} />
+        <Route path={routes.teamsEdit} element={<TeamsEdit currentUser={currentUser} />} />
       </Routes>
     </div>
   );

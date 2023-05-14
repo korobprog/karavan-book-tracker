@@ -10,7 +10,6 @@ export type TeamDoc = {
   name: string;
   parentId: string | null;
   leader: { id: string };
-  members: string[];
   requests?: string[];
   created: string;
   founded?: string;

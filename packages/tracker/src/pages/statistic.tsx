@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { generatePath, useNavigate } from "react-router-dom";
 import {
   Button,
   Table,
@@ -18,12 +18,12 @@ import {
   EditOutlined,
 } from "@ant-design/icons";
 import { useStore } from "effector-react";
+import moment from "moment";
 
 import { routes } from "../shared/routes";
 import { OperationDoc, useMyOperations } from "common/src/services/api/operations";
 import { removeOperationMultiAction } from "common/src/services/api/multiactions";
 import { shareOperation } from "common/src/services/share";
-import moment from "moment";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { useLocations } from "common/src/services/api/locations";
 import { $booksHashMap, $booksLoading } from "common/src/services/books";
@@ -53,7 +53,7 @@ export const Statistic = ({ currentUser }: Props) => {
   };
 
   const onEditOperation = (id: string) => {
-    navigate(routes.reportEdit(id));
+    navigate(generatePath(routes.reportEdit, { operationId: id }));
   };
 
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -83,8 +83,9 @@ export const Statistic = ({ currentUser }: Props) => {
   const data =
     myOperationsDocData
       ?.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0))
-      ?.map((operation, index) => ({
-        key: operation.id || index,
+      ?.map((operation) => ({
+        key: operation.id,
+        id: operation.id,
         date: operation.date,
         isAuthorized: operation.isAuthorized,
         totalCount: operation.totalCount,
@@ -93,9 +94,9 @@ export const Statistic = ({ currentUser }: Props) => {
         location: operation.locationId,
       })) || [];
 
-  type DataType = typeof data[0];
+  type DataType = (typeof data)[0];
 
-  const columns: TableColumnsType<typeof data[0]> = [
+  const columns: TableColumnsType<(typeof data)[0]> = [
     {
       title: "Дата",
       dataIndex: "date",
@@ -150,7 +151,7 @@ export const Statistic = ({ currentUser }: Props) => {
           <Button
             icon={<EditOutlined />}
             loading={deleteLoading}
-            onClick={() => onEditOperation(String(record.key))}
+            onClick={() => onEditOperation(record.id)}
           />
           <Popconfirm
             title={`Удалить операцию?`}

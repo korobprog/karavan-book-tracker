@@ -1,7 +1,21 @@
 import React, { useMemo, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Select, Button, Table, Divider, Space, TableColumnsType, Popconfirm, Typography } from "antd";
-import { CalculatorOutlined, DeleteOutlined, UserAddOutlined } from "@ant-design/icons";
+import { generatePath, useNavigate } from "react-router-dom";
+import {
+  Select,
+  Button,
+  Table,
+  Divider,
+  Space,
+  TableColumnsType,
+  Popconfirm,
+  Typography,
+} from "antd";
+import {
+  CalculatorOutlined,
+  DeleteOutlined,
+  UserAddOutlined,
+  EditOutlined,
+} from "@ant-design/icons";
 
 import { useUsers } from "common/src/services/api/useUsers";
 import { LocationDoc, useLocations } from "common/src/services/api/locations";
@@ -23,7 +37,7 @@ type Sorter = {
   columnKey?: string;
   field?: string;
   order?: SortOrder;
-}
+};
 
 export const Users = ({ currentUser }: Props) => {
   const { profile } = currentUser;
@@ -49,11 +63,16 @@ export const Users = ({ currentUser }: Props) => {
     navigate(routes.usersNew);
   };
 
+  const onEditUser = (userId: string) => {
+    navigate(generatePath(routes.usersEdit, { userId }));
+  };
+
   const [selectedYear, setSelectedYear] = useState(nowYear);
 
   const data =
     usersDocData?.map((user) => ({
       key: user.id,
+      id: user.id,
       nameSpiritual: user.nameSpiritual,
       name: user.name,
       count: user.statistic?.[selectedYear]?.count || 0,
@@ -64,34 +83,34 @@ export const Users = ({ currentUser }: Props) => {
       role: user.role,
     })) || [];
 
-  const columns: TableColumnsType<typeof data[0]> = [
+  const columns: TableColumnsType<(typeof data)[0]> = [
     {
       title: "Духовное имя",
       dataIndex: "nameSpiritual",
       key: "nameSpiritual",
       sorter: (a: any, b: any) => a.nameSpiritual.localeCompare(b.nameSpiritual),
-      sortOrder: sortedInfo.columnKey === 'nameSpiritual' ? sortedInfo.order : null,
+      sortOrder: sortedInfo.columnKey === "nameSpiritual" ? sortedInfo.order : null,
     },
     {
       title: "ФИО",
       dataIndex: "name",
       key: "name",
       sorter: (a: any, b: any) => a.name.localeCompare(b.name),
-      sortOrder: sortedInfo.columnKey === 'name' ? sortedInfo.order : null,
+      sortOrder: sortedInfo.columnKey === "name" ? sortedInfo.order : null,
     },
     {
       title: "Книг",
       dataIndex: "count",
       key: "count",
       sorter: (a: any, b: any) => a.count - b.count,
-      sortOrder: sortedInfo.columnKey === 'count' ? sortedInfo.order : null,
+      sortOrder: sortedInfo.columnKey === "count" ? sortedInfo.order : null,
     },
     {
       title: "Баллов",
       dataIndex: "points",
       key: "points",
       sorter: (a: any, b: any) => a.points - b.points,
-      sortOrder: sortedInfo.columnKey === 'points' ? sortedInfo.order : null,
+      sortOrder: sortedInfo.columnKey === "points" ? sortedInfo.order : null,
     },
     {
       title: "Контакты",
@@ -109,7 +128,7 @@ export const Users = ({ currentUser }: Props) => {
       dataIndex: "city",
       key: "city",
       sorter: (a: any, b: any) => a.city.localeCompare(b.city),
-      sortOrder: sortedInfo.columnKey === 'city' ? sortedInfo.order : null,
+      sortOrder: sortedInfo.columnKey === "city" ? sortedInfo.order : null,
     },
     {
       title: "Адрес",
@@ -123,25 +142,29 @@ export const Users = ({ currentUser }: Props) => {
       render: (_, record) => (
         <Select
           mode="multiple"
-          style={{ width: '100%' }}
+          style={{ width: "100%" }}
           placeholder="Выберите роли"
-          defaultValue={() =>{
-            if(record.role){
-              return String(record?.role).split(',').map((role: any) => ({ 'label': role, 'value': role }));
+          defaultValue={() => {
+            if (record.role) {
+              return String(record?.role)
+                .split(",")
+                .map((role: any) => ({ label: role, value: role }));
             }
           }}
-          onChange={(event) =>{
+          onChange={(event) => {
             handleRoleChange(event, record.key);
           }}
-          options={rolesDropDown.map((role: any) => ({ 'label': role, 'value': role }))}
+          options={rolesDropDown.map((role: any) => ({ label: role, value: role }))}
         />
       ),
     },
     {
       title: "Действие",
       key: "action",
+      fixed: "right",
       render: (text: string, record) => (
         <Space>
+          <Button icon={<EditOutlined />} onClick={() => onEditUser(record.id)} />
           <Popconfirm
             title={`Удалить пользователя ${record.name}?`}
             onConfirm={() => {
@@ -155,23 +178,23 @@ export const Users = ({ currentUser }: Props) => {
     },
   ];
 
-  const rolesDropDown = ['admin', 'authorized'];
+  const rolesDropDown = ["admin", "authorized"];
 
   const handleRoleChange = (role: any, userId: any) => {
-    updateProfile(userId, { role: role })
+    updateProfile(userId, { role: role });
   };
-  
+
   useEffect(() => {
-    if(localStorage.getItem('admin-users-sort-key')){
-      setSortedInfo(JSON.parse(localStorage.getItem('admin-users-sort-key') || ''));
+    if (localStorage.getItem("admin-users-sort-key")) {
+      setSortedInfo(JSON.parse(localStorage.getItem("admin-users-sort-key") || ""));
     }
   }, []);
 
   const onChange = (pagination: any, filters: any, sorter: any, extra: any) => {
     setSortedInfo(sorter);
-    localStorage.setItem('admin-users-sort-key', JSON.stringify(sorter));
+    localStorage.setItem("admin-users-sort-key", JSON.stringify(sorter));
   };
-  
+
   return (
     <BaseLayout title="ПОЛЬЗОВАТЕЛИ" backPath={routes.root}>
       <Button block size="large" type="primary" icon={<UserAddOutlined />} onClick={onAddUser}>
