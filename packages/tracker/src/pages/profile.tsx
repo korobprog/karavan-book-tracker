@@ -24,6 +24,7 @@ const Profile = ({ currentUser }: Props) => {
     ...profile,
     name: profile?.name || user?.displayName || "",
     email: profile?.email || user?.email || "",
+    registrationDate: profile?.registrationDate ? profile?.registrationDate : new Date().toLocaleString(),
   };
 
   const onLogout = () => {

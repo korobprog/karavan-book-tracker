@@ -30,6 +30,7 @@ export type UserDoc = {
   email?: string;
   isUnattached?: boolean; // Профиль не привязан к конкретному аккаунту
   team?: UserTeam | null; // Членство в передвижной команде
+  registrationDate?: string; // Добавить пользователю поле registrationDate
 };
 
 export type UserDocWithId = UserDoc & {
