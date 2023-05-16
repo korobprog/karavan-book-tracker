@@ -27,7 +27,7 @@ export const shareOperation = async (params: ShareOperation) => {
   );
 
   let sumWithoutPoints = 0;
-  for (let book of Object.values(booksWithoutPoints)) {
+  for (let book of booksWithoutPoints) {
     sumWithoutPoints += book.count;
   }
 
