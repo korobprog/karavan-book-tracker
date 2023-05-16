@@ -2,7 +2,6 @@ import moment from "moment";
 import { message } from "antd";
 import { DistributedBook } from "../api/operations";
 import { BooksHashMap } from "../books";
-// import { getBookDeclensions } from "../../utils/declension";
 import { UserDoc } from "../api/useUser";
 
 type ShareOperation = {
@@ -27,11 +26,9 @@ export const shareOperation = async (params: ShareOperation) => {
     (book) => booksHashMap[book.bookId]?.points === undefined
   );
 
-  let sum = 0;
-  for (let prop in booksWithoutPoints) {
-    if (booksWithoutPoints.hasOwnProperty(prop)) {
-      sum += booksWithoutPoints[prop].count;
-    }
+  let sumWithoutPoints = 0;
+  for (let book of Object.values(booksWithoutPoints)) {
+    sumWithoutPoints += book.count;
   }
 
   const getBookStrings = () =>
@@ -47,7 +44,7 @@ ${locationName}
 ${formattedDate}
 ${getBookStrings()}
 
-${sum > 0 ? `Другие: ${sum}` : ""}
+${sumWithoutPoints > 0 ? `Другие: ${sumWithoutPoints}` : ""}
 
 Итого${isOnline ? " (онлайн)" : ""}: ${total}
 `;
