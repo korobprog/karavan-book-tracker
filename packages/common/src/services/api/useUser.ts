@@ -4,6 +4,9 @@ import { setDoc, updateDoc, addDoc, deleteDoc } from "firebase/firestore";
 import { apiRefs } from "./refs";
 import { UserStatisticType } from "./statistic";
 
+import firebase from "firebase/app";
+import "firebase/storage";
+
 export type UserRoles = "admin" | "authorized";
 
 export enum TeamMemberStatus {
