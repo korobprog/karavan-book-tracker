@@ -59,6 +59,7 @@ const Report = ({ currentUser }: Props) => {
         totalPoints,
         isAuthorized: totalCount <= 100 || profile?.role?.includes('authorized') ? true : false,
         isOnline,
+        yatraLocationId: profile?.yatraLocationId || "",
       };
 
       addOperationMultiAction(operation)
