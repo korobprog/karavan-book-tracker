@@ -43,7 +43,7 @@ export const Report = ({ currentUser }: Props) => {
       const operation: OperationDoc = {
         userId: user?.uid,
         date: date.format(),
-        yatraLocationId: profile?.yatraLocationId || "",
+        yatraLocationId: profile?.yatraLocationId || undefined,
         locationId,
         userName: profile?.name || "",
         books: operationBooks,
