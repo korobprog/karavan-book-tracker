@@ -18,15 +18,17 @@ type Props = {
   initialValues?: ProfileFormValues;
   isLoading?: boolean;
   isEmailEditable?: boolean;
+  userId: string;
 };
 
 export const ProfileForm = (props: Props) => {
-  const { onFinish, initialValues, isLoading, isEmailEditable } = props;
+  const { userId, onFinish, initialValues, isLoading, isEmailEditable } = props;
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string | undefined>(initialValues?.avatar);
 
   const onFinishHandler = ({ ...formValues }: UserDoc) => {
     setIsSubmitting(true);
-    onFinish(removeEmptyFields(formValues)).finally(() => setIsSubmitting(false));
+    onFinish(removeEmptyFields({...formValues, avatar: imageUrl })).finally(() => setIsSubmitting(false));
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -43,12 +45,9 @@ export const ProfileForm = (props: Props) => {
       {...layout}
     >
       <Typography.Paragraph>Обязательно заполните профиль</Typography.Paragraph>
-      <Form.Item
-  name={["user", "avatar"]}
-  label="Avatar"
->
-  <AvatarUploader currentUser={currentUser}/>
-</Form.Item>
+      <Form.Item name="avatar" label="Avatar" valuePropName="avatar">
+        <AvatarUploader imageUrl={imageUrl} onImageUrlChange={setImageUrl} userId={userId} />
+      </Form.Item>
       <Form.Item name="name" label="Ваше Ф.И.О" rules={[{ required: true }]}>
         <Input />
       </Form.Item>

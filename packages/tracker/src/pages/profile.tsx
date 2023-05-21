@@ -31,8 +31,10 @@ const Profile = ({ currentUser }: Props) => {
     signOut(auth);
   };
 
+  const userId = profile?.id || user?.uid || '';
+
   const onFinish = async (formValues: ProfileFormValues) => {
-    const userId = profile?.id || user?.uid;
+  console.log("🚀 ~ onFinish:", formValues)
 
     if (userId) {
       setProfile(formValues).then(() => navigate(routes.root));
@@ -58,7 +60,7 @@ const Profile = ({ currentUser }: Props) => {
           Загрузка...
         </Typography.Title>
       ) : (
-        <ProfileForm initialValues={initialValues} onFinish={onFinish} />
+        <ProfileForm initialValues={initialValues} onFinish={onFinish} userId={userId} />
       )}
     </BaseLayout>
   );
