@@ -4,6 +4,7 @@ import { UserDoc } from "common/src/services/api/useUser";
 import { phoneNumberPattern } from "common/src/utils/patterns";
 import { SelectLocation } from "common/src/features/select-location/SelectLocation";
 import { removeEmptyFields } from "../../../utils/objects";
+import { AvatarUploader } from "./AvatarUploader ";
 
 const layout = {
   labelCol: { span: 8 },
@@ -42,7 +43,12 @@ export const ProfileForm = (props: Props) => {
       {...layout}
     >
       <Typography.Paragraph>Обязательно заполните профиль</Typography.Paragraph>
-
+      <Form.Item
+  name={["user", "avatar"]}
+  label="Avatar"
+>
+  <AvatarUploader currentUser={currentUser}/>
+</Form.Item>
       <Form.Item name="name" label="Ваше Ф.И.О" rules={[{ required: true }]}>
         <Input />
       </Form.Item>

@@ -29,10 +29,11 @@
   ],
   "dependencies": {
     "exceljs": "^4.3.0",
-    "file-saver": "^2.0.5",
-    "firebase": "^9.21.0"
+    "file-saver": "^2.0.5"
   },
   "devDependencies": {
-    "craco-plugin-env": "^1.0.5"
+    "@types/firebase": "^3.2.1",
+    "craco-plugin-env": "^1.0.5",
+    "firebase": "^9.22.0"
   }
 }
