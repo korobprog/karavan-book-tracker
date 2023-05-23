@@ -117,7 +117,15 @@ export const AvatarUploader = ({ imageUrl, onImageUrlChange, userId, ...restProp
       // @ts-ignore
       customRequest={customRequest}
     >
-      {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: "100%", borderRadius: '50%' }} /> : uploadButton}
+      {imageUrl ? (
+        <img
+          src={imageUrl}
+          alt="avatar"
+          style={{ width: "100%", height: "100%", borderRadius: "10px" }}
+        />
+      ) : (
+        uploadButton
+      )}
     </Upload>
   );
 };

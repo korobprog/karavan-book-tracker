@@ -46,7 +46,7 @@ export const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
                     type="ghost"
                     shape="circle"
                     icon={<UserOutlined />}
-                    onClick={() => navigate(" /profile")}
+                    onClick={() => navigate("/profile")}
                     loading={userDocLoading}
                   />
                 )}
