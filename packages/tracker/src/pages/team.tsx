@@ -17,7 +17,7 @@ type Props = {
 export const Team = ({ currentUser }: Props) => {
   const { profile, userDocLoading } = currentUser;
   const { locationsHashMap } = useLocations();
-
+const avatar = profile?.address;
   const navigate = useNavigate();
   const { teams, loading } = useTeams();
 
@@ -81,6 +81,9 @@ export const Team = ({ currentUser }: Props) => {
       title="МОЯ КОМАНДА"
       backPath={routes.root}
       userDocLoading={userDocLoading}
+      profile={{
+        avatar: avatar
+      }}
     >
       {myTeam ? (
         <TeamCard

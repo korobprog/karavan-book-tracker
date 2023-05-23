@@ -23,6 +23,8 @@ export const Report = ({ currentUser }: Props) => {
 
   const navigate = useNavigate();
 
+  const avatar = profile?.avatar;
+
   useEffect(() => {
     if (!user && !loading) {
       navigate(routes.auth);
@@ -59,7 +61,9 @@ export const Report = ({ currentUser }: Props) => {
   }
 
   return (
-    <BaseLayout title="ОТМЕТИТЬ КНИГИ" backPath={routes.root} userDocLoading={userDocLoading}>
+    <BaseLayout title="ОТМЕТИТЬ КНИГИ" backPath={routes.root} userDocLoading={userDocLoading} profile={{
+      avatar: avatar
+    }}>
       <ReportForm
         currentUser={currentUser}
         onFinish={onFinish}

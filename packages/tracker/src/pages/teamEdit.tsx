@@ -5,13 +5,14 @@ import { saveTeam, TeamFormValues } from "common/src/services/teams";
 import { TeamForm } from "common/src//components/forms/TeamForm";
 import { useTeam } from "common/src/services/api/teams";
 import { BaseLayout } from "common/src/components/BaseLayout";
+import { profile } from "console";
 
 type Props = {
   currentUser: CurrentUser;
 };
 
 export const TeamEdit = ({ currentUser }: Props) => {
-  const { userDocLoading } = currentUser;
+  const { userDocLoading, profile } = currentUser;
   const navigate = useNavigate();
 
   const teamId = currentUser.profile?.team?.id;
@@ -32,11 +33,14 @@ export const TeamEdit = ({ currentUser }: Props) => {
       }
     : null;
 
+  const avatar = profile?.avatar;
+
   return (
     <BaseLayout
       title="РЕДАКТИРОВАНИЕ КОМАНДЫ"
       backPath={routes.team}
       userDocLoading={userDocLoading}
+      profile={{ avatar: avatar }}
     >
       {initialValues && !loading && (
         <TeamForm onFinishHandler={onFinish} initialValues={initialValues} />

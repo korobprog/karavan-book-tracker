@@ -20,12 +20,13 @@ type Props = {
 };
 
 export const Auth = ({ currentUser }: Props) => {
-  const { auth, user } = currentUser;
+  const { auth, user, profile } = currentUser;
   const [signInWithGoogle, , , googleError] = useSignInWithGoogle(auth);
   const [signInWithEmailAndPassword, , , emailError] =
     useSignInWithEmailAndPassword(auth);
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const avatar = profile?.avatar;
 
   useEffect(() => {
     if (user) {
@@ -47,7 +48,9 @@ export const Auth = ({ currentUser }: Props) => {
   const { Title, Text } = Typography;
 
   return (
-    <BaseLayout title="УЧЕТ КНИГ" headerActions={[]}>
+    <BaseLayout title="УЧЕТ КНИГ" headerActions={[]} profile={{
+      avatar: avatar
+    }}>
       <Title className="site-page-title" level={2}>
         ВХОД В УЧЕТ КНИГ
       </Title>

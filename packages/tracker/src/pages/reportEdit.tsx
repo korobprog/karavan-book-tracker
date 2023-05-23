@@ -29,6 +29,8 @@ export const ReportEdit = ({ currentUser }: Props) => {
 
   const navigate = useNavigate();
 
+  const avatar = profile?.address;
+
   const initialValues: ReportFormValues | undefined = operationDocData
     ? {
         date: moment(operationDocData.date),
@@ -80,6 +82,9 @@ export const ReportEdit = ({ currentUser }: Props) => {
       title="ИЗМЕНИТЬ ОПЕРАЦИЮ"
       backPath={routes.statistic}
       userDocLoading={userDocLoading}
+      profile={{
+        avatar: avatar,
+      }}
     >
       {initialValues ? (
         <ReportForm

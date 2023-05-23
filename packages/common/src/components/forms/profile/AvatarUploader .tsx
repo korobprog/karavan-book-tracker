@@ -47,7 +47,6 @@ export const AvatarUploader = ({ imageUrl, onImageUrlChange, userId, ...restProp
   };
 
   const handleChange: UploadProps["onChange"] = async (info: UploadChangeParam<UploadFile>) => {
-    console.log("🚀 ~  info:", info);
     if (info.file.status === "uploading") {
       setLoading(true);
     } else if (info.file.status === "done") {
@@ -56,7 +55,6 @@ export const AvatarUploader = ({ imageUrl, onImageUrlChange, userId, ...restProp
       // setImageUrl(undefined); // Очистите старый URL-адрес изображения, чтобы запустить повторный рендеринг
       try {
         const url = await getDownloadURL(storageRef);
-        console.log("🚀 ~ url:", url);
         onImageUrlChange(url);
         setLoading(false);
         // Обновите профиль пользователя с помощью нового URL-адреса аватара
@@ -80,7 +78,6 @@ export const AvatarUploader = ({ imageUrl, onImageUrlChange, userId, ...restProp
       const uploadTask = uploadBytes(storageRef, file);
       const snapshot = await uploadTask;
       const url = await snapshot.ref.fullPath;
-      console.log("🚀 ~ file: AvatarUploader .tsx:82 ~ customRequest ~ url:", url);
 
       onSuccess(
         { url },
@@ -100,25 +97,6 @@ export const AvatarUploader = ({ imageUrl, onImageUrlChange, userId, ...restProp
       onError(new Error("Failed to upload the avatar!"));
     }
   };
-
-  // eslint-disable-next-line no-empty-pattern
-  /*   const customRequest = async ({ file, onSuccess, onError }: CustomRequest) => {
-    if (!(file instanceof File)) {
-      return;
-    }
-    
-    const storageRef = ref(storage, `avatar/${userId}`);
-    try {
-      const uploadTask = uploadBytes(storageRef, file as RcFile);
-      const url = await uploadTask.then((snapshot) => snapshot.ref.fullPath);
-      const response: UploadResponse = { url };
-      onSuccess(response, { uid: (file as RcFile).uid, size: file.size, name: file.name, type: file.type, status: 'done', percent: 100 });
-      setImageUrl(url);
-    } catch (error) {
-      message.error("Failed to upload the avatar!");
-      onError(new Error('Failed to upload the avatar!'));
-    }
-  }; */
 
   const uploadButton = (
     <div>

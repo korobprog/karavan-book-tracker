@@ -18,9 +18,9 @@ type Props = {
 };
 
 export const Home = (props: Props) => {
-  const { userDocLoading } = props.currentUser;
+  const { userDocLoading, profile } = props.currentUser;
   const navigate = useNavigate();
-
+  const avatar = profile?.avatar;
   const onAddReport = () => {
     navigate(routes.report);
   };
@@ -28,15 +28,15 @@ export const Home = (props: Props) => {
   const { Paragraph } = Typography;
 
   return (
-    <BaseLayout title="УЧЕТ КНИГ" userDocLoading={userDocLoading}>
+    <BaseLayout
+      title="УЧЕТ КНИГ"
+      userDocLoading={userDocLoading}
+      profile={{
+        avatar: avatar,
+      }}
+    >
       <Paragraph>Отметить распространненные книги</Paragraph>
-      <Button
-        type="primary"
-        block
-        size="large"
-        icon={<ReadOutlined />}
-        onClick={onAddReport}
-      >
+      <Button type="primary" block size="large" icon={<ReadOutlined />} onClick={onAddReport}>
         Отметить книги
       </Button>
       <Divider dashed />
@@ -49,12 +49,7 @@ export const Home = (props: Props) => {
         Моя статистика
       </Button>
       <Divider dashed />
-      <Button
-        block
-        size="large"
-        icon={<TeamOutlined />}
-        onClick={() => navigate(routes.team)}
-      >
+      <Button block size="large" icon={<TeamOutlined />} onClick={() => navigate(routes.team)}>
         Моя команда
       </Button>
       <Divider dashed />

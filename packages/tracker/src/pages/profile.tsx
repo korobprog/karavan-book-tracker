@@ -8,6 +8,7 @@ import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { LogoutOutlined } from "@ant-design/icons";
 import { ProfileForm, ProfileFormValues } from "common/src/components/forms/profile/ProfileForm";
+import { strict } from "assert";
 
 type Props = {
   currentUser: CurrentUser;
@@ -15,8 +16,8 @@ type Props = {
 
 const Profile = ({ currentUser }: Props) => {
   const { profile, user, userDocLoading } = currentUser;
+  const avatar = profile?.avatar;
   const { setProfile } = useUser({ profile, user });
-
   const auth = getAuth();
   const navigate = useNavigate();
 
@@ -24,18 +25,18 @@ const Profile = ({ currentUser }: Props) => {
     ...profile,
     name: profile?.name || user?.displayName || "",
     email: profile?.email || user?.email || "",
-    registrationDate: profile?.registrationDate ? profile?.registrationDate : new Date().toISOString(),
+    registrationDate: profile?.registrationDate
+      ? profile?.registrationDate
+      : new Date().toISOString(),
   };
 
   const onLogout = () => {
     signOut(auth);
   };
 
-  const userId = profile?.id || user?.uid || '';
+  const userId = profile?.id || user?.uid || "";
 
   const onFinish = async (formValues: ProfileFormValues) => {
-  console.log("🚀 ~ onFinish:", formValues)
-
     if (userId) {
       setProfile(formValues).then(() => navigate(routes.root));
     }
@@ -51,6 +52,9 @@ const Profile = ({ currentUser }: Props) => {
           <Button type="ghost" shape="circle" icon={<LogoutOutlined />} onClick={onLogout} />
         </Tooltip>,
       ]}
+      profile={{
+        avatar: avatar,
+      }}
     >
       <Typography.Title className="site-page-title" level={2}>
         Ваш профиль

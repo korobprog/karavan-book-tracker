@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  Form,
-  Input,
-  Button,
-  Checkbox,
-  Typography,
-  Space,
-} from "antd";
+import { Form, Input, Button, Checkbox, Typography, Space } from "antd";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { AuthError } from "firebase/auth";
 import { routes } from "../shared/routes";
@@ -19,8 +12,7 @@ type Props = {
 };
 
 const RegistrationErrors = {
-  "Firebase: Error (auth/email-already-in-use).":
-    "Пользователь с таким email уже существует",
+  "Firebase: Error (auth/email-already-in-use).": "Пользователь с таким email уже существует",
   "Firebase: Error (auth/invalid-email).": "Email не валиднный",
 } as Record<string, string>;
 
@@ -30,9 +22,8 @@ const getErrorMessage = (error: AuthError) => {
 };
 
 export const Registration = ({ currentUser }: Props) => {
-  const { auth, user } = currentUser;
-  const [createUserWithEmailAndPassword, , , error] =
-    useCreateUserWithEmailAndPassword(auth);
+  const { auth, user, profile } = currentUser;
+  const [createUserWithEmailAndPassword, , , error] = useCreateUserWithEmailAndPassword(auth);
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -56,8 +47,16 @@ export const Registration = ({ currentUser }: Props) => {
 
   const { Title, Text } = Typography;
 
+  const avatar = profile?.avatar;
+
   return (
-    <BaseLayout title="УЧЕТ КНИГ" headerActions={[]}>
+    <BaseLayout
+      title="УЧЕТ КНИГ"
+      headerActions={[]}
+      profile={{
+        avatar: avatar,
+      }}
+    >
       <Title className="site-page-title" level={2}>
         СТРАНИЦА РЕГИСТРАЦИИ
       </Title>
@@ -108,20 +107,14 @@ export const Registration = ({ currentUser }: Props) => {
                 if (!value || getFieldValue("password") === value) {
                   return Promise.resolve();
                 }
-                return Promise.reject(
-                  new Error("Два введенных вами пароля не совпадают")
-                );
+                return Promise.reject(new Error("Два введенных вами пароля не совпадают"));
               },
             }),
           ]}
         >
           <Input.Password />
         </Form.Item>
-        <Form.Item
-          name="remember"
-          valuePropName="checked"
-          wrapperCol={{ offset: 8, span: 16 }}
-        >
+        <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>
           <Checkbox>Запомни меня</Checkbox>
         </Form.Item>
 
