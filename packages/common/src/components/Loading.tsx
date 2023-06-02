@@ -1,7 +1,7 @@
 import React from "react";
 import { Typography, Spin, Avatar, Space } from "antd";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import BbtLogo from "../images/bbt-logo.png";
+import Logo from "../images/logo.png";
 
 type Props = {
   currentUser: CurrentUser;
@@ -15,7 +15,7 @@ export const Loading = ({ currentUser }: Props) => {
       <div className="loading-page">
         <Title className="site-page-title loading-title" level={2}>
           <Space>
-            <Avatar src={BbtLogo} />
+            <Avatar src={Logo} />
             Добро пожаловать
             <Spin />
           </Space>

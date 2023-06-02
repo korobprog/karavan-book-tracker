@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button, Layout, PageHeader, Tooltip } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 
-import BbtLogo from "../images/bbt-logo.png";
+import Logo from "../images/logo.png";
 
 type BaseLayoutProps = {
   title: string;
@@ -25,7 +25,7 @@ export const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
           title={title}
           className="page-header"
           onBack={onBack}
-          avatar={{ src: BbtLogo }}
+          avatar={{ src: Logo }}
           extra={
             headerActions ?? [
               <Tooltip title="Профиль" key="profile">
