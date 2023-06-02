@@ -3,6 +3,7 @@ import { addDoc, deleteDoc, getDocFromCache, updateDoc } from "firebase/firestor
 import { calcLocationStat, calcUserStat } from "../statistic";
 import { OperationDoc } from "./operations";
 import { apiRefs } from "./refs";
+import { removeEmptyFields } from "../../utils/objects";
 
 export const addOperationMultiAction = async (newOperation: OperationDoc) => {
   try {
@@ -22,7 +23,7 @@ export const addOperationMultiAction = async (newOperation: OperationDoc) => {
     const newUserStat = calcUserStat(prevUserStat, "+", newOperation);
 
     updateDoc(userRef, { statistic: newUserStat });
-    addDoc(apiRefs.operations, newOperation);
+    addDoc(apiRefs.operations, removeEmptyFields(newOperation));
 
     // TODO: add isAuthorized to other multiActions
     // ! TODO: if user have long offline it mays overwrite latest statistic
@@ -121,10 +122,10 @@ export const editOperationMultiAction = async (operationId: string, newOperation
       updateDoc(prevLocationRef, { statistic: newLocationStat });
     }
 
-    updateDoc(operationRef, newOperation);
+    updateDoc(operationRef, removeEmptyFields(newOperation));
     updateDoc(userRef, { statistic: userStat });
     console.log("MultiAction successfully committed!");
   } catch (e) {
-    console.log("MultiAction failed: ", e);
+    console.warn("MultiAction failed: ", e);
   }
 };
