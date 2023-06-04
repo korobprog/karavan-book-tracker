@@ -17,7 +17,8 @@ type Props = {
 export const Team = ({ currentUser }: Props) => {
   const { profile, userDocLoading } = currentUser;
   const { locationsHashMap } = useLocations();
-const avatar = profile?.address;
+const avatar = profile?.avatar;
+  console.log("🚀 ~ file: team.tsx:21 ~ Team ~ avatar:", avatar)
   const navigate = useNavigate();
   const { teams, loading } = useTeams();
 

@@ -33,23 +33,13 @@ export const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
           extra={
             headerActions ?? [
               <Tooltip title="Профиль" key="profile">
-                {avatar ? (
-                  <Button
-                    type="ghost"
-                    shape="circle"
-                    icon={<Avatar src={avatar} />}
-                    onClick={() => navigate("/profile")}
-                    loading={userDocLoading}
-                  />
-                ) : (
-                  <Button
-                    type="ghost"
-                    shape="circle"
-                    icon={<UserOutlined />}
-                    onClick={() => navigate("/profile")}
-                    loading={userDocLoading}
-                  />
-                )}
+                <Button
+                  type="ghost"
+                  shape="circle"
+                  icon={avatar ? <Avatar src={avatar} /> : <UserOutlined />}
+                  onClick={() => navigate("/profile")}
+                  loading={userDocLoading}
+                />
               </Tooltip>,
             ]
           }
