@@ -13,6 +13,7 @@ import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
 
+
 type Props = {
   currentUser: CurrentUser;
 };
@@ -20,20 +21,17 @@ type Props = {
 export const Home = (props: Props) => {
   const { userDocLoading, profile } = props.currentUser;
   const navigate = useNavigate();
-  const avatar = profile?.avatar;
   const onAddReport = () => {
     navigate(routes.report);
   };
-
+const avatar = profile?.avatar
   const { Paragraph } = Typography;
 
   return (
     <BaseLayout
       title="УЧЕТ КНИГ"
       userDocLoading={userDocLoading}
-      profile={{
-        avatar: avatar,
-      }}
+      profile = {{avatar: avatar}}
     >
       <Paragraph>Отметить распространненные книги</Paragraph>
       <Button type="primary" block size="large" icon={<ReadOutlined />} onClick={onAddReport}>

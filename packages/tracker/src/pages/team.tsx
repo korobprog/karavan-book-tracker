@@ -17,7 +17,7 @@ type Props = {
 export const Team = ({ currentUser }: Props) => {
   const { profile, userDocLoading } = currentUser;
   const { locationsHashMap } = useLocations();
-const avatar = profile?.address;
+  const avatar = profile?.avatar;
   const navigate = useNavigate();
   const { teams, loading } = useTeams();
 
@@ -51,19 +51,12 @@ const avatar = profile?.address;
 
       {teams.map((team) => {
         return (
-          <TeamCard
-            key={team.id}
-            team={team}
-            locationsHashMap={locationsHashMap}
-          >
+          <TeamCard key={team.id} team={team} locationsHashMap={locationsHashMap}>
             <Button
               size="large"
               icon={<CheckSquareOutlined />}
               onClick={() =>
-                setUserTeam(
-                  { id: team.id, status: TeamMemberStatus.request },
-                  profile?.id
-                )
+                setUserTeam({ id: team.id, status: TeamMemberStatus.request }, profile?.id)
               }
               style={{ marginLeft: "auto" }}
               loading={userDocLoading}
@@ -82,7 +75,7 @@ const avatar = profile?.address;
       backPath={routes.root}
       userDocLoading={userDocLoading}
       profile={{
-        avatar: avatar
+        avatar: avatar,
       }}
     >
       {myTeam ? (

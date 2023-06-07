@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { message, Upload } from "antd";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import { updateProfile } from "../../../services/api/useUser";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 import type { UploadChangeParam } from "antd/es/upload";
@@ -30,15 +29,14 @@ export const AvatarUploader = ({ imageUrl, onImageUrlChange, userId, ...restProp
   const storage = getStorage();
 
   const beforeUpload = (file: RcFile | string | Blob): boolean => {
-    // указываем, что file может быть типом RcFile, string или Blob
     const isJpgOrPng =
       (typeof file !== "string" && file.type === "image/jpeg") ||
-      (typeof file !== "string" && file.type === "image/png"); // проверяем тип файла только если файл не является строкой
+      (typeof file !== "string" && file.type === "image/png");
     if (!isJpgOrPng) {
       message.error("You can only upload JPG/PNG file!");
       return false;
     }
-    const isLt2M = typeof file !== "string" && file.size / 1024 / 1024 < 2; // проверяем размер файла только если файл не является строкой
+    const isLt2M = typeof file !== "string" && file.size / 1024 / 1024 < 2;
     if (!isLt2M) {
       message.error("Image must be smaller than 2MB!");
       return false;
@@ -50,15 +48,11 @@ export const AvatarUploader = ({ imageUrl, onImageUrlChange, userId, ...restProp
     if (info.file.status === "uploading") {
       setLoading(true);
     } else if (info.file.status === "done") {
-      // Получите URL-адрес загрузки из хранилища Firebase
       const storageRef = ref(storage, `avatar/${userId}/${info.file.name}`);
-      // setImageUrl(undefined); // Очистите старый URL-адрес изображения, чтобы запустить повторный рендеринг
       try {
         const url = await getDownloadURL(storageRef);
         onImageUrlChange(url);
         setLoading(false);
-        // Обновите профиль пользователя с помощью нового URL-адреса аватара
-        // await updateProfile(userId, { avatar: url });
       } catch (error) {
         console.error(error);
         message.error("Failed to get the download URL!");
@@ -91,7 +85,6 @@ export const AvatarUploader = ({ imageUrl, onImageUrlChange, userId, ...restProp
         }
       );
       onImageUrlChange(url);
-      // await updateProfile(userId, { avatar: url });
     } catch (error) {
       message.error("Failed to upload the avatar!");
       onError(new Error("Failed to upload the avatar!"));

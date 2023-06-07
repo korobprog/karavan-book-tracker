@@ -18,6 +18,7 @@ type BaseLayoutProps = {
 export const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
   const { children, title, backPath, headerActions, userDocLoading, profile } = props;
   const avatar = profile.avatar;
+
   const { Content, Header } = Layout;
   const navigate = useNavigate();
   const onBack = backPath ? () => navigate(backPath) : undefined;
@@ -33,29 +34,18 @@ export const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
           extra={
             headerActions ?? [
               <Tooltip title="Профиль" key="profile">
-                {avatar ? (
                   <Button
                     type="ghost"
                     shape="circle"
-                    icon={<Avatar src={avatar} />}
+                    icon={avatar ?<Avatar src={avatar} /> : <UserOutlined />  }
                     onClick={() => navigate("/profile")}
                     loading={userDocLoading}
                   />
-                ) : (
-                  <Button
-                    type="ghost"
-                    shape="circle"
-                    icon={<UserOutlined />}
-                    onClick={() => navigate("/profile")}
-                    loading={userDocLoading}
-                  />
-                )}
               </Tooltip>,
             ]
           }
         />
       </Header>
-
       <Content>
         <div className="site-layout-content">{children}</div>
       </Content>

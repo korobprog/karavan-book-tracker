@@ -8,7 +8,6 @@ import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { LogoutOutlined } from "@ant-design/icons";
 import { ProfileForm, ProfileFormValues } from "common/src/components/forms/profile/ProfileForm";
-import { strict } from "assert";
 
 type Props = {
   currentUser: CurrentUser;
