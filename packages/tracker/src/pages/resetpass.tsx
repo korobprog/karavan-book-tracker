@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Form,
-  Input,
-  Button,
-  Typography,
-  Row,
-  notification,
-} from "antd";
+import { Form, Input, Button, Typography, Row, notification } from "antd";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
@@ -34,15 +27,16 @@ export const Reset = ({ currentUser }: Props) => {
     sendPasswordResetEmail(auth, email)
       .then(() => {
         notification.open({
-          message: 'Письмо отправлено',
+          message: "Письмо отправлено",
           description: `Зайдите на почту ${email} и пройдите по ссылке, чтобы восстановить пароль `,
         });
       })
       .catch((error) => {
         notification.open({
           message: `Нет такого пользователя ${email}`,
-        })
-      }).finally(() => setIsSubmitting(false));
+        });
+      })
+      .finally(() => setIsSubmitting(false));
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -52,11 +46,7 @@ export const Reset = ({ currentUser }: Props) => {
   const { Title } = Typography;
 
   return (
-    <BaseLayout
-      title="УЧЕТ КНИГ"
-      backPath={routes.auth}
-      headerActions={[]}
-    >
+    <BaseLayout title="УЧЕТ КНИГ" backPath={routes.auth} headerActions={[]}>
       <Title className="site-page-title" level={4}>
         ВВЕДИТЕ СВОЙ EMAIL ДЛЯ СБРОСА ПАРОЛЯ
       </Title>
@@ -80,9 +70,7 @@ export const Reset = ({ currentUser }: Props) => {
           ]}
         >
           <Row>
-            <Input
-              style={{ flexGrow: 1, width: 200, marginRight: 8 }}
-            />
+            <Input style={{ flexGrow: 1, width: 200, marginRight: 8 }} />
             <Button type="primary" htmlType="submit" loading={isSubmitting}>
               сбросить пароль
             </Button>
