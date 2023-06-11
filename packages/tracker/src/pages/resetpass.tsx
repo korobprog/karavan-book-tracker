@@ -46,7 +46,11 @@ export const Reset = ({ currentUser }: Props) => {
   const { Title } = Typography;
 
   return (
-    <BaseLayout title="УЧЕТ КНИГ" backPath={routes.auth} headerActions={[]}>
+    <BaseLayout
+      title="Восстановление пароля"
+      backPath={routes.auth}
+      headerActions={[]}
+    >
       <Title className="site-page-title" level={4}>
         ВВЕДИТЕ СВОЙ EMAIL ДЛЯ СБРОСА ПАРОЛЯ
       </Title>

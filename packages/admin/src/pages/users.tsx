@@ -196,7 +196,7 @@ export const Users = ({ currentUser }: Props) => {
   };
 
   return (
-    <BaseLayout title="ПОЛЬЗОВАТЕЛИ" backPath={routes.root}>
+    <BaseLayout title="Пользователи" isAdmin backPath={routes.root}>
       <Button block size="large" type="primary" icon={<UserAddOutlined />} onClick={onAddUser}>
         Добавить пользователя
       </Button>

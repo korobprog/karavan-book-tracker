@@ -27,7 +27,7 @@ export const Teams = ({ currentUser }: Props) => {
   };
 
   return (
-    <BaseLayout title="УЧЕТ КНИГ (АДМИН)" backPath={routes.root}>
+    <BaseLayout title="Команды" isAdmin backPath={routes.root}>
       <Title className="site-page-title" level={2}>
         Команды
       </Title>

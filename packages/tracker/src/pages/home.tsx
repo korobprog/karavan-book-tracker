@@ -18,25 +18,26 @@ type Props = {
 };
 
 export const Home = (props: Props) => {
-  const { userDocLoading } = props.currentUser;
+  const { userDocLoading, profile, user } = props.currentUser;
   const navigate = useNavigate();
 
   const onAddReport = () => {
     navigate(routes.report);
   };
 
-  const { Paragraph } = Typography;
+  const { Paragraph, Title } = Typography;
 
   return (
-    <BaseLayout title="УЧЕТ КНИГ" userDocLoading={userDocLoading}>
-      <Paragraph>Отметить распространненные книги</Paragraph>
-      <Button
-        type="primary"
-        block
-        size="large"
-        icon={<ReadOutlined />}
-        onClick={onAddReport}
-      >
+    <BaseLayout title="Karavan Book Tracker" userDocLoading={userDocLoading}>
+      <Title className="site-page-title" level={2}>
+        Привет,
+        <br />
+        {profile?.nameSpiritual || profile?.name || user?.displayName || "друг"}
+      </Title>
+      <Title className="site-page-subtitle" level={5}>
+        Удачной санкиртаны!
+      </Title>
+      <Button type="primary" block size="large" icon={<ReadOutlined />} onClick={onAddReport}>
         Отметить книги
       </Button>
       <Divider dashed />
@@ -49,12 +50,7 @@ export const Home = (props: Props) => {
         Моя статистика
       </Button>
       <Divider dashed />
-      <Button
-        block
-        size="large"
-        icon={<TeamOutlined />}
-        onClick={() => navigate(routes.team)}
-      >
+      <Button block size="large" icon={<TeamOutlined />} onClick={() => navigate(routes.team)}>
         Моя команда
       </Button>
       <Divider dashed />

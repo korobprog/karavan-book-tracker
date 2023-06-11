@@ -34,44 +34,28 @@ const Home = ({ currentUser }: Props) => {
   const { Title } = Typography;
 
   return (
-    <BaseLayout title="УЧЕТ КНИГ (АДМИН)">
+    <BaseLayout title="Karavan Book Tracker" isAdmin>
       <Title className="site-page-title" level={2}>
-        Привет, {profile?.name || user?.displayName || "друг"}
+        Привет,
+        <br />
+        {profile?.nameSpiritual || profile?.name || user?.displayName || "друг"}
       </Title>
-      <Button
-        type="primary"
-        block
-        size="large"
-        icon={<ReadOutlined />}
-        onClick={onAddReport}
-      >
+      <Title className="site-page-subtitle" level={5}>
+        Удачной санкиртаны!
+      </Title>
+      <Button type="primary" block size="large" icon={<ReadOutlined />} onClick={onAddReport}>
         Последние операции
       </Button>
       <Divider dashed />
-      <Button
-        block
-        size="large"
-        icon={<TeamOutlined />}
-        onClick={onUsersSelect}
-      >
+      <Button block size="large" icon={<TeamOutlined />} onClick={onUsersSelect}>
         Пользователи
       </Button>
       <Divider dashed />
-      <Button
-        block
-        size="large"
-        icon={<TrophyOutlined />}
-        onClick={() => navigate(routes.teams)}
-      >
+      <Button block size="large" icon={<TrophyOutlined />} onClick={() => navigate(routes.teams)}>
         Команды
       </Button>
       <Divider dashed />
-      <Button
-        block
-        size="large"
-        icon={<FlagOutlined />}
-        onClick={onLocationsSelect}
-      >
+      <Button block size="large" icon={<FlagOutlined />} onClick={onLocationsSelect}>
         Города
       </Button>
       <Divider />

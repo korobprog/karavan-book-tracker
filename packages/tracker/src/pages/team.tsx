@@ -51,19 +51,12 @@ export const Team = ({ currentUser }: Props) => {
 
       {teams.map((team) => {
         return (
-          <TeamCard
-            key={team.id}
-            team={team}
-            locationsHashMap={locationsHashMap}
-          >
+          <TeamCard key={team.id} team={team} locationsHashMap={locationsHashMap}>
             <Button
               size="large"
               icon={<CheckSquareOutlined />}
               onClick={() =>
-                setUserTeam(
-                  { id: team.id, status: TeamMemberStatus.request },
-                  profile?.id
-                )
+                setUserTeam({ id: team.id, status: TeamMemberStatus.request }, profile?.id)
               }
               style={{ marginLeft: "auto" }}
               loading={userDocLoading}
@@ -77,11 +70,7 @@ export const Team = ({ currentUser }: Props) => {
   );
 
   return (
-    <BaseLayout
-      title="МОЯ КОМАНДА"
-      backPath={routes.root}
-      userDocLoading={userDocLoading}
-    >
+    <BaseLayout title="Моя команда" backPath={routes.root} userDocLoading={userDocLoading}>
       {myTeam ? (
         <TeamCard
           key={myTeam.id}

@@ -31,7 +31,7 @@ export const TeamsEdit = ({ currentUser }: Props) => {
     : null;
 
   return (
-    <BaseLayout title="РЕДАКТИРОВАНИЕ КОМАНДЫ" backPath={routes.teams}>
+    <BaseLayout title="Редактирование команды" isAdmin backPath={routes.teams}>
       {initialValues && !loading && (
         <TeamForm onFinishHandler={onFinish} initialValues={initialValues} />
       )}
