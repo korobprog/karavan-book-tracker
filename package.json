@@ -14,7 +14,8 @@
     "admin:build:staging": "npm run build:staging -w admin",
     "admin:deploy:staging": "npm run deploy:staging -w admin",
     "admin:build:prod": "npm run build:prod -w admin",
-    "admin:deploy:prod": "npm run deploy:prod -w admin"
+    "admin:deploy:prod": "npm run deploy:prod -w admin",
+    "prepare": "husky install"
   },
   "eslintConfig": {
     "extends": [
@@ -33,6 +34,12 @@
     "firebase": "^9.21.0"
   },
   "devDependencies": {
-    "craco-plugin-env": "^1.0.5"
+    "craco-plugin-env": "^1.0.5",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.2",
+    "prettier": "2.8.8"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx,css,md}": "prettier --write"
   }
 }
