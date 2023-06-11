@@ -57,7 +57,7 @@ const Report = ({ currentUser }: Props) => {
         books: operationBooks,
         totalCount,
         totalPoints,
-        isAuthorized: totalCount <= 100 || profile?.role?.includes('authorized') ? true : false,
+        isAuthorized: totalCount <= 100 || profile?.role?.includes("authorized") ? true : false,
         isOnline,
         yatraLocationId: usersDocData?.find((value) => value.id === userId)?.yatraLocationId,
       };
@@ -77,7 +77,7 @@ const Report = ({ currentUser }: Props) => {
   const { Title } = Typography;
 
   return (
-    <BaseLayout title="УЧЕТ КНИГ (АДМИН)" backPath={routes.root}>
+    <BaseLayout title="Добавить операцию" isAdmin backPath={routes.root}>
       <ReportForm
         currentUser={currentUser}
         onFinish={onFinish}

@@ -32,7 +32,8 @@ export const UsersEdit = (props: Props) => {
 
   return (
     <BaseLayout
-      title="УЧЕТ КНИГ (АДМИН)"
+      title="Редактировать пользователя"
+      isAdmin
       backPath={routes.users}
       headerActions={[
         <Tooltip title="Выйти" key="logout">

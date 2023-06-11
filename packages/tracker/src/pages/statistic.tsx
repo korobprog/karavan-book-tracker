@@ -165,7 +165,7 @@ export const Statistic = ({ currentUser }: Props) => {
   ];
 
   return (
-    <BaseLayout title="МОЯ СТАТИСТИКА" backPath={routes.root} userDocLoading={userDocLoading}>
+    <BaseLayout title="Моя статистика" backPath={routes.root} userDocLoading={userDocLoading}>
       <Row justify="center" align="middle">
         <Space split={<Divider type="vertical" />}>
           <YearSwitch selectedYear={selectedYear} setSelectedYear={setSelectedYear} />

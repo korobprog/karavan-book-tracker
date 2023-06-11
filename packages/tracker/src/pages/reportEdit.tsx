@@ -77,7 +77,7 @@ export const ReportEdit = ({ currentUser }: Props) => {
 
   return (
     <BaseLayout
-      title="ИЗМЕНИТЬ ОПЕРАЦИЮ"
+      title="Изменить операцию"
       backPath={routes.statistic}
       userDocLoading={userDocLoading}
     >

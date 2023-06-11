@@ -53,7 +53,7 @@ export const Reset = ({ currentUser }: Props) => {
 
   return (
     <BaseLayout
-      title="УЧЕТ КНИГ"
+      title="Восстановление пароля"
       backPath={routes.auth}
       headerActions={[]}
     >

@@ -60,7 +60,7 @@ export const Report = ({ currentUser }: Props) => {
   }
 
   return (
-    <BaseLayout title="ОТМЕТИТЬ КНИГИ" backPath={routes.root} userDocLoading={userDocLoading}>
+    <BaseLayout title="Отметить книги" backPath={routes.root} userDocLoading={userDocLoading}>
       <ReportForm
         currentUser={currentUser}
         onFinish={onFinish}

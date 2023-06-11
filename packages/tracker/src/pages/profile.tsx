@@ -24,7 +24,9 @@ const Profile = ({ currentUser }: Props) => {
     ...profile,
     name: profile?.name || user?.displayName || "",
     email: profile?.email || user?.email || "",
-    registrationDate: profile?.registrationDate ? profile?.registrationDate : new Date().toISOString(),
+    registrationDate: profile?.registrationDate
+      ? profile?.registrationDate
+      : new Date().toISOString(),
   };
 
   const onLogout = () => {
@@ -41,7 +43,7 @@ const Profile = ({ currentUser }: Props) => {
 
   return (
     <BaseLayout
-      title="УЧЕТ КНИГ"
+      title="Профиль"
       backPath={routes.root}
       userDocLoading={userDocLoading}
       headerActions={[

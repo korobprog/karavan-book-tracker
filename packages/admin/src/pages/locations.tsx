@@ -40,19 +40,21 @@ export const Locations = ({ currentUser }: Props) => {
   };
 
   const data =
-  locations?.map((location, index) => ({
-    ...location,
-    key: location.id || String(index),
-  })) || [];
+    locations?.map((location, index) => ({
+      ...location,
+      key: location.id || String(index),
+    })) || [];
 
-const dataWithoutCoords = data.filter((location) => !location.coordinates);
+  const dataWithoutCoords = data.filter((location) => !location.coordinates);
 
-  const columns: TableColumnsType<typeof data[0]>  = [
+  const columns: TableColumnsType<(typeof data)[0]> = [
     {
       title: "Населенный пункт",
       dataIndex: "name",
       key: "name",
-      render: (_stat: LocationDoc["name"], locationData: LocationDoc & { key: string }) => (<LocationNameEdit locationData={locationData}/>),
+      render: (_stat: LocationDoc["name"], locationData: LocationDoc & { key: string }) => (
+        <LocationNameEdit locationData={locationData} />
+      ),
     },
     {
       title: "Страна",
@@ -80,7 +82,7 @@ const dataWithoutCoords = data.filter((location) => !location.coordinates);
       key: "action",
       render: (text: string, record) => (
         <Space>
-         <Popconfirm
+          <Popconfirm
             title={`Удалить локацию?`}
             onConfirm={() => onRemoveLocation(String(record.key))}
           >
@@ -92,7 +94,7 @@ const dataWithoutCoords = data.filter((location) => !location.coordinates);
   ];
 
   return (
-    <BaseLayout title="ГОРОДА НА КАРТЕ" backPath={routes.root}>
+    <BaseLayout title="Города на карте" isAdmin backPath={routes.root}>
       <Button
         block
         size="large"

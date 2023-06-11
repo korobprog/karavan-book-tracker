@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Form,
-  Input,
-  Button,
-  Checkbox,
-  Typography,
-  Space,
-} from "antd";
+import { Form, Input, Button, Checkbox, Typography, Space } from "antd";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { Link, useNavigate } from "react-router-dom";
@@ -22,8 +15,7 @@ type Props = {
 export const Auth = ({ currentUser }: Props) => {
   const { auth, user } = currentUser;
   const [signInWithGoogle, , , googleError] = useSignInWithGoogle(auth);
-  const [signInWithEmailAndPassword, , , emailError] =
-    useSignInWithEmailAndPassword(auth);
+  const [signInWithEmailAndPassword, , , emailError] = useSignInWithEmailAndPassword(auth);
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -47,7 +39,7 @@ export const Auth = ({ currentUser }: Props) => {
   const { Title, Text } = Typography;
 
   return (
-    <BaseLayout title="УЧЕТ КНИГ" headerActions={[]}>
+    <BaseLayout title="Учет книг" headerActions={[]}>
       <Title className="site-page-title" level={2}>
         ВХОД В УЧЕТ КНИГ
       </Title>
@@ -79,18 +71,12 @@ export const Auth = ({ currentUser }: Props) => {
         >
           <Input.Password />
         </Form.Item>
-        <Form.Item
-          name="remember"
-          valuePropName="checked"
-          wrapperCol={{ offset: 8, span: 16 }}
-        >
+        <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>
           <Checkbox>Запомни меня</Checkbox>
         </Form.Item>
         <Form.Item
           wrapperCol={{ offset: 8, span: 16 }}
-          help={
-            emailError && <Text type="danger">Неверный логин или пароль</Text>
-          }
+          help={emailError && <Text type="danger">Неверный логин или пароль</Text>}
         >
           <Space>
             <Button type="primary" htmlType="submit" loading={isSubmitting}>
@@ -109,9 +95,7 @@ export const Auth = ({ currentUser }: Props) => {
           Войти через Google
         </Button>
         {googleError && (
-          <Text type="danger">
-            При входе произошла ошибка: {googleError.message}
-          </Text>
+          <Text type="danger">При входе произошла ошибка: {googleError.message}</Text>
         )}
       </Form>
     </BaseLayout>

@@ -18,7 +18,7 @@ export const TeamsNew = ({ currentUser }: Props) => {
   };
 
   return (
-    <BaseLayout title="СОЗДАНИЕ НОВОЙ КОМАНДЫ" backPath={routes.teams}>
+    <BaseLayout title="Новая команда" isAdmin backPath={routes.teams}>
       <TeamForm onFinishHandler={onFinish} />
     </BaseLayout>
   );

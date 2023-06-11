@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Layout, PageHeader, Tooltip } from "antd";
 import { UserOutlined } from "@ant-design/icons";
@@ -10,13 +10,18 @@ type BaseLayoutProps = {
   backPath?: string;
   headerActions?: React.ReactNode;
   userDocLoading?: boolean;
+  isAdmin?: boolean;
 };
 
 export const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
-  const { children, title, backPath, headerActions, userDocLoading } = props;
+  const { children, title, backPath, headerActions, userDocLoading, isAdmin } = props;
   const { Content, Header } = Layout;
   const navigate = useNavigate();
   const onBack = backPath ? () => navigate(backPath) : undefined;
+
+  useEffect(() => {
+    document.title = (isAdmin ? "Admin: " : "") + (title || "Karavan Book Tracker");
+  }, [title, isAdmin]);
 
   return (
     <Layout>
