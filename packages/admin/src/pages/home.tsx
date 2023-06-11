@@ -31,7 +31,7 @@ const Home = ({ currentUser }: Props) => {
     navigate(routes.users);
   };
 
-  const { Title, Text } = Typography;
+  const { Title } = Typography;
 
   return (
     <BaseLayout title="Karavan Book Tracker" isAdmin>
