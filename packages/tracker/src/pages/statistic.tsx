@@ -40,9 +40,8 @@ export const Statistic = ({ currentUser }: Props) => {
   const navigate = useNavigate();
   const booksHashMap = useStore($booksHashMap);
   const booksLoading = useStore($booksLoading);
-  const avatar = profile?.avatar;
   const { myOperationsDocData, loading: myOperationsLoading } = useMyOperations(user?.uid || "");
-
+  const avatar = profile?.avatar;
   const { locations, locationsHashMap } = useLocations({});
 
   const [selectedYear, setSelectedYear] = useState(nowYear);
@@ -169,9 +168,7 @@ export const Statistic = ({ currentUser }: Props) => {
       title="МОЯ СТАТИСТИКА"
       backPath={routes.root}
       userDocLoading={userDocLoading}
-      profile={{
-        avatar: avatar,
-      }}
+      avatar={avatar}
     >
       <Row justify="center" align="middle">
         <Space split={<Divider type="vertical" />}>

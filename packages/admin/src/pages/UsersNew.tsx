@@ -21,7 +21,8 @@ export const UsersNew = ({ currentUser }: Props) => {
   return (
     <BaseLayout title="СОЗДАНИЕ НОВОГО ПОЛЬЗОВАТЕЛЯ" backPath={routes.users}>
       <Typography.Text mark>Здесь создается не привязанный к емейлу профиль!</Typography.Text>
-      <ProfileForm onFinish={onFinish} isEmailEditable />
+
+      <ProfileForm onFinish={onFinish} isEmailEditable userId="none" />
     </BaseLayout>
   );
 };

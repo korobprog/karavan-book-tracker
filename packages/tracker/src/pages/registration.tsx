@@ -22,7 +22,7 @@ const getErrorMessage = (error: AuthError) => {
 };
 
 export const Registration = ({ currentUser }: Props) => {
-  const { auth, user, profile } = currentUser;
+  const { auth, user } = currentUser;
   const [createUserWithEmailAndPassword, , , error] = useCreateUserWithEmailAndPassword(auth);
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -47,16 +47,8 @@ export const Registration = ({ currentUser }: Props) => {
 
   const { Title, Text } = Typography;
 
-  const avatar = profile?.avatar;
-
   return (
-    <BaseLayout
-      title="УЧЕТ КНИГ"
-      headerActions={[]}
-      profile={{
-        avatar: avatar,
-      }}
-    >
+    <BaseLayout title="УЧЕТ КНИГ" headerActions={[]} >
       <Title className="site-page-title" level={2}>
         СТРАНИЦА РЕГИСТРАЦИИ
       </Title>

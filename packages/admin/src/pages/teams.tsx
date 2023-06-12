@@ -13,11 +13,12 @@ type Props = {
 };
 
 export const Teams = ({ currentUser }: Props) => {
+  const { profile } = currentUser;
   const { locationsHashMap } = useLocations();
   const navigate = useNavigate();
   const { teams, loading } = useTeams();
   const { Title } = Typography;
-
+  const avatar = profile?.avatar;
   const onTeamAdd = () => {
     navigate(routes.teamsNew);
   };
@@ -27,17 +28,11 @@ export const Teams = ({ currentUser }: Props) => {
   };
 
   return (
-    <BaseLayout title="УЧЕТ КНИГ (АДМИН)" backPath={routes.root}>
+    <BaseLayout title="УЧЕТ КНИГ (АДМИН)" backPath={routes.root} avatar={avatar}>
       <Title className="site-page-title" level={2}>
         Команды
       </Title>
-      <Button
-        block
-        size="large"
-        type="primary"
-        icon={<UsergroupAddOutlined />}
-        onClick={onTeamAdd}
-      >
+      <Button block size="large" type="primary" icon={<UsergroupAddOutlined />} onClick={onTeamAdd}>
         Добавить команду
       </Button>
 

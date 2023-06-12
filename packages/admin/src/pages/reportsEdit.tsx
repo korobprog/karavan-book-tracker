@@ -30,7 +30,7 @@ export const ReportsEdit = ({ currentUser }: Props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
-
+  const avatar = profile?.avatar;
   const { usersDocData } = useUsers({
     searchString: userSearchString,
   });
@@ -90,7 +90,7 @@ export const ReportsEdit = ({ currentUser }: Props) => {
   const loadingTitle = operationLoading ? "Загрузка" : "Операции не существует";
 
   return (
-    <BaseLayout title="УЧЕТ КНИГ (АДМИН)" backPath={routes.reports}>
+    <BaseLayout title="УЧЕТ КНИГ (АДМИН)" backPath={routes.reports} avatar={avatar}>
       {initialValues ? (
         <ReportForm
           currentUser={currentUser}

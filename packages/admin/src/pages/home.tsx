@@ -20,7 +20,6 @@ type Props = {
 const Home = ({ currentUser }: Props) => {
   const { user, profile } = currentUser;
   const navigate = useNavigate();
-
   const onAddReport = () => {
     navigate(routes.reports);
   };
@@ -34,44 +33,23 @@ const Home = ({ currentUser }: Props) => {
   const { Title } = Typography;
 
   return (
-    <BaseLayout title="УЧЕТ КНИГ (АДМИН)">
+    <BaseLayout title="УЧЕТ КНИГ (АДМИН)" avatar={profile?.avatar}>
       <Title className="site-page-title" level={2}>
         Привет, {profile?.name || user?.displayName || "друг"}
       </Title>
-      <Button
-        type="primary"
-        block
-        size="large"
-        icon={<ReadOutlined />}
-        onClick={onAddReport}
-      >
+      <Button type="primary" block size="large" icon={<ReadOutlined />} onClick={onAddReport}>
         Последние операции
       </Button>
       <Divider dashed />
-      <Button
-        block
-        size="large"
-        icon={<TeamOutlined />}
-        onClick={onUsersSelect}
-      >
+      <Button block size="large" icon={<TeamOutlined />} onClick={onUsersSelect}>
         Пользователи
       </Button>
       <Divider dashed />
-      <Button
-        block
-        size="large"
-        icon={<TrophyOutlined />}
-        onClick={() => navigate(routes.teams)}
-      >
+      <Button block size="large" icon={<TrophyOutlined />} onClick={() => navigate(routes.teams)}>
         Команды
       </Button>
       <Divider dashed />
-      <Button
-        block
-        size="large"
-        icon={<FlagOutlined />}
-        onClick={onLocationsSelect}
-      >
+      <Button block size="large" icon={<FlagOutlined />} onClick={onLocationsSelect}>
         Города
       </Button>
       <Divider />

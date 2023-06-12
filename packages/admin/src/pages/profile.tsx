@@ -24,7 +24,6 @@ const Profile = ({ currentUser }: Props) => {
     name: profile?.name || user?.displayName || "",
     email: profile?.email || user?.email || "",
   };
-
   const onLogout = () => {
     signOut(auth);
   };
@@ -47,12 +46,12 @@ const Profile = ({ currentUser }: Props) => {
         </Tooltip>,
       ]}
     >
-      {userDocLoading ? (
+      {userDocLoading || !profile?.id ? (
         <Typography.Title className="site-page-title" level={5}>
           Загрузка...
         </Typography.Title>
       ) : (
-        <ProfileForm initialValues={initialValues} onFinish={onFinish} />
+        <ProfileForm initialValues={initialValues} onFinish={onFinish} userId={profile.id} />
       )}
     </BaseLayout>
   );

@@ -20,10 +20,8 @@ export const Report = ({ currentUser }: Props) => {
   const { profile, user, loading, userDocLoading } = currentUser;
   const [isOnline, setIsOnline] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const navigate = useNavigate();
-
   const avatar = profile?.avatar;
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!user && !loading) {
@@ -50,7 +48,7 @@ export const Report = ({ currentUser }: Props) => {
         books: operationBooks,
         totalCount,
         totalPoints,
-        isAuthorized: totalCount <= 100 || profile?.role?.includes('authorized') ? true : false,
+        isAuthorized: totalCount <= 100 || profile?.role?.includes("authorized") ? true : false,
         isOnline,
       };
 
@@ -61,9 +59,12 @@ export const Report = ({ currentUser }: Props) => {
   }
 
   return (
-    <BaseLayout title="ОТМЕТИТЬ КНИГИ" backPath={routes.root} userDocLoading={userDocLoading} profile={{
-      avatar: avatar
-    }}>
+    <BaseLayout
+      title="ОТМЕТИТЬ КНИГИ"
+      backPath={routes.root}
+      userDocLoading={userDocLoading}
+      avatar={avatar}
+    >
       <ReportForm
         currentUser={currentUser}
         onFinish={onFinish}

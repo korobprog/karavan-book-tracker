@@ -12,10 +12,10 @@ type Props = {
 
 export const Reset = ({ currentUser }: Props) => {
   const auth = getAuth();
-  const { user, profile } = currentUser;
+  const { user } = currentUser;
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const avatar = profile?.avatar;
+
   useEffect(() => {
     if (user) {
       navigate(routes.root);
@@ -46,14 +46,7 @@ export const Reset = ({ currentUser }: Props) => {
   const { Title } = Typography;
 
   return (
-    <BaseLayout
-      title="УЧЕТ КНИГ"
-      backPath={routes.auth}
-      headerActions={[]}
-      profile={{
-        avatar: avatar,
-      }}
-    >
+    <BaseLayout title="УЧЕТ КНИГ" backPath={routes.auth} headerActions={[]}>
       <Title className="site-page-title" level={4}>
         ВВЕДИТЕ СВОЙ EMAIL ДЛЯ СБРОСА ПАРОЛЯ
       </Title>

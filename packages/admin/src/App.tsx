@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
+import { Route, Routes, useNavigate, useLocation, useParams } from "react-router-dom";
 import Auth from "./pages/auth";
 import Registration from "./pages/registration";
 import Home from "./pages/home";
@@ -21,6 +21,7 @@ import { TeamsEdit } from "./pages/teamsEdit";
 import Profile from "./pages/profile";
 
 import "./App.less";
+import { type } from "os";
 
 const routesWithoutRedirect = [routes.registration, routes.auth];
 
@@ -29,6 +30,7 @@ function App() {
   const { profile, loading, user, userDocLoading } = currentUser;
   const navigate = useNavigate();
   const location = useLocation();
+
   useBooks();
 
   useEffect(() => {

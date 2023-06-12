@@ -15,10 +15,11 @@ type Props = {
 
 const Profile = ({ currentUser }: Props) => {
   const { profile, user, userDocLoading } = currentUser;
-  const avatar = profile?.avatar;
   const { setProfile } = useUser({ profile, user });
   const auth = getAuth();
   const navigate = useNavigate();
+
+  const avatar = profile?.avatar;
 
   const initialValues: ProfileFormValues = {
     ...profile,
@@ -51,9 +52,7 @@ const Profile = ({ currentUser }: Props) => {
           <Button type="ghost" shape="circle" icon={<LogoutOutlined />} onClick={onLogout} />
         </Tooltip>,
       ]}
-      profile={{
-        avatar: avatar,
-      }}
+      avatar={avatar}
     >
       <Typography.Title className="site-page-title" level={2}>
         Ваш профиль

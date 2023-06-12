@@ -14,12 +14,12 @@ type Props = {
 
 const Auth = ({ currentUser }: Props) => {
   const { auth, user, profile } = currentUser;
+  const avatar = profile?.avatar;
   const [signInWithGoogle, , , googleError] = useSignInWithGoogle(auth);
-  const [signInWithEmailAndPassword, , , emailError] =
-    useSignInWithEmailAndPassword(auth);
+  const [signInWithEmailAndPassword, , , emailError] = useSignInWithEmailAndPassword(auth);
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-const avatar = profile?.avatar;
+
   useEffect(() => {
     if (user) {
       navigate(routes.root);
@@ -40,7 +40,7 @@ const avatar = profile?.avatar;
   const { Title, Text } = Typography;
 
   return (
-    <BaseLayout title="УЧЕТ КНИГ (АДМИН)" headerActions={[]} profile = {{avatar: avatar}}>
+    <BaseLayout title="УЧЕТ КНИГ (АДМИН)" headerActions={[]} avatar={avatar}>
       <Title className="site-page-title" level={2}>
         ВХОД В УЧЕТ КНИГ
       </Title>
@@ -68,26 +68,18 @@ const avatar = profile?.avatar;
         <Form.Item
           label="Пароль"
           name="password"
-          rules={[
-            { required: true, message: "Пожалуйста, введите ваш пароль!" },
-          ]}
+          rules={[{ required: true, message: "Пожалуйста, введите ваш пароль!" }]}
         >
           <Input.Password />
         </Form.Item>
 
-        <Form.Item
-          name="remember"
-          valuePropName="checked"
-          wrapperCol={{ offset: 8, span: 16 }}
-        >
+        <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>
           <Checkbox>Запомни меня</Checkbox>
         </Form.Item>
 
         <Form.Item
           wrapperCol={{ offset: 8, span: 16 }}
-          help={
-            emailError && <Text type="danger">Неверный логин или пароль</Text>
-          }
+          help={emailError && <Text type="danger">Неверный логин или пароль</Text>}
         >
           <Space>
             <Button type="primary" htmlType="submit" loading={isSubmitting}>
@@ -105,9 +97,7 @@ const avatar = profile?.avatar;
           Войти через Google
         </Button>
         {googleError && (
-          <Text type="danger">
-            При входе произошла ошибка: {googleError.message}
-          </Text>
+          <Text type="danger">При входе произошла ошибка: {googleError.message}</Text>
         )}
       </Form>
     </BaseLayout>

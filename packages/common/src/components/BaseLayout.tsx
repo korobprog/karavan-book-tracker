@@ -5,19 +5,16 @@ import { UserOutlined } from "@ant-design/icons";
 
 import BbtLogo from "../images/bbt-logo.png";
 
-import { UserDoc } from "../services/api/useUser";
-
 type BaseLayoutProps = {
   title: string;
   backPath?: string;
   headerActions?: React.ReactNode;
   userDocLoading?: boolean;
-  profile: UserDoc;
+  avatar?: string;
 };
 
 export const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
-  const { children, title, backPath, headerActions, userDocLoading, profile } = props;
-  const avatar = profile.avatar;
+  const { children, title, backPath, headerActions, userDocLoading, avatar } = props;
 
   const { Content, Header } = Layout;
   const navigate = useNavigate();
@@ -34,13 +31,13 @@ export const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
           extra={
             headerActions ?? [
               <Tooltip title="Профиль" key="profile">
-                  <Button
-                    type="ghost"
-                    shape="circle"
-                    icon={avatar ?<Avatar src={avatar} /> : <UserOutlined />  }
-                    onClick={() => navigate("/profile")}
-                    loading={userDocLoading}
-                  />
+                <Button
+                  type="ghost"
+                  shape="circle"
+                  icon={avatar ? <Avatar src={avatar} /> : <UserOutlined />}
+                  onClick={() => navigate("/profile")}
+                  loading={userDocLoading}
+                />
               </Tooltip>,
             ]
           }

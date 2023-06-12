@@ -11,8 +11,9 @@ type Props = {
 };
 
 export const TeamsEdit = ({ currentUser }: Props) => {
+  const { profile } = currentUser;
   const navigate = useNavigate();
-
+  const avatar = profile?.avatar;
   const { teamId } = useParams();
   const { team, loading } = useTeam(teamId || "");
 
@@ -31,7 +32,7 @@ export const TeamsEdit = ({ currentUser }: Props) => {
     : null;
 
   return (
-    <BaseLayout title="РЕДАКТИРОВАНИЕ КОМАНДЫ" backPath={routes.teams}>
+    <BaseLayout title="РЕДАКТИРОВАНИЕ КОМАНДЫ" backPath={routes.teams} avatar={avatar}>
       {initialValues && !loading && (
         <TeamForm onFinishHandler={onFinish} initialValues={initialValues} />
       )}
