@@ -94,7 +94,7 @@ export const Locations = ({ currentUser }: Props) => {
   ];
 
   return (
-    <BaseLayout title="ГОРОДА НА КАРТЕ" backPath={routes.root} avatar={avatar}>
+    <BaseLayout title="Города на карте" isAdmin backPath={routes.root} avatar={avatar}>
       <Button
         block
         size="large"

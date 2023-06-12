@@ -3,17 +3,19 @@
 body,
 html {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+.ant-layout {
+  background: #fff;
 }
 
 .site-layout-content {
@@ -26,18 +28,24 @@ code {
 }
 
 .site-page-header {
-  background: #fff;
+  background: #e6f4ff;
+  border-radius: 0 0 8px 8px;
   padding: 8px;
 }
 
 .page-header {
-  background: #fff;
-  padding: 8px;
+  padding: 4px;
+  text-transform: uppercase;
 }
 
 .site-page-title {
   text-align: center;
-  padding: 16px;
+  padding: 16px 16px 0;
+}
+
+.site-page-subtitle {
+  text-align: center;
+  padding-bottom: 16px;
 }
 
 .centred {
@@ -82,11 +90,7 @@ code {
   justify-content: center;
   background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
 
-  background: linear-gradient(
-      217deg,
-      rgba(255, 0, 0, 0.8),
-      rgba(255, 0, 0, 0) 70%
-    ),
+  background: linear-gradient(217deg, rgba(255, 0, 0, 0.8), rgba(255, 0, 0, 0) 70%),
     linear-gradient(127deg, rgba(0, 255, 0, 0.8), rgba(0, 255, 0, 0) 70%),
     linear-gradient(336deg, rgba(0, 0, 255, 0.8), rgba(0, 0, 255, 0) 70%);
 

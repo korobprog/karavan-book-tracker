@@ -90,7 +90,7 @@ export const ReportsEdit = ({ currentUser }: Props) => {
   const loadingTitle = operationLoading ? "Загрузка" : "Операции не существует";
 
   return (
-    <BaseLayout title="УЧЕТ КНИГ (АДМИН)" backPath={routes.reports} avatar={avatar}>
+    <BaseLayout title="Редактировать отчет" isAdmin backPath={routes.reports} avatar={avatar}>
       {initialValues ? (
         <ReportForm
           currentUser={currentUser}

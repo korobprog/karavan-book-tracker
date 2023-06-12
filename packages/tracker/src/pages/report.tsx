@@ -43,6 +43,7 @@ export const Report = ({ currentUser }: Props) => {
       const operation: OperationDoc = {
         userId: user?.uid,
         date: date.format(),
+        yatraLocationId: profile?.yatraLocationId,
         locationId,
         userName: profile?.name || "",
         books: operationBooks,
@@ -60,7 +61,7 @@ export const Report = ({ currentUser }: Props) => {
 
   return (
     <BaseLayout
-      title="ОТМЕТИТЬ КНИГИ"
+      title="Отметить книги"
       backPath={routes.root}
       userDocLoading={userDocLoading}
       avatar={avatar}

@@ -70,7 +70,7 @@ export const Team = ({ currentUser }: Props) => {
 
   return (
     <BaseLayout
-      title="МОЯ КОМАНДА"
+      title="Моя команда"
       backPath={routes.root}
       userDocLoading={userDocLoading}
       avatar={avatar}

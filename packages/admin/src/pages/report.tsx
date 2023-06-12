@@ -59,6 +59,7 @@ const Report = ({ currentUser }: Props) => {
         totalPoints,
         isAuthorized: totalCount <= 100 || profile?.role?.includes("authorized") ? true : false,
         isOnline,
+        yatraLocationId: usersDocData?.find((value) => value.id === userId)?.yatraLocationId,
       };
 
       addOperationMultiAction(operation)
@@ -76,7 +77,7 @@ const Report = ({ currentUser }: Props) => {
   const { Title } = Typography;
 
   return (
-    <BaseLayout title="УЧЕТ КНИГ (АДМИН)" backPath={routes.root} avatar={avatar}>
+    <BaseLayout title="Добавить операцию" isAdmin backPath={routes.root} avatar={avatar}>
       <ReportForm
         currentUser={currentUser}
         onFinish={onFinish}

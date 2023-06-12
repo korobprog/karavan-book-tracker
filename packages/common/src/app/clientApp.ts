@@ -1,4 +1,5 @@
 import { initializeApp, getApps } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 import "firebase/auth";
 import "firebase/firestore";
 
@@ -13,5 +14,6 @@ const firebaseConfig = {
 };
 
 if (!getApps().length) {
-  initializeApp(firebaseConfig);
+  const app = initializeApp(firebaseConfig);
+  getAnalytics(app);
 }

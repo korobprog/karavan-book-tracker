@@ -38,7 +38,8 @@ const Profile = ({ currentUser }: Props) => {
 
   return (
     <BaseLayout
-      title="УЧЕТ КНИГ (АДМИН)"
+      title="Профиль"
+      isAdmin
       backPath={routes.root}
       headerActions={[
         <Tooltip title="Выйти" key="logout">

@@ -62,6 +62,9 @@ export const ProfileForm = (props: Props) => {
       <Form.Item name="city" label="Ваш город" rules={[{ required: true }]}>
         <SelectLocation />
       </Form.Item>
+      <Form.Item name="yatraLocationId" label="Ваша ятра">
+        <SelectLocation />
+      </Form.Item>
       <Form.Item
         name="phone"
         label="Ваш телефон"

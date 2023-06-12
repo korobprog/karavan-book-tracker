@@ -18,17 +18,24 @@ type Props = {
 };
 
 export const Home = ({ currentUser }: Props) => {
-  const { userDocLoading, profile } = currentUser;
+  const { userDocLoading, profile, user } = currentUser;
   const navigate = useNavigate();
   const onAddReport = () => {
     navigate(routes.report);
   };
   const avatar = profile?.avatar;
-  const { Paragraph } = Typography;
+  const { Paragraph, Title } = Typography;
 
   return (
-    <BaseLayout title="УЧЕТ КНИГ" userDocLoading={userDocLoading} avatar={avatar}>
-      <Paragraph>Отметить распространненные книги</Paragraph>
+    <BaseLayout title="Karavan Book Tracker" userDocLoading={userDocLoading} avatar={avatar}>
+      <Title className="site-page-title" level={2}>
+        Привет,
+        <br />
+        {profile?.nameSpiritual || profile?.name || user?.displayName || "друг"}
+      </Title>
+      <Title className="site-page-subtitle" level={5}>
+        Удачной санкиртаны!
+      </Title>
       <Button type="primary" block size="large" icon={<ReadOutlined />} onClick={onAddReport}>
         Отметить книги
       </Button>

@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Layout, PageHeader, Tooltip, Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 
-import BbtLogo from "../images/bbt-logo.png";
+import Logo from "../images/logo.png";
 
 type BaseLayoutProps = {
   title: string;
@@ -11,14 +11,18 @@ type BaseLayoutProps = {
   headerActions?: React.ReactNode;
   userDocLoading?: boolean;
   avatar?: string;
+  isAdmin?: boolean;
 };
 
 export const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
-  const { children, title, backPath, headerActions, userDocLoading, avatar } = props;
-
+  const { children, title, backPath, headerActions, userDocLoading, isAdmin, avatar } = props;
   const { Content, Header } = Layout;
   const navigate = useNavigate();
   const onBack = backPath ? () => navigate(backPath) : undefined;
+
+  useEffect(() => {
+    document.title = (isAdmin ? "Admin: " : "") + (title || "Karavan Book Tracker");
+  }, [title, isAdmin]);
 
   return (
     <Layout>
@@ -27,7 +31,7 @@ export const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
           title={title}
           className="page-header"
           onBack={onBack}
-          avatar={{ src: BbtLogo }}
+          avatar={{ src: Logo }}
           extra={
             headerActions ?? [
               <Tooltip title="Профиль" key="profile">

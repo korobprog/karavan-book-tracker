@@ -165,7 +165,7 @@ export const Statistic = ({ currentUser }: Props) => {
 
   return (
     <BaseLayout
-      title="МОЯ СТАТИСТИКА"
+      title="Моя статистика"
       backPath={routes.root}
       userDocLoading={userDocLoading}
       avatar={avatar}

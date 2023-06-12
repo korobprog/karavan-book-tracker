@@ -1,7 +1,7 @@
-const CracoLessPlugin = require('craco-less');
-const fs = require('fs');
-const path = require('path');
-const CracoEnvPlugin = require('craco-plugin-env')
+const CracoLessPlugin = require("craco-less");
+const fs = require("fs");
+const path = require("path");
+const CracoEnvPlugin = require("craco-plugin-env");
 
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
@@ -14,25 +14,25 @@ module.exports = {
         lessLoaderOptions: {
           lessOptions: {
             modifyVars: {
-                '@primary-color': '#1DA57A',
-                'border-radius-base': '12px',
-        },
+              "@primary-color": "#722ed1",
+              "border-radius-base": "12px",
+            },
             javascriptEnabled: true,
           },
         },
       },
     },
     {
-			plugin: require('craco-babel-loader'),
-			options: {
-				includes: [resolveApp('../common')],
-			},
-		},
+      plugin: require("craco-babel-loader"),
+      options: {
+        includes: [resolveApp("../common")],
+      },
+    },
     {
       plugin: CracoEnvPlugin,
       options: {
-        variables: {}
-      }
-    }
+        variables: {},
+      },
+    },
   ],
 };

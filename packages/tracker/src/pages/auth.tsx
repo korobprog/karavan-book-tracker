@@ -39,7 +39,7 @@ export const Auth = ({ currentUser }: Props) => {
   const { Title, Text } = Typography;
 
   return (
-    <BaseLayout title="УЧЕТ КНИГ" headerActions={[]}>
+    <BaseLayout title="Учет книг" headerActions={[]}>
       <Title className="site-page-title" level={2}>
         ВХОД В УЧЕТ КНИГ
       </Title>

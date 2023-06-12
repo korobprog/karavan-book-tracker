@@ -33,9 +33,14 @@ const Home = ({ currentUser }: Props) => {
   const { Title } = Typography;
 
   return (
-    <BaseLayout title="УЧЕТ КНИГ (АДМИН)" avatar={profile?.avatar}>
+    <BaseLayout title="Karavan Book Tracker" isAdmin avatar={profile?.avatar}>
       <Title className="site-page-title" level={2}>
-        Привет, {profile?.name || user?.displayName || "друг"}
+        Привет,
+        <br />
+        {profile?.nameSpiritual || profile?.name || user?.displayName || "друг"}
+      </Title>
+      <Title className="site-page-subtitle" level={5}>
+        Удачной санкиртаны!
       </Title>
       <Button type="primary" block size="large" icon={<ReadOutlined />} onClick={onAddReport}>
         Последние операции

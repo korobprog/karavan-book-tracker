@@ -44,7 +44,7 @@ const Profile = ({ currentUser }: Props) => {
 
   return (
     <BaseLayout
-      title="УЧЕТ КНИГ"
+      title="Профиль"
       backPath={routes.root}
       userDocLoading={userDocLoading}
       headerActions={[

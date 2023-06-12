@@ -1,11 +1,7 @@
 import React, { useEffect } from "react";
 import { signOut } from "firebase/auth";
 import { Button, Divider, Tooltip, Typography } from "antd";
-import {
-  LogoutOutlined,
-  MessageOutlined,
-  BookOutlined,
-} from "@ant-design/icons";
+import { LogoutOutlined, MessageOutlined, BookOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
@@ -33,16 +29,12 @@ export const Denied = ({ currentUser }: Props) => {
 
   return (
     <BaseLayout
-      title="УЧЕТ КНИГ (АДМИН)"
+      title="Учет книг"
+      isAdmin
       backPath={routes.root}
       headerActions={[
         <Tooltip title="Выйти" key="logout">
-          <Button
-            type="ghost"
-            shape="circle"
-            icon={<LogoutOutlined />}
-            onClick={onLogout}
-          />
+          <Button type="ghost" shape="circle" icon={<LogoutOutlined />} onClick={onLogout} />
         </Tooltip>,
       ]}
     >
@@ -50,12 +42,10 @@ export const Denied = ({ currentUser }: Props) => {
         Доступ закрыт
       </Title>
       <Paragraph>
-        Уважаемый {profile?.name || user?.displayName || "друг"}, Ваш аккаунт не
-        обладает правами администратора.
+        Уважаемый {profile?.name || user?.displayName || "друг"}, Ваш аккаунт не обладает правами
+        администратора.
       </Paragraph>
-      <Paragraph>
-        Вы можете связаться с поддержкой для получения доступа:
-      </Paragraph>
+      <Paragraph>Вы можете связаться с поддержкой для получения доступа:</Paragraph>
       <Button
         href="https://t.me/karavanBook_bot"
         target="_blank"

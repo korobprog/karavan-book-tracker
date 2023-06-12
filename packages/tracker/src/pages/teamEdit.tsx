@@ -34,7 +34,7 @@ export const TeamEdit = ({ currentUser }: Props) => {
 
   return (
     <BaseLayout
-      title="РЕДАКТИРОВАНИЕ КОМАНДЫ"
+      title="Редактирование команды"
       backPath={routes.team}
       userDocLoading={userDocLoading}
     >

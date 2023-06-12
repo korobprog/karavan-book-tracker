@@ -147,7 +147,7 @@ export const Reports = ({ currentUser }: Props) => {
   ];
 
   return (
-    <BaseLayout title="ПОСЛЕДНИЕ ОПЕРАЦИИ" backPath={routes.root} avatar={avatar}>
+    <BaseLayout title="Последние операции" isAdmin backPath={routes.root} avatar={avatar}>
       <Button
         block
         size="large"

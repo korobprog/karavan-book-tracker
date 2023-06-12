@@ -48,7 +48,7 @@ export const Registration = ({ currentUser }: Props) => {
   const { Title, Text } = Typography;
 
   return (
-    <BaseLayout title="УЧЕТ КНИГ" headerActions={[]} >
+    <BaseLayout title="Регистрация" headerActions={[]}>
       <Title className="site-page-title" level={2}>
         СТРАНИЦА РЕГИСТРАЦИИ
       </Title>
