@@ -13,7 +13,8 @@ type Props = {
 };
 
 const Auth = ({ currentUser }: Props) => {
-  const { auth, user } = currentUser;
+  const { auth, user, profile } = currentUser;
+  const avatar = profile?.avatar;
   const [signInWithGoogle, , , googleError] = useSignInWithGoogle(auth);
   const [signInWithEmailAndPassword, , , emailError] = useSignInWithEmailAndPassword(auth);
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ const Auth = ({ currentUser }: Props) => {
   const { Title, Text } = Typography;
 
   return (
-    <BaseLayout title="Учет книг" headerActions={[]} isAdmin>
+    <BaseLayout title="Учет книг" headerActions={[]} avatar={avatar} isAdmin>
       <Title className="site-page-title" level={2}>
         ВХОД В УЧЕТ КНИГ
       </Title>

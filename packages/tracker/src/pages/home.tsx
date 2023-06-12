@@ -17,18 +17,17 @@ type Props = {
   currentUser: CurrentUser;
 };
 
-export const Home = (props: Props) => {
-  const { userDocLoading, profile, user } = props.currentUser;
+export const Home = ({ currentUser }: Props) => {
+  const { userDocLoading, profile, user } = currentUser;
   const navigate = useNavigate();
-
   const onAddReport = () => {
     navigate(routes.report);
   };
-
+  const avatar = profile?.avatar;
   const { Paragraph, Title } = Typography;
 
   return (
-    <BaseLayout title="Karavan Book Tracker" userDocLoading={userDocLoading}>
+    <BaseLayout title="Karavan Book Tracker" userDocLoading={userDocLoading} avatar={avatar}>
       <Title className="site-page-title" level={2}>
         Привет,
         <br />

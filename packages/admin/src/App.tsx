@@ -29,6 +29,7 @@ function App() {
   const { profile, loading, user, userDocLoading } = currentUser;
   const navigate = useNavigate();
   const location = useLocation();
+
   useBooks();
 
   useEffect(() => {

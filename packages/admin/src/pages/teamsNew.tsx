@@ -10,15 +10,16 @@ type Props = {
 };
 
 export const TeamsNew = ({ currentUser }: Props) => {
+  const { profile } = currentUser;
   const navigate = useNavigate();
-
+  const avatar = profile?.avatar;
   const onFinish = async (formValues: TeamFormValues) => {
     await saveTeam({ team: formValues });
     navigate(routes.teams);
   };
 
   return (
-    <BaseLayout title="Новая команда" isAdmin backPath={routes.teams}>
+    <BaseLayout title="Новая команда" isAdmin backPath={routes.teams} avatar={avatar}>
       <TeamForm onFinishHandler={onFinish} />
     </BaseLayout>
   );

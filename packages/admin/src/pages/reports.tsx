@@ -18,13 +18,14 @@ type Props = {
 };
 
 export const Reports = ({ currentUser }: Props) => {
-  const { loading } = currentUser;
+  const { loading, profile } = currentUser;
   const navigate = useNavigate();
   const { loading: booksLoading } = useGoogleSheets({
     apiKey: process.env.REACT_APP_GOOGLE_API_KEY as string,
     sheetId: process.env.REACT_APP_GOOGLE_SHEETS_ID as string,
   });
-
+  const avatar = profile?.avatar;
+  console.log("🚀 ~ file: reports.tsx:28 ~ Reports ~ avatar:", avatar);
   const { operationsDocData, loading: operationLoading } = useOperations();
 
   const onAddOperation = () => {
@@ -146,7 +147,7 @@ export const Reports = ({ currentUser }: Props) => {
   ];
 
   return (
-    <BaseLayout title="Последние операции" isAdmin backPath={routes.root}>
+    <BaseLayout title="Последние операции" isAdmin backPath={routes.root} avatar={avatar}>
       <Button
         block
         size="large"

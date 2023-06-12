@@ -16,9 +16,10 @@ type Props = {
 const Profile = ({ currentUser }: Props) => {
   const { profile, user, userDocLoading } = currentUser;
   const { setProfile } = useUser({ profile, user });
-
   const auth = getAuth();
   const navigate = useNavigate();
+
+  const avatar = profile?.avatar;
 
   const initialValues: ProfileFormValues = {
     ...profile,
@@ -33,9 +34,9 @@ const Profile = ({ currentUser }: Props) => {
     signOut(auth);
   };
 
-  const onFinish = async (formValues: ProfileFormValues) => {
-    const userId = profile?.id || user?.uid;
+  const userId = profile?.id || user?.uid || "";
 
+  const onFinish = async (formValues: ProfileFormValues) => {
     if (userId) {
       setProfile(formValues).then(() => navigate(routes.root));
     }
@@ -51,6 +52,7 @@ const Profile = ({ currentUser }: Props) => {
           <Button type="ghost" shape="circle" icon={<LogoutOutlined />} onClick={onLogout} />
         </Tooltip>,
       ]}
+      avatar={avatar}
     >
       <Typography.Title className="site-page-title" level={2}>
         Ваш профиль
@@ -60,7 +62,7 @@ const Profile = ({ currentUser }: Props) => {
           Загрузка...
         </Typography.Title>
       ) : (
-        <ProfileForm initialValues={initialValues} onFinish={onFinish} />
+        <ProfileForm initialValues={initialValues} onFinish={onFinish} userId={userId} />
       )}
     </BaseLayout>
   );

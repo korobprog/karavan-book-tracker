@@ -26,7 +26,7 @@ const Report = ({ currentUser }: Props) => {
   const [userSearchString, setUserSearchString] = useState("");
   const [isOnline, setIsOnline] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const avatar = profile?.avatar;
   const navigate = useNavigate();
 
   const { usersDocData } = useUsers({
@@ -77,7 +77,7 @@ const Report = ({ currentUser }: Props) => {
   const { Title } = Typography;
 
   return (
-    <BaseLayout title="Добавить операцию" isAdmin backPath={routes.root}>
+    <BaseLayout title="Добавить операцию" isAdmin backPath={routes.root} avatar={avatar}>
       <ReportForm
         currentUser={currentUser}
         onFinish={onFinish}

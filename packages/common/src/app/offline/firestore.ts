@@ -10,7 +10,7 @@ const db = initializeFirestore(apps[0], {
 });
 
 enableIndexedDbPersistence(db)
-  .then(() => message.info("Теперь поддерживается работа с прервающимся интернетом"))
+  .then(() => console.log("Поддерживается работа с прервающимся интернетом"))
   .catch((err) => {
     if (err.code == "failed-precondition") {
       message.warning(

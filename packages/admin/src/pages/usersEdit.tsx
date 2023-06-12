@@ -41,12 +41,12 @@ export const UsersEdit = (props: Props) => {
         </Tooltip>,
       ]}
     >
-      {loading ? (
+      {loading || !userId ? (
         <Typography.Title className="site-page-title" level={5}>
           Загрузка...
         </Typography.Title>
       ) : (
-        <ProfileForm initialValues={initialValues} onFinish={onFinish} />
+        <ProfileForm initialValues={initialValues} onFinish={onFinish} userId={userId} />
       )}
     </BaseLayout>
   );

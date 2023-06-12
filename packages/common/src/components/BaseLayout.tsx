@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Layout, PageHeader, Tooltip } from "antd";
+import { Button, Layout, PageHeader, Tooltip, Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 
 import Logo from "../images/logo.png";
@@ -10,11 +10,12 @@ type BaseLayoutProps = {
   backPath?: string;
   headerActions?: React.ReactNode;
   userDocLoading?: boolean;
+  avatar?: string;
   isAdmin?: boolean;
 };
 
 export const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
-  const { children, title, backPath, headerActions, userDocLoading, isAdmin } = props;
+  const { children, title, backPath, headerActions, userDocLoading, isAdmin, avatar } = props;
   const { Content, Header } = Layout;
   const navigate = useNavigate();
   const onBack = backPath ? () => navigate(backPath) : undefined;
@@ -37,7 +38,7 @@ export const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
                 <Button
                   type="ghost"
                   shape="circle"
-                  icon={<UserOutlined />}
+                  icon={avatar ? <Avatar src={avatar} /> : <UserOutlined />}
                   onClick={() => navigate("/profile")}
                   loading={userDocLoading}
                 />
@@ -46,7 +47,6 @@ export const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
           }
         />
       </Header>
-
       <Content>
         <div className="site-layout-content">{children}</div>
       </Content>

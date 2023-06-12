@@ -20,7 +20,6 @@ type Props = {
 const Home = ({ currentUser }: Props) => {
   const { user, profile } = currentUser;
   const navigate = useNavigate();
-
   const onAddReport = () => {
     navigate(routes.reports);
   };
@@ -34,7 +33,7 @@ const Home = ({ currentUser }: Props) => {
   const { Title } = Typography;
 
   return (
-    <BaseLayout title="Karavan Book Tracker" isAdmin>
+    <BaseLayout title="Karavan Book Tracker" isAdmin avatar={profile?.avatar}>
       <Title className="site-page-title" level={2}>
         Привет,
         <br />
