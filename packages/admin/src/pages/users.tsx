@@ -43,7 +43,7 @@ export const Users = ({ currentUser }: Props) => {
   const { profile } = currentUser;
 
   const navigate = useNavigate();
-
+  const avatar = profile?.avatar;
   const { usersDocData, usersDocLoading } = useUsers({});
   const { deleteProfile } = useUser({ profile });
   const { locations, loading: locationLoading } = useLocations({});
@@ -196,7 +196,7 @@ export const Users = ({ currentUser }: Props) => {
   };
 
   return (
-    <BaseLayout title="ПОЛЬЗОВАТЕЛИ" backPath={routes.root}>
+    <BaseLayout title="ПОЛЬЗОВАТЕЛИ" backPath={routes.root} avatar={avatar}>
       <Button block size="large" type="primary" icon={<UserAddOutlined />} onClick={onAddUser}>
         Добавить пользователя
       </Button>

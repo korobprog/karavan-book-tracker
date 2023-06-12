@@ -12,14 +12,15 @@ type Props = {
 
 export const UsersNew = ({ currentUser }: Props) => {
   const { addNewUnattachedProfile } = useUser({ profile: currentUser.profile });
+  const { profile } = currentUser;
   const navigate = useNavigate();
-
+  const avatar = profile?.avatar;
   const onFinish = async (formValues: ProfileFormValues) => {
     addNewUnattachedProfile(formValues).then(() => navigate(routes.users));
   };
 
   return (
-    <BaseLayout title="СОЗДАНИЕ НОВОГО ПОЛЬЗОВАТЕЛЯ" backPath={routes.users}>
+    <BaseLayout title="СОЗДАНИЕ НОВОГО ПОЛЬЗОВАТЕЛЯ" backPath={routes.users} avatar={avatar}>
       <Typography.Text mark>Здесь создается не привязанный к емейлу профиль!</Typography.Text>
 
       <ProfileForm onFinish={onFinish} isEmailEditable userId="none" />
