@@ -43,7 +43,6 @@ ${name}
 ${locationName}
 ${formattedDate}
 
-${getBookStrings()}
 ${getBookStrings()}${other}
 
 Итого${isOnline ? " (онлайн)" : ""}: ${total}
