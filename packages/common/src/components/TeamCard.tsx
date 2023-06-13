@@ -26,7 +26,6 @@ import { LocationDoc } from "../services/api/locations";
 import { HashMap } from "../utils/getHashMap";
 import { setUserTeam, TeamMemberStatus, UserDocWithId } from "../services/api/useUser";
 import { UsersStatistic } from "common/src/features/downloadUsersStatistic";
-import { CurrentUser } from "common/src/services/api/useCurrentUser";
 
 type Props = {
   team: TeamDoc;
