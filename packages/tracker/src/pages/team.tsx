@@ -50,12 +50,7 @@ export const Team = ({ currentUser }: Props) => {
 
       {teams.map((team) => {
         return (
-          <TeamCard
-            key={team.id}
-            team={team}
-            locationsHashMap={locationsHashMap}
-            currentUser={currentUser}
-          >
+          <TeamCard key={team.id} team={team} locationsHashMap={locationsHashMap}>
             <Button
               size="large"
               icon={<CheckSquareOutlined />}
@@ -88,7 +83,6 @@ export const Team = ({ currentUser }: Props) => {
           myStatus={myStatus}
           onLeaveTeam={() => setUserTeam(null, profile?.id)}
           onTeamEdit={onTeamEdit}
-          currentUser={currentUser}
         />
       ) : (
         teamNoSelectedBlock

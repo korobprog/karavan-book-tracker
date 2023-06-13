@@ -35,7 +35,6 @@ type Props = {
   myStatus?: TeamMemberStatus;
   onLeaveTeam?: () => void;
   onTeamEdit?: (teamId: string) => void;
-  currentUser: CurrentUser;
 };
 
 export const TeamCard = ({
@@ -45,13 +44,8 @@ export const TeamCard = ({
   onLeaveTeam,
   onTeamEdit,
   children,
-  currentUser,
 }: Props) => {
   const { name, location, currentLocation, leader } = team;
-
-  const { profile } = currentUser;
-
-  const avatar = profile?.avatar;
 
   const { teamMembers } = useTeamMembers({ teamId: team?.id });
 
