@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Button, Typography } from "antd";
+import { Avatar, Button, Typography } from "antd";
 import { CheckSquareOutlined } from "@ant-design/icons";
 
 import { routes } from "../shared/routes";
@@ -50,7 +50,12 @@ export const Team = ({ currentUser }: Props) => {
 
       {teams.map((team) => {
         return (
-          <TeamCard key={team.id} team={team} locationsHashMap={locationsHashMap}>
+          <TeamCard
+            key={team.id}
+            team={team}
+            locationsHashMap={locationsHashMap}
+            currentUser={currentUser}
+          >
             <Button
               size="large"
               icon={<CheckSquareOutlined />}
@@ -83,6 +88,7 @@ export const Team = ({ currentUser }: Props) => {
           myStatus={myStatus}
           onLeaveTeam={() => setUserTeam(null, profile?.id)}
           onTeamEdit={onTeamEdit}
+          currentUser={currentUser}
         />
       ) : (
         teamNoSelectedBlock

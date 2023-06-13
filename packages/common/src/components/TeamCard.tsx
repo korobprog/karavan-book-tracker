@@ -26,6 +26,7 @@ import { LocationDoc } from "../services/api/locations";
 import { HashMap } from "../utils/getHashMap";
 import { setUserTeam, TeamMemberStatus, UserDocWithId } from "../services/api/useUser";
 import { UsersStatistic } from "common/src/features/downloadUsersStatistic";
+import { CurrentUser } from "common/src/services/api/useCurrentUser";
 
 type Props = {
   team: TeamDoc;
@@ -34,6 +35,7 @@ type Props = {
   myStatus?: TeamMemberStatus;
   onLeaveTeam?: () => void;
   onTeamEdit?: (teamId: string) => void;
+  currentUser: CurrentUser;
 };
 
 export const TeamCard = ({
@@ -43,8 +45,13 @@ export const TeamCard = ({
   onLeaveTeam,
   onTeamEdit,
   children,
+  currentUser,
 }: Props) => {
   const { name, location, currentLocation, leader } = team;
+
+  const { profile } = currentUser;
+
+  const avatar = profile?.avatar;
 
   const { teamMembers } = useTeamMembers({ teamId: team?.id });
 
@@ -80,7 +87,7 @@ export const TeamCard = ({
         title: "Вы хотите выйти из этой группы?",
         icon: <ExclamationCircleOutlined />,
         okText: "Покинуть группу",
-        okType: 'danger',
+        okType: "danger",
         cancelText: "Отмена",
         onOk: (close) => {
           onLeaveTeam?.();
@@ -131,12 +138,20 @@ export const TeamCard = ({
             <Avatar.Group>
               <Tooltip title={teamLeader[0]?.nameSpiritual || teamLeader[0]?.name} placement="top">
                 <Badge count={<StarTwoTone twoToneColor="#e4db30" />} offset={[-25, 5]}>
-                  <Avatar style={{ backgroundColor: "#689cd0" }} icon={<UserOutlined />} />
+                  {teamLeader[0]?.avatar ? (
+                    <Avatar style={{ backgroundColor: "#689cd0" }} src={teamLeader[0]?.avatar} />
+                  ) : (
+                    <Avatar style={{ backgroundColor: "#689cd0" }} icon={<UserOutlined />} />
+                  )}
                 </Badge>
               </Tooltip>
-              {approvedTeamMembers?.map(({ name, nameSpiritual, id }) => (
+              {approvedTeamMembers?.map(({ name, nameSpiritual, id, avatar }) => (
                 <Tooltip key={id} title={nameSpiritual || name} placement="top">
-                  <Avatar style={{ backgroundColor: "#87d068" }} icon={<UserOutlined />} />
+                  {avatar ? (
+                    <Avatar style={{ backgroundColor: "#87d068" }} src={avatar} />
+                  ) : (
+                    <Avatar style={{ backgroundColor: "#87d068" }} icon={<UserOutlined />} />
+                  )}
                 </Tooltip>
               ))}
             </Avatar.Group>
@@ -187,7 +202,9 @@ export const TeamCard = ({
             ))}
           </div>
         )}
-        {(myStatus === TeamMemberStatus.admin || myStatus === TeamMemberStatus.member) && (<UsersStatistic teamMembers={teamMembers.map((member) => member.id)} />)}
+        {(myStatus === TeamMemberStatus.admin || myStatus === TeamMemberStatus.member) && (
+          <UsersStatistic teamMembers={teamMembers.map((member) => member.id)} />
+        )}
       </Card>
     </>
   );
