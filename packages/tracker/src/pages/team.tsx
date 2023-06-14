@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Avatar, Button, Typography } from "antd";
+import { Button, Typography } from "antd";
 import { CheckSquareOutlined } from "@ant-design/icons";
 
 import { routes } from "../shared/routes";
