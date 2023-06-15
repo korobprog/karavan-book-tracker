@@ -26,7 +26,7 @@ export const ReportEdit = ({ currentUser }: Props) => {
 
   const [isOnline, setIsOnline] = useState(operationDocData?.isOnline || false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const avatar = profile?.avatar;
   const navigate = useNavigate();
 
   const initialValues: ReportFormValues | undefined = operationDocData
@@ -80,6 +80,7 @@ export const ReportEdit = ({ currentUser }: Props) => {
       title="Изменить операцию"
       backPath={routes.statistic}
       userDocLoading={userDocLoading}
+      avatar={avatar}
     >
       {initialValues ? (
         <ReportForm

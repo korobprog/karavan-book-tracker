@@ -37,14 +37,13 @@ export const shareOperation = async (params: ShareOperation) => {
       .join(`\n`);
 
   const title = "Отправить статистику";
-
+  const other = `${sumWithoutPoints > 0 ? `\nДругие: ${sumWithoutPoints}` : ""}`;
   const text = `
 ${name}
 ${locationName}
 ${formattedDate}
-${getBookStrings()}
 
-${sumWithoutPoints > 0 ? `Другие: ${sumWithoutPoints}` : ""}
+${getBookStrings()}${other}
 
 Итого${isOnline ? " (онлайн)" : ""}: ${total}
 `;
