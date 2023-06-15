@@ -71,7 +71,6 @@ export const TeamForm = (props: Props) => {
     console.log("Failed:", errorInfo);
   };
 
-  console.log("🚀 ~ TeamForm ~ usersDocData:", usersDocData);
   const usersWithoutAdmin = usersDocData?.filter(
     (usersDocData) =>
       usersDocData.id === initialValues?.leaderId ||
