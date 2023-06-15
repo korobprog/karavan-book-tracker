@@ -8,6 +8,7 @@ import { UserSelect } from "common/src/components/UserSelect";
 import { TeamFormValues } from "common/src/services/teams";
 import { removeEmptyFields } from "common/src/utils/objects";
 import { SelectLocation } from "../../features/select-location/SelectLocation";
+import { TeamMemberStatus } from "../../services/api/useUser";
 
 type Props = {
   onFinishHandler: (formValues: TeamFormValues) => Promise<void>;
@@ -40,8 +41,6 @@ export const TeamForm = (props: Props) => {
 
     const leader = usersDocData.find((user) => user.id === leaderId);
 
-    // ! TODO: add founded date;
-
     if (leader) {
       setIsSubmitting(true);
       await onFinishHandler({
@@ -55,7 +54,11 @@ export const TeamForm = (props: Props) => {
     console.log("Failed:", errorInfo);
   };
 
-  const usersOptions = usersDocData?.map((d) => (
+  const usersWithoutAdmin =
+    usersDocData &&
+    usersDocData.filter((usersDocData) => usersDocData.team?.status !== TeamMemberStatus.admin);
+
+  const usersOptions = usersWithoutAdmin?.map((d) => (
     <Select.Option key={d.id}>
       {d.name} {d.nameSpiritual}
     </Select.Option>
