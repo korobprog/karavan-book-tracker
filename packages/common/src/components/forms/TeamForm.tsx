@@ -59,7 +59,7 @@ export const TeamForm = (props: Props) => {
         await Promise.allSettled(promises);
       }
 
-      // Сабмитим форму
+      // Сабмитим форму..
       await onFinishHandler({
         leaderId,
         ...removeEmptyFields(formValues),
