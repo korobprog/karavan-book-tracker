@@ -39,7 +39,7 @@ export const TeamEdit = ({ currentUser }: Props) => {
       userDocLoading={userDocLoading}
     >
       {initialValues && !loading && (
-        <TeamForm onFinishHandler={onFinish} initialValues={initialValues} />
+        <TeamForm onFinishHandler={onFinish} initialValues={initialValues} teamId={teamId} />
       )}
     </BaseLayout>
   );

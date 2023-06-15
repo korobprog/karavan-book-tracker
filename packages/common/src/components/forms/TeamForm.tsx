@@ -8,15 +8,16 @@ import { UserSelect } from "common/src/components/UserSelect";
 import { TeamFormValues } from "common/src/services/teams";
 import { removeEmptyFields } from "common/src/utils/objects";
 import { SelectLocation } from "../../features/select-location/SelectLocation";
-import { TeamMemberStatus } from "../../services/api/useUser";
+import { TeamMemberStatus, setUserTeam } from "../../services/api/useUser";
 
 type Props = {
   onFinishHandler: (formValues: TeamFormValues) => Promise<void>;
   initialValues?: TeamFormValues;
+  teamId?: string;
 };
 
 export const TeamForm = (props: Props) => {
-  const { onFinishHandler, initialValues } = props;
+  const { onFinishHandler, initialValues, teamId } = props;
   const navigate = useNavigate();
 
   const [userSearchString, setUserSearchString] = useState("");
@@ -43,6 +44,22 @@ export const TeamForm = (props: Props) => {
 
     if (leader) {
       setIsSubmitting(true);
+
+      if (teamId) {
+        // Удаляем предыдущих лидеров
+        const prevLeaders = usersDocData?.filter(
+          (user) => user.team?.id === teamId && user.id !== leaderId
+        );
+        const promises = prevLeaders.map((prevLeader) => {
+          setUserTeam(
+            { id: prevLeader.team?.id || teamId, status: TeamMemberStatus.member },
+            prevLeader.id
+          );
+        });
+        await Promise.allSettled(promises);
+      }
+
+      // Сабмитим форму
       await onFinishHandler({
         leaderId,
         ...removeEmptyFields(formValues),
@@ -54,9 +71,12 @@ export const TeamForm = (props: Props) => {
     console.log("Failed:", errorInfo);
   };
 
-  const usersWithoutAdmin =
-    usersDocData &&
-    usersDocData.filter((usersDocData) => usersDocData.team?.status !== TeamMemberStatus.admin);
+  console.log("🚀 ~ TeamForm ~ usersDocData:", usersDocData);
+  const usersWithoutAdmin = usersDocData?.filter(
+    (usersDocData) =>
+      usersDocData.id === initialValues?.leaderId ||
+      usersDocData.team?.status !== TeamMemberStatus.admin
+  );
 
   const usersOptions = usersWithoutAdmin?.map((d) => (
     <Select.Option key={d.id}>
