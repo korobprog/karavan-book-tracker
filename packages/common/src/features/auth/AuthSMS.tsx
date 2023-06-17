@@ -90,10 +90,13 @@ export const AuthSMS = ({ currentUser }: Props) => {
           <Reactphone value={value} setValue={setValue} />
           {expandForm && <Input className="phone-input" value={OTP} onChange={verifyOTP} />}
           {!expandForm && (
-            <Button type="dashed" size="middle" htmlType="submit">
-              ПОЛУЧИТЬ SMS КОД
-            </Button>
+            <div style={{ marginTop: "16px" }}>
+              <Button type="dashed" size="middle" htmlType="submit">
+                ПОЛУЧИТЬ SMS КОД
+              </Button>
+            </div>
           )}
+
           <div id="recaptcha-container"></div>
         </Form>
       </Card>

@@ -76,7 +76,7 @@ export const AuthEmail = ({ currentUser }: Props) => {
             help={emailError && <Text type="danger">Неверный логин или пароль</Text>}
           >
             {" "}
-            <Space>
+            <Space direction="vertical">
               <Button type="primary" htmlType="submit" loading={isSubmitting}>
                 Войти
               </Button>
