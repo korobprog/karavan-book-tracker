@@ -4,7 +4,6 @@ import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../../../../tracker/src/shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import { BaseLayout } from "common/src/components/BaseLayout";
 
 type Props = {
   currentUser: CurrentUser;
