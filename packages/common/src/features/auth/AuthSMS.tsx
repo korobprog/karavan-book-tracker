@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Button, Typography, Card, Space, Input, Tooltip, Alert, notification } from "antd";
+import { Form, Button, Card, Space, Input, Alert, notification } from "antd";
 import { routes } from "../../../../tracker/src/shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { useNavigate } from "react-router-dom";
@@ -42,7 +42,6 @@ export const AuthSMS = ({ currentUser }: Props) => {
           .then((confirmationResult) => {
             // Отправлено SMS. Предложите пользователю ввести код из сообщения, затем войдите в систему
             // пользователя с результатом подтверждения.подтвердите (код).
-            console.log(confirmationResult);
             setСonfirmationResult(confirmationResult);
           })
           .catch(function (error) {
