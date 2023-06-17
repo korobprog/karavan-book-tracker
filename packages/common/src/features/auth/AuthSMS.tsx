@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Form, Button, Typography, Card, Space, Input, Tooltip } from "antd";
+import { Form, Button, Typography, Card, Space, Input, Tooltip, Alert, notification } from "antd";
 import { routes } from "../../../../tracker/src/shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { useNavigate } from "react-router-dom";
 import { Reactphone } from "../auth-phone/Reactphone";
 import "../../../../tracker/src/App.less";
 import { signInWithPhoneNumber, RecaptchaVerifier, ConfirmationResult } from "firebase/auth";
+import { MobileTwoTone } from "@ant-design/icons";
 
 type Props = {
   currentUser: CurrentUser;
@@ -17,7 +18,6 @@ export const AuthSMS = ({ currentUser }: Props) => {
   const [expandForm, setExpandForm] = useState(false);
   const [OTP, setOTP] = useState("");
   const [confirmationResult, setСonfirmationResult] = useState<ConfirmationResult>();
-  const [tooltipVisible, setTooltipVisible] = useState<boolean>(false);
 
   let PhoneNumber = value;
   const navigate = useNavigate();
@@ -31,8 +31,6 @@ export const AuthSMS = ({ currentUser }: Props) => {
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
-
-  const { Title } = Typography;
 
   const requstOTP = () => {
     console.log(PhoneNumber);
@@ -69,7 +67,10 @@ export const AuthSMS = ({ currentUser }: Props) => {
         .catch((error) => {
           // User couldn't sign in (bad verification code?)
           if (error.code === "auth/invalid-verification-code") {
-            setTooltipVisible(true); // новое
+            notification.error({
+              message: "Ошибка аутентификации",
+              description: "Неверный код аутентификации. Введите правильный код.",
+            });
           }
         });
     }
@@ -77,10 +78,16 @@ export const AuthSMS = ({ currentUser }: Props) => {
 
   return (
     <Space direction="vertical" size="middle" align="center" style={{ display: "flex" }}>
+      <Space>
+        <Alert
+          message="Внимание!"
+          description="Если у вы уже регистрировали аккаунт через почту или Google, то при входе по номеру телефона создастся новый аккаунт."
+          type="warning"
+          showIcon
+          closable
+        />
+      </Space>
       <Card>
-        <Title className="site-page-title" level={5}>
-          Введите номер телефона
-        </Title>
         <Form
           name="basic"
           labelCol={{ span: 8 }}
@@ -90,30 +97,31 @@ export const AuthSMS = ({ currentUser }: Props) => {
           autoComplete="off"
           onFinish={requstOTP}
         >
-          <Reactphone value={value} setValue={setValue} />
-          {expandForm && (
-            <Tooltip
-              title="Неверный код аутентификации. Введите правильный код"
-              visible={tooltipVisible}
-            >
+          <div style={{ marginBottom: "16px" }}>
+            <Reactphone value={value} setValue={setValue} />
+            {expandForm && (
               <Input
-                style={{ marginTop: "16px" }}
+                style={{ marginTop: "32px" }}
                 className="phone-input"
                 value={OTP}
                 onChange={verifyOTP}
-                placeholder="введите 6 ти значный SMS код"
+                placeholder="введите 6-ти значный SMS код"
                 maxLength={6}
               />
-            </Tooltip>
-          )}
+            )}
+          </div>
           {!expandForm && (
-            <div style={{ marginTop: "16px" }}>
+            <div style={{ marginTop: "16px", marginLeft: "16px" }}>
               <Button type="dashed" size="middle" htmlType="submit">
-                ПОЛУЧИТЬ SMS КОД
+                ПОЛУЧИТЬ SMS КОД <MobileTwoTone />
               </Button>
             </div>
           )}
-
+          {expandForm && (
+            <div style={{ marginTop: "16px", marginLeft: "16px" }}>
+              <Alert message="Код отправлен" type="success" showIcon></Alert>
+            </div>
+          )}
           <div id="recaptcha-container"></div>
         </Form>
       </Card>

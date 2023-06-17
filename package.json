@@ -29,6 +29,7 @@
     "packages/tracker"
   ],
   "dependencies": {
+    "@ant-design/icons": "^4.7.0",
     "exceljs": "^4.3.0",
     "file-saver": "^2.0.5"
   },

@@ -27,7 +27,7 @@ export const Auth = ({ currentUser }: Props) => {
   return (
     <BaseLayout title="УЧЕТ КНИГ" headerActions={[]}>
       <Title className="site-page-title" level={2}>
-        ВХОД В УЧЕТ КНИГ С ПОМОЩЬЮ
+        вход в учет книг с помощью
       </Title>
       <Tabs
         defaultActiveKey="1"
@@ -35,16 +35,16 @@ export const Auth = ({ currentUser }: Props) => {
         items={[
           {
             label: "SMS",
-            key: "1",
+            key: "2",
             children: <AuthSMS currentUser={currentUser} />,
           },
           {
             label: "Google",
-            key: "2",
+            key: "1",
             children: <AuthGoogle currentUser={currentUser} />,
           },
           {
-            label: "eMail",
+            label: "email",
             key: "3",
             children: <AuthEmail currentUser={currentUser} />,
           },

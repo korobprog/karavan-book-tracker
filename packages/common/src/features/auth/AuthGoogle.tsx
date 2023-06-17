@@ -31,7 +31,7 @@ export const AuthGoogle = ({ currentUser }: Props) => {
     <Space direction="vertical" size="middle" style={{ display: "flex" }}>
       <Card>
         <Title className="site-page-title" level={5}>
-          БЫСТРЫЙ ВХОД И РЕГИСТРАЦИЯ
+          Быстрый вход и регистрация
         </Title>
         <Form
           name="basic"
