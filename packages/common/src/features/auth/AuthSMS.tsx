@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Button, Typography, Card, Space, Input } from "antd";
+import { Form, Button, Typography, Card, Space, Input, Tooltip } from "antd";
 import { routes } from "../../../../tracker/src/shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +17,7 @@ export const AuthSMS = ({ currentUser }: Props) => {
   const [expandForm, setExpandForm] = useState(false);
   const [OTP, setOTP] = useState("");
   const [confirmationResult, setСonfirmationResult] = useState<ConfirmationResult>();
+  const [tooltipVisible, setTooltipVisible] = useState<boolean>(false);
 
   let PhoneNumber = value;
   const navigate = useNavigate();
@@ -67,7 +68,9 @@ export const AuthSMS = ({ currentUser }: Props) => {
         })
         .catch((error) => {
           // User couldn't sign in (bad verification code?)
-          console.log(error);
+          if (error.code === "auth/invalid-verification-code") {
+            setTooltipVisible(true); // новое
+          }
         });
     }
   };
@@ -88,7 +91,21 @@ export const AuthSMS = ({ currentUser }: Props) => {
           onFinish={requstOTP}
         >
           <Reactphone value={value} setValue={setValue} />
-          {expandForm && <Input className="phone-input" value={OTP} onChange={verifyOTP} />}
+          {expandForm && (
+            <Tooltip
+              title="Неверный код аутентификации. Введите правильный код"
+              visible={tooltipVisible}
+            >
+              <Input
+                style={{ marginTop: "16px" }}
+                className="phone-input"
+                value={OTP}
+                onChange={verifyOTP}
+                placeholder="введите 6 ти значный SMS код"
+                maxLength={6}
+              />
+            </Tooltip>
+          )}
           {!expandForm && (
             <div style={{ marginTop: "16px" }}>
               <Button type="dashed" size="middle" htmlType="submit">
