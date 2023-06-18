@@ -80,7 +80,7 @@ export const AuthSMS = ({ currentUser }: Props) => {
       <Space>
         <Alert
           message="Внимание!"
-          description="Если у вы уже регистрировали аккаунт через почту или Google, то при входе по номеру телефона создастся новый аккаунт."
+          description="Если вы уже регистрировали аккаунт через почту или Google, то при входе по номеру телефона создастся новый аккаунт."
           type="warning"
           showIcon
           closable
