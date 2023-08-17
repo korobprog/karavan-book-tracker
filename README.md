@@ -3,6 +3,11 @@
 This monorepo combine apps for handling statistic of book distribution
 It based on [npm workspaces](https://docs.npmjs.com/cli/v8/using-npm/workspaces)
 
+# Demo Access
+You can register and see the project, it is connected to the test base, you can do anything there:
+An application for employees: <https://karavan-book-tracker-test.web.app/>
+For admins: <https://karavan-book-tracker-admin-test.web.app/>
+
 # Examples
 
 There are two projects:
