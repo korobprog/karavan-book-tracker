@@ -15,6 +15,12 @@
     "admin:deploy:staging": "npm run deploy:staging -w admin",
     "admin:build:prod": "npm run build:prod -w admin",
     "admin:deploy:prod": "npm run deploy:prod -w admin",
+    "stock": "npm run start -w stock",
+    "stock:prod": "npm run start:prod -w stock",
+    "stock:build:staging": "npm run build:staging -w stock",
+    "stock:deploy:staging": "npm run deploy:staging -w stock",
+    "stock:build:prod": "npm run build:prod -w stock",
+    "stock:deploy:prod": "npm run deploy:prod -w stock",
     "prepare": "husky install"
   },
   "eslintConfig": {
@@ -26,7 +32,8 @@
   "workspaces": [
     "packages/common",
     "packages/admin",
-    "packages/tracker"
+    "packages/tracker",
+    "packages/stock"
   ],
   "dependencies": {
     "exceljs": "^4.3.0",
