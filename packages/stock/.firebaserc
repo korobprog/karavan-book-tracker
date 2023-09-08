@@ -1,0 +1,23 @@
+{
+  "projects": {
+    "default": "karavan-book-tracker",
+    "staging": "karavan-book-tracker-test"
+  },
+  "targets": {
+    "karavan-book-tracker": {
+      "hosting": {
+        "stock": [
+          "karavan-book-tracker"
+        ]
+      }
+    },
+    "karavan-book-tracker-test": {
+      "hosting": {
+        "stock": [
+          "karavan-book-tracker-test"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
