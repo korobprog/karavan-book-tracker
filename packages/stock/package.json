@@ -1,7 +1,7 @@
 {
   "name": "stock",
   "version": "1.0.2",
-  "description": "karavan-book-tracker",
+  "description": "karavan-book-stock",
   "scripts": {
     "start": "craco start --mode staging",
     "build:staging": "craco build --mode staging",

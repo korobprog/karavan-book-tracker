@@ -7,14 +7,14 @@
     "karavan-book-tracker": {
       "hosting": {
         "stock": [
-          "karavan-book-tracker"
+          "karavan-book-stock"
         ]
       }
     },
     "karavan-book-tracker-test": {
       "hosting": {
         "stock": [
-          "karavan-book-tracker-test"
+          "karavan-book-stock-test"
         ]
       }
     }
