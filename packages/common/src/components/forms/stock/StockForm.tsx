@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useStore } from "effector-react";
 import { Button, List, Input, InputNumber, Form, Row, Space, DatePicker, Typography } from "antd";
 import {
@@ -34,6 +34,11 @@ export const StockForm = (props: Props) => {
   const [selectedBooks, setSelectedBooks] = useState<Book[]>([]);
 
   const books = useStore($books);
+
+  const newAll = books.filter((value1) => {
+    return !selectedBooks.some((value2) => value1.id === value2.id);
+  });
+
   const booksLoading = useStore($booksLoading);
 
   const booksStorageInitialValues = calcFormValuesFromBooks(storage.getReportBooks());
@@ -80,7 +85,6 @@ export const StockForm = (props: Props) => {
 
   const onValuesChange = () => {
     const formValues: StockFormValues = form.getFieldsValue();
-    console.log("🚀 ~ onValuesChange ~ formValues:", formValues);
     const { totalCount, operationBooks } = calcBooksCountsFromValues(formValues);
     setTotalBooksCount(totalCount);
 
@@ -227,7 +231,7 @@ export const StockForm = (props: Props) => {
       </Row>
       <List
         itemLayout="horizontal"
-        dataSource={books}
+        dataSource={newAll}
         loading={booksLoading || userDocLoading}
         locale={{ emptyText: "Не найдено книг" }}
         renderItem={(book) => renderBookItem(book, false)}
