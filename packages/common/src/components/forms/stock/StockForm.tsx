@@ -35,9 +35,11 @@ export const StockForm = (props: Props) => {
 
   const books = useStore($books);
 
-  const newAll = books.filter((value1) => {
-    return !selectedBooks.some((value2) => value1.id === value2.id);
-  });
+  const newBooks = useMemo(() => {
+    return books.filter((book) => {
+      return !selectedBooks.some((selected) => book.id === selected.id);
+    });
+  }, [books, selectedBooks]);
 
   const booksLoading = useStore($booksLoading);
 
@@ -134,9 +136,8 @@ export const StockForm = (props: Props) => {
     return book.name.toLowerCase().includes(searchString) ? (
       <List.Item>
         <Button
-          onClick={() => toggleFavorite(book.id)}
+          disabled={true}
           icon={isSelected ? <StarFilled /> : <StarOutlined />}
-          disabled={isSubmitting || userDocLoading}
           style={{ marginRight: 8 }}
         />
         <List.Item.Meta title={book.name} />
@@ -231,7 +232,7 @@ export const StockForm = (props: Props) => {
       </Row>
       <List
         itemLayout="horizontal"
-        dataSource={newAll}
+        dataSource={newBooks}
         loading={booksLoading || userDocLoading}
         locale={{ emptyText: "Не найдено книг" }}
         renderItem={(book) => renderBookItem(book, false)}
