@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useStore } from "effector-react";
 import { Button, List, Input, InputNumber, Form, Row, Space, DatePicker, Typography } from "antd";
 import {
@@ -34,6 +34,13 @@ export const StockForm = (props: Props) => {
   const [selectedBooks, setSelectedBooks] = useState<Book[]>([]);
 
   const books = useStore($books);
+
+  const newBooks = useMemo(() => {
+    return books.filter((book) => {
+      return !selectedBooks.some((selected) => book.id === selected.id);
+    });
+  }, [books, selectedBooks]);
+
   const booksLoading = useStore($booksLoading);
 
   const booksStorageInitialValues = calcFormValuesFromBooks(storage.getReportBooks());
@@ -80,7 +87,6 @@ export const StockForm = (props: Props) => {
 
   const onValuesChange = () => {
     const formValues: StockFormValues = form.getFieldsValue();
-    console.log("🚀 ~ onValuesChange ~ formValues:", formValues);
     const { totalCount, operationBooks } = calcBooksCountsFromValues(formValues);
     setTotalBooksCount(totalCount);
 
@@ -130,9 +136,8 @@ export const StockForm = (props: Props) => {
     return book.name.toLowerCase().includes(searchString) ? (
       <List.Item>
         <Button
-          onClick={() => toggleFavorite(book.id)}
+          disabled={true}
           icon={isSelected ? <StarFilled /> : <StarOutlined />}
-          disabled={isSubmitting || userDocLoading}
           style={{ marginRight: 8 }}
         />
         <List.Item.Meta title={book.name} />
@@ -227,7 +232,7 @@ export const StockForm = (props: Props) => {
       </Row>
       <List
         itemLayout="horizontal"
-        dataSource={books}
+        dataSource={newBooks}
         loading={booksLoading || userDocLoading}
         locale={{ emptyText: "Не найдено книг" }}
         renderItem={(book) => renderBookItem(book, false)}
