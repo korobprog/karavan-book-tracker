@@ -17,7 +17,7 @@ export const Home = ({ currentUser }: Props) => {
     navigate(routes.stock);
   };
   const avatar = profile?.avatar;
-  const { Paragraph, Title } = Typography;
+  const { Title } = Typography;
 
   return (
     <BaseLayout title="Karavan Book Tracker" userDocLoading={userDocLoading} avatar={avatar}>
