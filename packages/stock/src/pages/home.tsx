@@ -16,6 +16,9 @@ export const Home = ({ currentUser }: Props) => {
   const onStockClick = () => {
     navigate(routes.stock);
   };
+  const onDitributorsClick = () => {
+    navigate(routes.distributors);
+  };
   const avatar = profile?.avatar;
   const { Title } = Typography;
 
@@ -31,8 +34,14 @@ export const Home = ({ currentUser }: Props) => {
         Склад книг
       </Button>
       <Divider dashed />
-      <Button type="default" block size="large" icon={<TeamOutlined />} onClick={onStockClick}>
-        Выдача книг
+      <Button
+        type="default"
+        block
+        size="large"
+        icon={<TeamOutlined />}
+        onClick={onDitributorsClick}
+      >
+        Распространители: выдача книг
       </Button>
     </BaseLayout>
   );

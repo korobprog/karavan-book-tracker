@@ -14,6 +14,8 @@ import { Reset } from "./pages/resetpass";
 
 import "./App.less";
 import { StockEdit } from "./pages/stockEdit";
+import { Distributors } from "./pages/distributors";
+import { Distributor } from "./pages/distributor";
 
 const routesWithoutRedirect = [routes.registration, routes.auth, routes.resetpassemail];
 
@@ -57,6 +59,8 @@ function App() {
 
         <Route path={routes.stock} element={<Stock currentUser={currentUser} />} />
         <Route path={routes.stockEdit} element={<StockEdit currentUser={currentUser} />} />
+        <Route path={routes.distributors} element={<Distributors currentUser={currentUser} />} />
+        <Route path={routes.distributor} element={<Distributor currentUser={currentUser} />} />
       </Routes>
     </div>
   );
