@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
+import { DistributionStatistic } from "../features/DistributionStatistic";
 
 type Props = {
   currentUser: CurrentUser;
@@ -43,6 +44,8 @@ export const Home = ({ currentUser }: Props) => {
       >
         Распространители: выдача книг
       </Button>
+      <Divider dashed />
+      <DistributionStatistic />
     </BaseLayout>
   );
 };

@@ -5,6 +5,7 @@ import { Button, Divider, Tooltip, Space } from "antd";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
+import { DistributionStatistic } from "../features/DistributionStatistic";
 
 type Props = {
   currentUser: CurrentUser;
@@ -52,6 +53,7 @@ export const Distributor = ({ currentUser }: Props) => {
         </Tooltip>
       </Space>
       <Divider dashed />
+      <DistributionStatistic />
     </BaseLayout>
   );
 };
