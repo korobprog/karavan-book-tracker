@@ -1,6 +1,7 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 
+import "./App.less";
 import { Home } from "./pages/home";
 import { routes } from "././shared/routes";
 

@@ -2,19 +2,16 @@ import React from "react";
 import { Divider, Typography } from "antd";
 import { BaseLayout } from "common/src/components/BaseLayout";
 
-type Props = {};
-
-export const Home = ({}: Props) => {
+export const Home = () => {
   const { Title } = Typography;
 
   return (
-    <BaseLayout title="Book Donation">
+    <BaseLayout title="Book Donation" headerActions={[]}>
       <Title className="site-page-title" level={2}>
-        Привет,
-        <br />
+        Привет, друг!
       </Title>
       <Divider dashed />
-      фa
+      Donation оставлять тут
     </BaseLayout>
   );
 };
