@@ -32,6 +32,9 @@ const locations = getCollectionRef<LocationDoc>("locations");
 const team = (id: string) => getDocRef<TeamDoc>(id, "teams");
 const teams = getCollectionRef<TeamDoc>("teams");
 
+const holder = (id: string) => getDocRef<TeamDoc>(id, "holder");
+const holders = getCollectionRef<TeamDoc>("holders");
+
 export const apiRefs = {
   user,
   addUser,
@@ -42,4 +45,6 @@ export const apiRefs = {
   locations,
   team,
   teams,
+  holder,
+  holders,
 };
