@@ -11,6 +11,7 @@ import { TeamDoc } from "./teams";
 import { UserDoc, UserDocWithId } from "./useUser";
 import { idConverter } from "./utils";
 import { HolderDoc } from "./holders";
+import { HolderTransferDoc } from "./holderTransfer";
 
 const db = getFirestore();
 
@@ -35,6 +36,8 @@ const teams = getCollectionRef<TeamDoc>("teams");
 
 const holder = (id: string) => getDocRef<HolderDoc>(id, "holder");
 const holders = getCollectionRef<HolderDoc>("holders");
+const holderTransfer = (id: string) => getDocRef<HolderTransferDoc>(id, "holder-transactions");
+const holderTransfers = getCollectionRef<HolderTransferDoc>("holder-transactions");
 
 export const apiRefs = {
   user,
@@ -48,4 +51,6 @@ export const apiRefs = {
   teams,
   holder,
   holders,
+  holderTransfer,
+  holderTransfers,
 };

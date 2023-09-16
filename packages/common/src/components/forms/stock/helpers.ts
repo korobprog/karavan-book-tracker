@@ -2,15 +2,15 @@ import type { Moment } from "moment";
 
 import { DistributedBook } from "../../../services/api/operations";
 import { $books } from "common/src/services/books";
+import { HolderBooks, HolderTransferType } from "../../../services/api/holderTransfer";
 
 export type StockFormValues = Record<number, number> & {
-  transferType: string;
+  transferType: HolderTransferType;
   date: Moment;
-  userId?: string;
 };
 
 export const calcBooksCountsFromValues = (formValues: StockFormValues) => {
-  const { transferType, date, userId, ...bookIdsWithCounts } = formValues;
+  const { transferType, date, ...bookIdsWithCounts } = formValues;
 
   const books = $books.getState();
   let totalCount = 0;
@@ -19,10 +19,10 @@ export const calcBooksCountsFromValues = (formValues: StockFormValues) => {
     if (count) {
       totalCount += count;
       totalPoints += (Number(books.find((book) => book.id === id)?.points) || 0) * count;
-      acc.push({ bookId: Number(id), count });
+      acc[id] = count;
     }
     return acc;
-  }, [] as DistributedBook[]);
+  }, {} as HolderBooks);
 
   return { operationBooks, totalCount, totalPoints };
 };

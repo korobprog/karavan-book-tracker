@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Button, Divider, Typography } from "antd";
 
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
+import { HolderTransferList } from "common/src/components/HolderTransferList";
 import { StockList } from "common/src/components/StockList";
-import { Button, Divider } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
 
 type Props = {
@@ -37,7 +38,13 @@ export const Stock = ({ currentUser }: Props) => {
       <Button block size="large" type="primary" icon={<PlusCircleOutlined />} onClick={onEditStock}>
         Изменить книги на складе
       </Button>
+
       <Divider dashed />
+      <Typography.Title level={3}>Последние операции:</Typography.Title>
+      <HolderTransferList currentUser={currentUser} />
+
+      <Divider dashed />
+      <Typography.Title level={3}> Книги на складе:</Typography.Title>
       <StockList currentUser={currentUser} />
     </BaseLayout>
   );

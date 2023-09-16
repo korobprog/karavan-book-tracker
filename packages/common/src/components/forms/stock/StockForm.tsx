@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { useStore } from "effector-react";
 import { Button, List, Input, InputNumber, Form, Row, Space, DatePicker, Typography } from "antd";
 import {
@@ -9,7 +9,6 @@ import {
   SelectOutlined,
 } from "@ant-design/icons";
 
-import { useUser } from "common/src/services/api/useUser";
 import * as storage from "common/src/services/localStorage/reportBooks";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { $books, $booksLoading, Book } from "common/src/services/books";
@@ -17,7 +16,7 @@ import { TransferTypeSelect } from "common/src/components/TransferTypeSelect";
 
 import moment from "moment";
 import { StockFormValues, calcBooksCountsFromValues, calcFormValuesFromBooks } from "./helpers";
-import { SelectLocation } from "../../../features/select-location/SelectLocation";
+import { HolderTransferType } from "../../../services/api/holderTransfer";
 
 type Props = {
   currentUser: CurrentUser;
@@ -28,8 +27,7 @@ type Props = {
 
 export const StockForm = (props: Props) => {
   const { currentUser, onFinish, isSubmitting, initialValues: initialValuesProps } = props;
-  const { profile, favorite, userDocLoading } = currentUser;
-  const { toggleFavorite } = useUser({ profile });
+  const { userDocLoading } = currentUser;
   const [searchString, setSearchString] = useState("");
   const [selectedBooks, setSelectedBooks] = useState<Book[]>([]);
 
@@ -47,17 +45,11 @@ export const StockForm = (props: Props) => {
 
   const initialValues = {
     date: moment(),
-    locationId: storage.getLocationId(),
+    transferType: HolderTransferType.bbtIncome,
     ...initialValuesProps,
   };
 
-  // useEffect(() => {
-  //   if (!initialValuesProps) {
-  //     form.setFieldsValue(booksStorageInitialValues);
-  //   }
-  // }, []);
-
-  const { date, transferType, userId, ...booksPropsInitialValues } =
+  const { date, transferType, ...booksPropsInitialValues } =
     initialValuesProps || ({} as StockFormValues);
 
   const getInitialBooks = (booksValues: Record<number, number>) => {
@@ -68,30 +60,14 @@ export const StockForm = (props: Props) => {
     getInitialBooks(booksPropsInitialValues) || getInitialBooks(booksStorageInitialValues)
   );
 
-  const { favoriteBooks, otherBooks } = books.reduce(
-    ({ favoriteBooks, otherBooks }, book) => {
-      if (favorite.includes(book.id)) {
-        favoriteBooks.push(book);
-      } else {
-        otherBooks.push(book);
-      }
-
-      return { favoriteBooks, otherBooks };
-    },
-    { favoriteBooks: [] as Book[], otherBooks: [] as Book[] }
-  );
-
   const onSearchChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setSearchString(e.target.value.toLowerCase());
   };
 
   const onValuesChange = () => {
     const formValues: StockFormValues = form.getFieldsValue();
-    const { totalCount, operationBooks } = calcBooksCountsFromValues(formValues);
+    const { totalCount } = calcBooksCountsFromValues(formValues);
     setTotalBooksCount(totalCount);
-
-    // storage.setReportBooks(operationBooks);
-    // storage.setLocationId(formValues.locationId);
   };
 
   const onBooksReset = () => {
@@ -99,7 +75,6 @@ export const StockForm = (props: Props) => {
     const formValues: StockFormValues = form.getFieldsValue();
     const { totalCount } = calcBooksCountsFromValues(formValues);
     setTotalBooksCount(totalCount);
-    // storage.setReportBooks([]);
   };
 
   const { Search } = Input;
@@ -133,13 +108,11 @@ export const StockForm = (props: Props) => {
   };
 
   const renderBookItem = (book: Book, isSelected: boolean) => {
+    const StarIcon = isSelected ? StarFilled : StarOutlined;
+
     return book.name.toLowerCase().includes(searchString) ? (
       <List.Item>
-        <Button
-          disabled={true}
-          icon={isSelected ? <StarFilled /> : <StarOutlined />}
-          style={{ marginRight: 8 }}
-        />
+        <StarIcon style={{ fontSize: "24px", marginRight: 12, color: "#bae0ff" }} />
         <List.Item.Meta title={book.name} />
 
         {isSelected ? (

@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Divider } from "antd";
 
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
+import { addHolderTransferMultiAction } from "common/src/services/api/stockMultiactions";
+import { HolderTransferDoc } from "common/src/services/api/holderTransfer";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { StockForm } from "common/src/components/forms/stock/StockForm";
-import { Divider } from "antd";
 import {
   StockFormValues,
   calcBooksCountsFromValues,
@@ -22,34 +24,33 @@ export const StockEdit = ({ currentUser }: Props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   function onFinish(formValues: StockFormValues) {
-    if (user && profile?.name && formValues.userId) {
+    console.log("🚀 ~ onFinish ~ formValues:", formValues);
+    if (user && profile?.name) {
       setIsSubmitting(true);
-      const { transferType, userId, date } = formValues;
+      const { transferType, date } = formValues;
 
-      const { operationBooks, totalCount, totalPoints } = calcBooksCountsFromValues(formValues);
+      const { operationBooks, totalCount } = calcBooksCountsFromValues(formValues);
 
       if (totalCount === 0) {
         setIsSubmitting(false);
         return;
       }
 
-      console.log(formValues);
-      // const operation: OperationDoc = {
-      //   userId,
-      //   date: date.format(),
-      //   transferType,
-      //   userName: usersDocData?.find((value) => value.id === userId)?.name || "",
-      //   books: operationBooks,
-      //   totalCount,
-      //   totalPoints,
-      //   isAuthorized: totalCount <= 100 || profile?.role?.includes("authorized") ? true : false,
-      //   isOnline,
-      //   yatraLocationId: usersDocData?.find((value) => value.id === userId)?.yatraLocationId,
-      // };
+      const myStockHolderId = "myTestStock";
 
-      // addOperationMultiAction(operation)
-      //   .then(() => navigate(routes.reports))
-      //   .finally(() => setIsSubmitting(false));
+      console.log(formValues);
+      const holderTransfer: HolderTransferDoc = {
+        userId: profile.id,
+        date: date.format(),
+        type: transferType,
+        fromHolderId: null,
+        toHolderId: myStockHolderId,
+        books: operationBooks,
+      };
+
+      addHolderTransferMultiAction(holderTransfer)
+        .then(() => navigate(routes.stock))
+        .finally(() => setIsSubmitting(false));
     }
   }
 
