@@ -1,0 +1,23 @@
+{
+  "projects": {
+    "default": "karavan-book-tracker",
+    "staging": "karavan-book-tracker-test"
+  },
+  "targets": {
+    "karavan-book-tracker": {
+      "hosting": {
+        "donatot": [
+          "books-donation"
+        ]
+      }
+    },
+    "karavan-book-tracker-test": {
+      "hosting": {
+        "donation": [
+          "books-donation-test"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

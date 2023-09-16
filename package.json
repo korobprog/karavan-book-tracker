@@ -21,6 +21,12 @@
     "stock:deploy:staging": "npm run deploy:staging -w stock",
     "stock:build:prod": "npm run build:prod -w stock",
     "stock:deploy:prod": "npm run deploy:prod -w stock",
+    "donation": "npm run start -w donation",
+    "donation:prod": "npm run start:prod -w donation",
+    "donation:build:staging": "npm run build:staging -w donation",
+    "donation:deploy:staging": "npm run deploy:staging -w donation",
+    "donation:build:prod": "npm run build:prod -w donation",
+    "donation:deploy:prod": "npm run deploy:prod -w donation",
     "prepare": "husky install"
   },
   "eslintConfig": {
@@ -33,7 +39,8 @@
     "packages/common",
     "packages/admin",
     "packages/tracker",
-    "packages/stock"
+    "packages/stock",
+    "packages/donation"
   ],
   "dependencies": {
     "exceljs": "^4.3.0",
