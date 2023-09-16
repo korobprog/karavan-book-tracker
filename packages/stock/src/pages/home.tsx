@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
+import { DistributionStatistic } from "../features/DistributionStatistic";
 
 type Props = {
   currentUser: CurrentUser;
@@ -15,6 +16,9 @@ export const Home = ({ currentUser }: Props) => {
   const navigate = useNavigate();
   const onStockClick = () => {
     navigate(routes.stock);
+  };
+  const onDitributorsClick = () => {
+    navigate(routes.distributors);
   };
   const avatar = profile?.avatar;
   const { Title } = Typography;
@@ -31,9 +35,17 @@ export const Home = ({ currentUser }: Props) => {
         Склад книг
       </Button>
       <Divider dashed />
-      <Button type="default" block size="large" icon={<TeamOutlined />} onClick={onStockClick}>
-        Выдача книг
+      <Button
+        type="default"
+        block
+        size="large"
+        icon={<TeamOutlined />}
+        onClick={onDitributorsClick}
+      >
+        Распространители: выдача книг
       </Button>
+      <Divider dashed />
+      <DistributionStatistic />
     </BaseLayout>
   );
 };

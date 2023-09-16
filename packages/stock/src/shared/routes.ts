@@ -7,4 +7,6 @@ export const routes = {
 
   stock: "/stock",
   stockEdit: "/stock/edit",
+  distributors: "/distributors",
+  distributor: "/distributor/:distributorId",
 };
