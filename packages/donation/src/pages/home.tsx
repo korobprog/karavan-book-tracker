@@ -1,5 +1,5 @@
 import React from "react";
-import { Divider, Typography } from "antd";
+import { Divider, QRCode, Typography } from "antd";
 import { BaseLayout } from "common/src/components/BaseLayout";
 
 export const Home = () => {
@@ -12,6 +12,7 @@ export const Home = () => {
       </Title>
       <Divider dashed />
       Donation оставлять тут
+      <QRCode value="https://trello.com/b/OeP3wt1g/karavan-book-tracker" />
     </BaseLayout>
   );
 };
