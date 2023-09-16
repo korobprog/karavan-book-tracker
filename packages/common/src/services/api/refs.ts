@@ -10,6 +10,7 @@ import { OperationDoc, OperationDocWithId } from "./operations";
 import { TeamDoc } from "./teams";
 import { UserDoc, UserDocWithId } from "./useUser";
 import { idConverter } from "./utils";
+import { HolderDoc } from "./holders";
 
 const db = getFirestore();
 
@@ -32,8 +33,8 @@ const locations = getCollectionRef<LocationDoc>("locations");
 const team = (id: string) => getDocRef<TeamDoc>(id, "teams");
 const teams = getCollectionRef<TeamDoc>("teams");
 
-const holder = (id: string) => getDocRef<TeamDoc>(id, "holder");
-const holders = getCollectionRef<TeamDoc>("holders");
+const holder = (id: string) => getDocRef<HolderDoc>(id, "holder");
+const holders = getCollectionRef<HolderDoc>("holders");
 
 export const apiRefs = {
   user,
