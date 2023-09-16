@@ -6,7 +6,7 @@
   "targets": {
     "karavan-book-tracker": {
       "hosting": {
-        "donatot": [
+        "donation": [
           "books-donation"
         ]
       }
