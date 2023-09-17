@@ -4,7 +4,6 @@ import { setDoc, updateDoc, addDoc, deleteDoc } from "firebase/firestore";
 import { apiRefs } from "./refs";
 import { UserStatisticType } from "./statistic";
 
-
 export type UserRoles = "admin" | "authorized";
 
 export enum TeamMemberStatus {
@@ -33,6 +32,8 @@ export type UserDoc = {
   team?: UserTeam | null; // Членство в передвижной команде
   registrationDate?: string;
   avatar?: string;
+
+  stockId?: string; // Склад, привязываемый в складском приложении
 };
 
 export type UserDocWithId = UserDoc & {
@@ -47,7 +48,6 @@ type Params = {
 export const updateProfile = async (id: string, profile: Partial<UserDoc>) => {
   await updateDoc(apiRefs.user(id), profile);
 };
-
 
 export const useProfileById = (id?: string) => {
   const [profile, loading] = useDocumentData<UserDoc>(id ? apiRefs.user(id) : null);

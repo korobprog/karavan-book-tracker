@@ -8,6 +8,19 @@ import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { LogoutOutlined } from "@ant-design/icons";
 import { ProfileForm, ProfileFormValues } from "common/src/components/forms/profile/ProfileForm";
+import {
+  ProfileStockForm,
+  ProfileStockFormValues,
+} from "common/src/components/forms/stock/ProfileStockForm";
+import {
+  HolderDoc,
+  HolderType,
+  addHolder,
+  updateHolder,
+  useHolder,
+} from "common/src/services/api/holders";
+
+type FormValues = ProfileFormValues & ProfileStockFormValues;
 
 type Props = {
   currentUser: CurrentUser;
@@ -19,15 +32,18 @@ const Profile = ({ currentUser }: Props) => {
   const auth = getAuth();
   const navigate = useNavigate();
 
+  const { holder: stock } = useHolder(profile?.stockId);
+
   const avatar = profile?.avatar;
 
-  const initialValues: ProfileFormValues = {
+  const initialValues: FormValues = {
     ...profile,
     name: profile?.name || user?.displayName || "",
     email: profile?.email || user?.email || "",
     registrationDate: profile?.registrationDate
       ? profile?.registrationDate
       : new Date().toISOString(),
+    stockName: stock?.name || "",
   };
 
   const onLogout = () => {
@@ -36,9 +52,24 @@ const Profile = ({ currentUser }: Props) => {
 
   const userId = profile?.id || user?.uid || "";
 
-  const onFinish = async (formValues: ProfileFormValues) => {
+  const onFinish = async (formValues: FormValues) => {
     if (userId) {
-      setProfile(formValues).then(() => navigate(routes.root));
+      const { stockName, ...newProfile } = formValues;
+
+      const stockId = profile?.stockId;
+      const setHolder = stockId
+        ? (data: Partial<HolderDoc>) => updateHolder(stockId, data)
+        : addHolder;
+
+      setHolder({
+        creatorId: userId,
+        locationId: newProfile.yatraLocationId || "",
+        name: stockName,
+        type: HolderType.stock,
+      }).then((holderDoc) => {
+        newProfile.stockId = holderDoc ? holderDoc.id : profile?.stockId;
+        setProfile(newProfile).then(() => navigate(routes.root));
+      });
     }
   };
 
@@ -49,7 +80,7 @@ const Profile = ({ currentUser }: Props) => {
       userDocLoading={userDocLoading}
       headerActions={[
         <Tooltip title="Выйти" key="logout">
-          <Button type="ghost" shape="circle" icon={<LogoutOutlined />} onClick={onLogout} />
+          <Button type="default" shape="circle" icon={<LogoutOutlined />} onClick={onLogout} />
         </Tooltip>,
       ]}
       avatar={avatar}
@@ -57,12 +88,18 @@ const Profile = ({ currentUser }: Props) => {
       <Typography.Title className="site-page-title" level={2}>
         Ваш профиль
       </Typography.Title>
-      {userDocLoading ? (
+      {userDocLoading || (profile?.stockId && !stock) ? (
         <Typography.Title className="site-page-title" level={5}>
           Загрузка...
         </Typography.Title>
       ) : (
-        <ProfileForm initialValues={initialValues} onFinish={onFinish} userId={userId} />
+        <ProfileForm
+          initialValues={initialValues}
+          onFinish={onFinish}
+          userId={userId}
+          slot={<ProfileStockForm />}
+          isYatraLocationRequired
+        />
       )}
     </BaseLayout>
   );

@@ -34,8 +34,9 @@ const locations = getCollectionRef<LocationDoc>("locations");
 const team = (id: string) => getDocRef<TeamDoc>(id, "teams");
 const teams = getCollectionRef<TeamDoc>("teams");
 
-const holder = (id: string) => getDocRef<HolderDoc>(id, "holder");
+const holder = (id: string) => getDocRef<HolderDoc>(id, "holders");
 const holders = getCollectionRef<HolderDoc>("holders");
+
 const holderTransfer = (id: string) => getDocRef<HolderTransferDoc>(id, "holder-transactions");
 const holderTransfers = getCollectionRef<HolderTransferDoc>("holder-transactions");
 
