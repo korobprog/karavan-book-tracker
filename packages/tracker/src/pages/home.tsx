@@ -28,7 +28,7 @@ export const Home = ({ currentUser }: Props) => {
 
   return (
     <BaseLayout title="Karavan Book Tracker" userDocLoading={userDocLoading} avatar={avatar}>
-      <Title className="site-page-title" level={2}>
+      <Title level={2}>
         Привет,
         <br />
         {profile?.nameSpiritual || profile?.name || user?.displayName || "друг"}
