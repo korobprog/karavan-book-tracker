@@ -13,16 +13,26 @@ const layout = {
 
 export type ProfileFormValues = UserDoc;
 
-type Props = {
-  onFinish: (newProfile: UserDoc) => Promise<void>;
-  initialValues?: ProfileFormValues;
+type Props<FormValues> = {
+  onFinish: (formValues: FormValues) => Promise<void>;
+  initialValues?: FormValues;
   isLoading?: boolean;
   isEmailEditable?: boolean;
   userId: string;
+  isYatraLocationRequired?: boolean;
+  slot?: React.ReactNode;
 };
 
-export const ProfileForm = (props: Props) => {
-  const { userId, onFinish, initialValues, isLoading, isEmailEditable } = props;
+export const ProfileForm = <FormValues extends ProfileFormValues>(props: Props<FormValues>) => {
+  const {
+    userId,
+    onFinish,
+    initialValues,
+    isLoading,
+    isEmailEditable,
+    slot,
+    isYatraLocationRequired,
+  } = props;
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | undefined>(initialValues?.avatar);
@@ -62,7 +72,11 @@ export const ProfileForm = (props: Props) => {
       <Form.Item name="city" label="Ваш город" rules={[{ required: true }]}>
         <SelectLocation />
       </Form.Item>
-      <Form.Item name="yatraLocationId" label="Ваша ятра">
+      <Form.Item
+        name="yatraLocationId"
+        label="Ваша ятра"
+        rules={[{ required: isYatraLocationRequired }]}
+      >
         <SelectLocation />
       </Form.Item>
       <Form.Item
@@ -87,6 +101,9 @@ export const ProfileForm = (props: Props) => {
       <Form.Item name="address" label="Ваш адрес" rules={[{ required: false }]}>
         <Input />
       </Form.Item>
+
+      {slot}
+
       <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
         <Button type="primary" htmlType="submit" loading={isSubmitting || isLoading}>
           СОХРАНИТЬ

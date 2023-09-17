@@ -1,3 +1,3 @@
-export { ReportForm } from "./ReportForm";
+export { ProfileStockForm } from "./ProfileStockForm";
 export { calcBooksCountsFromValues } from "./helpers";
-export type { ReportFormValues } from "./helpers";
+export type { StockFormValues } from "./helpers";
