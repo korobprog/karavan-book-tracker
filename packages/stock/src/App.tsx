@@ -35,7 +35,7 @@ function App() {
       // Авторизованный пользователь с незаполненым профилем
       if (
         user &&
-        !profile &&
+        !profile?.stockId &&
         location.pathname !== routes.profile &&
         !routesWithoutRedirect.includes(location.pathname)
       ) {
