@@ -10,8 +10,10 @@ import { OperationDoc, OperationDocWithId } from "./operations";
 import { TeamDoc } from "./teams";
 import { UserDoc, UserDocWithId } from "./useUser";
 import { idConverter } from "./utils";
-import { HolderDoc } from "./holders";
+import { HolderDistributorDoc, HolderDoc, HolderStockDoc } from "./holders";
 import { HolderTransferDoc } from "./holderTransfer";
+
+export type WithId<T> = { id: string } & T;
 
 const db = getFirestore();
 
@@ -34,8 +36,12 @@ const locations = getCollectionRef<LocationDoc>("locations");
 const team = (id: string) => getDocRef<TeamDoc>(id, "teams");
 const teams = getCollectionRef<TeamDoc>("teams");
 
-const holder = (id: string) => getDocRef<HolderDoc>(id, "holders");
+const holder = (id: string) =>
+  getDocRef<HolderDoc>(id, "holders").withConverter<WithId<HolderDoc>>(idConverter);
 const holders = getCollectionRef<HolderDoc>("holders");
+const stock = (id: string) =>
+  getDocRef<HolderDoc>(id, "holders").withConverter<WithId<HolderStockDoc>>(idConverter);
+const distributors = getCollectionRef<WithId<HolderDistributorDoc>>("holders");
 
 const holderTransfer = (id: string) => getDocRef<HolderTransferDoc>(id, "holder-transactions");
 const holderTransfers = getCollectionRef<HolderTransferDoc>("holder-transactions");
@@ -52,6 +58,8 @@ export const apiRefs = {
   teams,
   holder,
   holders,
+  stock,
+  distributors,
   holderTransfer,
   holderTransfers,
 };

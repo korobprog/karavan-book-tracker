@@ -1,9 +1,10 @@
 import React from "react";
-import { Divider, QRCode, Typography, Image, Avatar, Button } from "antd";
+import { Divider, QRCode, Typography, Image, Avatar, Button, Space } from "antd";
 import { BaseLayout } from "common/src/components/BaseLayout";
-import { CreditCardOutlined } from "@ant-design/icons";
+import { BankOutlined, CreditCardOutlined } from "@ant-design/icons";
 import telegram from "../img/telegram-svgrepo-com.svg";
 import avatar from "../img/evgeny_avatar.jpg";
+import logoTinkoff from "../img/tinkoff_logo.svg";
 
 export const EvgenyK = () => {
   const downloadQRCode = () => {
@@ -35,13 +36,23 @@ export const EvgenyK = () => {
           22001023396
         </Text>
       </Paragraph>
-      <Text strong>Tinkoff</Text>
+
+      <Divider dashed />
+      <Image preview={false} alt="Tinkoff" src={logoTinkoff} width={150} />
       <Paragraph copyable>
-        <CreditCardOutlined />
+        <Space align="center">
+          <BankOutlined />
+          <Button href="https://www.tinkoff.ru/rm/korobkov.maksim37/xORxX45790">
+            ПЕРЕВОД ЧЕРЕЗ TINKOFF
+          </Button>
+        </Space>
+
+        {/*    <CreditCardOutlined />
         <Text style={{ fontSize: "150%" }} code>
           5536914106233152
-        </Text>
+        </Text> */}
       </Paragraph>
+
       <Divider dashed />
       <Text>My contacts</Text>
       <div style={{ display: "flex", justifyContent: "center" }}>
