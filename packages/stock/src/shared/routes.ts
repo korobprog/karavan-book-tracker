@@ -9,4 +9,6 @@ export const routes = {
   stockEdit: "/stock/edit",
   distributors: "/distributors",
   distributor: "/distributor/:distributorId",
+  distributorTransfer: "/distributor/:distributorId/transfer",
+  distributorNew: "/distributor/new",
 };

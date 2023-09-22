@@ -1,6 +1,7 @@
 import React from "react";
 import { getAuth, signOut } from "firebase/auth";
 import { Button, Typography, Tooltip } from "antd";
+import { useStore } from "effector-react";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
 import { useUser } from "common/src/services/api/useUser";
@@ -13,11 +14,11 @@ import {
   ProfileStockFormValues,
 } from "common/src/components/forms/stock/ProfileStockForm";
 import {
+  $stock,
   HolderDoc,
   HolderType,
   addHolder,
   updateHolder,
-  useHolder,
 } from "common/src/services/api/holders";
 
 type FormValues = ProfileFormValues & ProfileStockFormValues;
@@ -31,8 +32,7 @@ const Profile = ({ currentUser }: Props) => {
   const { setProfile } = useUser({ profile, user });
   const auth = getAuth();
   const navigate = useNavigate();
-
-  const { holder: stock } = useHolder(profile?.stockId);
+  const stock = useStore($stock);
 
   const avatar = profile?.avatar;
 

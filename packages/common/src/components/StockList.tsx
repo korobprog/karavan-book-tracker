@@ -1,20 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useStore } from "effector-react";
 import { Row, List, Input } from "antd";
 
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import { $books, $booksLoading, Book } from "common/src/services/books";
+import { $booksHashMap, $booksLoading, Book } from "common/src/services/books";
+import { HolderBooks } from "../services/api/holders";
+
+type BookWithCount = Book & { count: number };
 
 type Props = {
   currentUser: CurrentUser;
+  holderBooks: HolderBooks;
 };
 
 export const StockList = (props: Props) => {
-  const { currentUser } = props;
+  const { currentUser, holderBooks } = props;
   const { userDocLoading } = currentUser;
   const [searchString, setSearchString] = useState("");
 
-  const books = useStore($books);
+  const booksHashMap = useStore($booksHashMap);
+
+  const books = Object.entries(holderBooks).map(
+    ([id, count]) => ({ ...booksHashMap[id], count } as BookWithCount)
+  );
+
   const booksLoading = useStore($booksLoading);
 
   const onSearchChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -23,17 +32,16 @@ export const StockList = (props: Props) => {
 
   const { Search } = Input;
 
-  const renderBookItem = (book: Book) => {
-    const count = 0;
+  const renderBookItem = (book: BookWithCount) => {
     return (
       <List.Item key={book.id}>
         <List.Item.Meta title={book.name} />
-        {count}
+        {book.count}
       </List.Item>
     );
   };
 
-  const filteredBooks = books.filter((book) => book.name.toLowerCase().includes(searchString));
+  const filteredBooks = books.filter((book) => book.name?.toLowerCase().includes(searchString));
 
   return (
     <div>
