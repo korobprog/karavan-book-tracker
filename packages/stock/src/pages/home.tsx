@@ -24,7 +24,7 @@ export const Home = ({ currentUser }: Props) => {
   const { Title } = Typography;
 
   return (
-    <BaseLayout title="Karavan Book Tracker" userDocLoading={userDocLoading} avatar={avatar}>
+    <BaseLayout title="Book Stock" userDocLoading={userDocLoading} avatar={avatar}>
       <Title className="site-page-title" level={2}>
         Привет,
         <br />

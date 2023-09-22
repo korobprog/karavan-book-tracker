@@ -9,6 +9,15 @@ export type StockFormValues = Record<number, number> & {
   date: Moment;
 };
 
+export type DistributorTransferFormValues = Record<number, number> & {
+  transferType: HolderTransferType;
+  date: Moment;
+};
+
+export type StockDistributorFormValues = {
+  name: string;
+};
+
 export const calcBooksCountsFromValues = (formValues: StockFormValues) => {
   const { transferType, date, ...bookIdsWithCounts } = formValues;
 
