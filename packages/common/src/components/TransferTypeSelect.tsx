@@ -50,3 +50,4 @@ export const TransferTypeSelect = React.forwardRef<RefSelectProps, TransferTypeS
     );
   }
 );
+export { HolderTransferType };
