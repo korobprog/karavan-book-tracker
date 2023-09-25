@@ -11,8 +11,9 @@ import {
   DistributorTransferFormValues,
   calcBooksCountsFromValues,
 } from "common/src/components/forms/stock/helpers";
-import { $distributors, $stock, updateHolder } from "common/src/services/api/holders";
-import { HolderTransferDoc, addHolderTransfer } from "common/src/services/api/holderTransfer";
+import { $stock } from "common/src/services/api/holders";
+import { HolderTransferDoc } from "common/src/services/api/holderTransfer";
+import { addHolderTransferMultiAction } from "common/src/services/api/stockMultiactions";
 
 type Props = {
   currentUser: CurrentUser;
@@ -26,8 +27,6 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
   const stock = useStore($stock);
 
   const { distributorId } = useParams<{ distributorId: string }>();
-  const distributors = useStore($distributors);
-  const currentDistributor = distributors.find((value) => value.id === distributorId);
 
   function onFinish(formValues: DistributorTransferFormValues) {
     console.log("🚀 ~ onFinish ~ formValues:", formValues);
@@ -46,20 +45,7 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
         books: newBooks.operationBooks,
       };
 
-      const sumObjectValues = (obj1: Record<string, number>, obj2: Record<string, number>) => {
-        return Object.entries(obj2).reduce(
-          (acc, [key, value]) => ({ ...acc, [key]: (acc[key] || 0) + value }),
-          { ...obj1 }
-        );
-      };
-
-      const booksSum = sumObjectValues(currentDistributor?.books || {}, newBooks.operationBooks);
-
-      // TODO: Списать со своего склада
-      Promise.all([
-        updateHolder(distributorId, { books: booksSum }),
-        addHolderTransfer(holderTransfer),
-      ])
+      addHolderTransferMultiAction(holderTransfer)
         .then(() => navigate(generatePath(routes.distributor, { distributorId })))
         .finally(() => setIsSubmitting(false));
     }

@@ -1,5 +1,5 @@
 import React from "react";
-import { List, Tag, Space } from "antd";
+import { List, Tag } from "antd";
 import moment from "moment";
 
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
