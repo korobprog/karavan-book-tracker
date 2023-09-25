@@ -1,4 +1,4 @@
-import { $distributors } from "common/src/services/api/holders";
+import { $distributors, $stock } from "common/src/services/api/holders";
 import { HolderTransferDoc, HolderTransferType, addHolderTransfer } from "./holderTransfer";
 import { updateHolder } from "./holders";
 import { calcObjectFields } from "../../utils/objects";
@@ -14,9 +14,17 @@ export const addHolderTransferMultiAction = async (newHolderTransfer: HolderTran
     switch (newHolderTransfer.type) {
       // Приход
       case HolderTransferType.bbtIncome: {
-        // TODO: Добавлять книги себе на склад
-        await addHolderTransfer(newHolderTransfer);
-        break;
+        const stock = $stock.getState();
+        if (!stock) {
+          return console.error("stock not found");
+        }
+
+        const booksSum = calcObjectFields(stock?.books || {}, "+", newHolderTransfer.books);
+
+        return Promise.all([
+          updateHolder(stock.id, { books: booksSum }),
+          addHolderTransfer(newHolderTransfer),
+        ]);
       }
 
       // Выдача в рассрочку

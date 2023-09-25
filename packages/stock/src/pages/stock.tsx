@@ -44,12 +44,12 @@ export const Stock = ({ currentUser }: Props) => {
       </Button>
 
       <Divider dashed />
-      <Typography.Title level={3}>Последние операции:</Typography.Title>
-      <HolderTransferList currentUser={currentUser} />
-
-      <Divider dashed />
       <Typography.Title level={3}> Книги на складе:</Typography.Title>
       <StockList currentUser={currentUser} holderBooks={stockBooks} />
+
+      <Divider dashed />
+      <Typography.Title level={3}>Последние операции:</Typography.Title>
+      <HolderTransferList currentUser={currentUser} />
     </BaseLayout>
   );
 };
