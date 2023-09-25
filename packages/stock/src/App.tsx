@@ -16,12 +16,17 @@ import "./App.less";
 import { StockEdit } from "./pages/stockEdit";
 import { Distributors } from "./pages/distributors";
 import { Distributor } from "./pages/distributor";
+import { DistributorEdit } from "./pages/distributorEdit";
+import { useHolders } from "common/src/services/api/holders";
+import { DistributorTransfer } from "./pages/distributorTransfer";
 
 const routesWithoutRedirect = [routes.registration, routes.auth, routes.resetpassemail];
 
 function App() {
   const currentUser = useCurrentUser();
   const { profile, loading, user, userDocLoading } = currentUser;
+  const { stock } = useHolders(profile?.stockId);
+  const isStockLoading = profile?.stockId && !stock;
   const navigate = useNavigate();
   const location = useLocation();
   useBooks();
@@ -44,7 +49,7 @@ function App() {
     }
   }, [loading, user, profile, navigate, location.pathname, userDocLoading]);
 
-  if (loading) {
+  if (loading || isStockLoading) {
     return <Loading currentUser={currentUser} />;
   }
 
@@ -60,7 +65,15 @@ function App() {
         <Route path={routes.stock} element={<Stock currentUser={currentUser} />} />
         <Route path={routes.stockEdit} element={<StockEdit currentUser={currentUser} />} />
         <Route path={routes.distributors} element={<Distributors currentUser={currentUser} />} />
+        <Route
+          path={routes.distributorNew}
+          element={<DistributorEdit currentUser={currentUser} />}
+        />
         <Route path={routes.distributor} element={<Distributor currentUser={currentUser} />} />
+        <Route
+          path={routes.distributorTransfer}
+          element={<DistributorTransfer currentUser={currentUser} />}
+        />
       </Routes>
     </div>
   );

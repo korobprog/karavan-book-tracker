@@ -8,6 +8,8 @@ import { BaseLayout } from "common/src/components/BaseLayout";
 import { HolderTransferList } from "common/src/components/HolderTransferList";
 import { StockList } from "common/src/components/StockList";
 import { PlusCircleOutlined } from "@ant-design/icons";
+import { useStore } from "effector-react";
+import { $stock } from "common/src/services/api/holders";
 
 type Props = {
   currentUser: CurrentUser;
@@ -17,6 +19,8 @@ export const Stock = ({ currentUser }: Props) => {
   const { profile, user, loading, userDocLoading } = currentUser;
   const avatar = profile?.avatar;
   const navigate = useNavigate();
+  const stock = useStore($stock);
+  const stockBooks = stock?.books || {};
 
   const onEditStock = () => {
     navigate(routes.stockEdit);
@@ -40,12 +44,12 @@ export const Stock = ({ currentUser }: Props) => {
       </Button>
 
       <Divider dashed />
-      <Typography.Title level={3}>Последние операции:</Typography.Title>
-      <HolderTransferList currentUser={currentUser} />
+      <Typography.Title level={3}> Книги на складе:</Typography.Title>
+      <StockList currentUser={currentUser} holderBooks={stockBooks} />
 
       <Divider dashed />
-      <Typography.Title level={3}> Книги на складе:</Typography.Title>
-      <StockList currentUser={currentUser} />
+      <Typography.Title level={3}>Последние операции:</Typography.Title>
+      <HolderTransferList currentUser={currentUser} />
     </BaseLayout>
   );
 };

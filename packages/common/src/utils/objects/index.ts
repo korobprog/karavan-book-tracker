@@ -14,9 +14,9 @@ export const calcObjectFields = <Obj extends Record<string, any>>(
   next: Obj
 ): Obj => {
   const result = { ...prev } as Record<string, any>;
-  for (const key in result) {
-    if (operator === "+") result[key] += next[key] || 0;
-    if (operator === "-") result[key] -= next[key] || 0;
+  for (const key in next) {
+    if (operator === "+") result[key] = (result[key] || 0) + (next[key] || 0);
+    if (operator === "-") result[key] = (result[key] || 0) - (next[key] || 0);
   }
   return result as Obj;
 };

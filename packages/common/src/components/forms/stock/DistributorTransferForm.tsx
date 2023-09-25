@@ -26,7 +26,7 @@ type Props = {
   initialValues?: StockFormValues;
 };
 
-export const StockForm = (props: Props) => {
+export const DistributorTransferForm = (props: Props) => {
   const { currentUser, onFinish, isSubmitting, initialValues: initialValuesProps } = props;
   const { userDocLoading } = currentUser;
   const [searchString, setSearchString] = useState("");
@@ -46,7 +46,7 @@ export const StockForm = (props: Props) => {
 
   const initialValues = {
     date: moment(),
-    transferType: HolderTransferType.bbtIncome,
+    transferType: HolderTransferType.installments,
     ...initialValuesProps,
   };
 
@@ -151,7 +151,7 @@ export const StockForm = (props: Props) => {
       initialValues={initialValues}
     >
       <Form.Item name="transferType" label="Тип перемещения">
-        <TransferTypeSelect type={HolderType.stock} />
+        <TransferTypeSelect type={HolderType.distributor} />
       </Form.Item>
       <Form.Item name="date" label="Дата">
         <DatePicker

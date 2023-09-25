@@ -12,6 +12,8 @@ import {
   StockFormValues,
   calcBooksCountsFromValues,
 } from "common/src/components/forms/stock/helpers";
+import { useStore } from "effector-react";
+import { $stock } from "common/src/services/api/holders";
 
 type Props = {
   currentUser: CurrentUser;
@@ -21,11 +23,12 @@ export const StockEdit = ({ currentUser }: Props) => {
   const { profile, user, loading, userDocLoading } = currentUser;
   const avatar = profile?.avatar;
   const navigate = useNavigate();
+  const stock = useStore($stock);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   function onFinish(formValues: StockFormValues) {
     console.log("🚀 ~ onFinish ~ formValues:", formValues);
-    if (user && profile?.name) {
+    if (user && profile?.name && stock) {
       setIsSubmitting(true);
       const { transferType, date } = formValues;
 
@@ -36,15 +39,13 @@ export const StockEdit = ({ currentUser }: Props) => {
         return;
       }
 
-      const myStockHolderId = "myTestStock";
-
       console.log(formValues);
       const holderTransfer: HolderTransferDoc = {
         userId: profile.id,
         date: date.format(),
         type: transferType,
         fromHolderId: null,
-        toHolderId: myStockHolderId,
+        toHolderId: stock?.id,
         books: operationBooks,
       };
 
