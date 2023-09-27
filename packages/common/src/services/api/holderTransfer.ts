@@ -1,3 +1,6 @@
+import { useEffect } from "react";
+import { createStore } from "effector";
+import { createEvent } from "effector";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { addDoc, setDoc, updateDoc, deleteDoc, query, where } from "firebase/firestore";
 import {
@@ -6,9 +9,13 @@ import {
   LoginOutlined,
   LogoutOutlined,
   QuestionCircleOutlined,
+  RedoOutlined,
+  SolutionOutlined,
+  CheckCircleOutlined,
+  DollarOutlined,
 } from "@ant-design/icons";
 
-import { apiRefs } from "./refs";
+import { WithId, apiRefs } from "./refs";
 import { usePreloadedData } from "../../utils/memo/usePreloadedData";
 
 type BookId = string;
@@ -30,16 +37,41 @@ export enum HolderTransferType {
   report = "report",
 }
 
+export const StatisticHolderTransferTypes = [HolderTransferType.report, HolderTransferType.sale];
+
 export const HolderTransferMap = {
-  [HolderTransferType.bbtIncome]: { name: "Приход из ББТ", icon: LoginOutlined },
-  [HolderTransferType.adjustment]: { name: "Корректировка", icon: QuestionCircleOutlined },
-  [HolderTransferType.move]: { name: "Перемещение", icon: LogoutOutlined },
-  [HolderTransferType.donations]: { name: "Пожертвования", icon: GiftOutlined },
-  [HolderTransferType.found]: { name: "Нашли", icon: SearchOutlined },
-  [HolderTransferType.return]: { name: "Возврат", icon: null },
-  [HolderTransferType.installments]: { name: "Выдача в рассрочку", icon: null },
-  [HolderTransferType.sale]: { name: "Продажа", icon: null },
-  [HolderTransferType.report]: { name: "Отчет", icon: null },
+  [HolderTransferType.bbtIncome]: { title: "Приход из ББТ", icon: LoginOutlined, description: "" },
+  [HolderTransferType.adjustment]: {
+    title: "Корректировка",
+    icon: QuestionCircleOutlined,
+    description: "",
+  },
+  [HolderTransferType.move]: { title: "Перемещение", icon: LogoutOutlined, description: "" },
+  [HolderTransferType.donations]: { title: "Пожертвования", icon: GiftOutlined, description: "" },
+  [HolderTransferType.found]: { title: "Нашли", icon: SearchOutlined, description: "" },
+
+  [HolderTransferType.return]: {
+    title: "Возврат",
+    icon: RedoOutlined,
+    description:
+      "Возврат выданных ранее книг под распространение - снимает с баланса санкиртанщика и добавляет на склад",
+  },
+  [HolderTransferType.installments]: {
+    title: "Выдача в рассрочку",
+    icon: SolutionOutlined,
+    description: "Выдать под распространение - позже получившему за них нужно будет отчитаться",
+  },
+  [HolderTransferType.sale]: {
+    title: "Продажа",
+    icon: DollarOutlined,
+    description: "Выдать и сразу рассчитаться - книги сразу считаются как распространенные",
+  },
+  [HolderTransferType.report]: {
+    title: "Отчет",
+    icon: CheckCircleOutlined,
+    description:
+      "Принять отчет по выданным ранее книгам - снимает с баланса санкиртанщика и добавляет в распространенные",
+  },
 };
 
 export type HolderTransferDoc = {
@@ -76,14 +108,23 @@ export type UseHolderTransfersParams = {
   userId: string;
 };
 
+export const holderTransferChanged = createEvent<WithId<HolderTransferDoc>[]>();
+export const $holderTransfers = createStore<WithId<HolderTransferDoc>[]>([]);
+
+$holderTransfers.on(holderTransferChanged, (_state, distributors) => distributors);
+
 export const useHolderTransfers = (params: UseHolderTransfersParams | null) => {
   const { userId } = params || {};
 
-  const [holderTransfersDocData, holderTransfersDocLoading] = useCollectionData<HolderTransferDoc>(
-    userId ? query(apiRefs.holderTransfers, where("userId", "==", userId)) : apiRefs.holderTransfers
-  );
+  const [holderTransfersDocData, holderTransfersDocLoading] = useCollectionData<
+    WithId<HolderTransferDoc>
+  >(userId ? query(apiRefs.holderTransfers, where("userId", "==", userId)) : null);
 
   const holderTransfers = usePreloadedData(holderTransfersDocData, holderTransfersDocLoading);
+
+  useEffect(() => {
+    holderTransferChanged(holderTransfers || []);
+  }, [holderTransfers]);
 
   return {
     holderTransfers: holderTransfers || [],

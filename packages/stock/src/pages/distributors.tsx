@@ -7,6 +7,7 @@ import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { useStore } from "effector-react";
 import { $distributors } from "common/src/services/api/holders";
+import { calcBooksCounts } from "common/src/components/forms/stock/helpers";
 
 type Props = {
   currentUser: CurrentUser;
@@ -48,7 +49,9 @@ export const Distributors = ({ currentUser }: Props) => {
             <List.Item className="list-item-clickable">
               <List.Item.Meta
                 title={distributor.name}
-                description={`Книг на руках: ${distributor.books || 0}`}
+                description={`Книг на руках: ${
+                  distributor.books ? calcBooksCounts(distributor.books).totalCount : 0
+                }`}
               />
             </List.Item>
           </Link>

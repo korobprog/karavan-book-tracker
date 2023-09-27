@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { generatePath, useNavigate, useParams } from "react-router-dom";
+import { generatePath, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Divider } from "antd";
 import { useStore } from "effector-react";
 
@@ -12,8 +12,13 @@ import {
   calcBooksCountsFromValues,
 } from "common/src/components/forms/stock/helpers";
 import { $stock } from "common/src/services/api/holders";
-import { HolderTransferDoc } from "common/src/services/api/holderTransfer";
+import {
+  HolderTransferDoc,
+  HolderTransferMap,
+  HolderTransferType,
+} from "common/src/services/api/holderTransfer";
 import { addHolderTransferMultiAction } from "common/src/services/api/stockMultiactions";
+import { DistributorTransferType } from "common/src/components/TransferTypeSelect";
 
 type Props = {
   currentUser: CurrentUser;
@@ -26,10 +31,18 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const stock = useStore($stock);
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const typeParam =
+    (searchParams.get("type") as DistributorTransferType) || HolderTransferType.installments;
+
+  const onTypeChange = (value: DistributorTransferType) => {
+    setSearchParams({ type: value });
+  };
+
   const { distributorId } = useParams<{ distributorId: string }>();
+  const backPath = generatePath(routes.distributor, { distributorId });
 
   function onFinish(formValues: DistributorTransferFormValues) {
-    console.log("🚀 ~ onFinish ~ formValues:", formValues);
     if (user && profile?.name && stock && distributorId) {
       setIsSubmitting(true);
       const { date, transferType } = formValues;
@@ -46,25 +59,22 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
       };
 
       addHolderTransferMultiAction(holderTransfer)
-        .then(() => navigate(generatePath(routes.distributor, { distributorId })))
+        .then(() => navigate(backPath))
         .finally(() => setIsSubmitting(false));
     }
   }
 
-  const title = "Выдать книги";
+  const title = HolderTransferMap[typeParam].title;
 
   return (
-    <BaseLayout
-      title={title}
-      backPath={routes.distributors}
-      userDocLoading={userDocLoading}
-      avatar={avatar}
-    >
+    <BaseLayout title={title} backPath={backPath} userDocLoading={userDocLoading} avatar={avatar}>
       <Divider dashed />
       <DistributorTransferForm
         currentUser={currentUser}
         onFinish={onFinish}
         isSubmitting={isSubmitting}
+        typeParam={typeParam}
+        onTypeChange={onTypeChange}
       />
     </BaseLayout>
   );

@@ -19,6 +19,7 @@ import { Distributor } from "./pages/distributor";
 import { DistributorEdit } from "./pages/distributorEdit";
 import { useHolders } from "common/src/services/api/holders";
 import { DistributorTransfer } from "./pages/distributorTransfer";
+import { useHolderTransfers } from "common/src/services/api/holderTransfer";
 
 const routesWithoutRedirect = [routes.registration, routes.auth, routes.resetpassemail];
 
@@ -30,6 +31,7 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
   useBooks();
+  const { loading: holderTransfersLoading } = useHolderTransfers(profile && { userId: profile.id });
 
   useEffect(() => {
     if (!loading && !userDocLoading) {
@@ -49,7 +51,7 @@ function App() {
     }
   }, [loading, user, profile, navigate, location.pathname, userDocLoading]);
 
-  if (loading || isStockLoading) {
+  if (loading || isStockLoading || holderTransfersLoading) {
     return <Loading currentUser={currentUser} />;
   }
 

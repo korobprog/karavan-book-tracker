@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { generatePath, useNavigate, useParams } from "react-router-dom";
 import { Button, Divider, Tooltip, Space, Empty, Typography } from "antd";
 
@@ -9,6 +9,12 @@ import { DistributionStatistic } from "../features/DistributionStatistic";
 import { $distributors } from "common/src/services/api/holders";
 import { useStore } from "effector-react";
 import { StockList } from "common/src/components/StockList";
+import {
+  DistributorTransferType,
+  HolderTransferType,
+} from "common/src/components/TransferTypeSelect";
+import { $holderTransfers, HolderTransferMap } from "common/src/services/api/holderTransfer";
+import { BaseButtonProps } from "antd/es/button/button";
 
 type Props = {
   currentUser: CurrentUser;
@@ -22,14 +28,48 @@ export const Distributor = ({ currentUser }: Props) => {
   const distributors = useStore($distributors);
   const currentDistributor = distributors.find((value) => value.id === distributorId);
 
+  const holderTransfers = useStore($holderTransfers);
+  const currentHolderTransfers = useMemo(
+    () =>
+      holderTransfers.filter((transfer) => {
+        return transfer.fromHolderId === distributorId || transfer.toHolderId === distributorId;
+      }),
+    [holderTransfers, distributorId]
+  );
+
   useEffect(() => {
     if (!user && !loading) {
       navigate(routes.auth);
     }
   }, [user, loading, navigate]);
 
-  const onTransferNavigate = () => {
-    navigate(generatePath(routes.distributorTransfer, { distributorId }));
+  const onTransferNavigate = (operationType: DistributorTransferType) => () => {
+    const path = generatePath(routes.distributorTransfer, { distributorId });
+    navigate(`${path}?type=${operationType}`);
+  };
+
+  const getButtonWithTooltip = (
+    operationType: DistributorTransferType,
+    buttonType?: BaseButtonProps["type"]
+  ) => {
+    const { description, title, icon: Icon } = HolderTransferMap[operationType];
+
+    return (
+      <>
+        <Tooltip title={description}>
+          <Button
+            type={buttonType}
+            onClick={onTransferNavigate(operationType)}
+            block
+            size="large"
+            icon={<Icon />}
+          >
+            {title}
+          </Button>
+        </Tooltip>
+        <Divider type="vertical" />
+      </>
+    );
   };
 
   return (
@@ -44,33 +84,17 @@ export const Distributor = ({ currentUser }: Props) => {
       ) : (
         <>
           <Space>
-            <Tooltip title="Выдать под распространение - позже получившему за них нужно будет отчитаться">
-              <Button type="primary" block size="large" onClick={onTransferNavigate}>
-                Выдать
-              </Button>
-            </Tooltip>
-            <Divider type="vertical" />
-            <Tooltip title="Выдать и сразу рассчитаться - книги сразу считаются как распространенные">
-              <Button block size="large" onClick={onTransferNavigate}>
-                Продать
-              </Button>
-            </Tooltip>
-            <Divider type="vertical" />
-            <Tooltip
-              title="Принять отчет по выданным ранее книгам - снимает с баланса санкиртанщика и добавляет в
-        распространенные"
-            >
-              <Button block size="large" onClick={onTransferNavigate}>
-                Отчет
-              </Button>
-            </Tooltip>
+            {getButtonWithTooltip(HolderTransferType.installments, "primary")}
+            {getButtonWithTooltip(HolderTransferType.sale)}
+            {getButtonWithTooltip(HolderTransferType.report)}
+            {getButtonWithTooltip(HolderTransferType.return)}
           </Space>
           <Divider dashed />
-          <Typography.Title level={3}> Книги на складе:</Typography.Title>
+          <Typography.Title level={3}> Подотчетные книги у распространителя:</Typography.Title>
           <StockList currentUser={currentUser} holderBooks={currentDistributor.books || {}} />
           <Divider dashed />
 
-          <DistributionStatistic />
+          <DistributionStatistic holderTransfers={currentHolderTransfers} />
         </>
       )}
     </BaseLayout>

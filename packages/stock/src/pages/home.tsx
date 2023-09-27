@@ -6,6 +6,8 @@ import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { DistributionStatistic } from "../features/DistributionStatistic";
+import { useStore } from "effector-react";
+import { $holderTransfers } from "common/src/services/api/holderTransfer";
 
 type Props = {
   currentUser: CurrentUser;
@@ -13,6 +15,8 @@ type Props = {
 
 export const Home = ({ currentUser }: Props) => {
   const { userDocLoading, profile, user } = currentUser;
+  const holderTransfers = useStore($holderTransfers);
+
   const navigate = useNavigate();
   const onStockClick = () => {
     navigate(routes.stock);
@@ -45,7 +49,7 @@ export const Home = ({ currentUser }: Props) => {
         Распространители: выдача книг
       </Button>
       <Divider dashed />
-      <DistributionStatistic />
+      <DistributionStatistic holderTransfers={holderTransfers} />
     </BaseLayout>
   );
 };

@@ -72,7 +72,7 @@ export const useHolders = (holderId?: string) => {
       ? query(apiRefs.distributors, where(documentId(), "in", distributorIds))
       : null
   );
-  console.log("🚀 ~ useHolder ~ distributorDocsData:", distributorDocsData);
+
   const distributors = usePreloadedData(distributorDocsData, distributorDocsLoading);
 
   useEffect(() => {

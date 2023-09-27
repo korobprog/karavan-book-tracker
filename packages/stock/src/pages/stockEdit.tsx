@@ -39,7 +39,6 @@ export const StockEdit = ({ currentUser }: Props) => {
         return;
       }
 
-      console.log(formValues);
       const holderTransfer: HolderTransferDoc = {
         userId: profile.id,
         date: date.format(),
