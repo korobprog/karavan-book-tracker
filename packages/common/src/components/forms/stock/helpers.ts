@@ -21,6 +21,10 @@ export type StockDistributorFormValues = {
 export const calcBooksCountsFromValues = (formValues: StockFormValues) => {
   const { transferType, date, ...bookIdsWithCounts } = formValues;
 
+  return calcBooksCounts(bookIdsWithCounts);
+};
+
+export const calcBooksCounts = (bookIdsWithCounts: Record<number, number>) => {
   const books = $books.getState();
   let totalCount = 0;
   let totalPoints = 0;

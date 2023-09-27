@@ -3,6 +3,22 @@ import { Sheet } from "use-google-sheets/dist/types";
 import { createStore, createEvent } from "effector";
 import useGoogleSheets from "use-google-sheets";
 
+export enum BooksCategories {
+  small = "small",
+  medium = "medium",
+  big = "big",
+  mahaBig = "maha_big",
+  other = "other",
+}
+
+const mapBooksByCategory = {
+  [BooksCategories.small]: { shortTitle: "S" },
+  [BooksCategories.medium]: { shortTitle: "M" },
+  [BooksCategories.big]: { shortTitle: "B" },
+  [BooksCategories.mahaBig]: { shortTitle: "MB" },
+  [BooksCategories.other]: { shortTitle: "O" },
+};
+
 export type Book = {
   id: string;
   name: string;

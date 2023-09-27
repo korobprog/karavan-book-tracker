@@ -44,7 +44,7 @@ const stock = (id: string) =>
 const distributors = getCollectionRef<WithId<HolderDistributorDoc>>("holders");
 
 const holderTransfer = (id: string) => getDocRef<HolderTransferDoc>(id, "holder-transactions");
-const holderTransfers = getCollectionRef<HolderTransferDoc>("holder-transactions");
+const holderTransfers = getCollectionRef<WithId<HolderTransferDoc>>("holder-transactions");
 
 export const apiRefs = {
   user,

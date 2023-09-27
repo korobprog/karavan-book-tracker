@@ -42,6 +42,8 @@ export const StockForm = (props: Props) => {
 
   const booksLoading = useStore($booksLoading);
 
+  const [allowNegative, setAllowNegative] = useState(false);
+
   const booksStorageInitialValues = calcFormValuesFromBooks(storage.getReportBooks());
 
   const initialValues = {
@@ -67,7 +69,23 @@ export const StockForm = (props: Props) => {
 
   const onValuesChange = () => {
     const formValues: StockFormValues = form.getFieldsValue();
-    const { totalCount } = calcBooksCountsFromValues(formValues);
+
+    const isAllowNegative = formValues.transferType === HolderTransferType.adjustment;
+    if (isAllowNegative !== allowNegative) {
+      setAllowNegative(isAllowNegative);
+      if (!isAllowNegative) {
+        const { date, transferType, ...currentBooks } = formValues;
+        for (const book in currentBooks) {
+          if (currentBooks[book] < 0) {
+            currentBooks[book] = 0;
+          }
+        }
+        form.setFieldsValue(currentBooks);
+      }
+    }
+
+    const newformValues: StockFormValues = form.getFieldsValue();
+    const { totalCount } = calcBooksCountsFromValues(newformValues);
     setTotalBooksCount(totalCount);
   };
 
@@ -97,7 +115,7 @@ export const StockForm = (props: Props) => {
 
   const onMinusClick = (bookId: string) => {
     const prevValue = form.getFieldValue(bookId) || 0;
-    if (prevValue !== 0) {
+    if (prevValue !== 0 || allowNegative) {
       form.setFieldsValue({ [bookId]: prevValue - 1 });
       onValuesChange();
     }
@@ -121,7 +139,7 @@ export const StockForm = (props: Props) => {
             <Button onClick={() => onMinusClick(book.id)} icon={<MinusOutlined />} />
             <Form.Item name={book.id} noStyle>
               <InputNumber
-                min={0}
+                min={allowNegative ? -10000 : 0}
                 max={10000}
                 style={{ width: 70 }}
                 type="number"

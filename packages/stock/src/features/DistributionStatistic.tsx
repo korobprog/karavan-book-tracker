@@ -1,16 +1,55 @@
-import React from "react";
 import { TotalStatistic } from "common/src/components/TotalStatistic";
+import {
+  HolderTransferDoc,
+  StatisticHolderTransferTypes,
+} from "common/src/services/api/holderTransfer";
+import { HolderBooks } from "common/src/services/api/holders";
+import { $booksHashMap, BooksCategories } from "common/src/services/books";
+import { WithId } from "common/src/services/api/refs";
 
-type Props = {};
+type Props = {
+  holderTransfers: WithId<HolderTransferDoc>[];
+};
+
+const calcBooksCountsByPoints = (books: HolderBooks) => {
+  const booksHashMap = $booksHashMap.getState();
+  return Object.entries(books).reduce((acc, [bookId, bookCount]) => {
+    const bookPoints = booksHashMap[bookId].points || 0;
+    const category = booksHashMap[bookId].category as BooksCategories;
+    acc[category] = (acc[category] || 0) + bookCount || 0;
+    acc.points = (acc.points || 0) + Number(bookPoints) * bookCount;
+
+    return acc;
+  }, {} as Record<BooksCategories | "points", number>);
+};
+
+export const getDataForTotalStatistic = (holderTransfers: WithId<HolderTransferDoc>[]) =>
+  holderTransfers.reduce(
+    (acc, holderTransfer) => {
+      if (StatisticHolderTransferTypes.includes(holderTransfer.type)) {
+        const { points, ...restValues } = calcBooksCountsByPoints(holderTransfer.books);
+
+        acc[0].value += restValues.maha_big || 0;
+        acc[1].value += restValues.big || 0;
+        acc[2].value += restValues.medium || 0;
+        acc[3].value += restValues.small || 0;
+        acc[4].value += points || 0;
+      }
+      return acc;
+    },
+    [
+      { title: "MB", value: 0 },
+      { title: "B", value: 0 },
+      { title: "M", value: 0 },
+      { title: "S", value: 0 },
+      { title: "Очки", value: 0 },
+    ]
+  );
 
 export const DistributionStatistic = (props: Props) => {
-  const data = [
-    { title: "MB", value: 12 },
-    { title: "B", value: 108 },
-    { title: "M", value: 11 },
-    { title: "S", value: 15 },
-    { title: "Очки", value: 800 },
-  ];
+  const { holderTransfers } = props;
+
+  const data = getDataForTotalStatistic(holderTransfers);
 
   return <TotalStatistic data={data} />;
 };

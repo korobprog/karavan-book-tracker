@@ -12,11 +12,13 @@ import {
 import * as storage from "common/src/services/localStorage/reportBooks";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { $books, $booksLoading, Book } from "common/src/services/books";
-import { TransferTypeSelect } from "common/src/components/TransferTypeSelect";
+import {
+  DistributorTransferType,
+  TransferTypeSelect,
+} from "common/src/components/TransferTypeSelect";
 
 import moment from "moment";
 import { StockFormValues, calcBooksCountsFromValues, calcFormValuesFromBooks } from "./helpers";
-import { HolderTransferType } from "../../../services/api/holderTransfer";
 import { HolderType } from "../../../services/api/holders";
 
 type Props = {
@@ -24,10 +26,19 @@ type Props = {
   onFinish: (formValues: StockFormValues) => void;
   isSubmitting?: boolean;
   initialValues?: StockFormValues;
+  typeParam: DistributorTransferType;
+  onTypeChange: (value: DistributorTransferType) => void;
 };
 
 export const DistributorTransferForm = (props: Props) => {
-  const { currentUser, onFinish, isSubmitting, initialValues: initialValuesProps } = props;
+  const {
+    currentUser,
+    onFinish,
+    isSubmitting,
+    initialValues: initialValuesProps,
+    typeParam,
+    onTypeChange,
+  } = props;
   const { userDocLoading } = currentUser;
   const [searchString, setSearchString] = useState("");
   const [selectedBooks, setSelectedBooks] = useState<Book[]>([]);
@@ -46,7 +57,7 @@ export const DistributorTransferForm = (props: Props) => {
 
   const initialValues = {
     date: moment(),
-    transferType: HolderTransferType.installments,
+    transferType: typeParam,
     ...initialValuesProps,
   };
 
@@ -69,6 +80,10 @@ export const DistributorTransferForm = (props: Props) => {
     const formValues: StockFormValues = form.getFieldsValue();
     const { totalCount } = calcBooksCountsFromValues(formValues);
     setTotalBooksCount(totalCount);
+
+    if (typeParam !== formValues.transferType) {
+      onTypeChange(formValues.transferType as DistributorTransferType);
+    }
   };
 
   const onBooksReset = () => {

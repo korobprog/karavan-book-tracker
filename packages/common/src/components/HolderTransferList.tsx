@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { List, Tag } from "antd";
 import moment from "moment";
+import { useStore } from "effector-react";
 
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import {
+  $holderTransfers,
   HolderTransferDoc,
   HolderTransferMap,
-  useHolderTransfers,
+  HolderTransferType,
 } from "../services/api/holderTransfer";
 import { $booksHashMap } from "common/src/services/books/index";
 
@@ -15,10 +17,11 @@ type Props = {
 };
 
 export const HolderTransferList = (props: Props) => {
-  const { currentUser } = props;
-  const { profile, userDocLoading } = currentUser;
+  const holderTransfers = useStore($holderTransfers);
 
-  const { holderTransfers, loading } = useHolderTransfers(profile && { userId: profile.id });
+  const sortedHolderTransfers = useMemo(() => {
+    return holderTransfers.sort((a, b) => (moment(a.date).isBefore(b.date) ? 1 : -1));
+  }, [holderTransfers]);
 
   const renderHolderTransferItem = (holderTransfer: HolderTransferDoc) => {
     const bookHashMap = $booksHashMap.getState();
@@ -28,16 +31,18 @@ export const HolderTransferList = (props: Props) => {
       <List.Item key={holderTransfer.id}>
         {Icon && <Icon size={50} style={{ fontSize: "24px", marginRight: 12 }} />}
         <List.Item.Meta
-          title={HolderTransferMap[holderTransfer.type].name}
+          title={HolderTransferMap[holderTransfer.type].title}
           description={moment(holderTransfer.date).calendar()}
         />
         <>
           {Object.entries(holderTransfer.books).map(([bookId, count], index) => {
-            const color = count > 0 ? "green" : "red";
+            const isPositive =
+              count >= 0 && holderTransfer.type !== HolderTransferType.installments;
+            const color = isPositive ? "green" : "red";
 
             return (
               <Tag color={color} key={index}>
-                {count > 0 ? "+" : "-"} {count} {bookHashMap[bookId]?.short_name}
+                {isPositive ? "+" : "-"} {Math.abs(count)} {bookHashMap[bookId]?.short_name}
               </Tag>
             );
           })}
@@ -50,8 +55,8 @@ export const HolderTransferList = (props: Props) => {
     <div>
       <List
         itemLayout="horizontal"
-        dataSource={holderTransfers}
-        loading={loading || userDocLoading}
+        dataSource={sortedHolderTransfers}
+        // loading={loading || userDocLoading}
         locale={{ emptyText: "Не найдено книг" }}
         renderItem={(book) => renderHolderTransferItem(book)}
       />
