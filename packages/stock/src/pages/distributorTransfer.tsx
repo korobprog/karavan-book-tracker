@@ -16,6 +16,7 @@ import {
   HolderTransferDoc,
   HolderTransferMap,
   HolderTransferType,
+  TransferFromDistributorTypes,
 } from "common/src/services/api/holderTransfer";
 import { addHolderTransferMultiAction } from "common/src/services/api/stockMultiactions";
 import { DistributorTransferType } from "common/src/components/TransferTypeSelect";
@@ -57,6 +58,11 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
         toHolderId: distributorId,
         books: newBooks.operationBooks,
       };
+
+      if (TransferFromDistributorTypes.includes(transferType)) {
+        holderTransfer.fromHolderId = distributorId;
+        holderTransfer.toHolderId = stock.id;
+      }
 
       addHolderTransferMultiAction(holderTransfer)
         .then(() => navigate(backPath))

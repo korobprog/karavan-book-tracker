@@ -70,4 +70,6 @@ export const useBooks = () => {
     booksChanged(getBooks(data));
     booksLoadingChanged(loading);
   }, [data, loading]);
+
+  return { data, loading };
 };

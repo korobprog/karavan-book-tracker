@@ -128,11 +128,14 @@ export const StockForm = (props: Props) => {
 
   const renderBookItem = (book: Book, isSelected: boolean) => {
     const StarIcon = isSelected ? StarFilled : StarOutlined;
+    const isBookFinded =
+      book.name.toLowerCase().includes(searchString) ||
+      book.short_name.toLowerCase().includes(searchString);
 
-    return book.name.toLowerCase().includes(searchString) ? (
+    return isBookFinded ? (
       <List.Item>
         <StarIcon style={{ fontSize: "24px", marginRight: 12, color: "#bae0ff" }} />
-        <List.Item.Meta title={book.name} />
+        <List.Item.Meta title={book.name} description={book.short_name} />
 
         {isSelected ? (
           <Space>
@@ -199,7 +202,7 @@ export const StockForm = (props: Props) => {
             loading={isSubmitting || userDocLoading}
             disabled={totalBooksCount === 0}
           >
-            {isSubmitting ? "Отправляем..." : "Отправить"}
+            {isSubmitting ? "Сохраняем..." : "Сохранить"}
           </Button>
         </Space>
       </Form.Item>
