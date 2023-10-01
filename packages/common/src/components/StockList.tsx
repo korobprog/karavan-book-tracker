@@ -34,12 +34,12 @@ export const StockList = (props: Props) => {
   const { Search } = Input;
 
   const renderBookItem = (book: BookWithCount) => {
-    return (
+    return book.count ? (
       <List.Item key={book.id}>
         <List.Item.Meta title={book.name} />
         {book.count}
       </List.Item>
-    );
+    ) : null;
   };
 
   const filteredBooks = books.filter((book) => book.name?.toLowerCase().includes(searchString));

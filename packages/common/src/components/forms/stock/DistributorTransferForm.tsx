@@ -19,7 +19,7 @@ import {
 
 import moment from "moment";
 import { StockFormValues, calcBooksCountsFromValues, calcFormValuesFromBooks } from "./helpers";
-import { HolderType } from "../../../services/api/holders";
+import { HolderBooks, HolderType } from "../../../services/api/holders";
 
 type Props = {
   currentUser: CurrentUser;
@@ -28,6 +28,7 @@ type Props = {
   initialValues?: StockFormValues;
   typeParam: DistributorTransferType;
   onTypeChange: (value: DistributorTransferType) => void;
+  availableBooks?: HolderBooks;
 };
 
 export const DistributorTransferForm = (props: Props) => {
@@ -38,6 +39,7 @@ export const DistributorTransferForm = (props: Props) => {
     initialValues: initialValuesProps,
     typeParam,
     onTypeChange,
+    availableBooks,
   } = props;
   const { userDocLoading } = currentUser;
   const [searchString, setSearchString] = useState("");
@@ -104,15 +106,17 @@ export const DistributorTransferForm = (props: Props) => {
     }
   };
 
-  const onPlusClick = (bookId: string) => {
+  const onPlusClick = (bookId: string, maxCount: number) => {
     const prevValue = form.getFieldValue(bookId) || 0;
-    form.setFieldsValue({ [bookId]: prevValue + 1 });
-    onValuesChange();
+    if (prevValue !== maxCount) {
+      form.setFieldsValue({ [bookId]: prevValue + 1 });
+      onValuesChange();
+    }
   };
 
-  const onMinusClick = (bookId: string) => {
+  const onMinusClick = (bookId: string, minCount: number) => {
     const prevValue = form.getFieldValue(bookId) || 0;
-    if (prevValue !== 0) {
+    if (prevValue !== minCount) {
       form.setFieldsValue({ [bookId]: prevValue - 1 });
       onValuesChange();
     }
@@ -129,31 +133,39 @@ export const DistributorTransferForm = (props: Props) => {
       book.name.toLowerCase().includes(searchString) ||
       book.short_name.toLowerCase().includes(searchString);
 
-    return isBookFinded ? (
+    const availableBookCount = availableBooks?.[book.id];
+
+    const minCount = 0;
+    const maxCount = (availableBooks && availableBookCount) || 10000;
+
+    return isBookFinded && (!availableBooks || (availableBookCount && availableBookCount > 0)) ? (
       <List.Item>
         <StarIcon style={{ fontSize: "24px", marginRight: 12, color: "#bae0ff" }} />
         <List.Item.Meta title={book.name} description={book.short_name} />
+        <Space>
+          <Typography>Доступно {availableBookCount}</Typography>
 
-        {isSelected ? (
-          <Space>
-            <Button onClick={() => onMinusClick(book.id)} icon={<MinusOutlined />} />
-            <Form.Item name={book.id} noStyle>
-              <InputNumber
-                min={0}
-                max={10000}
-                style={{ width: 70 }}
-                type="number"
-                inputMode="numeric"
-                pattern="\d*"
-              />
-            </Form.Item>
-            <Button onClick={() => onPlusClick(book.id)} icon={<PlusOutlined />} />
-          </Space>
-        ) : (
-          <Button onClick={() => onSelectClick(book.id)} icon={<SelectOutlined />}>
-            Выбрать
-          </Button>
-        )}
+          {isSelected ? (
+            <Space>
+              <Button onClick={() => onMinusClick(book.id, minCount)} icon={<MinusOutlined />} />
+              <Form.Item name={book.id} noStyle>
+                <InputNumber
+                  min={minCount}
+                  max={maxCount}
+                  style={{ width: 70 }}
+                  type="number"
+                  inputMode="numeric"
+                  pattern="\d*"
+                />
+              </Form.Item>
+              <Button onClick={() => onPlusClick(book.id, maxCount)} icon={<PlusOutlined />} />
+            </Space>
+          ) : (
+            <Button onClick={() => onSelectClick(book.id)} icon={<SelectOutlined />}>
+              Выбрать
+            </Button>
+          )}
+        </Space>
       </List.Item>
     ) : (
       <Form.Item name={book.id} noStyle />

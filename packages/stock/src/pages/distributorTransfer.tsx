@@ -70,6 +70,12 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
     }
   }
 
+  const distributorBooks = distributorId ? stock?.distributors?.[distributorId] : undefined;
+
+  const availableBooks = TransferFromDistributorTypes.includes(typeParam)
+    ? distributorBooks
+    : stock?.books;
+
   const title = HolderTransferMap[typeParam].title;
 
   return (
@@ -81,6 +87,7 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
         isSubmitting={isSubmitting}
         typeParam={typeParam}
         onTypeChange={onTypeChange}
+        availableBooks={availableBooks}
       />
     </BaseLayout>
   );

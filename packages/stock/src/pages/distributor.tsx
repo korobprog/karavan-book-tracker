@@ -8,7 +8,7 @@ import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { DistributionStatistic } from "../features/DistributionStatistic";
-import { $distributors } from "common/src/services/api/holders";
+import { $distributors, $stock } from "common/src/services/api/holders";
 import { StockList } from "common/src/components/StockList";
 import {
   DistributorTransferType,
@@ -32,6 +32,7 @@ export const Distributor = ({ currentUser }: Props) => {
   const navigate = useNavigate();
   const { distributorId } = useParams<{ distributorId: string }>();
   const distributors = useStore($distributors);
+  const stock = useStore($stock);
   const currentDistributor = distributors.find((value) => value.id === distributorId);
 
   const holderTransfers = useStore($holderTransfers);
@@ -89,7 +90,7 @@ export const Distributor = ({ currentUser }: Props) => {
       userDocLoading={userDocLoading}
       avatar={avatar}
     >
-      {!currentDistributor || !distributorId ? (
+      {!currentDistributor || !distributorId || !stock ? (
         <Empty />
       ) : (
         <>
@@ -111,7 +112,7 @@ export const Distributor = ({ currentUser }: Props) => {
           <StockList
             title="Подотчетные книги у распространителя:"
             currentUser={currentUser}
-            holderBooks={currentDistributor.books || {}}
+            holderBooks={stock.distributors?.[distributorId] || {}}
           />
           <Divider dashed />
 
