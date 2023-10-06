@@ -32,7 +32,7 @@ export type LocationDoc = {
 };
 
 export const addLocation = async (data: LocationDoc) => {
-  addDoc(apiRefs.locations, data);
+  return addDoc(apiRefs.locations, data);
 };
 
 export const editLocation = async (id: string, data: LocationDoc) => {

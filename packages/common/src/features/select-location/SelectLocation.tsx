@@ -1,31 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useStore } from "effector-react";
-import { Select, RefSelectProps, SelectProps } from "antd";
+import { Select, RefSelectProps, SelectProps, Form } from "antd";
 import { useDebouncedCallback } from "use-debounce";
 
 import { addLocation, useLocations } from "common/src/services/api/locations";
 import { $isOnline } from "../../app/offline/lib/isOnlineStore";
 import { LocationSelect } from "../../components/LocationSelect";
 
-type SelectLocationProps = SelectProps;
+type SelectLocationProps = SelectProps & { name: string };
 
 export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationProps>(
-  (props, ref) => {
+  ({ name, ...props }, ref) => {
     const isOnline = useStore($isOnline);
+    const { setFieldValue } = Form.useFormInstance();
+    const localRef = useRef<RefSelectProps | null>(null);
 
     const [locationSearchString, setLocationSearchString] = useState("");
     const { locations, loading } = useLocations({
       searchString: locationSearchString,
     });
+    const [creationLoading, setCreationLoading] = useState(false);
 
-    const onLocationChange = useDebouncedCallback((value: string) => {
+    const onLocationSearchChange = useDebouncedCallback((value: string) => {
       const trimmedValue = value.trim();
       setLocationSearchString(trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1));
     }, 1000);
 
     const onAddNewLocation = () => {
-      addLocation({ name: locationSearchString });
-      setLocationSearchString("");
+      setCreationLoading(true);
+      addLocation({ name: locationSearchString })
+        .then(({ id }) => {
+          setFieldValue(name, id);
+          localRef.current?.blur();
+          setLocationSearchString("");
+        })
+        .finally(() => {
+          setCreationLoading(false);
+        });
     };
 
     const locationOptions = locations.map((d) => (
@@ -34,12 +45,21 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
 
     return (
       <LocationSelect
-        ref={ref}
-        onSearch={onLocationChange}
+        ref={(node) => {
+          localRef.current = node;
+          if (typeof ref === "function") {
+            ref(node);
+          } else if (ref) {
+            ref.current = node;
+          }
+        }}
+        // ref={ref}
+        onSearch={onLocationSearchChange}
         onAddNewLocation={onAddNewLocation}
         locationSearchString={locationSearchString}
         isOnline={isOnline}
-        loading={loading}
+        loading={loading || creationLoading}
+        autoClearSearchValue
         {...props}
       >
         {locationOptions}

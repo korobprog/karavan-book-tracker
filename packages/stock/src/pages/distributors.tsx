@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { generatePath, useNavigate, Link } from "react-router-dom";
-import { Button, Divider, List } from "antd";
+import { Button, Divider, List, Row } from "antd";
 
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
@@ -8,6 +8,7 @@ import { BaseLayout } from "common/src/components/BaseLayout";
 import { useStore } from "effector-react";
 import { $distributors, $stock } from "common/src/services/api/holders";
 import { calcBooksCounts } from "common/src/components/forms/stock/helpers";
+import Search from "antd/es/input/Search";
 
 type Props = {
   currentUser: CurrentUser;
@@ -20,11 +21,21 @@ export const Distributors = ({ currentUser }: Props) => {
   const distributors = useStore($distributors);
   const stock = useStore($stock);
 
+  const [searchString, setSearchString] = useState("");
+
+  const onSearchChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setSearchString(e.target.value.toLowerCase());
+  };
+
   useEffect(() => {
     if (!user && !loading) {
       navigate(routes.auth);
     }
   }, [user, loading, navigate]);
+
+  const filteredDistributors = distributors.filter((distributors) =>
+    distributors.name?.toLowerCase().includes(searchString)
+  );
 
   return (
     <BaseLayout
@@ -39,9 +50,19 @@ export const Distributors = ({ currentUser }: Props) => {
 
       <Divider dashed />
 
+      <Row>
+        <Search
+          placeholder="поиск по имени"
+          allowClear
+          onChange={onSearchChange}
+          value={searchString}
+          style={{ flexGrow: 1, width: 200, marginRight: 8 }}
+        />
+      </Row>
+
       <List
         itemLayout="horizontal"
-        dataSource={distributors}
+        dataSource={filteredDistributors}
         renderItem={(distributor) => {
           const stockDistributor = stock?.distributors?.[distributor.id];
           const booksCounts = stockDistributor ? calcBooksCounts(stockDistributor).totalCount : 0;

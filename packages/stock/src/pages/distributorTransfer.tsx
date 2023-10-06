@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { generatePath, useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { Divider } from "antd";
+import { Divider, Form, Typography } from "antd";
 import { useStore } from "effector-react";
 
 import { routes } from "../shared/routes";
@@ -11,7 +11,7 @@ import {
   DistributorTransferFormValues,
   calcBooksCountsFromValues,
 } from "common/src/components/forms/stock/helpers";
-import { $stock } from "common/src/services/api/holders";
+import { $distributors, $stock } from "common/src/services/api/holders";
 import {
   HolderTransferDoc,
   HolderTransferMap,
@@ -31,6 +31,7 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const stock = useStore($stock);
+  const distributors = useStore($distributors);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const typeParam =
@@ -70,6 +71,7 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
     }
   }
 
+  const distributorName = distributors.find(({ id }) => id === distributorId)?.name;
   const distributorBooks = distributorId ? stock?.distributors?.[distributorId] : undefined;
 
   const availableBooks = TransferFromDistributorTypes.includes(typeParam)
@@ -77,10 +79,14 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
     : stock?.books;
 
   const title = HolderTransferMap[typeParam].title;
+  const label = TransferFromDistributorTypes.includes(typeParam) ? "От кого:" : "Кому";
 
   return (
     <BaseLayout title={title} backPath={backPath} userDocLoading={userDocLoading} avatar={avatar}>
       <Divider dashed />
+      <Form.Item name="transferType" label={label}>
+        {distributorName}
+      </Form.Item>
       <DistributorTransferForm
         currentUser={currentUser}
         onFinish={onFinish}

@@ -103,6 +103,7 @@ export const DistributorTransferForm = (props: Props) => {
     const newBook = books.find((book) => book.id === bookId);
     if (newBook) {
       setSelectedBooks([...selectedBooks, newBook]);
+      form.setFieldsValue({ [bookId]: 1 });
     }
   };
 

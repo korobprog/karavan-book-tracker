@@ -5,7 +5,7 @@ import { Divider } from "antd";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { addHolderTransferMultiAction } from "common/src/services/api/stockMultiactions";
-import { HolderTransferDoc } from "common/src/services/api/holderTransfer";
+import { HolderTransferDoc, HolderTransferType } from "common/src/services/api/holderTransfer";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { StockForm } from "common/src/components/forms/stock/StockForm";
 import {
@@ -68,7 +68,12 @@ export const StockEdit = ({ currentUser }: Props) => {
       avatar={avatar}
     >
       <Divider dashed />
-      <StockForm currentUser={currentUser} onFinish={onFinish} isSubmitting={isSubmitting} />
+      <StockForm
+        currentUser={currentUser}
+        onFinish={onFinish}
+        isSubmitting={isSubmitting}
+        availableBooks={stock?.books}
+      />
     </BaseLayout>
   );
 };
