@@ -11,8 +11,6 @@ import { Stock } from "./pages/stock";
 import { useCurrentUser } from "common/src/services/api/useCurrentUser";
 import { useBooks } from "common/src/services/books";
 import { Reset } from "./pages/resetpass";
-
-import "./App.less";
 import { StockEdit } from "./pages/stockEdit";
 import { Distributors } from "./pages/distributors";
 import { Distributor } from "./pages/distributor";
@@ -20,6 +18,9 @@ import { DistributorEdit } from "./pages/distributorEdit";
 import { useHolders } from "common/src/services/api/holders";
 import { DistributorTransfer } from "./pages/distributorTransfer";
 import { useHolderTransfers } from "common/src/services/api/holderTransfer";
+
+import "antd/dist/reset.css";
+import "./App.less";
 
 const routesWithoutRedirect = [routes.registration, routes.auth, routes.resetpassemail];
 

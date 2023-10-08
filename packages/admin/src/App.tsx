@@ -20,6 +20,7 @@ import { TeamsNew } from "./pages/teamsNew";
 import { TeamsEdit } from "./pages/teamsEdit";
 import Profile from "./pages/profile";
 
+import "antd/dist/reset.css";
 import "./App.less";
 
 const routesWithoutRedirect = [routes.registration, routes.auth];

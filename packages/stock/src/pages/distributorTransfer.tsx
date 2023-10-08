@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { generatePath, useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { Divider, Form, Typography } from "antd";
+import { Divider, Form } from "antd";
 import { useStore } from "effector-react";
 
 import { routes } from "../shared/routes";

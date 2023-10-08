@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Layout, PageHeader, Tooltip, Avatar } from "antd";
+import { Button, Layout, Tooltip, Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
-
+import { PageHeader } from "@ant-design/pro-layout";
 import Logo from "../images/logo.png";
 
 type BaseLayoutProps = {
@@ -14,7 +14,7 @@ type BaseLayoutProps = {
   isAdmin?: boolean;
 };
 
-export const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
+export const BaseLayout = (props: React.PropsWithChildren<BaseLayoutProps>) => {
   const { children, title, backPath, headerActions, userDocLoading, isAdmin, avatar } = props;
   const { Content, Header } = Layout;
   const navigate = useNavigate();
@@ -31,12 +31,13 @@ export const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
           title={title}
           className="page-header"
           onBack={onBack}
-          avatar={{ src: Logo }}
+          avatar={{ src: Logo, style: { minWidth: 32 } }}
           extra={
             headerActions ?? [
               <Tooltip title="Профиль" key="profile">
                 <Button
-                  type="ghost"
+                  type="text"
+                  size="middle"
                   shape="circle"
                   icon={avatar ? <Avatar src={avatar} /> : <UserOutlined />}
                   onClick={() => navigate("/profile")}
