@@ -47,6 +47,7 @@ export const Teams = ({ currentUser }: Props) => {
           team={team}
           locationsHashMap={locationsHashMap}
           onTeamEdit={onTeamEdit}
+          isAdmin
         />
       ))}
     </BaseLayout>

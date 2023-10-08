@@ -113,10 +113,10 @@ export const TeamForm = (props: Props) => {
         </UserSelect>
       </Form.Item>
       <Form.Item name="location" label="Место базирования">
-        <SelectLocation />
+        <SelectLocation name="location" />
       </Form.Item>
       <Form.Item name="currentLocation" label="Текущее место пребывания">
-        <SelectLocation />
+        <SelectLocation name="currentLocation" />
       </Form.Item>
 
       <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
