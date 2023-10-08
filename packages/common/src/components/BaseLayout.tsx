@@ -31,7 +31,7 @@ export const BaseLayout = (props: React.PropsWithChildren<BaseLayoutProps>) => {
           title={title}
           className="page-header"
           onBack={onBack}
-          avatar={{ src: Logo }}
+          avatar={{ src: Logo, style: { minWidth: 32 } }}
           extra={
             headerActions ?? [
               <Tooltip title="Профиль" key="profile">
