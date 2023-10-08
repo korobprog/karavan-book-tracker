@@ -47,7 +47,7 @@ export const CoordinatesEdit: React.FC<CoordinatesEditProps> = (props) => {
             <InputNumber value={y} onChange={(value) => setY(value || 0)} />
             <Button icon={<CheckOutlined />} onClick={saveCoordinates} />
           </Space>
-          <Input placeholder="[0.0000,0.0000]" onChange={onInputChange} />
+          <Input placeholder="[0.0000,0.0000]" onChange={onInputChange} autoFocus />
         </Space>
       ) : (
         <Space>
