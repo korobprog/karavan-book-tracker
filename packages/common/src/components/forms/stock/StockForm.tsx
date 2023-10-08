@@ -17,17 +17,24 @@ import { TransferTypeSelect } from "common/src/components/TransferTypeSelect";
 import moment from "moment";
 import { StockFormValues, calcBooksCountsFromValues, calcFormValuesFromBooks } from "./helpers";
 import { HolderTransferType } from "../../../services/api/holderTransfer";
-import { HolderType } from "../../../services/api/holders";
+import { HolderBooks, HolderType } from "../../../services/api/holders";
 
 type Props = {
   currentUser: CurrentUser;
   onFinish: (formValues: StockFormValues) => void;
   isSubmitting?: boolean;
   initialValues?: StockFormValues;
+  availableBooks?: HolderBooks;
 };
 
 export const StockForm = (props: Props) => {
-  const { currentUser, onFinish, isSubmitting, initialValues: initialValuesProps } = props;
+  const {
+    currentUser,
+    onFinish,
+    isSubmitting,
+    initialValues: initialValuesProps,
+    availableBooks,
+  } = props;
   const { userDocLoading } = currentUser;
   const [searchString, setSearchString] = useState("");
   const [selectedBooks, setSelectedBooks] = useState<Book[]>([]);
@@ -104,18 +111,21 @@ export const StockForm = (props: Props) => {
     const newBook = books.find((book) => book.id === bookId);
     if (newBook) {
       setSelectedBooks([...selectedBooks, newBook]);
+      form.setFieldsValue({ [bookId]: 1 });
     }
   };
 
-  const onPlusClick = (bookId: string) => {
+  const onPlusClick = (bookId: string, maxCount: number) => {
     const prevValue = form.getFieldValue(bookId) || 0;
-    form.setFieldsValue({ [bookId]: prevValue + 1 });
-    onValuesChange();
+    if (prevValue !== maxCount) {
+      form.setFieldsValue({ [bookId]: prevValue + 1 });
+      onValuesChange();
+    }
   };
 
-  const onMinusClick = (bookId: string) => {
+  const onMinusClick = (bookId: string, minCount: number) => {
     const prevValue = form.getFieldValue(bookId) || 0;
-    if (prevValue !== 0 || allowNegative) {
+    if (prevValue !== minCount) {
       form.setFieldsValue({ [bookId]: prevValue - 1 });
       onValuesChange();
     }
@@ -128,32 +138,44 @@ export const StockForm = (props: Props) => {
 
   const renderBookItem = (book: Book, isSelected: boolean) => {
     const StarIcon = isSelected ? StarFilled : StarOutlined;
+    const isBookFinded =
+      book.name.toLowerCase().includes(searchString) ||
+      book.short_name.toLowerCase().includes(searchString);
 
-    return book.name.toLowerCase().includes(searchString) ? (
+    const availableBookCount = availableBooks?.[book.id] || 0;
+
+    const minCount = allowNegative ? -availableBookCount : 0;
+    const maxCount = 10000;
+
+    return isBookFinded ? (
       <List.Item>
         <StarIcon style={{ fontSize: "24px", marginRight: 12, color: "#bae0ff" }} />
-        <List.Item.Meta title={book.name} />
+        <List.Item.Meta title={book.name} description={book.short_name} />
 
-        {isSelected ? (
-          <Space>
-            <Button onClick={() => onMinusClick(book.id)} icon={<MinusOutlined />} />
-            <Form.Item name={book.id} noStyle>
-              <InputNumber
-                min={allowNegative ? -10000 : 0}
-                max={10000}
-                style={{ width: 70 }}
-                type="number"
-                inputMode="numeric"
-                pattern="\d*"
-              />
-            </Form.Item>
-            <Button onClick={() => onPlusClick(book.id)} icon={<PlusOutlined />} />
-          </Space>
-        ) : (
-          <Button onClick={() => onSelectClick(book.id)} icon={<SelectOutlined />}>
-            Выбрать
-          </Button>
-        )}
+        <Space>
+          {availableBookCount > 0 && <Typography>На складе {availableBookCount}</Typography>}
+
+          {isSelected ? (
+            <Space>
+              <Button onClick={() => onMinusClick(book.id, minCount)} icon={<MinusOutlined />} />
+              <Form.Item name={book.id} noStyle>
+                <InputNumber
+                  min={minCount}
+                  max={maxCount}
+                  style={{ width: 70 }}
+                  type="number"
+                  inputMode="numeric"
+                  pattern="\d*"
+                />
+              </Form.Item>
+              <Button onClick={() => onPlusClick(book.id, maxCount)} icon={<PlusOutlined />} />
+            </Space>
+          ) : (
+            <Button onClick={() => onSelectClick(book.id)} icon={<SelectOutlined />}>
+              Выбрать
+            </Button>
+          )}
+        </Space>
       </List.Item>
     ) : (
       <Form.Item name={book.id} noStyle />
@@ -199,7 +221,7 @@ export const StockForm = (props: Props) => {
             loading={isSubmitting || userDocLoading}
             disabled={totalBooksCount === 0}
           >
-            {isSubmitting ? "Отправляем..." : "Отправить"}
+            {isSubmitting ? "Сохраняем..." : "Сохранить"}
           </Button>
         </Space>
       </Form.Item>

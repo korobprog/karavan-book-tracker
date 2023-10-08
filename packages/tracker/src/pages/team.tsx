@@ -25,7 +25,7 @@ export const Team = ({ currentUser }: Props) => {
   const myTeamId = profile?.team?.id;
   const myStatus = profile?.team?.status;
 
-  const myTeam = teams.find((team) => team.id === myTeamId);
+  const myTeam = teams.find((team) => team.id === "rJrmHBu9u21v1MOxX8ZF");
 
   const onTeamEdit = () => {
     navigate(routes.teamEdit);

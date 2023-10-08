@@ -38,6 +38,7 @@ export enum HolderTransferType {
 }
 
 export const StatisticHolderTransferTypes = [HolderTransferType.report, HolderTransferType.sale];
+export const TransferFromDistributorTypes = [HolderTransferType.report, HolderTransferType.return];
 
 export const HolderTransferMap = {
   [HolderTransferType.bbtIncome]: { title: "Приход из ББТ", icon: LoginOutlined, description: "" },

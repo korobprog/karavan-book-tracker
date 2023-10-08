@@ -132,29 +132,30 @@ export const ReportForm = (props: Props) => {
   };
 
   const onFinishHandler = (formValues: ReportFormValues) => {
-    if(totalBooksCount > 100 && !profile?.role?.includes('authorized')){
+    if (totalBooksCount > 100 && !profile?.role?.includes("authorized")) {
       message.warning({
-        content: 'Спасибо, ваша операция добавлена, но еще не подтверждена. Мы свяжемся с вами в ближайшее время для подтверждения.',
+        content:
+          "Спасибо, ваша операция добавлена, но еще не подтверждена. Мы свяжемся с вами в ближайшее время для подтверждения.",
         duration: 5,
         style: {
-          marginTop: '10vh',
-          fontSize: 'medium',
+          marginTop: "10vh",
+          fontSize: "medium",
         },
       });
     }
     onFinish(formValues);
     storage.setReportBooks([]);
-  }
+  };
 
   const renderBookItem = (book: Book, isFavorite: boolean) => {
     return book.name.toLowerCase().includes(searchString) ? (
       <List.Item>
-            <Button
-            onClick={() => toggleFavorite(book.id)}
-            icon={isFavorite ? <StarFilled /> : <StarOutlined />}
-            disabled={isSubmitting || userDocLoading}
-            style={{ marginRight: 8 }}
-          />
+        <Button
+          onClick={() => toggleFavorite(book.id)}
+          icon={isFavorite ? <StarFilled /> : <StarOutlined />}
+          disabled={isSubmitting || userDocLoading}
+          style={{ marginRight: 8 }}
+        />
         <List.Item.Meta
           title={book.name}
           description={book.points ? `Баллы: ${book.points}` : ""}
@@ -171,12 +172,12 @@ export const ReportForm = (props: Props) => {
               pattern="\d*"
             />
           </Form.Item>
-        <Button onClick={() => onPlusClick(book.id)} icon={<PlusOutlined />} />
+          <Button onClick={() => onPlusClick(book.id)} icon={<PlusOutlined />} />
         </Space>
       </List.Item>
     ) : (
       <Form.Item name={book.id} noStyle />
-      );
+    );
   };
 
   return (
@@ -198,7 +199,7 @@ export const ReportForm = (props: Props) => {
           },
         ]}
       >
-        <SelectLocation />
+        <SelectLocation name="locationId" />
       </Form.Item>
       <Space style={{ flexGrow: 1, marginRight: 8 }}>
         <Form.Item name="date">
@@ -249,7 +250,7 @@ export const ReportForm = (props: Props) => {
           style={{ flexGrow: 1, width: 200, marginRight: 8 }}
         />
       </Row>
-      
+
       <List
         itemLayout="horizontal"
         dataSource={favoriteBooks}

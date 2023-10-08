@@ -39,17 +39,19 @@ export const Stock = ({ currentUser }: Props) => {
       userDocLoading={userDocLoading}
       avatar={avatar}
     >
+      <Typography.Title className="site-page-title" level={2}>
+        {stock?.name}
+      </Typography.Title>
+
       <Button block size="large" type="primary" icon={<PlusCircleOutlined />} onClick={onEditStock}>
         Изменить книги на складе
       </Button>
 
       <Divider dashed />
-      <Typography.Title level={3}> Книги на складе:</Typography.Title>
-      <StockList currentUser={currentUser} holderBooks={stockBooks} />
+      <HolderTransferList title="Последние операции:" />
 
       <Divider dashed />
-      <Typography.Title level={3}>Последние операции:</Typography.Title>
-      <HolderTransferList currentUser={currentUser} />
+      <StockList currentUser={currentUser} holderBooks={stockBooks} title="Книги на складе:" />
     </BaseLayout>
   );
 };

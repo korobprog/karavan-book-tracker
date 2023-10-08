@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useStore } from "effector-react";
-import { Row, List, Input } from "antd";
+import { Row, List, Input, Typography } from "antd";
 
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { $booksHashMap, $booksLoading, Book } from "common/src/services/books";
@@ -11,10 +11,11 @@ type BookWithCount = Book & { count: number };
 type Props = {
   currentUser: CurrentUser;
   holderBooks: HolderBooks;
+  title?: string;
 };
 
 export const StockList = (props: Props) => {
-  const { currentUser, holderBooks } = props;
+  const { currentUser, holderBooks, title } = props;
   const { userDocLoading } = currentUser;
   const [searchString, setSearchString] = useState("");
 
@@ -33,18 +34,19 @@ export const StockList = (props: Props) => {
   const { Search } = Input;
 
   const renderBookItem = (book: BookWithCount) => {
-    return (
+    return book.count ? (
       <List.Item key={book.id}>
         <List.Item.Meta title={book.name} />
         {book.count}
       </List.Item>
-    );
+    ) : null;
   };
 
   const filteredBooks = books.filter((book) => book.name?.toLowerCase().includes(searchString));
 
   return (
     <div>
+      <Typography.Title level={3}>{title}</Typography.Title>
       <Row>
         <Search
           placeholder="поиск книги"

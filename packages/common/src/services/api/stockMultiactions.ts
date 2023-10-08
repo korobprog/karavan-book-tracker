@@ -5,8 +5,10 @@ import { calcObjectFields } from "../../utils/objects";
 
 const getDistributor = (id?: string | null) => {
   const distributors = $distributors.getState();
-  const currentDistributor = distributors.find((value) => value.id === id);
-  return currentDistributor;
+  const distributor = distributors.find((value) => value.id === id);
+  const distributorPath = `distributors.${distributor?.id}`;
+
+  return { distributor, distributorPath };
 };
 
 export const addHolderTransferMultiAction = async (newHolderTransfer: HolderTransferDoc) => {
@@ -32,44 +34,56 @@ export const addHolderTransferMultiAction = async (newHolderTransfer: HolderTran
 
       // Выдача в рассрочку
       case HolderTransferType.installments: {
-        const distributor = getDistributor(toHolderId);
+        const { distributor, distributorPath } = getDistributor(toHolderId);
         if (!distributor) {
           return console.error("distributor not found");
         }
 
         return Promise.all([
           addHolderTransfer(newHolderTransfer),
-          updateHolder(stock.id, { books: calcObjectFields(stock.books, "-", books) }),
+          updateHolder(stock.id, {
+            books: calcObjectFields(stock.books, "-", books),
+            [distributorPath]: calcObjectFields(stock.distributors?.[distributor.id], "+", books),
+          }),
           updateHolder(distributor.id, { books: calcObjectFields(distributor.books, "+", books) }),
         ]);
       }
 
       // Продажа
       case HolderTransferType.sale: {
+        const { distributor } = getDistributor(toHolderId);
+        if (!distributor) {
+          return console.error("distributor not found");
+        }
+
         // TODO: Учитывать в статистике распростроненных
         return Promise.all([
           updateHolder(stock.id, { books: calcObjectFields(stock.books, "-", books) }),
+          updateHolder(distributor.id, { books: calcObjectFields(distributor.books, "+", books) }),
           addHolderTransfer(newHolderTransfer),
         ]);
       }
 
       // Возврат
       case HolderTransferType.return: {
-        const distributor = getDistributor(fromHolderId);
+        const { distributor, distributorPath } = getDistributor(fromHolderId);
         if (!distributor) {
           return console.error("distributor not found");
         }
 
         return Promise.all([
           addHolderTransfer(newHolderTransfer),
-          updateHolder(stock.id, { books: calcObjectFields(stock.books, "+", books) }),
+          updateHolder(stock.id, {
+            books: calcObjectFields(stock.books, "+", books),
+            [distributorPath]: calcObjectFields(stock.distributors?.[distributor.id], "-", books),
+          }),
           updateHolder(distributor.id, { books: calcObjectFields(distributor.books, "-", books) }),
         ]);
       }
 
       // Принять отчет и платеж по выданным ранее книгам
       case HolderTransferType.report: {
-        const distributor = getDistributor(fromHolderId);
+        const { distributor, distributorPath } = getDistributor(fromHolderId);
         if (!distributor) {
           return console.error("distributor not found");
         }
@@ -77,7 +91,9 @@ export const addHolderTransferMultiAction = async (newHolderTransfer: HolderTran
         // TODO: Учитывать в статистике распростроненных
         return Promise.all([
           addHolderTransfer(newHolderTransfer),
-          updateHolder(distributor.id, { books: calcObjectFields(distributor.books, "-", books) }),
+          updateHolder(stock.id, {
+            [distributorPath]: calcObjectFields(stock.distributors?.[distributor.id], "-", books),
+          }),
         ]);
       }
     }

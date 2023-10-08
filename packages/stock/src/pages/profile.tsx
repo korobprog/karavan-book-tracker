@@ -61,15 +61,16 @@ const Profile = ({ currentUser }: Props) => {
         ? (data: Partial<HolderDoc>) => updateHolder(stockId, data)
         : addHolder;
 
-      setHolder({
+      const holderDoc = await setHolder({
         creatorId: userId,
         locationId: newProfile.yatraLocationId || "",
         name: stockName,
         type: HolderType.stock,
-      }).then((holderDoc) => {
-        newProfile.stockId = holderDoc ? holderDoc.id : profile?.stockId;
-        setProfile(newProfile).then(() => navigate(routes.root));
       });
+
+      newProfile.stockId = holderDoc ? holderDoc.id : profile?.stockId;
+
+      return setProfile(newProfile).then(() => navigate(routes.root));
     }
   };
 

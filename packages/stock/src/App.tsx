@@ -30,7 +30,7 @@ function App() {
   const isStockLoading = profile?.stockId && !stock;
   const navigate = useNavigate();
   const location = useLocation();
-  useBooks();
+  const { loading: booksLoading } = useBooks();
   const { loading: holderTransfersLoading } = useHolderTransfers(profile && { userId: profile.id });
 
   useEffect(() => {
@@ -51,7 +51,7 @@ function App() {
     }
   }, [loading, user, profile, navigate, location.pathname, userDocLoading]);
 
-  if (loading || isStockLoading || holderTransfersLoading) {
+  if (loading || isStockLoading || holderTransfersLoading || booksLoading) {
     return <Loading currentUser={currentUser} />;
   }
 

@@ -10,7 +10,7 @@ export type HolderBooks = Record<string, BookCount>;
 export type DistributorBooks = { id: string; count: BookCount }[];
 
 // ! Тут еще и ID понадобится и заметка наверное массив лучше, или запись с ID
-export type StockDistiributors = Record<string, DistributorBooks>;
+export type StockDistiributors = Record<string, HolderBooks>;
 
 export enum HolderType {
   stock = "stock",
@@ -42,10 +42,12 @@ export const addHolder = async (data: HolderDoc) => {
 };
 
 export const updateHolder = async (id: string, data: Partial<HolderDoc>) => {
+  // @ts-ignore
   return updateDoc(apiRefs.holder(id), data);
 };
 
 export const updateStockHolder = async (id: string, data: Partial<HolderDoc>) => {
+  // @ts-ignore
   return updateDoc(apiRefs.holder(id), data);
 };
 
