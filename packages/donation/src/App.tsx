@@ -1,6 +1,7 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 
+import "antd/dist/reset.css";
 import "./App.less";
 import { Home } from "./pages/home";
 import { VarnaG } from "./pages/varna-gauranga";

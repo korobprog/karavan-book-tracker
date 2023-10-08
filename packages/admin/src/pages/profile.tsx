@@ -43,7 +43,7 @@ const Profile = ({ currentUser }: Props) => {
       backPath={routes.root}
       headerActions={[
         <Tooltip title="Выйти" key="logout">
-          <Button type="ghost" shape="circle" icon={<LogoutOutlined />} onClick={onLogout} />
+          <Button type="default" shape="circle" icon={<LogoutOutlined />} onClick={onLogout} />
         </Tooltip>,
       ]}
     >

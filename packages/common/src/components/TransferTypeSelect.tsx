@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Select, SelectProps, RefSelectProps } from "antd";
 import { HolderTransferMap, HolderTransferType } from "../services/api/holderTransfer";
 import { HolderType } from "../services/api/holders";
@@ -51,7 +51,7 @@ export const TransferTypeSelect = React.forwardRef<RefSelectProps, TransferTypeS
     ));
 
     return (
-      <Select ref={ref} placeholder="Выберете из вариантов" showArrow={true} {...restProps}>
+      <Select ref={ref} placeholder="Выберете из вариантов" {...restProps}>
         {options}
       </Select>
     );

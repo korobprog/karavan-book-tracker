@@ -15,18 +15,14 @@ export const UserSelect: React.FC<UserSelectProps> = (props) => {
       placeholder="Начните вводить..."
       defaultActiveFirstOption={false}
       autoClearSearchValue={false}
-      showArrow={false}
+      suffixIcon={null}
       filterOption={false}
       notFoundContent={
         <>
           <Typography.Paragraph style={{ whiteSpace: "nowrap" }}>
-            Такого пользователя пока нет. Вы можете его добавить на отдельной
-            странице
+            Такого пользователя пока нет. Вы можете его добавить на отдельной странице
           </Typography.Paragraph>
-          <Typography.Link
-            onClick={onAddNewUser}
-            style={{ whiteSpace: "nowrap" }}
-          >
+          <Typography.Link onClick={onAddNewUser} style={{ whiteSpace: "nowrap" }}>
             <PlusOutlined />
             Добавить нового пользователя
           </Typography.Link>

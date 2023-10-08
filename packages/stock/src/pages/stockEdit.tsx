@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Divider } from "antd";
 
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { addHolderTransferMultiAction } from "common/src/services/api/stockMultiactions";
-import { HolderTransferDoc, HolderTransferType } from "common/src/services/api/holderTransfer";
+import { HolderTransferDoc } from "common/src/services/api/holderTransfer";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { StockForm } from "common/src/components/forms/stock/StockForm";
 import {

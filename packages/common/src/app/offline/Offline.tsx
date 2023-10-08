@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { PropsWithChildren, useEffect } from "react";
 import { message } from "antd";
 import "./firestore";
 import { isOnlineChanged } from "./lib/isOnlineStore";
@@ -13,7 +13,7 @@ const onOffline = () => {
   isOnlineChanged(false);
 };
 
-export const Offline: React.FC = ({ children }) => {
+export const Offline = ({ children }: PropsWithChildren<{}>) => {
   useEffect(() => {
     if (!navigator.onLine) {
       message.warning("Интернет не подключен");
