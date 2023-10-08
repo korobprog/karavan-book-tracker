@@ -1,8 +1,9 @@
-import { generatePath, useNavigate } from "react-router-dom";
+import { generatePath } from "react-router-dom";
 import useGoogleSheets from "use-google-sheets";
 import { Select, Button, Table, Divider, Space, TableColumnsType, Popconfirm } from "antd";
 import { PlusCircleOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { removeOperationMultiAction } from "common/src/services/api/multiactions";
 import { routes } from "../shared/routes";
 import { useOperations } from "common/src/services/api/operations";
@@ -19,7 +20,7 @@ type Props = {
 
 export const Reports = ({ currentUser }: Props) => {
   const { loading, profile } = currentUser;
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const { loading: booksLoading } = useGoogleSheets({
     apiKey: process.env.REACT_APP_GOOGLE_API_KEY as string,
     sheetId: process.env.REACT_APP_GOOGLE_SHEETS_ID as string,

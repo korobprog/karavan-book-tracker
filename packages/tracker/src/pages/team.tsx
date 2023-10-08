@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { Button, Typography } from "antd";
 import { CheckSquareOutlined } from "@ant-design/icons";
 
@@ -17,7 +17,7 @@ type Props = {
 export const Team = ({ currentUser }: Props) => {
   const { profile, userDocLoading } = currentUser;
   const { locationsHashMap } = useLocations();
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const { teams, loading } = useTeams();
   const avatar = profile?.avatar;
   const { Title, Paragraph } = Typography;

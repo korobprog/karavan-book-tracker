@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Divider } from "antd";
 import { useStore } from "effector-react";
 
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
@@ -23,7 +23,7 @@ type Props = {
 export const DistributorEdit = ({ currentUser }: Props) => {
   const { profile, user, userDocLoading } = currentUser;
   const avatar = profile?.avatar;
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const stock = useStore($stock);
 

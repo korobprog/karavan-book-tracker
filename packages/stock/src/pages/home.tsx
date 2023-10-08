@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Divider, Typography } from "antd";
 import { ReadOutlined, TeamOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
@@ -17,7 +17,7 @@ export const Home = ({ currentUser }: Props) => {
   const { userDocLoading, profile, user } = currentUser;
   const holderTransfers = useStore($holderTransfers);
 
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const onStockClick = () => {
     navigate(routes.stock);
   };

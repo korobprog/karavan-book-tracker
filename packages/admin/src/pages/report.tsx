@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { Typography, Form, Select } from "antd";
 
 import { routes } from "../shared/routes";
@@ -27,7 +27,7 @@ const Report = ({ currentUser }: Props) => {
   const [isOnline, setIsOnline] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const avatar = profile?.avatar;
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
 
   const { usersDocData } = useUsers({
     searchString: userSearchString,

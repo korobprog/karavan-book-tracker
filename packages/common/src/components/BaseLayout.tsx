@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { Button, Layout, Tooltip, Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { PageHeader } from "@ant-design/pro-layout";
@@ -17,7 +17,7 @@ type BaseLayoutProps = {
 export const BaseLayout = (props: React.PropsWithChildren<BaseLayoutProps>) => {
   const { children, title, backPath, headerActions, userDocLoading, isAdmin, avatar } = props;
   const { Content, Header } = Layout;
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const onBack = backPath ? () => navigate(backPath) : undefined;
 
   useEffect(() => {

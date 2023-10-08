@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import moment from "moment";
 
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { routes } from "../shared/routes";
 import { OperationDoc, useOperation } from "common/src/services/api/operations";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
@@ -27,7 +28,7 @@ export const ReportEdit = ({ currentUser }: Props) => {
   const [isOnline, setIsOnline] = useState(operationDocData?.isOnline || false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const avatar = profile?.avatar;
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
 
   const initialValues: ReportFormValues | undefined = operationDocData
     ? {

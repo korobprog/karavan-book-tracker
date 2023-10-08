@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { generatePath, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { generatePath, useParams, useSearchParams } from "react-router-dom";
 import { Divider, Form } from "antd";
 import { useStore } from "effector-react";
 
@@ -20,6 +20,7 @@ import {
 } from "common/src/services/api/holderTransfer";
 import { addHolderTransferMultiAction } from "common/src/services/api/stockMultiactions";
 import { DistributorTransferType } from "common/src/components/TransferTypeSelect";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 
 type Props = {
   currentUser: CurrentUser;
@@ -28,7 +29,7 @@ type Props = {
 export const DistributorTransfer = ({ currentUser }: Props) => {
   const { profile, user, userDocLoading } = currentUser;
   const avatar = profile?.avatar;
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const stock = useStore($stock);
   const distributors = useStore($distributors);

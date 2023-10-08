@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { generatePath, useNavigate } from "react-router-dom";
+import { generatePath } from "react-router-dom";
 import {
   Button,
   Table,
@@ -30,6 +30,7 @@ import { $booksHashMap, $booksLoading } from "common/src/services/books";
 import { nowYear } from "common/src/services/year";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { YearSwitch } from "common/src/components/YearSwitch";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 
 type Props = {
   currentUser: CurrentUser;
@@ -37,7 +38,7 @@ type Props = {
 
 export const Statistic = ({ currentUser }: Props) => {
   const { loading, profile, user, userDocLoading } = currentUser;
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const booksHashMap = useStore($booksHashMap);
   const booksLoading = useStore($booksLoading);
   const { myOperationsDocData, loading: myOperationsLoading } = useMyOperations(user?.uid || "");

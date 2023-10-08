@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Form, Input, Button, Checkbox, Typography, Space } from "antd";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { AuthError } from "firebase/auth";
 import { BaseLayout } from "common/src/components/BaseLayout";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 
 const RegistrationErrors = {
   "Firebase: Error (auth/email-already-in-use).": "Пользователь с таким email уже существует",
@@ -24,7 +25,7 @@ type Props = {
 const Registration = ({ currentUser }: Props) => {
   const { auth, user } = currentUser;
   const [createUserWithEmailAndPassword, , , error] = useCreateUserWithEmailAndPassword(auth);
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {

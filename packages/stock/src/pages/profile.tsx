@@ -2,7 +2,7 @@ import React from "react";
 import { getAuth, signOut } from "firebase/auth";
 import { Button, Typography, Tooltip } from "antd";
 import { useStore } from "effector-react";
-import { useNavigate } from "react-router-dom";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { routes } from "../shared/routes";
 import { useUser } from "common/src/services/api/useUser";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
@@ -31,7 +31,7 @@ const Profile = ({ currentUser }: Props) => {
   const { profile, user, userDocLoading } = currentUser;
   const { setProfile } = useUser({ profile, user });
   const auth = getAuth();
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const stock = useStore($stock);
 
   const avatar = profile?.avatar;

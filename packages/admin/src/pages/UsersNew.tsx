@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { routes } from "../shared/routes";
 import { useUser } from "common/src/services/api/useUser";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
@@ -13,7 +13,7 @@ type Props = {
 export const UsersNew = ({ currentUser }: Props) => {
   const { addNewUnattachedProfile } = useUser({ profile: currentUser.profile });
   const { profile } = currentUser;
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const avatar = profile?.avatar;
   const onFinish = async (formValues: ProfileFormValues) => {
     addNewUnattachedProfile(formValues).then(() => navigate(routes.users));

@@ -1,7 +1,8 @@
 import { Button, Typography } from "antd";
 import { UsergroupAddOutlined } from "@ant-design/icons";
-import { generatePath, useNavigate } from "react-router-dom";
+import { generatePath } from "react-router-dom";
 import { routes } from "../shared/routes";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { useTeams } from "common/src/services/api/teams";
 import { TeamCard } from "common/src/components/TeamCard";
@@ -15,7 +16,7 @@ type Props = {
 export const Teams = ({ currentUser }: Props) => {
   const { profile } = currentUser;
   const { locationsHashMap } = useLocations();
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const { teams, loading } = useTeams();
   const { Title } = Typography;
   const avatar = profile?.avatar;

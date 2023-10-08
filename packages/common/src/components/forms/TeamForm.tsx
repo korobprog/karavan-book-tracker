@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Form, Input, Select } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { useDebouncedCallback } from "use-debounce";
 import { useUsers } from "common/src/services/api/useUsers";
 import { routes } from "../../../../admin/src/shared/routes";
@@ -18,7 +18,7 @@ type Props = {
 
 export const TeamForm = (props: Props) => {
   const { onFinishHandler, initialValues, teamId } = props;
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
 
   const [userSearchString, setUserSearchString] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
