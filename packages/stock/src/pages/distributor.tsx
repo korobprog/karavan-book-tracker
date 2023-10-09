@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useMemo } from "react";
-import { generatePath, useNavigate, useParams } from "react-router-dom";
+import { generatePath, useParams } from "react-router-dom";
 import { Button, Divider, Tooltip, Space, Empty } from "antd";
 import { BaseButtonProps } from "antd/es/button/button";
 import { useStore } from "effector-react";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
@@ -29,7 +30,7 @@ type Props = {
 export const Distributor = ({ currentUser }: Props) => {
   const { profile, user, loading, userDocLoading } = currentUser;
   const avatar = profile?.avatar;
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const { distributorId } = useParams<{ distributorId: string }>();
   const distributors = useStore($distributors);
   const stock = useStore($stock);

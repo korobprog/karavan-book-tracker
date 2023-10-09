@@ -19,6 +19,7 @@ import { Teams } from "./pages/teams";
 import { TeamsNew } from "./pages/teamsNew";
 import { TeamsEdit } from "./pages/teamsEdit";
 import Profile from "./pages/profile";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 
 import "antd/dist/reset.css";
 import "./App.less";
@@ -28,7 +29,7 @@ const routesWithoutRedirect = [routes.registration, routes.auth];
 function App() {
   const currentUser = useCurrentUser();
   const { profile, loading, user, userDocLoading } = currentUser;
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const location = useLocation();
 
   useBooks();

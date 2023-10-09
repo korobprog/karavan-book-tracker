@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { Divider } from "antd";
 
 import { routes } from "../shared/routes";
@@ -22,7 +22,7 @@ type Props = {
 export const StockEdit = ({ currentUser }: Props) => {
   const { profile, user, loading, userDocLoading } = currentUser;
   const avatar = profile?.avatar;
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const stock = useStore($stock);
   const [isSubmitting, setIsSubmitting] = useState(false);
 

@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { Auth } from "./pages/auth";
 import { Registration } from "./pages/registration";
 import { Home } from "./pages/home";
@@ -24,7 +25,7 @@ const routesWithoutRedirect = [routes.registration, routes.auth, routes.resetpas
 function App() {
   const currentUser = useCurrentUser();
   const { profile, loading, user, userDocLoading } = currentUser;
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const location = useLocation();
   useBooks();
 

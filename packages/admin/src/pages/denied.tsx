@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { signOut } from "firebase/auth";
 import { Button, Divider, Tooltip, Typography } from "antd";
 import { LogoutOutlined, MessageOutlined, BookOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
@@ -13,7 +13,7 @@ type Props = {
 
 export const Denied = ({ currentUser }: Props) => {
   const { auth, user, profile, loading } = currentUser;
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
 
   useEffect(() => {
     if (!user && !loading) {

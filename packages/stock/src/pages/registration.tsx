@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Form, Input, Button, Checkbox, Typography, Space } from "antd";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { AuthError } from "firebase/auth";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 
 type Props = {
   currentUser: CurrentUser;
@@ -24,7 +25,7 @@ const getErrorMessage = (error: AuthError) => {
 export const Registration = ({ currentUser }: Props) => {
   const { auth, user } = currentUser;
   const [createUserWithEmailAndPassword, , , error] = useCreateUserWithEmailAndPassword(auth);
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {

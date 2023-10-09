@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { generatePath, useNavigate, Link } from "react-router-dom";
+import { generatePath, Link } from "react-router-dom";
 import { Button, Divider, List, Row } from "antd";
 
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
@@ -17,7 +18,7 @@ type Props = {
 export const Distributors = ({ currentUser }: Props) => {
   const { profile, user, loading, userDocLoading } = currentUser;
   const avatar = profile?.avatar;
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const distributors = useStore($distributors);
   const stock = useStore($stock);
 

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { Button, Divider, Typography } from "antd";
 
 import { routes } from "../shared/routes";
@@ -18,7 +18,7 @@ type Props = {
 export const Stock = ({ currentUser }: Props) => {
   const { profile, user, loading, userDocLoading } = currentUser;
   const avatar = profile?.avatar;
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const stock = useStore($stock);
   const stockBooks = stock?.books || {};
 
