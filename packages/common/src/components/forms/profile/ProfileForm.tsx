@@ -5,6 +5,7 @@ import { phoneNumberPattern } from "common/src/utils/patterns";
 import { SelectLocation } from "common/src/features/select-location/SelectLocation";
 import { removeEmptyFields } from "../../../utils/objects";
 import { AvatarUploader } from "./AvatarUploader ";
+import { getViewTransitionStyles } from "../../../utils/transition";
 
 const layout = {
   labelCol: { span: 8 },
@@ -60,7 +61,12 @@ export const ProfileForm = <FormValues extends ProfileFormValues>(props: Props<F
       <Typography.Paragraph>Обязательно заполните профиль</Typography.Paragraph>
       {userId !== "none" && (
         <Form.Item name="avatar" label="Avatar" valuePropName="avatar">
-          <AvatarUploader imageUrl={imageUrl} onImageUrlChange={setImageUrl} userId={userId} />
+          <AvatarUploader
+            imageUrl={imageUrl}
+            onImageUrlChange={setImageUrl}
+            userId={userId}
+            imgStyle={getViewTransitionStyles("avatar")}
+          />
         </Form.Item>
       )}
       <Form.Item name="name" label="Ваше Ф.И.О" rules={[{ required: true }]}>

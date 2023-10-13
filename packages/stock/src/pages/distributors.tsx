@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { generatePath, Link } from "react-router-dom";
+import { generatePath } from "react-router-dom";
 import { Button, Divider, List, Row } from "antd";
 
 import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
@@ -68,18 +68,17 @@ export const Distributors = ({ currentUser }: Props) => {
           const stockDistributor = stock?.distributors?.[distributor.id];
           const booksCounts = stockDistributor ? calcBooksCounts(stockDistributor).totalCount : 0;
 
+          const onUserClick = () => {
+            navigate(generatePath(routes.distributor, { distributorId: distributor.id }));
+          };
+
           return (
-            <Link
-              key={distributor.id}
-              to={generatePath(routes.distributor, { distributorId: distributor.id })}
-            >
-              <List.Item className="list-item-clickable">
-                <List.Item.Meta
-                  title={distributor.name}
-                  description={`Книг на руках: ${booksCounts}`}
-                />
-              </List.Item>
-            </Link>
+            <List.Item key={distributor.id} className="list-item-clickable" onClick={onUserClick}>
+              <List.Item.Meta
+                title={distributor.name}
+                description={`Книг на руках: ${booksCounts}`}
+              />
+            </List.Item>
           );
         }}
       />

@@ -11,6 +11,7 @@ type Props = {
   imageUrl?: string;
   onImageUrlChange: (imageUrl: string) => void;
   userId: string;
+  imgStyle?: React.CSSProperties;
 };
 
 type CustomRequest = {
@@ -23,7 +24,13 @@ type UploadResponse = {
   url: string;
 };
 
-export const AvatarUploader = ({ imageUrl, onImageUrlChange, userId, ...restProps }: Props) => {
+export const AvatarUploader = ({
+  imageUrl,
+  onImageUrlChange,
+  userId,
+  imgStyle,
+  ...restProps
+}: Props) => {
   const [loading, setLoading] = useState(false);
 
   const storage = getStorage();
@@ -114,7 +121,7 @@ export const AvatarUploader = ({ imageUrl, onImageUrlChange, userId, ...restProp
         <img
           src={imageUrl}
           alt="avatar"
-          style={{ width: "100%", height: "100%", borderRadius: "10px" }}
+          style={{ width: "100%", height: "100%", borderRadius: "10px", ...imgStyle }}
         />
       ) : (
         uploadButton
