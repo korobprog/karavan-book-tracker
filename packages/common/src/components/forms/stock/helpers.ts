@@ -7,6 +7,7 @@ import { HolderBooks, HolderTransferType } from "../../../services/api/holderTra
 export type StockFormValues = Record<number, number> & {
   transferType: HolderTransferType;
   date: Moment;
+  comment?: string;
 };
 
 export type DistributorTransferFormValues = Record<number, number> & {

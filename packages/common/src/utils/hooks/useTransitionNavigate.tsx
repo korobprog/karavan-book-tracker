@@ -5,19 +5,22 @@ import { flushSync } from "react-dom";
 export const useTransitionNavigate = () => {
   const navigate = useNavigate();
 
-  const transitionNavigate = useCallback((to: To, options?: NavigateOptions) => {
-    // @ts-ignore
-    if (!document.startViewTransition) {
-      navigate(to, options);
-    } else {
+  const transitionNavigate = useCallback(
+    (to: To, options?: NavigateOptions) => {
       // @ts-ignore
-      document.startViewTransition(() => {
-        flushSync(() => {
-          navigate(to, options);
+      if (!document.startViewTransition) {
+        navigate(to, options);
+      } else {
+        // @ts-ignore
+        document.startViewTransition(() => {
+          flushSync(() => {
+            navigate(to, options);
+          });
         });
-      });
-    }
-  }, []);
+      }
+    },
+    [navigate]
+  );
 
   return transitionNavigate;
 };

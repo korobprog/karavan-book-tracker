@@ -59,8 +59,11 @@ export const StockForm = (props: Props) => {
     ...initialValuesProps,
   };
 
-  const { date, transferType, ...booksPropsInitialValues } =
-    initialValuesProps || ({} as StockFormValues);
+  const {
+    date,
+    transferType: _transferType,
+    ...booksPropsInitialValues
+  } = initialValuesProps || ({} as StockFormValues);
 
   const getInitialBooks = (booksValues: Record<number, number>) => {
     return Object.values(booksValues).reduce((acc, value) => acc + value, 0);
@@ -112,6 +115,9 @@ export const StockForm = (props: Props) => {
     if (newBook) {
       setSelectedBooks([...selectedBooks, newBook]);
       form.setFieldsValue({ [bookId]: 1 });
+      setTimeout(() => {
+        onValuesChange();
+      });
     }
   };
 
@@ -182,6 +188,8 @@ export const StockForm = (props: Props) => {
     );
   };
 
+  const transferType = Form.useWatch("transferType", form);
+
   return (
     <Form
       name="basic"
@@ -193,6 +201,11 @@ export const StockForm = (props: Props) => {
       <Form.Item name="transferType" label="Тип перемещения">
         <TransferTypeSelect type={HolderType.stock} />
       </Form.Item>
+      {transferType === HolderTransferType.adjustment && (
+        <Form.Item name="comment" label="Комментарий" rules={[{ required: true }]}>
+          <Input />
+        </Form.Item>
+      )}
       <Form.Item name="date" label="Дата">
         <DatePicker
           disabledDate={(current) => {
