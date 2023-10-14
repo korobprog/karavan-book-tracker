@@ -127,7 +127,7 @@ export const Locations = ({ currentUser }: Props) => {
         dataSource={data}
         loading={locationsLoading}
         scroll={{ x: true }}
-        pagination={{ pageSize: 100 }}
+        pagination={{ pageSize: 1000 }}
       />
     </BaseLayout>
   );

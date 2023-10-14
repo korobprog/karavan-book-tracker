@@ -10,7 +10,7 @@ export const useCurrentUser = () => {
   const [user, userLoading] = useAuthState(auth);
   const [userPreloaded, setUserPreloaded] = useState(false);
 
-  const userRef = user ? apiRefs.user(user?.uid) : null;
+  const userRef = user ? apiRefs.user(user.uid) : null;
 
   const [userDocData, userDocLoading] = useDocumentData<UserDoc>(userRef);
 
@@ -20,8 +20,7 @@ export const useCurrentUser = () => {
     }
   }, [user, userLoading, userPreloaded]);
 
-  const profile =
-    user && userDocData ? { ...userDocData, id: user?.uid } : null;
+  const profile = user && userDocData ? { ...userDocData, id: user?.uid } : null;
 
   const favorite = profile?.favorite || [];
 

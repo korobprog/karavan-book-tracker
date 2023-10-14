@@ -2,11 +2,12 @@ import React from "react";
 import { getAuth, signOut } from "firebase/auth";
 import { Button, Tooltip, Typography } from "antd";
 import { LogoutOutlined } from "@ant-design/icons";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { routes } from "../shared/routes";
 import { updateProfile, useProfileById } from "common/src/services/api/useUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { ProfileForm, ProfileFormValues } from "common/src/components/forms/profile/ProfileForm";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 
 type Props = {};
 
@@ -14,7 +15,7 @@ export const UsersEdit = (props: Props) => {
   const { userId } = useParams<{ userId: string }>();
   const { profile, loading } = useProfileById(userId);
   const auth = getAuth();
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
 
   const initialValues: ProfileFormValues = {
     ...profile,
@@ -37,7 +38,7 @@ export const UsersEdit = (props: Props) => {
       backPath={routes.users}
       headerActions={[
         <Tooltip title="Выйти" key="logout">
-          <Button type="ghost" shape="circle" icon={<LogoutOutlined />} onClick={onLogout} />
+          <Button type="default" shape="circle" icon={<LogoutOutlined />} onClick={onLogout} />
         </Tooltip>,
       ]}
     >

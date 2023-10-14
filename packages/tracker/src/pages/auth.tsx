@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Form, Input, Button, Checkbox, Typography, Space } from "antd";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { routes } from "../shared/routes";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { GoogleOutlined } from "@ant-design/icons";
 import { BaseLayout } from "common/src/components/BaseLayout";
@@ -16,7 +17,7 @@ export const Auth = ({ currentUser }: Props) => {
   const { auth, user } = currentUser;
   const [signInWithGoogle, , , googleError] = useSignInWithGoogle(auth);
   const [signInWithEmailAndPassword, , , emailError] = useSignInWithEmailAndPassword(auth);
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {

@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { Auth } from "./pages/auth";
 import { Registration } from "./pages/registration";
 import { Home } from "./pages/home";
@@ -16,15 +17,15 @@ import { useCurrentUser } from "common/src/services/api/useCurrentUser";
 import { useBooks } from "common/src/services/books";
 import { Reset } from "./pages/resetpass";
 
+import "antd/dist/reset.css";
 import "./App.less";
 
 const routesWithoutRedirect = [routes.registration, routes.auth, routes.resetpassemail];
 
-
 function App() {
   const currentUser = useCurrentUser();
   const { profile, loading, user, userDocLoading } = currentUser;
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const location = useLocation();
   useBooks();
 
@@ -54,36 +55,15 @@ function App() {
     <div>
       <Routes>
         <Route path={routes.root} element={<Home currentUser={currentUser} />} />
-        <Route
-          path={routes.report}
-          element={<Report currentUser={currentUser} />}
-        />
-        <Route
-          path={routes.reportEdit}
-          element={<ReportEdit currentUser={currentUser} />}
-        />
-        <Route
-          path={routes.statistic}
-          element={<Statistic currentUser={currentUser} />}
-        />
+        <Route path={routes.report} element={<Report currentUser={currentUser} />} />
+        <Route path={routes.reportEdit} element={<ReportEdit currentUser={currentUser} />} />
+        <Route path={routes.statistic} element={<Statistic currentUser={currentUser} />} />
         <Route path={routes.auth} element={<Auth currentUser={currentUser} />} />
-        <Route
-          path={routes.registration}
-          element={<Registration currentUser={currentUser}/>}
-        />
-        <Route
-          path={routes.profile}
-          element={<Profile currentUser={currentUser} />}
-        />
-        <Route
-          path={routes.resetpassemail}
-          element={<Reset currentUser={currentUser}  />}
-        />
+        <Route path={routes.registration} element={<Registration currentUser={currentUser} />} />
+        <Route path={routes.profile} element={<Profile currentUser={currentUser} />} />
+        <Route path={routes.resetpassemail} element={<Reset currentUser={currentUser} />} />
         <Route path={routes.team} element={<Team currentUser={currentUser} />} />
-        <Route
-          path={routes.teamEdit}
-          element={<TeamEdit currentUser={currentUser} />}
-        />
+        <Route path={routes.teamEdit} element={<TeamEdit currentUser={currentUser} />} />
       </Routes>
     </div>
   );

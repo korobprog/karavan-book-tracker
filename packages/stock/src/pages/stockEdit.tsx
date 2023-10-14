@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { Divider } from "antd";
 
 import { routes } from "../shared/routes";
@@ -22,7 +22,7 @@ type Props = {
 export const StockEdit = ({ currentUser }: Props) => {
   const { profile, user, loading, userDocLoading } = currentUser;
   const avatar = profile?.avatar;
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const stock = useStore($stock);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -39,7 +39,6 @@ export const StockEdit = ({ currentUser }: Props) => {
         return;
       }
 
-      console.log(formValues);
       const holderTransfer: HolderTransferDoc = {
         userId: profile.id,
         date: date.format(),
@@ -69,7 +68,12 @@ export const StockEdit = ({ currentUser }: Props) => {
       avatar={avatar}
     >
       <Divider dashed />
-      <StockForm currentUser={currentUser} onFinish={onFinish} isSubmitting={isSubmitting} />
+      <StockForm
+        currentUser={currentUser}
+        onFinish={onFinish}
+        isSubmitting={isSubmitting}
+        availableBooks={stock?.books}
+      />
     </BaseLayout>
   );
 };

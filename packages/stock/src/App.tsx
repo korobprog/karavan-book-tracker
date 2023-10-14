@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { Auth } from "./pages/auth";
 import { Registration } from "./pages/registration";
 import { Home } from "./pages/home";
@@ -11,14 +12,16 @@ import { Stock } from "./pages/stock";
 import { useCurrentUser } from "common/src/services/api/useCurrentUser";
 import { useBooks } from "common/src/services/books";
 import { Reset } from "./pages/resetpass";
-
-import "./App.less";
 import { StockEdit } from "./pages/stockEdit";
 import { Distributors } from "./pages/distributors";
 import { Distributor } from "./pages/distributor";
 import { DistributorEdit } from "./pages/distributorEdit";
 import { useHolders } from "common/src/services/api/holders";
 import { DistributorTransfer } from "./pages/distributorTransfer";
+import { useHolderTransfers } from "common/src/services/api/holderTransfer";
+
+import "antd/dist/reset.css";
+import "./App.less";
 
 const routesWithoutRedirect = [routes.registration, routes.auth, routes.resetpassemail];
 
@@ -27,9 +30,10 @@ function App() {
   const { profile, loading, user, userDocLoading } = currentUser;
   const { stock } = useHolders(profile?.stockId);
   const isStockLoading = profile?.stockId && !stock;
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const location = useLocation();
-  useBooks();
+  const { loading: booksLoading } = useBooks();
+  const { loading: holderTransfersLoading } = useHolderTransfers(profile && { userId: profile.id });
 
   useEffect(() => {
     if (!loading && !userDocLoading) {
@@ -49,7 +53,7 @@ function App() {
     }
   }, [loading, user, profile, navigate, location.pathname, userDocLoading]);
 
-  if (loading || isStockLoading) {
+  if (loading || isStockLoading || holderTransfersLoading || booksLoading) {
     return <Loading currentUser={currentUser} />;
   }
 

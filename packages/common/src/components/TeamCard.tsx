@@ -34,6 +34,7 @@ type Props = {
   myStatus?: TeamMemberStatus;
   onLeaveTeam?: () => void;
   onTeamEdit?: (teamId: string) => void;
+  isAdmin?: boolean;
 };
 
 export const TeamCard = ({
@@ -43,6 +44,7 @@ export const TeamCard = ({
   onLeaveTeam,
   onTeamEdit,
   children,
+  isAdmin,
 }: Props) => {
   const { name, location, currentLocation, leader } = team;
 
@@ -195,7 +197,9 @@ export const TeamCard = ({
             ))}
           </div>
         )}
-        {(myStatus === TeamMemberStatus.admin || myStatus === TeamMemberStatus.member) && (
+        {(isAdmin ||
+          myStatus === TeamMemberStatus.admin ||
+          myStatus === TeamMemberStatus.member) && (
           <UsersStatistic teamMembers={teamMembers.map((member) => member.id)} />
         )}
       </Card>

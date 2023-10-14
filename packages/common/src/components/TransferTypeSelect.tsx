@@ -11,20 +11,27 @@ const selectebleStockTransferTypes = [
   HolderTransferType.found,
 ];
 
+export type DistributorTransferType =
+  | HolderTransferType.installments
+  | HolderTransferType.sale
+  | HolderTransferType.report
+  | HolderTransferType.return;
+
 const selectebleDistributorTransferTypes = [
   HolderTransferType.installments,
   HolderTransferType.sale,
+  HolderTransferType.report,
   HolderTransferType.return,
 ];
 
 const stockTransferTypes = selectebleStockTransferTypes.map((type) => ({
   id: type,
-  name: HolderTransferMap[type].name,
+  title: HolderTransferMap[type].title,
 }));
 
 const distributorTransferTypes = selectebleDistributorTransferTypes.map((type) => ({
   id: type,
-  name: HolderTransferMap[type].name,
+  title: HolderTransferMap[type].title,
 }));
 
 const transferTypes = {
@@ -40,11 +47,11 @@ export const TransferTypeSelect = React.forwardRef<RefSelectProps, TransferTypeS
   (props, ref) => {
     const { type, ...restProps } = props;
     const options = transferTypes[type].map((d) => (
-      <Select.Option key={d.id}>{d.name}</Select.Option>
+      <Select.Option key={d.id}>{d.title}</Select.Option>
     ));
 
     return (
-      <Select ref={ref} placeholder="Выберете из вариантов" showArrow={true} {...restProps}>
+      <Select ref={ref} placeholder="Выберете из вариантов" {...restProps}>
         {options}
       </Select>
     );

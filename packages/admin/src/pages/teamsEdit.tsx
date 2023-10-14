@@ -1,10 +1,11 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { saveTeam, TeamFormValues } from "common/src/services/teams";
 import { TeamForm } from "common/src/components/forms/TeamForm";
 import { useTeam } from "common/src/services/api/teams";
 import { BaseLayout } from "common/src/components/BaseLayout";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 
 type Props = {
   currentUser: CurrentUser;
@@ -12,7 +13,7 @@ type Props = {
 
 export const TeamsEdit = ({ currentUser }: Props) => {
   const { profile } = currentUser;
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const avatar = profile?.avatar;
   const { teamId } = useParams();
   const { team, loading } = useTeam(teamId || "");

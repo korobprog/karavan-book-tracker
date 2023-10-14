@@ -1,11 +1,13 @@
 import React from "react";
 import { Button, Divider, Typography } from "antd";
 import { ReadOutlined, TeamOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { DistributionStatistic } from "../features/DistributionStatistic";
+import { useStore } from "effector-react";
+import { $holderTransfers } from "common/src/services/api/holderTransfer";
 
 type Props = {
   currentUser: CurrentUser;
@@ -13,7 +15,9 @@ type Props = {
 
 export const Home = ({ currentUser }: Props) => {
   const { userDocLoading, profile, user } = currentUser;
-  const navigate = useNavigate();
+  const holderTransfers = useStore($holderTransfers);
+
+  const navigate = useTransitionNavigate();
   const onStockClick = () => {
     navigate(routes.stock);
   };
@@ -45,7 +49,7 @@ export const Home = ({ currentUser }: Props) => {
         Распространители: выдача книг
       </Button>
       <Divider dashed />
-      <DistributionStatistic />
+      <DistributionStatistic holderTransfers={holderTransfers} />
     </BaseLayout>
   );
 };

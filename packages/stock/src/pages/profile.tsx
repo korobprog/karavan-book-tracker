@@ -2,7 +2,7 @@ import React from "react";
 import { getAuth, signOut } from "firebase/auth";
 import { Button, Typography, Tooltip } from "antd";
 import { useStore } from "effector-react";
-import { useNavigate } from "react-router-dom";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { routes } from "../shared/routes";
 import { useUser } from "common/src/services/api/useUser";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
@@ -31,7 +31,7 @@ const Profile = ({ currentUser }: Props) => {
   const { profile, user, userDocLoading } = currentUser;
   const { setProfile } = useUser({ profile, user });
   const auth = getAuth();
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const stock = useStore($stock);
 
   const avatar = profile?.avatar;
@@ -61,15 +61,16 @@ const Profile = ({ currentUser }: Props) => {
         ? (data: Partial<HolderDoc>) => updateHolder(stockId, data)
         : addHolder;
 
-      setHolder({
+      const holderDoc = await setHolder({
         creatorId: userId,
         locationId: newProfile.yatraLocationId || "",
         name: stockName,
         type: HolderType.stock,
-      }).then((holderDoc) => {
-        newProfile.stockId = holderDoc ? holderDoc.id : profile?.stockId;
-        setProfile(newProfile).then(() => navigate(routes.root));
       });
+
+      newProfile.stockId = holderDoc ? holderDoc.id : profile?.stockId;
+
+      return setProfile(newProfile).then(() => navigate(routes.root));
     }
   };
 

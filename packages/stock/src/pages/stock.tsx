@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { Button, Divider, Typography } from "antd";
 
 import { routes } from "../shared/routes";
@@ -18,7 +18,7 @@ type Props = {
 export const Stock = ({ currentUser }: Props) => {
   const { profile, user, loading, userDocLoading } = currentUser;
   const avatar = profile?.avatar;
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const stock = useStore($stock);
   const stockBooks = stock?.books || {};
 
@@ -39,6 +39,10 @@ export const Stock = ({ currentUser }: Props) => {
       userDocLoading={userDocLoading}
       avatar={avatar}
     >
+      <Typography.Title className="site-page-title" level={2}>
+        {stock?.name}
+      </Typography.Title>
+
       <Button block size="large" type="primary" icon={<PlusCircleOutlined />} onClick={onEditStock}>
         Изменить книги на складе
       </Button>
@@ -48,8 +52,10 @@ export const Stock = ({ currentUser }: Props) => {
       <StockList currentUser={currentUser} holderBooks={stockBooks} />
 
       <Divider dashed />
-      <Typography.Title level={3}>Последние операции:</Typography.Title>
-      <HolderTransferList currentUser={currentUser} />
+      <HolderTransferList title="Последние операции:" />
+
+      <Divider dashed />
+      <StockList currentUser={currentUser} holderBooks={stockBooks} title="Книги на складе:" />
     </BaseLayout>
   );
 };

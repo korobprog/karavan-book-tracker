@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { Button, Typography } from "antd";
 import { CheckSquareOutlined } from "@ant-design/icons";
 
@@ -17,7 +17,7 @@ type Props = {
 export const Team = ({ currentUser }: Props) => {
   const { profile, userDocLoading } = currentUser;
   const { locationsHashMap } = useLocations();
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const { teams, loading } = useTeams();
   const avatar = profile?.avatar;
   const { Title, Paragraph } = Typography;
@@ -25,7 +25,7 @@ export const Team = ({ currentUser }: Props) => {
   const myTeamId = profile?.team?.id;
   const myStatus = profile?.team?.status;
 
-  const myTeam = teams.find((team) => team.id === myTeamId);
+  const myTeam = teams.find((team) => team.id === "rJrmHBu9u21v1MOxX8ZF");
 
   const onTeamEdit = () => {
     navigate(routes.teamEdit);

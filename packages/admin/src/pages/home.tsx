@@ -8,7 +8,7 @@ import {
   EnvironmentOutlined,
   TrophyOutlined,
 } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
@@ -19,7 +19,7 @@ type Props = {
 
 const Home = ({ currentUser }: Props) => {
   const { user, profile } = currentUser;
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const onAddReport = () => {
     navigate(routes.reports);
   };

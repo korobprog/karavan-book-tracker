@@ -21,10 +21,15 @@ export type StockDistributorFormValues = {
 export const calcBooksCountsFromValues = (formValues: StockFormValues) => {
   const { transferType, date, ...bookIdsWithCounts } = formValues;
 
+  return calcBooksCounts(bookIdsWithCounts);
+};
+
+export const calcBooksCounts = (bookIdsWithCounts: Record<number, number>) => {
   const books = $books.getState();
   let totalCount = 0;
   let totalPoints = 0;
-  const operationBooks = Object.entries(bookIdsWithCounts).reduce((acc, [id, count]) => {
+  const booksArray = Object.entries(bookIdsWithCounts);
+  const operationBooks = booksArray.reduce((acc, [id, count]) => {
     if (count) {
       totalCount += count;
       totalPoints += (Number(books.find((book) => book.id === id)?.points) || 0) * count;
@@ -33,7 +38,7 @@ export const calcBooksCountsFromValues = (formValues: StockFormValues) => {
     return acc;
   }, {} as HolderBooks);
 
-  return { operationBooks, totalCount, totalPoints };
+  return { operationBooks, totalCount, totalPoints, length: booksArray.length };
 };
 
 export const calcFormValuesFromBooks = (books: DistributedBook[]) => {

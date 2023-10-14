@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
-import { generatePath, useNavigate } from "react-router-dom";
+import { generatePath } from "react-router-dom";
 import {
   Select,
   Button,
@@ -28,6 +28,7 @@ import { YearSwitch } from "common/src/components/YearSwitch";
 import { routes } from "../shared/routes";
 import { recalculateStatisticToUsers } from "common/src/services/statistic/user";
 import { SortOrder } from "antd/lib/table/interface";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 
 type Props = {
   currentUser: CurrentUser;
@@ -42,7 +43,7 @@ type Sorter = {
 export const Users = ({ currentUser }: Props) => {
   const { profile } = currentUser;
 
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const avatar = profile?.avatar;
   const { usersDocData, usersDocLoading } = useUsers({});
   const { deleteProfile } = useUser({ profile });

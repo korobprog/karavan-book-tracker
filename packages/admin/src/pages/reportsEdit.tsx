@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Typography, Form, Select } from "antd";
 import moment from "moment";
 
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { routes } from "../shared/routes";
 import { OperationDoc, useOperation } from "common/src/services/api/operations";
 import { useDebouncedCallback } from "use-debounce";
@@ -29,7 +30,7 @@ export const ReportsEdit = ({ currentUser }: Props) => {
   const [isOnline, setIsOnline] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const avatar = profile?.avatar;
   const { usersDocData } = useUsers({
     searchString: userSearchString,

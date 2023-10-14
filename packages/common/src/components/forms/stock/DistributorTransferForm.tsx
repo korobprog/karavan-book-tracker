@@ -12,22 +12,35 @@ import {
 import * as storage from "common/src/services/localStorage/reportBooks";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { $books, $booksLoading, Book } from "common/src/services/books";
-import { TransferTypeSelect } from "common/src/components/TransferTypeSelect";
+import {
+  DistributorTransferType,
+  TransferTypeSelect,
+} from "common/src/components/TransferTypeSelect";
 
 import moment from "moment";
 import { StockFormValues, calcBooksCountsFromValues, calcFormValuesFromBooks } from "./helpers";
-import { HolderTransferType } from "../../../services/api/holderTransfer";
-import { HolderType } from "../../../services/api/holders";
+import { HolderBooks, HolderType } from "../../../services/api/holders";
 
 type Props = {
   currentUser: CurrentUser;
   onFinish: (formValues: StockFormValues) => void;
   isSubmitting?: boolean;
   initialValues?: StockFormValues;
+  typeParam: DistributorTransferType;
+  onTypeChange: (value: DistributorTransferType) => void;
+  availableBooks?: HolderBooks;
 };
 
 export const DistributorTransferForm = (props: Props) => {
-  const { currentUser, onFinish, isSubmitting, initialValues: initialValuesProps } = props;
+  const {
+    currentUser,
+    onFinish,
+    isSubmitting,
+    initialValues: initialValuesProps,
+    typeParam,
+    onTypeChange,
+    availableBooks,
+  } = props;
   const { userDocLoading } = currentUser;
   const [searchString, setSearchString] = useState("");
   const [selectedBooks, setSelectedBooks] = useState<Book[]>([]);
@@ -46,7 +59,7 @@ export const DistributorTransferForm = (props: Props) => {
 
   const initialValues = {
     date: moment(),
-    transferType: HolderTransferType.installments,
+    transferType: typeParam,
     ...initialValuesProps,
   };
 
@@ -69,6 +82,10 @@ export const DistributorTransferForm = (props: Props) => {
     const formValues: StockFormValues = form.getFieldsValue();
     const { totalCount } = calcBooksCountsFromValues(formValues);
     setTotalBooksCount(totalCount);
+
+    if (typeParam !== formValues.transferType) {
+      onTypeChange(formValues.transferType as DistributorTransferType);
+    }
   };
 
   const onBooksReset = () => {
@@ -86,18 +103,21 @@ export const DistributorTransferForm = (props: Props) => {
     const newBook = books.find((book) => book.id === bookId);
     if (newBook) {
       setSelectedBooks([...selectedBooks, newBook]);
+      form.setFieldsValue({ [bookId]: 1 });
     }
   };
 
-  const onPlusClick = (bookId: string) => {
+  const onPlusClick = (bookId: string, maxCount: number) => {
     const prevValue = form.getFieldValue(bookId) || 0;
-    form.setFieldsValue({ [bookId]: prevValue + 1 });
-    onValuesChange();
+    if (prevValue !== maxCount) {
+      form.setFieldsValue({ [bookId]: prevValue + 1 });
+      onValuesChange();
+    }
   };
 
-  const onMinusClick = (bookId: string) => {
+  const onMinusClick = (bookId: string, minCount: number) => {
     const prevValue = form.getFieldValue(bookId) || 0;
-    if (prevValue !== 0) {
+    if (prevValue !== minCount) {
       form.setFieldsValue({ [bookId]: prevValue - 1 });
       onValuesChange();
     }
@@ -110,32 +130,43 @@ export const DistributorTransferForm = (props: Props) => {
 
   const renderBookItem = (book: Book, isSelected: boolean) => {
     const StarIcon = isSelected ? StarFilled : StarOutlined;
+    const isBookFinded =
+      book.name.toLowerCase().includes(searchString) ||
+      book.short_name.toLowerCase().includes(searchString);
 
-    return book.name.toLowerCase().includes(searchString) ? (
+    const availableBookCount = availableBooks?.[book.id];
+
+    const minCount = 0;
+    const maxCount = (availableBooks && availableBookCount) || 10000;
+
+    return isBookFinded && (!availableBooks || (availableBookCount && availableBookCount > 0)) ? (
       <List.Item>
         <StarIcon style={{ fontSize: "24px", marginRight: 12, color: "#bae0ff" }} />
-        <List.Item.Meta title={book.name} />
+        <List.Item.Meta title={book.name} description={book.short_name} />
+        <Space>
+          <Typography>Доступно {availableBookCount}</Typography>
 
-        {isSelected ? (
-          <Space>
-            <Button onClick={() => onMinusClick(book.id)} icon={<MinusOutlined />} />
-            <Form.Item name={book.id} noStyle>
-              <InputNumber
-                min={0}
-                max={10000}
-                style={{ width: 70 }}
-                type="number"
-                inputMode="numeric"
-                pattern="\d*"
-              />
-            </Form.Item>
-            <Button onClick={() => onPlusClick(book.id)} icon={<PlusOutlined />} />
-          </Space>
-        ) : (
-          <Button onClick={() => onSelectClick(book.id)} icon={<SelectOutlined />}>
-            Выбрать
-          </Button>
-        )}
+          {isSelected ? (
+            <Space>
+              <Button onClick={() => onMinusClick(book.id, minCount)} icon={<MinusOutlined />} />
+              <Form.Item name={book.id} noStyle>
+                <InputNumber
+                  min={minCount}
+                  max={maxCount}
+                  style={{ width: 70 }}
+                  type="number"
+                  inputMode="numeric"
+                  pattern="\d*"
+                />
+              </Form.Item>
+              <Button onClick={() => onPlusClick(book.id, maxCount)} icon={<PlusOutlined />} />
+            </Space>
+          ) : (
+            <Button onClick={() => onSelectClick(book.id)} icon={<SelectOutlined />}>
+              Выбрать
+            </Button>
+          )}
+        </Space>
       </List.Item>
     ) : (
       <Form.Item name={book.id} noStyle />
@@ -181,7 +212,7 @@ export const DistributorTransferForm = (props: Props) => {
             loading={isSubmitting || userDocLoading}
             disabled={totalBooksCount === 0}
           >
-            {isSubmitting ? "Отправляем..." : "Отправить"}
+            {isSubmitting ? "Сохраняем..." : "Сохранить"}
           </Button>
         </Space>
       </Form.Item>

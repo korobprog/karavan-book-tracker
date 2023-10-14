@@ -9,9 +9,9 @@ export const removeEmptyFields = (obj: Record<string, any>): any => {
 };
 
 export const calcObjectFields = <Obj extends Record<string, any>>(
-  prev: Obj,
+  prev: Obj = {} as Obj,
   operator: "+" | "-",
-  next: Obj
+  next: Obj = {} as Obj
 ): Obj => {
   const result = { ...prev } as Record<string, any>;
   for (const key in next) {

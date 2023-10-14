@@ -5,81 +5,95 @@ import { calcObjectFields } from "../../utils/objects";
 
 const getDistributor = (id?: string | null) => {
   const distributors = $distributors.getState();
-  const currentDistributor = distributors.find((value) => value.id === id);
-  return currentDistributor;
+  const distributor = distributors.find((value) => value.id === id);
+  const distributorPath = `distributors.${distributor?.id}`;
+
+  return { distributor, distributorPath };
 };
 
 export const addHolderTransferMultiAction = async (newHolderTransfer: HolderTransferDoc) => {
   try {
+    const stock = $stock.getState();
+    const { books, fromHolderId, toHolderId } = newHolderTransfer;
+
+    if (!stock) {
+      return console.error("holder not found");
+    }
+
     switch (newHolderTransfer.type) {
-      // Приход
-      case HolderTransferType.bbtIncome: {
-        const stock = $stock.getState();
-        if (!stock) {
-          return console.error("stock not found");
-        }
-
-        const booksSum = calcObjectFields(stock?.books || {}, "+", newHolderTransfer.books);
-
+      // Приход, Корректировка, Найденные, Пожертвования
+      case HolderTransferType.bbtIncome:
+      case HolderTransferType.adjustment:
+      case HolderTransferType.found:
+      case HolderTransferType.donations: {
         return Promise.all([
-          updateHolder(stock.id, { books: booksSum }),
+          updateHolder(stock.id, { books: calcObjectFields(stock.books, "+", books) }),
           addHolderTransfer(newHolderTransfer),
         ]);
       }
 
       // Выдача в рассрочку
       case HolderTransferType.installments: {
-        const distributor = getDistributor(newHolderTransfer.toHolderId);
+        const { distributor, distributorPath } = getDistributor(toHolderId);
         if (!distributor) {
           return console.error("distributor not found");
         }
 
-        const booksSum = calcObjectFields(distributor?.books || {}, "+", newHolderTransfer.books);
-
-        // TODO: Списать со своего склада
         return Promise.all([
           addHolderTransfer(newHolderTransfer),
-          updateHolder(distributor.id, { books: booksSum }),
+          updateHolder(stock.id, {
+            books: calcObjectFields(stock.books, "-", books),
+            [distributorPath]: calcObjectFields(stock.distributors?.[distributor.id], "+", books),
+          }),
+          updateHolder(distributor.id, { books: calcObjectFields(distributor.books, "+", books) }),
         ]);
       }
 
       // Продажа
       case HolderTransferType.sale: {
-        // TODO: Списать со своего склада
-        // TODO: Учитывать в статистике распростроненных
-        return Promise.all([addHolderTransfer(newHolderTransfer)]);
-      }
-
-      // Возврат
-      case HolderTransferType.return: {
-        const distributor = getDistributor(newHolderTransfer.fromHolderId);
+        const { distributor } = getDistributor(toHolderId);
         if (!distributor) {
           return console.error("distributor not found");
         }
 
-        const booksSum = calcObjectFields(distributor?.books || {}, "-", newHolderTransfer.books);
+        // TODO: Учитывать в статистике распростроненных
+        return Promise.all([
+          updateHolder(stock.id, { books: calcObjectFields(stock.books, "-", books) }),
+          updateHolder(distributor.id, { books: calcObjectFields(distributor.books, "+", books) }),
+          addHolderTransfer(newHolderTransfer),
+        ]);
+      }
 
-        // TODO: В свой склад добавлять
+      // Возврат
+      case HolderTransferType.return: {
+        const { distributor, distributorPath } = getDistributor(fromHolderId);
+        if (!distributor) {
+          return console.error("distributor not found");
+        }
+
         return Promise.all([
           addHolderTransfer(newHolderTransfer),
-          updateHolder(distributor.id, { books: booksSum }),
+          updateHolder(stock.id, {
+            books: calcObjectFields(stock.books, "+", books),
+            [distributorPath]: calcObjectFields(stock.distributors?.[distributor.id], "-", books),
+          }),
+          updateHolder(distributor.id, { books: calcObjectFields(distributor.books, "-", books) }),
         ]);
       }
 
       // Принять отчет и платеж по выданным ранее книгам
       case HolderTransferType.report: {
-        const distributor = getDistributor(newHolderTransfer.fromHolderId);
+        const { distributor, distributorPath } = getDistributor(fromHolderId);
         if (!distributor) {
           return console.error("distributor not found");
         }
 
-        const booksSum = calcObjectFields(distributor.books || {}, "-", newHolderTransfer.books);
-
-        // TODO: В свой склад добавлять
         // TODO: Учитывать в статистике распростроненных
         return Promise.all([
           addHolderTransfer(newHolderTransfer),
-          updateHolder(distributor.id, { books: booksSum }),
+          updateHolder(stock.id, {
+            [distributorPath]: calcObjectFields(stock.distributors?.[distributor.id], "-", books),
+          }),
         ]);
       }
     }

@@ -21,7 +21,7 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
         placeholder="Начните вводить..."
         defaultActiveFirstOption={false}
         autoClearSearchValue={false}
-        showArrow={false}
+        suffixIcon={null}
         filterOption={false}
         allowClear
         notFoundContent={

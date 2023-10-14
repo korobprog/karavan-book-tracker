@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 
 import { routes } from "../shared/routes";
 import { OperationDoc } from "common/src/services/api/operations";
@@ -21,7 +21,7 @@ export const Report = ({ currentUser }: Props) => {
   const [isOnline, setIsOnline] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const avatar = profile?.avatar;
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
 
   useEffect(() => {
     if (!user && !loading) {

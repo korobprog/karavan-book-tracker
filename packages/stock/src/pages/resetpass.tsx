@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Form, Input, Button, Typography, Row, notification } from "antd";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
@@ -13,7 +13,7 @@ type Props = {
 export const Reset = ({ currentUser }: Props) => {
   const auth = getAuth();
   const { user } = currentUser;
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
