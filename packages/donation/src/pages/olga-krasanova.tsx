@@ -69,6 +69,7 @@ export const OlgaK = () => {
         <Paragraph>
           <a href="https://t.me/Gauravani_dd">
             <Image alt="telegram" src={telegram} height={30} width={30} preview={false} />
+            t.me/Gauravani_dd
           </a>
         </Paragraph>
       </div>

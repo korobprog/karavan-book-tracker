@@ -57,8 +57,9 @@ export const EvgenyK = () => {
       <Text>My contacts</Text>
       <div style={{ display: "flex", justifyContent: "center" }}>
         <Paragraph>
-          <a href="https://t.me/+87QpmUsO_Gw2NDNi">
+          <a href="https://t.me/VRM108">
             <Image alt="telegram" src={telegram} height={30} width={30} preview={false} />
+            t.me/VRM108
           </a>
         </Paragraph>
       </div>
