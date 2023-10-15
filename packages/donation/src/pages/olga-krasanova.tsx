@@ -42,11 +42,11 @@ export const OlgaK = () => {
         </Space>
       </Paragraph> */}
 
-      <Paragraph copyable>
+      <Paragraph>
         <Space align="center">
           <BankOutlined />
           <CreditCardOutlined />
-          <Text style={{ fontSize: "150%" }} code>
+          <Text copyable style={{ fontSize: "150%" }} code>
             2200700520451401
           </Text>
         </Space>
