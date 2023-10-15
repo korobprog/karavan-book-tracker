@@ -53,11 +53,11 @@ export const OlgaK = () => {
       </Paragraph>
       <Divider dashed />
       <Image preview={false} alt="Sber" src={logoSber} width={150} />
-      <Paragraph copyable>
+      <Paragraph>
         <Space align="center">
           <BankOutlined />
           <CreditCardOutlined />
-          <Text style={{ fontSize: "150%" }} code>
+          <Text copyable style={{ fontSize: "150%" }} code>
             2202206323240833
           </Text>
         </Space>
@@ -86,7 +86,7 @@ export const OlgaK = () => {
         </Button>
       </div>
       <Divider dashed />
-      <Paragraph copyable>
+      <Paragraph>
         <Text>
           <a href="https://books-donation.web.app/olgak">www.books-donation.web.app/olgak</a>
         </Text>

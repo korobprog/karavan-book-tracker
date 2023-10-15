@@ -30,16 +30,16 @@ export const EvgenyK = () => {
         Evgeny Kovalsky
       </Title>
       <Text strong>Gocha Afciauri TBS</Text>
-      <Paragraph copyable>
+      <Paragraph>
         <CreditCardOutlined />
-        <Text style={{ fontSize: "150%" }} code>
+        <Text copyable style={{ fontSize: "150%" }} code>
           22001023396
         </Text>
       </Paragraph>
 
       <Divider dashed />
       <Image preview={false} alt="Tinkoff" src={logoTinkoff} width={150} />
-      <Paragraph copyable>
+      <Paragraph>
         {/*    <Space align="center">
           <BankOutlined />
           <Button href="https://www.tinkoff.ru/rm/korobkov.maksim37/xORxX45790">
@@ -48,7 +48,7 @@ export const EvgenyK = () => {
         </Space> */}
 
         <CreditCardOutlined />
-        <Text style={{ fontSize: "150%" }} code>
+        <Text copyable style={{ fontSize: "150%" }} code>
           5536914106233152
         </Text>
       </Paragraph>
@@ -76,7 +76,7 @@ export const EvgenyK = () => {
         </Button>
       </div>
       <Divider dashed />
-      <Paragraph copyable>
+      <Paragraph>
         <Text>
           <a href="https://books-donation.web.app/evgenyk">www.books-donation.web.app/evgenyk</a>
         </Text>

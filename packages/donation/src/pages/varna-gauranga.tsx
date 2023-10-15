@@ -28,9 +28,9 @@ export const VarnaG = () => {
         Vladislav Nikolaevich M
       </Title>
       <Text strong>Gocha Afciauri TBS</Text>
-      <Paragraph copyable>
+      <Paragraph>
         <CreditCardOutlined />
-        <Text style={{ fontSize: "150%" }} code>
+        <Text copyable style={{ fontSize: "150%" }} code>
           22001023396
         </Text>
       </Paragraph>
@@ -48,7 +48,7 @@ export const VarnaG = () => {
         </Button>
       </div>
       <Divider dashed />
-      <Paragraph copyable>
+      <Paragraph>
         <Text>
           <a href="https://books-donation.web.app/varnag">www.books-donation.web.app/varnag</a>
         </Text>
