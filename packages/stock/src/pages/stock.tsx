@@ -48,6 +48,10 @@ export const Stock = ({ currentUser }: Props) => {
       </Button>
 
       <Divider dashed />
+      <Typography.Title level={3}> Книги на складе:</Typography.Title>
+      <StockList currentUser={currentUser} holderBooks={stockBooks} />
+
+      <Divider dashed />
       <HolderTransferList title="Последние операции:" />
 
       <Divider dashed />
