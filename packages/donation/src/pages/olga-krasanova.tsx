@@ -28,7 +28,7 @@ export const OlgaK = () => {
         <Avatar size={80} src={<img src={avatar} alt="Ольга" />} />
       </div>
       <Title className="site-page-title" level={4}>
-        Krasnova Olga
+        Krasanova Olga
       </Title>
 
       <Divider dashed />
