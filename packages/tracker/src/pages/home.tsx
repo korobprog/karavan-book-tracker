@@ -7,6 +7,7 @@ import {
   EnvironmentOutlined,
   BarChartOutlined,
   TeamOutlined,
+  WalletOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
@@ -73,6 +74,15 @@ export const Home = ({ currentUser }: Props) => {
         type="dashed"
       >
         Общая статистика на карте
+      </Button>
+      <Divider dashed />
+      <Button
+        block
+        size="large"
+        icon={<WalletOutlined />}
+        onClick={() => navigate(routes.pageDonations)}
+      >
+        Страница для пожертвований
       </Button>
       <Divider dashed />
       <Paragraph>Отправить полученные контакты:</Paragraph>
