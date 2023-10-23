@@ -1,71 +1,87 @@
 import React from "react";
-import { getAuth, signOut } from "firebase/auth";
-import { Button, Typography, Tooltip } from "antd";
+import { Button, Form, Space, Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../shared/routes";
 import { useUser } from "common/src/services/api/useUser";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import { BaseLayout } from "common/src/components/BaseLayout";
-import { LogoutOutlined } from "@ant-design/icons";
-import { ProfileForm, ProfileFormValues } from "common/src/components/forms/profile/ProfileForm";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { DonationPageDoc } from "common/src/services/api/donation";
 
 type Props = {
   currentUser: CurrentUser;
 };
 
 const PageDonations = ({ currentUser }: Props) => {
-  const { profile, user, userDocLoading } = currentUser;
-  const { setProfile } = useUser({ profile, user });
-  const auth = getAuth();
-  const navigate = useNavigate();
+  const { profile, user } = currentUser;
 
   const avatar = profile?.avatar;
 
-  const initialValues: ProfileFormValues = {
-    ...profile,
-    name: profile?.name || user?.displayName || "",
-    email: profile?.email || user?.email || "",
-    registrationDate: profile?.registrationDate
-      ? profile?.registrationDate
-      : new Date().toISOString(),
-  };
-
-  const onLogout = () => {
-    signOut(auth);
+  const initialPageDoc: DonationPageDoc = {
+    banks: [],
+    active: false,
+    avatar: "",
   };
 
   const userId = profile?.id || user?.uid || "";
 
-  const onFinish = async (formValues: ProfileFormValues) => {
-    if (userId) {
-      setProfile(formValues).then(() => navigate(routes.root));
-    }
-  };
+  const onFinish = async (formValues: DonationPageDoc) => {};
 
-  return (
-    <BaseLayout
-      title="Донаты"
-      backPath={routes.root}
-      userDocLoading={userDocLoading}
-      headerActions={[
-        <Tooltip title="Выйти" key="logout">
-          <Button type="ghost" shape="circle" icon={<LogoutOutlined />} onClick={onLogout} />
-        </Tooltip>,
-      ]}
-      avatar={avatar}
-    >
-      <Typography.Title className="site-page-title" level={2}>
-        Список банков
-      </Typography.Title>
-      {userDocLoading ? (
-        <Typography.Title className="site-page-title" level={5}>
-          Загрузка...
-        </Typography.Title>
-      ) : (
-        <ProfileForm initialValues={initialValues} onFinish={onFinish} userId={userId} />
+  <Form
+    name="dynamic_form_nest_item"
+    onFinish={onFinish}
+    style={{ maxWidth: 600 }}
+    autoComplete="off"
+  >
+    <Form.List name="users">
+      {(fields, { add, remove }) => (
+        <>
+          {fields.map(({ key, name, ...restField }) => (
+            <Space key={key} style={{ display: "flex", marginBottom: 8 }} align="baseline">
+              <Form.Item
+                {...restField}
+                name={[name, "first"]}
+                rules={[{ required: true, message: "Missing first name" }]}
+              >
+                <Input placeholder="Банк" />
+              </Form.Item>
+              <Form.Item
+                {...restField}
+                name={[name, "last"]}
+                rules={[{ required: true, message: "Missing last name" }]}
+              >
+                <Input placeholder="Номер карты" />
+              </Form.Item>
+              <MinusCircleOutlined onClick={() => remove(name)} />
+              <Form.Item
+                {...restField}
+                name={[name, "last"]}
+                rules={[{ required: true, message: "Missing last name" }]}
+              >
+                <Input placeholder="Ссылка на QR" />
+              </Form.Item>
+              <MinusCircleOutlined onClick={() => remove(name)} />
+            </Space>
+          ))}
+          <Form.Item>
+            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+              Добавить новые реквезиты
+            </Button>
+          </Form.Item>
+        </>
       )}
-    </BaseLayout>
-  );
+    </Form.List>
+    <Form.Item>
+      <Button
+        type="primary"
+        htmlType="submit"
+        initialPageDoc={initialPageDoc}
+        onFinish={onFinish}
+        userId={userId}
+      >
+        СОХРАНИТЬ
+      </Button>
+    </Form.Item>
+  </Form>;
 };
 
 export default PageDonations;

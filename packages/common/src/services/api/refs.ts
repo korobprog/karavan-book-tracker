@@ -12,6 +12,7 @@ import { UserDoc, UserDocWithId } from "./useUser";
 import { idConverter } from "./utils";
 import { HolderDistributorDoc, HolderDoc, HolderStockDoc } from "./holders";
 import { HolderTransferDoc } from "./holderTransfer";
+import { DonationPageDoc } from "./donation";
 
 export type WithId<T> = { id: string } & T;
 
@@ -46,6 +47,9 @@ const distributors = getCollectionRef<WithId<HolderDistributorDoc>>("holders");
 const holderTransfer = (id: string) => getDocRef<HolderTransferDoc>(id, "holder-transactions");
 const holderTransfers = getCollectionRef<WithId<HolderTransferDoc>>("holder-transactions");
 
+const donationPage = (id: string) => getDocRef<DonationPageDoc>(id, "donationPage");
+const donationPages = getCollectionRef<DonationPageDoc>("donationPage");
+
 export const apiRefs = {
   user,
   addUser,
@@ -62,4 +66,6 @@ export const apiRefs = {
   distributors,
   holderTransfer,
   holderTransfers,
+  donationPage,
+  donationPages,
 };
