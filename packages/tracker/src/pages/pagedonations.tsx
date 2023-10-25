@@ -1,11 +1,13 @@
-import React from "react";
-import { Button, Form, Space, Input } from "antd";
-import { useNavigate } from "react-router-dom";
-import { routes } from "../shared/routes";
-import { useUser } from "common/src/services/api/useUser";
+import React, { useState } from "react";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { DonationPageDoc } from "common/src/services/api/donation";
+import { DonationPageDoc, editDonationPageDoc } from "common/src/services/api/donation";
+import { apiRefs } from "common/src/services/api/refs";
+import { useDocumentData } from "react-firebase-hooks/firestore";
+import { PageForm } from "common/src/components/forms/profile/PageForm";
+import { Divider, Form, Switch, Typography } from "antd";
+import { BaseLayout } from "common/src/components/BaseLayout";
+import { routes } from "../shared/routes";
+import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 
 type Props = {
   currentUser: CurrentUser;
@@ -14,74 +16,54 @@ type Props = {
 const PageDonations = ({ currentUser }: Props) => {
   const { profile, user } = currentUser;
 
+  const [disabled, setDisabled] = useState(true);
+
+  const toggle = () => {
+    setDisabled(!disabled);
+  };
+
   const avatar = profile?.avatar;
 
   const initialPageDoc: DonationPageDoc = {
     banks: [],
     active: false,
-    avatar: "",
+    socialTelegram: "",
   };
 
   const userId = profile?.id || user?.uid || "";
 
-  const onFinish = async (formValues: DonationPageDoc) => {};
+  const [donationPageDocData, donationDocLoading] = useDocumentData<DonationPageDoc>(
+    apiRefs.donationPage(userId)
+  );
 
-  <Form
-    name="dynamic_form_nest_item"
-    onFinish={onFinish}
-    style={{ maxWidth: 600 }}
-    autoComplete="off"
-  >
-    <Form.List name="users">
-      {(fields, { add, remove }) => (
-        <>
-          {fields.map(({ key, name, ...restField }) => (
-            <Space key={key} style={{ display: "flex", marginBottom: 8 }} align="baseline">
-              <Form.Item
-                {...restField}
-                name={[name, "first"]}
-                rules={[{ required: true, message: "Missing first name" }]}
-              >
-                <Input placeholder="Банк" />
-              </Form.Item>
-              <Form.Item
-                {...restField}
-                name={[name, "last"]}
-                rules={[{ required: true, message: "Missing last name" }]}
-              >
-                <Input placeholder="Номер карты" />
-              </Form.Item>
-              <MinusCircleOutlined onClick={() => remove(name)} />
-              <Form.Item
-                {...restField}
-                name={[name, "last"]}
-                rules={[{ required: true, message: "Missing last name" }]}
-              >
-                <Input placeholder="Ссылка на QR" />
-              </Form.Item>
-              <MinusCircleOutlined onClick={() => remove(name)} />
-            </Space>
-          ))}
-          <Form.Item>
-            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-              Добавить новые реквезиты
-            </Button>
-          </Form.Item>
-        </>
+  const initialValues = donationPageDocData || initialPageDoc;
+  console.log("🚀 ~ file: pagedonations.tsx:39 ~ PageDonations ~ initialValues:", initialValues);
+
+  const onFinish = async (formValues: DonationPageDoc) => {
+    if (userId) {
+      editDonationPageDoc(userId, formValues);
+      console.log("🚀 ~ file: pagedonations.tsx:44 ~ onFinish ~ formValues:", formValues);
+    }
+  };
+  return (
+    <BaseLayout title="Страница для пожертвований" isAdmin backPath={routes.root} avatar={avatar}>
+      <Form.Item label="активировать страницу">
+        <Switch
+          checkedChildren={<CheckOutlined />}
+          unCheckedChildren={<CloseOutlined />}
+          defaultChecked
+          onClick={toggle}
+        />
+      </Form.Item>
+      {donationDocLoading || !initialPageDoc ? (
+        <Typography.Title className="site-page-title" level={5}>
+          Загрузка...
+        </Typography.Title>
+      ) : (
+        <PageForm disabled={disabled} initialValues={initialValues} onFinish={onFinish} />
       )}
-    </Form.List>
-    <Form.Item>
-      <Button
-        type="primary"
-        htmlType="submit"
-        initialPageDoc={initialPageDoc}
-        onFinish={onFinish}
-        userId={userId}
-      >
-        СОХРАНИТЬ
-      </Button>
-    </Form.Item>
-  </Form>;
+    </BaseLayout>
+  );
 };
 
 export default PageDonations;

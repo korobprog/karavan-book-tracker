@@ -1,12 +1,27 @@
 import React from "react";
-import { Divider, QRCode, Typography, Image, Avatar, Button, Space } from "antd";
+import { CurrentUser } from "common/src/services/api/useCurrentUser";
+import { DonationPageDoc, editDonationPageDoc } from "common/src/services/api/donation";
+import { apiRefs } from "common/src/services/api/refs";
+import { useDocumentData } from "react-firebase-hooks/firestore";
+import { Avatar, Button, Divider, QRCode, Space, Typography, Image } from "antd";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { BankOutlined, CreditCardOutlined } from "@ant-design/icons";
-import telegram from "../img/telegram-svgrepo-com.svg";
-import avatar from "../img/evgeny_avatar.jpg";
-import logoTinkoff from "../img/tinkoff_logo.svg";
 
-export const EvgenyK = () => {
+type Props = {
+  currentUser: CurrentUser;
+};
+
+const PageDonations = ({ currentUser }: Props) => {
+  const { profile, user } = currentUser;
+
+  const avatar = profile?.avatar;
+
+  const userId = profile?.id || user?.uid || "";
+
+  const [donationPageDocData, donationDocLoading] = useDocumentData<DonationPageDoc>(
+    apiRefs.donationPage(userId)
+  );
+
   const downloadQRCode = () => {
     const canvas = document.getElementById("myqrcode")?.querySelector<HTMLCanvasElement>("canvas");
     if (canvas) {
@@ -21,6 +36,7 @@ export const EvgenyK = () => {
   };
   const { Title } = Typography;
   const { Paragraph, Text } = Typography;
+
   return (
     <BaseLayout title="Book Donation" headerActions={[]}>
       <div style={{ display: "flex", justifyContent: "center" }}>
@@ -33,30 +49,31 @@ export const EvgenyK = () => {
       <Paragraph copyable>
         <CreditCardOutlined />
         <Text style={{ fontSize: "150%" }} code>
-          22001023396
+          {donationPageDocData?.banks}
         </Text>
       </Paragraph>
 
       <Divider dashed />
-      <Image preview={false} alt="Tinkoff" src={logoTinkoff} width={150} />
       <Paragraph copyable>
-        {/*    <Space align="center">
+        <Space align="center">
           <BankOutlined />
           <Button href="https://www.tinkoff.ru/rm/korobkov.maksim37/xORxX45790">
             ПЕРЕВОД ЧЕРЕЗ TINKOFF
           </Button>
-        </Space> */}
+        </Space>
+
         <CreditCardOutlined />
         <Text style={{ fontSize: "150%" }} code>
           5536914106233152
         </Text>
       </Paragraph>
+
       <Divider dashed />
       <Text>My contacts</Text>
       <div style={{ display: "flex", justifyContent: "center" }}>
         <Paragraph>
           <a href="https://t.me/+87QpmUsO_Gw2NDNi">
-            <Image alt="telegram" src={telegram} height={30} width={30} preview={false} />
+            <Image alt="telegram" src={avatar} height={30} width={30} preview={false} />
           </a>
         </Paragraph>
       </div>
@@ -81,3 +98,5 @@ export const EvgenyK = () => {
     </BaseLayout>
   );
 };
+
+export default PageDonations;
