@@ -4,7 +4,7 @@ import { DonationPageDoc, editDonationPageDoc } from "common/src/services/api/do
 import { apiRefs } from "common/src/services/api/refs";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { PageForm } from "common/src/components/forms/profile/PageForm";
-import { Divider, Form, Switch, Typography } from "antd";
+import { Form, Switch, Typography } from "antd";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { routes } from "../shared/routes";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
@@ -37,12 +37,10 @@ const PageDonations = ({ currentUser }: Props) => {
   );
 
   const initialValues = donationPageDocData || initialPageDoc;
-  console.log("🚀 ~ file: pagedonations.tsx:39 ~ PageDonations ~ initialValues:", initialValues);
 
   const onFinish = async (formValues: DonationPageDoc) => {
     if (userId) {
       editDonationPageDoc(userId, formValues);
-      console.log("🚀 ~ file: pagedonations.tsx:44 ~ onFinish ~ formValues:", formValues);
     }
   };
   return (

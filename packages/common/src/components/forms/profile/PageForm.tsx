@@ -37,14 +37,14 @@ export const PageForm = <FormValues extends PageFormValues>(props: Props<FormVal
                   name={[name, "bankName"]}
                   rules={[{ required: true, message: "Введите название банка" }]}
                 >
-                  <Input disabled={disabled} placeholder="Введите название банка" />
+                  <Input disabled={disabled} placeholder="Банк" />
                 </Form.Item>
                 <Form.Item
                   {...restField}
                   name={[name, "cardNumber"]}
                   rules={[{ required: true, message: "Введите номер карты" }]}
                 >
-                  <Input disabled={disabled} placeholder="Номер карты" />
+                  <Input disabled={disabled} placeholder="№-карты" />
                 </Form.Item>
                 <Form.Item {...restField} name={[name, "qrLink"]}>
                   <Input
@@ -54,7 +54,7 @@ export const PageForm = <FormValues extends PageFormValues>(props: Props<FormVal
                       </Tooltip>
                     }
                     disabled={disabled}
-                    placeholder="Ссылка на QR"
+                    placeholder="QR"
                   />
                 </Form.Item>
                 <MinusCircleOutlined onClick={() => remove(name)} />
