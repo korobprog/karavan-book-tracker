@@ -3,5 +3,5 @@ export const routes = {
   varnag: "/varnag",
   evgenyk: "/evgenyk",
   olgak: "/olgak",
-  pagedonation: "/pagedonation",
+  page: "/page/:pageId",
 };

@@ -28,6 +28,8 @@ const PageDonations = ({ currentUser }: Props) => {
     banks: [],
     active: false,
     socialTelegram: "",
+    socialWhats: "",
+    socialLink: "",
   };
 
   const userId = profile?.id || user?.uid || "";

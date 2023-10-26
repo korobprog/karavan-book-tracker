@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, Input, Space, Tooltip, Typography, Image, Divider } from "antd";
+import { Button, Form, Input, Space, Tooltip, Image, Divider } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { DonationPageDoc } from "common/src/services/api/donation";
 import { InfoCircleOutlined } from "@ant-design/icons";
@@ -18,7 +18,6 @@ type Props<FormValues> = {
 export const PageForm = <FormValues extends PageFormValues>(props: Props<FormValues>) => {
   const { onFinish, initialValues, disabled } = props;
 
-  const { Text } = Typography;
   return (
     <Form
       name="dynamic_form_nest_item"
