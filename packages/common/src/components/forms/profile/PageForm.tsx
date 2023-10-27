@@ -1,6 +1,6 @@
-import React from "react";
-import { Button, Form, Input, Space, Tooltip, Image, Divider } from "antd";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import React, { useState } from "react";
+import { Button, Form, Input, Space, Tooltip, Image, Divider, Switch } from "antd";
+import { MinusCircleOutlined, PlusOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { DonationPageDoc } from "common/src/services/api/donation";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import telegram from "common/src/images/telegram.svg";
@@ -16,7 +16,13 @@ type Props<FormValues> = {
 };
 
 export const PageForm = <FormValues extends PageFormValues>(props: Props<FormValues>) => {
-  const { onFinish, initialValues, disabled } = props;
+  const { onFinish, initialValues } = props;
+
+  const [disabled, setDisabled] = useState(true);
+
+  const toggle = () => {
+    setDisabled(!disabled);
+  };
 
   return (
     <Form
@@ -26,6 +32,13 @@ export const PageForm = <FormValues extends PageFormValues>(props: Props<FormVal
       autoComplete="off"
       initialValues={initialValues}
     >
+      <Form.Item name={"active"} label="активировать страницу">
+        <Switch
+          checkedChildren={<CheckOutlined />}
+          unCheckedChildren={<CloseOutlined />}
+          onClick={toggle}
+        />
+      </Form.Item>
       <Form.List name="banks">
         {(fields, { add, remove }) => (
           <>
@@ -94,7 +107,15 @@ export const PageForm = <FormValues extends PageFormValues>(props: Props<FormVal
             preview={false}
           />
           <Form.Item name="socialTelegram">
-            <Input disabled={disabled} placeholder="ссылка на ваш Telegram" />
+            <Input
+              disabled={disabled}
+              placeholder="ссылка на ваш Telegram"
+              suffix={
+                <Tooltip title="Пример: https://t.me/ваш_догин">
+                  <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
+                </Tooltip>
+              }
+            />
           </Form.Item>
         </Space>
         <Space>
@@ -107,7 +128,15 @@ export const PageForm = <FormValues extends PageFormValues>(props: Props<FormVal
             preview={false}
           />
           <Form.Item name="socialWhats">
-            <Input disabled={disabled} placeholder="ссылка на ваш Whats" />
+            <Input
+              disabled={disabled}
+              placeholder="ссылка на ваш Whats"
+              suffix={
+                <Tooltip title="Пример: 7xxxxxxxx">
+                  <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
+                </Tooltip>
+              }
+            />
           </Form.Item>
         </Space>
         <Space>
@@ -120,7 +149,15 @@ export const PageForm = <FormValues extends PageFormValues>(props: Props<FormVal
             preview={false}
           />
           <Form.Item name="socialLink">
-            <Input disabled={disabled} placeholder="другие ссылки" />
+            <Input
+              disabled={disabled}
+              placeholder="другие ссылки"
+              suffix={
+                <Tooltip title="Пример: mymail@mail.com">
+                  <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
+                </Tooltip>
+              }
+            />
           </Form.Item>
         </Space>
       </div>

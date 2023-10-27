@@ -16,12 +16,6 @@ type Props = {
 const PageDonations = ({ currentUser }: Props) => {
   const { profile, user } = currentUser;
 
-  const [disabled, setDisabled] = useState(true);
-
-  const toggle = () => {
-    setDisabled(!disabled);
-  };
-
   const avatar = profile?.avatar;
 
   const initialPageDoc: DonationPageDoc = {
@@ -47,20 +41,12 @@ const PageDonations = ({ currentUser }: Props) => {
   };
   return (
     <BaseLayout title="Страница для пожертвований" isAdmin backPath={routes.root} avatar={avatar}>
-      <Form.Item label="активировать страницу">
-        <Switch
-          checkedChildren={<CheckOutlined />}
-          unCheckedChildren={<CloseOutlined />}
-          defaultChecked
-          onClick={toggle}
-        />
-      </Form.Item>
       {donationDocLoading || !initialPageDoc ? (
         <Typography.Title className="site-page-title" level={5}>
           Загрузка...
         </Typography.Title>
       ) : (
-        <PageForm disabled={disabled} initialValues={initialValues} onFinish={onFinish} />
+        <PageForm initialValues={initialValues} onFinish={onFinish} />
       )}
     </BaseLayout>
   );

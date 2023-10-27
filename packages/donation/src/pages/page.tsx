@@ -47,20 +47,26 @@ export const Page = () => {
   const { Paragraph, Text, Link, Title } = Typography;
   return (
     <BaseLayout title="Book Donation" headerActions={[]} avatar={avatar}>
-      {!pageId ? (
+      {!pageId || initialValues.active ? (
         <PageExist />
       ) : (
         <>
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          <Space style={{ display: "flex", justifyContent: "center" }}>
             <Avatar size={80} src={<img src={avatar} alt="Евгений" />} />
-          </div>
+          </Space>
           <Title className="site-page-title" level={4}>
             здесь имя
           </Title>
           {initialValues.banks.map(({ bankName, cardNumber, qrLink }) => (
             <Space
               key={bankName}
-              style={{ display: "flex", marginBottom: 8, flexFlow: "column nowrap" }}
+              style={{
+                display: "flex",
+                marginBottom: 8,
+                flexFlow: "column nowrap",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
               align="baseline"
             >
               <Text strong>{bankName}</Text>
@@ -79,18 +85,54 @@ export const Page = () => {
             </Space>
           ))}
           <Divider dashed />
-          <Text>My contacts</Text>
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          <Space
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              flexWrap: "wrap",
+              justifyContent: "flex-start",
+              alignContent: "center",
+              alignItems: "flex-start",
+            }}
+          >
+            <Text>My contacts</Text>
+
             <Paragraph>
               <a href={initialValues.socialTelegram}>
-                <Image alt="telegram" src={telegram} height={30} width={30} preview={false} />
+                <Image alt="socialTelegram" src={telegram} height={30} width={30} preview={false} />
               </a>
               <Link style={{ marginLeft: 5 }} href={initialValues.socialTelegram} target="_blank">
                 {initialValues.socialTelegram}
               </Link>
             </Paragraph>
-          </div>
-          <Text>Donation leave here</Text>
+
+            <Paragraph>
+              <a href={initialValues.socialWhats}>
+                <Image alt="socialWhats" src={whats} height={30} width={30} preview={false} />
+              </a>
+              <Link
+                style={{ marginLeft: 5 }}
+                href={`tel:${initialValues.socialWhats}`}
+                target="_blank"
+              >
+                {initialValues.socialWhats}
+              </Link>
+            </Paragraph>
+
+            <Paragraph>
+              <a href={initialValues.socialLink}>
+                <Image alt="socialLink" src={email} height={30} width={30} preview={false} />
+              </a>
+              <Link
+                style={{ marginLeft: 5 }}
+                href={`mailto:${initialValues.socialLink}`}
+                target="_blank"
+              >
+                {initialValues.socialLink}
+              </Link>
+            </Paragraph>
+            <Text>Donation leave here</Text>
+          </Space>
           <div id="myqrcode">
             <QRCode
               className="centred"
