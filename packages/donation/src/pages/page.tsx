@@ -45,9 +45,11 @@ export const Page = () => {
     }
   };
   const { Paragraph, Text, Link, Title } = Typography;
+  const plug = !pageId || !initialValues.active;
+  console.log("🚀 ~ file: page.tsx:49 ~ Page ~ plug:", plug);
   return (
     <BaseLayout title="Book Donation" headerActions={[]} avatar={avatar}>
-      {!pageId || initialValues.active ? (
+      {plug ? (
         <PageExist />
       ) : (
         <>
@@ -76,12 +78,14 @@ export const Page = () => {
                   {cardNumber}
                 </Text>
               </Paragraph>
-              <QRCode
-                className="centred"
-                value={`${qrLink}`}
-                bgColor="#fff"
-                style={{ marginBottom: 16 }}
-              />
+              {qrLink && (
+                <QRCode
+                  className="centred"
+                  value={qrLink}
+                  bgColor="#fff"
+                  style={{ marginBottom: 16 }}
+                />
+              )}
             </Space>
           ))}
           <Divider dashed />
@@ -136,7 +140,7 @@ export const Page = () => {
           <div id="myqrcode">
             <QRCode
               className="centred"
-              value={`https://books-donation.web.app/${pageId}`}
+              value={`${window.location.href}${pageId}`}
               bgColor="#fff"
               style={{ marginBottom: 16 }}
             />

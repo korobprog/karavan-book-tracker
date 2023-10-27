@@ -13,6 +13,8 @@ export type DonationPageDoc = {
   socialWhats?: string;
   socialLink?: string;
   active?: boolean;
+  avatarPage?: string;
+  namePage?: string;
 };
 
 export type DonationTransferDocWithId = DonationPageDoc & {
