@@ -113,7 +113,7 @@ export const Distributor = ({ currentUser }: Props) => {
           <StockList
             title="Подотчетные книги у распространителя:"
             currentUser={currentUser}
-            holderBooks={stock.distributors?.[distributorId] || {}}
+            holderBooks={stock.distributors?.[distributorId].books || {}}
           />
           <Divider dashed />
 

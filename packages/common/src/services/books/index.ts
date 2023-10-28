@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Sheet } from "use-google-sheets/dist/types";
 import { createStore, createEvent } from "effector";
 import useGoogleSheets from "use-google-sheets";
+import { BaseStatisticItem } from "../api/statistic";
 
 export enum BooksCategories {
   small = "small",
@@ -11,13 +12,14 @@ export enum BooksCategories {
   other = "other",
 }
 
-const mapBooksByCategory = {
-  [BooksCategories.small]: { shortTitle: "S" },
-  [BooksCategories.medium]: { shortTitle: "M" },
-  [BooksCategories.big]: { shortTitle: "B" },
-  [BooksCategories.mahaBig]: { shortTitle: "MB" },
-  [BooksCategories.other]: { shortTitle: "O" },
-};
+export const mapBooksByCategory: Record<BooksCategories, { shortTitle: keyof BaseStatisticItem }> =
+  {
+    [BooksCategories.mahaBig]: { shortTitle: "MB" },
+    [BooksCategories.big]: { shortTitle: "B" },
+    [BooksCategories.medium]: { shortTitle: "M" },
+    [BooksCategories.small]: { shortTitle: "S" },
+    [BooksCategories.other]: { shortTitle: "O" },
+  };
 
 export type Book = {
   id: string;
