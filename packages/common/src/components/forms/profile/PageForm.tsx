@@ -19,6 +19,12 @@ type Props = {
 export const PageForm = (props: Props) => {
   const { onFinish, initialValues } = props;
 
+  const [switchState, setSwitchState] = useState(true);
+
+  const handleSwitchChange = (checked: boolean | ((prevState: boolean) => boolean)) => {
+    setSwitchState(checked);
+  };
+
   const { pageId } = useParams<{ pageId: string }>();
   console.log("🚀 ~ file: PageForm.tsx:23 ~ PageForm ~ pageId:", pageId);
 
@@ -41,6 +47,8 @@ export const PageForm = (props: Props) => {
           checkedChildren={<CheckOutlined />}
           unCheckedChildren={<CloseOutlined />}
           onClick={toggle}
+          checked={switchState}
+          onChange={handleSwitchChange}
         />
       </Form.Item>
       <Form.List name="banks">
