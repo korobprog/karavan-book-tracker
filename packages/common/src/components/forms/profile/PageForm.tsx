@@ -1,6 +1,12 @@
 import React, { useState } from "react";
-import { Button, Form, Input, Space, Tooltip, Image, Divider, Switch } from "antd";
-import { MinusCircleOutlined, PlusOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import { Button, Form, Input, Space, Tooltip, Image, Divider, Switch, Avatar } from "antd";
+import {
+  MinusCircleOutlined,
+  PlusOutlined,
+  CheckOutlined,
+  CloseOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { DonationPageDoc } from "common/src/services/api/donation";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import telegram from "common/src/images/telegram.svg";
@@ -94,7 +100,7 @@ export const PageForm = <FormValues extends PageFormValues>(props: Props<FormVal
           flexFlow: "column nowrap",
           alignItems: "center",
           alignContent: "center",
-          height: 100,
+          height: 200,
         }}
       >
         <Space>

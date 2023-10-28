@@ -1,12 +1,9 @@
 import React from "react";
 import { Divider, QRCode, Typography, Image, Avatar, Button, Space } from "antd";
 import { BaseLayout } from "common/src/components/BaseLayout";
-import { BankOutlined, CreditCardOutlined } from "@ant-design/icons";
+import { CreditCardOutlined } from "@ant-design/icons";
 import avatar from "../img/evgeny_avatar.jpg";
-import logoTinkoff from "../img/tinkoff_logo.svg";
-import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { useParams } from "react-router-dom";
-import { routes } from "../shared/routes";
 import { PageExist } from "./404";
 import { DonationPageDoc } from "common/src/services/api/donation";
 import { useDocumentData } from "react-firebase-hooks/firestore";
@@ -71,13 +68,15 @@ export const Page = () => {
               }}
               align="baseline"
             >
-              <Text strong>{bankName}</Text>
-              <Paragraph copyable>
-                <CreditCardOutlined />
-                <Text style={{ fontSize: "150%" }} code>
-                  {cardNumber}
-                </Text>
-              </Paragraph>
+              {bankName && <Text strong>{bankName}</Text>}
+              {cardNumber && (
+                <Paragraph copyable>
+                  <CreditCardOutlined />
+                  <Text style={{ fontSize: "150%" }} code>
+                    {cardNumber}
+                  </Text>
+                </Paragraph>
+              )}
               {qrLink && (
                 <QRCode
                   className="centred"
@@ -100,54 +99,65 @@ export const Page = () => {
             }}
           >
             <Text>My contacts</Text>
-
-            <Paragraph>
-              <a href={initialValues.socialTelegram}>
-                <Image alt="socialTelegram" src={telegram} height={30} width={30} preview={false} />
-              </a>
-              <Link style={{ marginLeft: 5 }} href={initialValues.socialTelegram} target="_blank">
-                {initialValues.socialTelegram}
-              </Link>
-            </Paragraph>
-
-            <Paragraph>
-              <a href={initialValues.socialWhats}>
-                <Image alt="socialWhats" src={whats} height={30} width={30} preview={false} />
-              </a>
-              <Link
-                style={{ marginLeft: 5 }}
-                href={`tel:${initialValues.socialWhats}`}
-                target="_blank"
-              >
-                {initialValues.socialWhats}
-              </Link>
-            </Paragraph>
-
-            <Paragraph>
-              <a href={initialValues.socialLink}>
-                <Image alt="socialLink" src={email} height={30} width={30} preview={false} />
-              </a>
-              <Link
-                style={{ marginLeft: 5 }}
-                href={`mailto:${initialValues.socialLink}`}
-                target="_blank"
-              >
-                {initialValues.socialLink}
-              </Link>
-            </Paragraph>
+            {telegram && (
+              <Paragraph>
+                <a href={initialValues.socialTelegram}>
+                  <Image
+                    alt="socialTelegram"
+                    src={telegram}
+                    height={30}
+                    width={30}
+                    preview={false}
+                  />
+                </a>
+                <Link style={{ marginLeft: 5 }} href={initialValues.socialTelegram} target="_blank">
+                  {initialValues.socialTelegram}
+                </Link>
+              </Paragraph>
+            )}
+            {whats && (
+              <Paragraph>
+                <a href={initialValues.socialWhats}>
+                  <Image alt="socialWhats" src={whats} height={30} width={30} preview={false} />
+                </a>
+                <Link
+                  style={{ marginLeft: 5 }}
+                  href={`tel:${initialValues.socialWhats}`}
+                  target="_blank"
+                >
+                  {initialValues.socialWhats}
+                </Link>
+              </Paragraph>
+            )}
+            {email && (
+              <Paragraph>
+                <a href={initialValues.socialLink}>
+                  <Image alt="socialLink" src={email} height={30} width={30} preview={false} />
+                </a>
+                <Link
+                  style={{ marginLeft: 5 }}
+                  href={`mailto:${initialValues.socialLink}`}
+                  target="_blank"
+                >
+                  {initialValues.socialLink}
+                </Link>
+              </Paragraph>
+            )}
             <Text>Donation leave here</Text>
           </Space>
-          <div id="myqrcode">
-            <QRCode
-              className="centred"
-              value={`${window.location.href}${pageId}`}
-              bgColor="#fff"
-              style={{ marginBottom: 16 }}
-            />
-            <Button className="centred" type="primary" onClick={downloadQRCode}>
-              Download QR
-            </Button>
-          </div>
+          {pageId && (
+            <div id="myqrcode">
+              <QRCode
+                className="centred"
+                value={`${window.location.href}${pageId}`}
+                bgColor="#fff"
+                style={{ marginBottom: 16 }}
+              />
+              <Button className="centred" type="primary" onClick={downloadQRCode}>
+                Download QR
+              </Button>
+            </div>
+          )}
           <Divider dashed />
         </>
       )}
