@@ -70,13 +70,15 @@ export const Page = () => {
               }}
               align="baseline"
             >
-              <Text strong>{bankName}</Text>
-              <Paragraph copyable>
-                <CreditCardOutlined />
-                <Text style={{ fontSize: "150%" }} code>
-                  {cardNumber}
-                </Text>
-              </Paragraph>
+              {bankName && <Text strong>{bankName}</Text>}
+              {cardNumber && (
+                <Paragraph copyable>
+                  <CreditCardOutlined />
+                  <Text style={{ fontSize: "150%" }} code>
+                    {cardNumber}
+                  </Text>
+                </Paragraph>
+              )}
               {qrLink && (
                 <QRCode
                   className="centred"
@@ -125,17 +127,19 @@ export const Page = () => {
             ) : null}
             <Text>Donation leave here</Text>
           </Space>
-          <div id="myqrcode">
-            <QRCode
-              className="centred"
-              value={`${window.location.href}${pageId}`}
-              bgColor="#fff"
-              style={{ marginBottom: 16 }}
-            />
-            <Button className="centred" type="primary" onClick={downloadQRCode}>
-              Download QR
-            </Button>
-          </div>
+          {pageId && (
+            <div id="myqrcode">
+              <QRCode
+                className="centred"
+                value={`${window.location.href}${pageId}`}
+                bgColor="#fff"
+                style={{ marginBottom: 16 }}
+              />
+              <Button className="centred" type="primary" onClick={downloadQRCode}>
+                Download QR
+              </Button>
+            </div>
+          )}
           <Divider dashed />
         </>
       )}
