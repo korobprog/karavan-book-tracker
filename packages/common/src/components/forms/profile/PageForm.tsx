@@ -1,29 +1,33 @@
 import React, { useState } from "react";
-import { Button, Form, Input, Space, Tooltip, Image, Divider, Switch } from "antd";
+import { Button, Form, Input, Space, Tooltip, Image, Divider, Switch, Typography } from "antd";
 import { MinusCircleOutlined, PlusOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { DonationPageDoc } from "common/src/services/api/donation";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import telegram from "common/src/images/telegram.svg";
 import whats from "common/src/images/whatsapp.svg";
 import email from "common/src/images/email.svg";
+import { useParams } from "react-router-dom";
 
 export type PageFormValues = DonationPageDoc;
 
-type Props<FormValues> = {
-  onFinish: (formValues: FormValues) => Promise<void>;
-  initialValues?: FormValues;
+type Props = {
+  onFinish: (formValues: PageFormValues) => Promise<void>;
+  initialValues?: PageFormValues;
   disabled?: boolean;
 };
 
-export const PageForm = <FormValues extends PageFormValues>(props: Props<FormValues>) => {
+export const PageForm = (props: Props) => {
   const { onFinish, initialValues } = props;
+
+  const { pageId } = useParams<{ pageId: string }>();
+  console.log("🚀 ~ file: PageForm.tsx:23 ~ PageForm ~ pageId:", pageId);
 
   const [disabled, setDisabled] = useState(true);
 
   const toggle = () => {
     setDisabled(!disabled);
   };
-
+  const { Link, Text } = Typography;
   return (
     <Form
       name="dynamic_form_nest_item"
@@ -94,7 +98,7 @@ export const PageForm = <FormValues extends PageFormValues>(props: Props<FormVal
           flexFlow: "column nowrap",
           alignItems: "center",
           alignContent: "center",
-          height: 100,
+          height: 200,
         }}
       >
         <Space>
@@ -167,6 +171,24 @@ export const PageForm = <FormValues extends PageFormValues>(props: Props<FormVal
           СОХРАНИТЬ
         </Button>
       </Form.Item>
+      <Space
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          flexWrap: "wrap",
+          justifyContent: "flex-start",
+          alignContent: "center",
+          alignItems: "flex-start",
+        }}
+      >
+        <Text>ваша страничка</Text>
+      </Space>
+
+      <Space style={{ marginLeft: 40 }}>
+        <Link href={`${window.location.href}${pageId}`} target="_blank">
+          {`${window.location.href}?${pageId}`}
+        </Link>
+      </Space>
     </Form>
   );
 };

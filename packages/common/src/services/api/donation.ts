@@ -15,6 +15,7 @@ export type DonationPageDoc = {
   active?: boolean;
   avatarPage?: string;
   namePage?: string;
+  nameUser?: string;
 };
 
 export type DonationTransferDocWithId = DonationPageDoc & {

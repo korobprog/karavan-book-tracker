@@ -4,10 +4,9 @@ import { DonationPageDoc, editDonationPageDoc } from "common/src/services/api/do
 import { apiRefs } from "common/src/services/api/refs";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { PageForm } from "common/src/components/forms/profile/PageForm";
-import { Form, Switch, Typography } from "antd";
+import { Typography } from "antd";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { routes } from "../shared/routes";
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 
 type Props = {
   currentUser: CurrentUser;
@@ -26,19 +25,27 @@ const PageDonations = ({ currentUser }: Props) => {
     socialLink: "",
     avatarPage: "",
     namePage: "",
+    nameUser: "",
   };
 
   const userId = profile?.id || user?.uid || "";
 
   const [donationPageDocData, donationDocLoading] = useDocumentData<DonationPageDoc>(
-    apiRefs.donationPage(userId)
+    userId ? apiRefs.donationPage(userId) : null
   );
 
   const initialValues = donationPageDocData || initialPageDoc;
 
   const onFinish = async (formValues: DonationPageDoc) => {
     if (userId) {
+      console.log("🚀 ~ file: pagedonations.tsx:42 ~ onFinish ~ userId:", userId);
       editDonationPageDoc(userId, formValues);
+      const updatedValues = {
+        ...formValues,
+        avatarPage: profile?.avatar,
+        nameUser: profile?.name,
+      };
+      editDonationPageDoc(userId, updatedValues);
     }
   };
   return (
