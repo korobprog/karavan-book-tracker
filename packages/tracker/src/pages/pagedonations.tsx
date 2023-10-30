@@ -23,9 +23,9 @@ const PageDonations = ({ currentUser }: Props) => {
     socialTelegram: "",
     socialWhats: "",
     socialLink: "",
-    avatarPage: "",
+    avatar: "",
     namePage: "",
-    nameUser: "",
+    userName: "",
   };
 
   const userId = profile?.id || user?.uid || "";
@@ -42,8 +42,8 @@ const PageDonations = ({ currentUser }: Props) => {
       editDonationPageDoc(userId, formValues);
       const updatedValues = {
         ...formValues,
-        avatarPage: profile?.avatar,
-        nameUser: profile?.name,
+        avatar: profile?.avatar,
+        namePage: profile?.name,
       };
       editDonationPageDoc(userId, updatedValues);
     }
@@ -55,7 +55,7 @@ const PageDonations = ({ currentUser }: Props) => {
           Загрузка...
         </Typography.Title>
       ) : (
-        <PageForm initialValues={initialValues} onFinish={onFinish} />
+        <PageForm initialValues={initialValues} onFinish={onFinish} currentUser={currentUser} />
       )}
     </BaseLayout>
   );

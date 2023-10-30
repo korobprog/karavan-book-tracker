@@ -18,8 +18,8 @@ export const Page = () => {
     socialTelegram: "",
     socialWhats: "",
     socialLink: "",
-    avatarPage: "",
-    nameUser: "",
+    avatar: "",
+    userName: "",
   };
 
   const { pageId } = useParams<{ pageId: string }>();
@@ -28,7 +28,7 @@ export const Page = () => {
     pageId ? apiRefs.donationPage(pageId) : null
   );
   const initialValues = donationPageDocData || initialPageDoc;
-  const { socialTelegram, socialWhats, socialLink, avatarPage, nameUser } = initialValues;
+  const { socialTelegram, socialWhats, socialLink, avatar, userName } = initialValues;
 
   const downloadQRCode = () => {
     const canvas = document.getElementById("myqrcode")?.querySelector<HTMLCanvasElement>("canvas");
@@ -53,10 +53,10 @@ export const Page = () => {
       ) : (
         <>
           <Space style={{ display: "flex", justifyContent: "center" }}>
-            <Avatar size={80} src={<img src={avatarPage} alt="Евгений" />} />
+            <Avatar size={80} src={<img src={avatar} alt={userName} />} />
           </Space>
           <Title className="site-page-title" level={4}>
-            {nameUser}
+            {userName}
           </Title>
           {initialValues.banks.map(({ bankName, cardNumber, qrLink }) => (
             <Space

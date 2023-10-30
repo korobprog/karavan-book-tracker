@@ -9,10 +9,8 @@ import { routes } from "././shared/routes";
 import { EvgenyK } from "./pages/evgeny-kovalsky";
 import { OlgaK } from "./pages/olga-krasanova";
 import { Page } from "./pages/page";
-import { useCurrentUser } from "common/src/services/api/useCurrentUser";
 
 function App() {
-  const currentUser = useCurrentUser();
   return (
     <div>
       <Routes>

@@ -7,6 +7,7 @@ import telegram from "common/src/images/telegram.svg";
 import whats from "common/src/images/whatsapp.svg";
 import email from "common/src/images/email.svg";
 import { useParams } from "react-router-dom";
+import { CurrentUser } from "common/src/services/api/useCurrentUser";
 
 export type PageFormValues = DonationPageDoc;
 
@@ -14,10 +15,14 @@ type Props = {
   onFinish: (formValues: PageFormValues) => Promise<void>;
   initialValues?: PageFormValues;
   disabled?: boolean;
+  currentUser: CurrentUser;
 };
 
 export const PageForm = (props: Props) => {
   const { onFinish, initialValues } = props;
+  const { currentUser } = props;
+
+  const linkpage = currentUser.profile?.id;
 
   const [switchState, setSwitchState] = useState(true);
 
@@ -193,8 +198,8 @@ export const PageForm = (props: Props) => {
       </Space>
 
       <Space style={{ marginLeft: 40 }}>
-        <Link href={`${window.location.href}${pageId}`} target="_blank">
-          {`${window.location.href}?${pageId}`}
+        <Link href={`${window.location.href}${linkpage}`} target="_blank">
+          {`${window.location.href}${linkpage}`}
         </Link>
       </Space>
     </Form>
