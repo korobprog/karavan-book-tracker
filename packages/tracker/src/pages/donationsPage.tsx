@@ -1,10 +1,9 @@
-import React, { useState } from "react";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { DonationPageDoc, editDonationPageDoc } from "common/src/services/api/donation";
 import { apiRefs } from "common/src/services/api/refs";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { PageForm } from "common/src/components/forms/profile/PageForm";
-import { Typography } from "antd";
+import { Typography, notification } from "antd";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { routes } from "../shared/routes";
 
@@ -24,7 +23,6 @@ const PageDonations = ({ currentUser }: Props) => {
     socialWhats: "",
     socialLink: "",
     avatar: "",
-    namePage: "",
     userName: "",
   };
 
@@ -38,14 +36,14 @@ const PageDonations = ({ currentUser }: Props) => {
 
   const onFinish = async (formValues: DonationPageDoc) => {
     if (userId) {
-      console.log("🚀 ~ file: pagedonations.tsx:42 ~ onFinish ~ userId:", userId);
       editDonationPageDoc(userId, formValues);
-      const updatedValues = {
+      const updatedValues: DonationPageDoc = {
         ...formValues,
         avatar: profile?.avatar,
-        namePage: profile?.name,
+        userName: profile?.name,
       };
       editDonationPageDoc(userId, updatedValues);
+      notification.success({ message: "Страница успешно сохранена" });
     }
   };
   return (

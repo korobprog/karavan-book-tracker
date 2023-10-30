@@ -8,13 +8,12 @@ export type BankItem = {
 };
 
 export type DonationPageDoc = {
+  active: boolean;
   banks: BankItem[];
   socialTelegram?: string;
   socialWhats?: string;
   socialLink?: string;
-  active?: boolean;
   avatar?: string;
-  namePage?: string;
   userName?: string;
 };
 

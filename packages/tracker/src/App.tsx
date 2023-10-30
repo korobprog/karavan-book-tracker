@@ -13,7 +13,7 @@ import { ReportEdit } from "./pages/reportEdit";
 import { Statistic } from "./pages/statistic";
 import { Team } from "./pages/team";
 import { TeamEdit } from "./pages/teamEdit";
-import PageDonations from "./pages/pagedonations";
+import DonationsPage from "./pages/donationsPage";
 import { useCurrentUser } from "common/src/services/api/useCurrentUser";
 import { useBooks } from "common/src/services/books";
 import { Reset } from "./pages/resetpass";
@@ -65,7 +65,7 @@ function App() {
         <Route path={routes.resetpassemail} element={<Reset currentUser={currentUser} />} />
         <Route path={routes.team} element={<Team currentUser={currentUser} />} />
         <Route path={routes.teamEdit} element={<TeamEdit currentUser={currentUser} />} />
-        <Route path={routes.pageDonations} element={<PageDonations currentUser={currentUser} />} />
+        <Route path={routes.pageDonations} element={<DonationsPage currentUser={currentUser} />} />
       </Routes>
     </div>
   );

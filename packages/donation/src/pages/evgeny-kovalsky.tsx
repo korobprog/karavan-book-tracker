@@ -1,7 +1,6 @@
-import React from "react";
-import { Divider, QRCode, Typography, Image, Avatar, Button, Space } from "antd";
+import { Divider, QRCode, Typography, Image, Avatar, Button } from "antd";
 import { BaseLayout } from "common/src/components/BaseLayout";
-import { BankOutlined, CreditCardOutlined } from "@ant-design/icons";
+import { CreditCardOutlined } from "@ant-design/icons";
 import telegram from "../img/telegram-svgrepo-com.svg";
 import avatar from "../img/evgeny_avatar.jpg";
 import logoTinkoff from "../img/tinkoff_logo.svg";

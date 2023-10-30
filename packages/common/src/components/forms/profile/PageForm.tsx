@@ -6,52 +6,49 @@ import { InfoCircleOutlined } from "@ant-design/icons";
 import telegram from "common/src/images/telegram.svg";
 import whats from "common/src/images/whatsapp.svg";
 import email from "common/src/images/email.svg";
-import { useParams } from "react-router-dom";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 
 export type PageFormValues = DonationPageDoc;
 
 type Props = {
   onFinish: (formValues: PageFormValues) => Promise<void>;
-  initialValues?: PageFormValues;
+  initialValues: PageFormValues;
   disabled?: boolean;
   currentUser: CurrentUser;
 };
 
 export const PageForm = (props: Props) => {
-  const { onFinish, initialValues } = props;
+  const { onFinish, initialValues, disabled } = props;
   const { currentUser } = props;
 
-  const linkpage = currentUser.profile?.id;
+  const userId = currentUser.profile?.id || currentUser.user?.uid;
 
-  const [switchState, setSwitchState] = useState(true);
+  const [switchState, setSwitchState] = useState(initialValues.active);
 
   const handleSwitchChange = (checked: boolean | ((prevState: boolean) => boolean)) => {
     setSwitchState(checked);
   };
 
-  const { pageId } = useParams<{ pageId: string }>();
-  console.log("🚀 ~ file: PageForm.tsx:23 ~ PageForm ~ pageId:", pageId);
+  const { Link } = Typography;
+  const myPageLink = `https://books-donation.web.app/page/${userId}`;
 
-  const [disabled, setDisabled] = useState(true);
-
-  const toggle = () => {
-    setDisabled(!disabled);
-  };
-  const { Link, Text } = Typography;
   return (
     <Form
-      name="dynamic_form_nest_item"
+      name="pageDonationForm"
       onFinish={onFinish}
       style={{ maxWidth: 600 }}
       autoComplete="off"
       initialValues={initialValues}
     >
-      <Form.Item name={"active"} label="активировать страницу">
+      <Space>
+        <Link copyable={{ text: myPageLink }} href={myPageLink} target="_blank">
+          Ваша страница
+        </Link>
+      </Space>
+      <Form.Item name={"active"} label="Активировать страницу">
         <Switch
           checkedChildren={<CheckOutlined />}
           unCheckedChildren={<CloseOutlined />}
-          onClick={toggle}
           checked={switchState}
           onChange={handleSwitchChange}
         />
@@ -75,7 +72,7 @@ export const PageForm = (props: Props) => {
                 >
                   <Input disabled={disabled} placeholder="№-карты" />
                 </Form.Item>
-                <Form.Item {...restField} name={[name, "qrLink"]}>
+                <Form.Item {...restField} name={[name, "qrLink"]} initialValue="">
                   <Input
                     suffix={
                       <Tooltip title="Скопируйте ссылку с Вашего банковского приложения">
@@ -126,7 +123,7 @@ export const PageForm = (props: Props) => {
           <Form.Item name="socialTelegram">
             <Input
               disabled={disabled}
-              placeholder="ссылка на ваш Telegram"
+              placeholder="ссылка на Telegram"
               suffix={
                 <Tooltip title="Пример: https://t.me/ваш_догин">
                   <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
@@ -147,7 +144,7 @@ export const PageForm = (props: Props) => {
           <Form.Item name="socialWhats">
             <Input
               disabled={disabled}
-              placeholder="ссылка на ваш Whats"
+              placeholder="ссылка на Whats"
               suffix={
                 <Tooltip title="Пример: 7xxxxxxxx">
                   <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
@@ -193,15 +190,7 @@ export const PageForm = (props: Props) => {
           alignContent: "center",
           alignItems: "flex-start",
         }}
-      >
-        <Text>ваша страничка</Text>
-      </Space>
-
-      <Space style={{ marginLeft: 40 }}>
-        <Link href={`${window.location.href}${linkpage}`} target="_blank">
-          {`${window.location.href}${linkpage}`}
-        </Link>
-      </Space>
+      ></Space>
     </Form>
   );
 };

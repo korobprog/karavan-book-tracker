@@ -11,5 +11,5 @@ export const routes = {
   statistic: "/statistic",
   team: "/team",
   teamEdit: "/team/edit",
-  pageDonations: "/pagedonations",
+  pageDonations: "/page-donations",
 };
