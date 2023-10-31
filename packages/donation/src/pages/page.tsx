@@ -3,7 +3,7 @@ import { Divider, QRCode, Typography, Image, Avatar, Button, Space } from "antd"
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { CreditCardOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
-import { PageExist } from "./404";
+import { Page404 } from "./404";
 import { DonationPageDoc } from "common/src/services/api/donation";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { apiRefs } from "common/src/services/api/refs";
@@ -24,7 +24,7 @@ export const Page = () => {
 
   const { pageId } = useParams<{ pageId: string }>();
 
-  const [donationPageDocData] = useDocumentData<DonationPageDoc>(
+  const [donationPageDocData, donationPageDocLoading] = useDocumentData<DonationPageDoc>(
     pageId ? apiRefs.donationPage(pageId) : null
   );
   const initialValues = donationPageDocData || initialPageDoc;
@@ -46,10 +46,18 @@ export const Page = () => {
 
   const plug = !pageId || !initialValues.active;
 
+  if (donationPageDocLoading) {
+    return (
+      <BaseLayout title="Book Donation" headerActions={[]}>
+        loading...
+      </BaseLayout>
+    );
+  }
+
   return (
     <BaseLayout title="Book Donation" headerActions={[]}>
       {plug ? (
-        <PageExist />
+        <Page404 />
       ) : (
         <>
           <Space style={{ display: "flex", justifyContent: "center" }}>
@@ -125,13 +133,13 @@ export const Page = () => {
                 </Link>
               </Paragraph>
             ) : null}
-            <Text>Donation leave here</Text>
+            <Text>Leave donation here</Text>
           </Space>
           {pageId && (
             <div id="myqrcode">
               <QRCode
                 className="centred"
-                value={`${window.location.href}${pageId}`}
+                value={window.location.href}
                 bgColor="#fff"
                 style={{ marginBottom: 16 }}
               />
