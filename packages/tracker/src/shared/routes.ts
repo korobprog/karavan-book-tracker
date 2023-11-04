@@ -3,12 +3,13 @@ export const routes = {
   auth: "/auth",
   registration: "/registration",
   profile: "/profile",
-  resetpassemail:"/resetpassemail",
+  resetpassemail: "/resetpassemail",
 
   report: "/report",
-  reportEdit: '/reports/:operationId/edit',
+  reportEdit: "/reports/:operationId/edit",
 
   statistic: "/statistic",
   team: "/team",
   teamEdit: "/team/edit",
+  pageDonations: "/page-donations",
 };
