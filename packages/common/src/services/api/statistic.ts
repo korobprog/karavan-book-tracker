@@ -15,6 +15,8 @@ export type BaseStatisticItem = {
   B: number; // Big
   M: number; // Medium
   S: number; // Small
+  SB: number; // SB set
+  CC: number; // CC set
   O: number; // Other
 };
 
@@ -23,6 +25,8 @@ export const defaultBaseStatistic: BaseStatisticItem = {
   B: 0,
   M: 0,
   S: 0,
+  SB: 0,
+  CC: 0,
   O: 0,
 };
 
@@ -33,7 +37,7 @@ export const defaultBaseStatistic: BaseStatisticItem = {
 // };
 
 export type BaseStatisticWithOnlineItem = BaseStatisticItem & {
-  online: BaseStatisticItem;
+  online: Partial<BaseStatisticItem>;
 };
 
 /*
@@ -43,7 +47,7 @@ export type BaseStatisticWithOnlineItem = BaseStatisticItem & {
     "2023-Q1" - первый квартал 2023
   }
 */
-export type BaseStatistic = Record<string, BaseStatisticItem>;
+export type BaseStatistic = Record<string, Partial<BaseStatisticItem>>;
 export type BaseStatisticWithOnline = Record<string, BaseStatisticWithOnlineItem>;
 
 export enum StatisticDateKeys {
@@ -66,10 +70,12 @@ export const typePointsMap = {
   B: 1,
   M: 0.5,
   S: 0.25,
+  SB: 104,
+  CC: 36,
   O: 0,
 };
 
-export const calcStaticticPointsSum = (baseStatisticItem?: BaseStatisticItem) => {
+export const calcStaticticPointsSum = (baseStatisticItem?: Partial<BaseStatisticItem>) => {
   const points = baseStatisticItem
     ? Object.entries(baseStatisticItem).reduce((acc, [key, count]) => {
         return acc + typePointsMap[key as keyof BaseStatisticItem] * count;

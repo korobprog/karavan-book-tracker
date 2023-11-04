@@ -15,6 +15,7 @@ import {
 } from "common/src/components/forms/stock/ProfileStockForm";
 import {
   $stock,
+  $stockLoading,
   HolderDoc,
   HolderType,
   addHolder,
@@ -33,6 +34,7 @@ const Profile = ({ currentUser }: Props) => {
   const auth = getAuth();
   const navigate = useTransitionNavigate();
   const stock = useStore($stock);
+  const stockLoading = useStore($stockLoading);
 
   const avatar = profile?.avatar;
 
@@ -57,9 +59,8 @@ const Profile = ({ currentUser }: Props) => {
       const { stockName, ...newProfile } = formValues;
 
       const stockId = profile?.stockId;
-      const setHolder = stockId
-        ? (data: Partial<HolderDoc>) => updateHolder(stockId, data)
-        : addHolder;
+      const setHolder =
+        stockId && stock ? (data: Partial<HolderDoc>) => updateHolder(stockId, data) : addHolder;
 
       const holderDoc = await setHolder({
         creatorId: userId,
@@ -89,7 +90,7 @@ const Profile = ({ currentUser }: Props) => {
       <Typography.Title className="site-page-title" level={2}>
         Ваш профиль
       </Typography.Title>
-      {userDocLoading || (profile?.stockId && !stock) ? (
+      {userDocLoading || stockLoading ? (
         <Typography.Title className="site-page-title" level={5}>
           Загрузка...
         </Typography.Title>

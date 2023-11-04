@@ -1,25 +1,8 @@
 import { defaultBaseStatistic } from "./../api/statistic";
-import { calcObjectFields } from "../../utils/objects";
+import { calcObjectFields, removeZeroFields } from "../../utils/objects";
 import { $booksHashMap, mapBooksByCategory, BooksCategories } from "../books";
 import { BaseStatistic, BaseStatisticItem, getStatisticDateKeys } from "../api/statistic";
 import { HolderTransferDoc } from "../api/holderTransfer";
-
-// export const getBookCountsMap = (books?: DistributedBook[]): Record<string, number> => {
-//   return (
-//     books?.reduce((acc, book) => {
-//       acc[book.bookId] = book.count ? Number(book.count) : 0;
-//       return acc;
-//     }, {} as Record<string, number>) || {}
-//   );
-// };
-
-// export const filterByField = (
-//   obj: Record<string, any>,
-//   key: string,
-//   filter: (value: any) => boolean
-// ) => {
-//   return filter(obj[key]);
-// };
 
 export const calcHolderStat = (
   prev: BaseStatistic | undefined,
@@ -32,9 +15,9 @@ export const calcHolderStat = (
   const transferStat = getBaseStat(transfer);
 
   // Берем каждый переиод и имеющуюся в нем статистику складываем с новой из операции
-  prevCopy[year] = calcObjectFields(transferStat, operator, prevCopy[year]);
-  prevCopy[month] = calcObjectFields(transferStat, operator, prevCopy[month]);
-  prevCopy[quarter] = calcObjectFields(transferStat, operator, prevCopy[quarter]);
+  prevCopy[year] = removeZeroFields(calcObjectFields(transferStat, operator, prevCopy[year]));
+  prevCopy[month] = removeZeroFields(calcObjectFields(transferStat, operator, prevCopy[month]));
+  prevCopy[quarter] = removeZeroFields(calcObjectFields(transferStat, operator, prevCopy[quarter]));
 
   return prevCopy;
 };

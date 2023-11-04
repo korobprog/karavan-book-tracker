@@ -58,10 +58,13 @@ export const updateStockHolder = async (id: string, data: Partial<HolderDoc>) =>
 
 export const stockChanged = createEvent<WithId<HolderStockDoc> | null>();
 export const $stock = createStore<WithId<HolderStockDoc> | null>(null);
+export const stockLoadingChanged = createEvent<boolean>();
+export const $stockLoading = createStore<boolean>(false);
 export const distributorsChanged = createEvent<WithId<HolderDistributorDoc>[]>();
 export const $distributors = createStore<WithId<HolderDistributorDoc>[]>([]);
 
 $stock.on(stockChanged, (_state, stock) => stock);
+$stockLoading.on(stockLoadingChanged, (_state, loading) => loading);
 $distributors.on(distributorsChanged, (_state, distributors) => distributors);
 
 export const useHolders = (holderId?: string) => {
@@ -84,8 +87,9 @@ export const useHolders = (holderId?: string) => {
 
   useEffect(() => {
     stockChanged(stock || null);
+    stockLoadingChanged(stockDocLoading);
     distributorsChanged(distributors || []);
-  }, [stock, distributors]);
+  }, [stock, distributors, stockDocLoading]);
 
   return {
     stock,

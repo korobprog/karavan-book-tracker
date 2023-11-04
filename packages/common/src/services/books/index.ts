@@ -10,6 +10,8 @@ export enum BooksCategories {
   big = "big",
   mahaBig = "maha_big",
   other = "other",
+  sbSet = "sb_set",
+  ccSet = "ccSet",
 }
 
 export const mapBooksByCategory: Record<BooksCategories, { shortTitle: keyof BaseStatisticItem }> =
@@ -18,6 +20,8 @@ export const mapBooksByCategory: Record<BooksCategories, { shortTitle: keyof Bas
     [BooksCategories.big]: { shortTitle: "B" },
     [BooksCategories.medium]: { shortTitle: "M" },
     [BooksCategories.small]: { shortTitle: "S" },
+    [BooksCategories.sbSet]: { shortTitle: "SB" },
+    [BooksCategories.ccSet]: { shortTitle: "CC" },
     [BooksCategories.other]: { shortTitle: "O" },
   };
 
