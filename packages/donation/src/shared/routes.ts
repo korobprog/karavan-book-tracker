@@ -3,4 +3,5 @@ export const routes = {
   varnag: "/varnag",
   evgenyk: "/evgenyk",
   olgak: "/olgak",
+  page: "/page/:pageId",
 };
