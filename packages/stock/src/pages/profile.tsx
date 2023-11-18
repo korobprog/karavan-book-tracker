@@ -6,7 +6,7 @@ import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavig
 import { routes } from "../shared/routes";
 import { useUser } from "common/src/services/api/useUser";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import { BaseLayout } from "common/src/components/BaseLayout";
+import { StockBaseLayout } from "../shared/StockBaseLayout";
 import { LogoutOutlined } from "@ant-design/icons";
 import { ProfileForm, ProfileFormValues } from "common/src/components/forms/profile/ProfileForm";
 import {
@@ -75,7 +75,7 @@ const Profile = ({ currentUser }: Props) => {
   };
 
   return (
-    <BaseLayout
+    <StockBaseLayout
       title="Профиль"
       backPath={routes.root}
       userDocLoading={userDocLoading}
@@ -102,7 +102,7 @@ const Profile = ({ currentUser }: Props) => {
           isYatraLocationRequired
         />
       )}
-    </BaseLayout>
+    </StockBaseLayout>
   );
 };
 

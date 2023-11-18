@@ -4,7 +4,7 @@ import { Button, Divider, Typography } from "antd";
 
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import { BaseLayout } from "common/src/components/BaseLayout";
+import { StockBaseLayout } from "../shared/StockBaseLayout";
 import { HolderTransferList } from "common/src/components/HolderTransferList";
 import { StockList } from "common/src/components/StockList";
 import { PlusCircleOutlined } from "@ant-design/icons";
@@ -33,7 +33,7 @@ export const Stock = ({ currentUser }: Props) => {
   }, [user, loading, navigate]);
 
   return (
-    <BaseLayout
+    <StockBaseLayout
       title="Склад книг"
       backPath={routes.root}
       userDocLoading={userDocLoading}
@@ -56,6 +56,6 @@ export const Stock = ({ currentUser }: Props) => {
 
       <Divider dashed />
       <StockList currentUser={currentUser} holderBooks={stockBooks} title="Книги на складе:" />
-    </BaseLayout>
+    </StockBaseLayout>
   );
 };

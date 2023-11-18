@@ -6,7 +6,9 @@ import { WithId, apiRefs } from "./refs";
 import { usePreloadedData } from "../../utils/memo/usePreloadedData";
 
 export type BookCount = number;
+export type BookPrice = number;
 export type HolderBooks = Record<string, BookCount>;
+export type HolderBookPrices = Record<string, BookPrice>;
 export type DistributorBooks = { id: string; count: BookCount }[];
 
 // ! Тут еще и ID понадобится и заметка наверное массив лучше, или запись с ID
@@ -25,6 +27,7 @@ export type HolderStockDoc = {
   name: string; // название склада - в форме отображаем (не обязательное)
   locationId: string; // местоположение склада - в форме это locationSelect (обязательное)
   books?: HolderBooks; // по умолчанию это пустой объект {}, в этой задаче его не наполняем
+  bookPrices?: HolderBookPrices; // цены книг
   distributors?: StockDistiributors;
 };
 

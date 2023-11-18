@@ -5,7 +5,7 @@ import { useStore } from "effector-react";
 
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import { BaseLayout } from "common/src/components/BaseLayout";
+import { StockBaseLayout } from "../shared/StockBaseLayout";
 import { DistributorTransferForm } from "common/src/components/forms/stock";
 import {
   DistributorTransferFormValues,
@@ -83,7 +83,12 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
   const label = TransferFromDistributorTypes.includes(typeParam) ? "От кого:" : "Кому";
 
   return (
-    <BaseLayout title={title} backPath={backPath} userDocLoading={userDocLoading} avatar={avatar}>
+    <StockBaseLayout
+      title={title}
+      backPath={backPath}
+      userDocLoading={userDocLoading}
+      avatar={avatar}
+    >
       <Divider dashed />
       <Form.Item name="transferType" label={label}>
         {distributorName}
@@ -96,6 +101,6 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
         onTypeChange={onTypeChange}
         availableBooks={availableBooks}
       />
-    </BaseLayout>
+    </StockBaseLayout>
   );
 };

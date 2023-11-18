@@ -7,7 +7,7 @@ import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavig
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { GoogleOutlined } from "@ant-design/icons";
-import { BaseLayout } from "common/src/components/BaseLayout";
+import { StockBaseLayout } from "../shared/StockBaseLayout";
 
 type Props = {
   currentUser: CurrentUser;
@@ -40,7 +40,7 @@ export const Auth = ({ currentUser }: Props) => {
   const { Title, Text } = Typography;
 
   return (
-    <BaseLayout title="Учет книг" headerActions={[]}>
+    <StockBaseLayout title="Учет книг" headerActions={[]}>
       <Title className="site-page-title" level={2}>
         ВХОД В УЧЕТ КНИГ
       </Title>
@@ -99,6 +99,6 @@ export const Auth = ({ currentUser }: Props) => {
           <Text type="danger">При входе произошла ошибка: {googleError.message}</Text>
         )}
       </Form>
-    </BaseLayout>
+    </StockBaseLayout>
   );
 };

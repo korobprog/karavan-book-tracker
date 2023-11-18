@@ -1,6 +1,17 @@
 import React, { useState, useMemo } from "react";
 import { useStore } from "effector-react";
-import { Button, List, Input, InputNumber, Form, Row, Space, DatePicker, Typography } from "antd";
+import {
+  Button,
+  List,
+  Input,
+  InputNumber,
+  Form,
+  Row,
+  Space,
+  DatePicker,
+  Typography,
+  Divider,
+} from "antd";
 import {
   PlusOutlined,
   MinusOutlined,
@@ -146,17 +157,30 @@ export const StockForm = (props: Props) => {
 
     const minCount = allowNegative ? -availableBookCount : 0;
     const maxCount = 10000;
+    const bookCountText = availableBookCount > 0 ? `(На складе: ${availableBookCount})` : "";
 
     return isBookFinded ? (
       <List.Item>
         <StarIcon style={{ fontSize: "24px", marginRight: 12, color: "#bae0ff" }} />
-        <List.Item.Meta title={book.name} description={book.short_name} />
+        <List.Item.Meta title={book.name} description={`${book.short_name} ${bookCountText}`} />
 
         <Space>
-          {availableBookCount > 0 && <Typography>На складе {availableBookCount}</Typography>}
+          {<Typography></Typography>}
 
           {isSelected ? (
             <Space>
+              <Form.Item name={`price-${book.id}`} noStyle label="Цена">
+                <InputNumber
+                  min={0}
+                  style={{ width: 56 }}
+                  placeholder="Цена"
+                  pattern="\d*"
+                  controls={false}
+                />
+              </Form.Item>
+
+              <Divider />
+
               <Button onClick={() => onMinusClick(book.id, minCount)} icon={<MinusOutlined />} />
               <Form.Item name={book.id} noStyle>
                 <InputNumber

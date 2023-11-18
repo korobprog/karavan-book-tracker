@@ -5,7 +5,7 @@ import { Button, Divider, List, Row } from "antd";
 import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import { BaseLayout } from "common/src/components/BaseLayout";
+import { StockBaseLayout } from "../shared/StockBaseLayout";
 import { useStore } from "effector-react";
 import { $distributors, $stock } from "common/src/services/api/holders";
 import { calcBooksCounts } from "common/src/components/forms/stock/helpers";
@@ -39,7 +39,7 @@ export const Distributors = ({ currentUser }: Props) => {
   );
 
   return (
-    <BaseLayout
+    <StockBaseLayout
       title="Распространители"
       backPath={routes.root}
       userDocLoading={userDocLoading}
@@ -84,6 +84,6 @@ export const Distributors = ({ currentUser }: Props) => {
         }}
       />
       <Divider dashed />
-    </BaseLayout>
+    </StockBaseLayout>
   );
 };

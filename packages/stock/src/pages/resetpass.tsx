@@ -4,7 +4,7 @@ import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import { BaseLayout } from "common/src/components/BaseLayout";
+import { StockBaseLayout } from "../shared/StockBaseLayout";
 
 type Props = {
   currentUser: CurrentUser;
@@ -46,7 +46,7 @@ export const Reset = ({ currentUser }: Props) => {
   const { Title } = Typography;
 
   return (
-    <BaseLayout title="Восстановление пароля" backPath={routes.auth} headerActions={[]}>
+    <StockBaseLayout title="Восстановление пароля" backPath={routes.auth} headerActions={[]}>
       <Title className="site-page-title" level={4}>
         ВВЕДИТЕ СВОЙ EMAIL ДЛЯ СБРОСА ПАРОЛЯ
       </Title>
@@ -77,6 +77,6 @@ export const Reset = ({ currentUser }: Props) => {
           </Row>
         </Form.Item>
       </Form>
-    </BaseLayout>
+    </StockBaseLayout>
   );
 };

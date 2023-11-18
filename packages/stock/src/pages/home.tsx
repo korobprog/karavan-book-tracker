@@ -4,7 +4,7 @@ import { ReadOutlined, TeamOutlined } from "@ant-design/icons";
 import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import { BaseLayout } from "common/src/components/BaseLayout";
+import { StockBaseLayout } from "../shared/StockBaseLayout";
 import { DistributionStatistic } from "../features/DistributionStatistic";
 import { useStore } from "effector-react";
 import { $holderTransfers } from "common/src/services/api/holderTransfer";
@@ -28,7 +28,7 @@ export const Home = ({ currentUser }: Props) => {
   const { Title } = Typography;
 
   return (
-    <BaseLayout title="Book Stock" userDocLoading={userDocLoading} avatar={avatar}>
+    <StockBaseLayout title="Book Stock" userDocLoading={userDocLoading} avatar={avatar}>
       <Title className="site-page-title" level={2}>
         Привет,
         <br />
@@ -50,6 +50,6 @@ export const Home = ({ currentUser }: Props) => {
       </Button>
       <Divider dashed />
       <DistributionStatistic holderTransfers={holderTransfers} />
-    </BaseLayout>
+    </StockBaseLayout>
   );
 };

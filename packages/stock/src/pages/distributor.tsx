@@ -7,7 +7,7 @@ import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavig
 
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import { BaseLayout } from "common/src/components/BaseLayout";
+import { StockBaseLayout } from "../shared/StockBaseLayout";
 import { DistributionStatistic } from "../features/DistributionStatistic";
 import { $distributors, $stock } from "common/src/services/api/holders";
 import { StockList } from "common/src/components/StockList";
@@ -85,7 +85,7 @@ export const Distributor = ({ currentUser }: Props) => {
   };
 
   return (
-    <BaseLayout
+    <StockBaseLayout
       title={currentDistributor?.name || "Распространитель не найден"}
       backPath={routes.distributors}
       userDocLoading={userDocLoading}
@@ -120,6 +120,6 @@ export const Distributor = ({ currentUser }: Props) => {
           <DistributionStatistic holderTransfers={currentHolderTransfers} />
         </>
       )}
-    </BaseLayout>
+    </StockBaseLayout>
   );
 };

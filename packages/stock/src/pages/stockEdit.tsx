@@ -6,7 +6,7 @@ import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { addHolderTransferMultiAction } from "common/src/services/api/stockMultiactions";
 import { HolderTransferDoc } from "common/src/services/api/holderTransfer";
-import { BaseLayout } from "common/src/components/BaseLayout";
+import { StockBaseLayout } from "../shared/StockBaseLayout";
 import { StockForm } from "common/src/components/forms/stock/StockForm";
 import {
   StockFormValues,
@@ -61,7 +61,7 @@ export const StockEdit = ({ currentUser }: Props) => {
   }, [user, loading, navigate]);
 
   return (
-    <BaseLayout
+    <StockBaseLayout
       title="Склад книг"
       backPath={routes.stock}
       userDocLoading={userDocLoading}
@@ -74,6 +74,6 @@ export const StockEdit = ({ currentUser }: Props) => {
         isSubmitting={isSubmitting}
         availableBooks={stock?.books}
       />
-    </BaseLayout>
+    </StockBaseLayout>
   );
 };
