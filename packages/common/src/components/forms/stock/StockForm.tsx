@@ -26,9 +26,15 @@ import { $books, $booksLoading, Book } from "common/src/services/books";
 import { TransferTypeSelect } from "common/src/components/TransferTypeSelect";
 
 import moment from "moment";
-import { StockFormValues, calcBooksCountsFromValues, calcFormValuesFromBooks } from "./helpers";
+import {
+  PRICE_PREFIX,
+  StockFormValues,
+  calcBooksCountsFromValues,
+  calcFormValuesFromBooks,
+  addPrefixToKeys,
+} from "./helpers";
 import { HolderTransferType } from "../../../services/api/holderTransfer";
-import { HolderBooks, HolderType } from "../../../services/api/holders";
+import { HolderBookPrices, HolderBooks, HolderType } from "../../../services/api/holders";
 
 type Props = {
   currentUser: CurrentUser;
@@ -36,6 +42,7 @@ type Props = {
   isSubmitting?: boolean;
   initialValues?: StockFormValues;
   availableBooks?: HolderBooks;
+  bookPrices?: HolderBookPrices;
 };
 
 export const StockForm = (props: Props) => {
@@ -45,6 +52,7 @@ export const StockForm = (props: Props) => {
     isSubmitting,
     initialValues: initialValuesProps,
     availableBooks,
+    bookPrices = {},
   } = props;
   const { userDocLoading } = currentUser;
   const [searchString, setSearchString] = useState("");
@@ -68,6 +76,7 @@ export const StockForm = (props: Props) => {
     date: moment(),
     transferType: HolderTransferType.bbtIncome,
     ...initialValuesProps,
+    ...addPrefixToKeys(bookPrices, `${PRICE_PREFIX}-`),
   };
 
   const { date, transferType, ...booksPropsInitialValues } =
@@ -169,10 +178,10 @@ export const StockForm = (props: Props) => {
 
           {isSelected ? (
             <Space>
-              <Form.Item name={`price-${book.id}`} noStyle label="Цена">
+              <Form.Item name={`${PRICE_PREFIX}-${book.id}`} noStyle label="Цена">
                 <InputNumber
                   min={0}
-                  style={{ width: 56 }}
+                  style={{ width: 58 }}
                   placeholder="Цена"
                   pattern="\d*"
                   controls={false}

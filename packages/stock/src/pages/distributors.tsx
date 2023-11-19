@@ -66,7 +66,9 @@ export const Distributors = ({ currentUser }: Props) => {
         dataSource={filteredDistributors}
         renderItem={(distributor) => {
           const stockDistributor = stock?.distributors?.[distributor.id];
-          const booksCounts = stockDistributor ? calcBooksCounts(stockDistributor).totalCount : 0;
+          const booksCounts = stockDistributor
+            ? calcBooksCounts(Object.entries(stockDistributor)).totalCount
+            : 0;
 
           return (
             <Link

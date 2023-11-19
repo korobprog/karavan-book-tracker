@@ -32,7 +32,7 @@ export const StockEdit = ({ currentUser }: Props) => {
       setIsSubmitting(true);
       const { transferType, date } = formValues;
 
-      const { operationBooks, totalCount } = calcBooksCountsFromValues(formValues);
+      const { operationBooks, totalCount, bookPrices } = calcBooksCountsFromValues(formValues);
 
       if (totalCount === 0) {
         setIsSubmitting(false);
@@ -48,7 +48,7 @@ export const StockEdit = ({ currentUser }: Props) => {
         books: operationBooks,
       };
 
-      addHolderTransferMultiAction(holderTransfer)
+      addHolderTransferMultiAction(holderTransfer, bookPrices)
         .then(() => navigate(routes.stock))
         .finally(() => setIsSubmitting(false));
     }
@@ -73,6 +73,7 @@ export const StockEdit = ({ currentUser }: Props) => {
         onFinish={onFinish}
         isSubmitting={isSubmitting}
         availableBooks={stock?.books}
+        bookPrices={stock?.bookPrices}
       />
     </StockBaseLayout>
   );

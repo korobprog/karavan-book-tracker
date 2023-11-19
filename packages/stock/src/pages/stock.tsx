@@ -21,6 +21,7 @@ export const Stock = ({ currentUser }: Props) => {
   const navigate = useTransitionNavigate();
   const stock = useStore($stock);
   const stockBooks = stock?.books || {};
+  const stockBookPrices = stock?.bookPrices || {};
 
   const onEditStock = () => {
     navigate(routes.stockEdit);
@@ -48,14 +49,15 @@ export const Stock = ({ currentUser }: Props) => {
       </Button>
 
       <Divider dashed />
-      <Typography.Title level={3}> Книги на складе:</Typography.Title>
-      <StockList currentUser={currentUser} holderBooks={stockBooks} />
+      <StockList
+        title="Книги на складе:"
+        currentUser={currentUser}
+        holderBooks={stockBooks}
+        prices={stockBookPrices}
+      />
 
       <Divider dashed />
       <HolderTransferList title="Последние операции:" />
-
-      <Divider dashed />
-      <StockList currentUser={currentUser} holderBooks={stockBooks} title="Книги на складе:" />
     </StockBaseLayout>
   );
 };

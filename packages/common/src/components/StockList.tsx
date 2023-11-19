@@ -4,25 +4,26 @@ import { Row, List, Input, Typography } from "antd";
 
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { $booksHashMap, $booksLoading, Book } from "common/src/services/books";
-import { HolderBooks } from "../services/api/holders";
+import { HolderBookPrices, HolderBooks } from "../services/api/holders";
 
-type BookWithCount = Book & { count: number };
+type BookWithCount = Book & { count: number; price: number };
 
 type Props = {
   currentUser: CurrentUser;
   holderBooks: HolderBooks;
   title?: string;
+  prices?: HolderBookPrices;
 };
 
 export const StockList = (props: Props) => {
-  const { currentUser, holderBooks, title } = props;
+  const { currentUser, holderBooks, title, prices = {} } = props;
   const { userDocLoading } = currentUser;
   const [searchString, setSearchString] = useState("");
 
   const booksHashMap = useStore($booksHashMap);
 
   const books = Object.entries(holderBooks).map(
-    ([id, count]) => ({ ...booksHashMap[id], count } as BookWithCount)
+    ([id, count]) => ({ ...booksHashMap[id], count, price: prices[id] } as BookWithCount)
   );
 
   const booksLoading = useStore($booksLoading);
@@ -34,10 +35,15 @@ export const StockList = (props: Props) => {
   const { Search } = Input;
 
   const renderBookItem = (book: BookWithCount) => {
+    const priceString = book.price ? `(${book.price} р.) ` : "";
     return book.count ? (
       <List.Item key={book.id}>
         <List.Item.Meta title={book.name} />
-        {book.count}
+        <Typography.Text>
+          <Typography.Text type="secondary">{priceString}</Typography.Text>
+
+          <b>{book.count}</b>
+        </Typography.Text>
       </List.Item>
     ) : null;
   };

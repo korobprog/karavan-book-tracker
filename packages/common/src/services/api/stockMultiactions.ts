@@ -1,7 +1,8 @@
-import { $distributors, $stock } from "common/src/services/api/holders";
+import { $distributors, $stock, HolderBookPrices } from "common/src/services/api/holders";
 import { HolderTransferDoc, HolderTransferType, addHolderTransfer } from "./holderTransfer";
 import { updateHolder } from "./holders";
 import { calcObjectFields } from "../../utils/objects";
+import { addPrefixToKeys } from "../../components/forms/stock/helpers";
 
 const getDistributor = (id?: string | null) => {
   const distributors = $distributors.getState();
@@ -11,7 +12,10 @@ const getDistributor = (id?: string | null) => {
   return { distributor, distributorPath };
 };
 
-export const addHolderTransferMultiAction = async (newHolderTransfer: HolderTransferDoc) => {
+export const addHolderTransferMultiAction = async (
+  newHolderTransfer: HolderTransferDoc,
+  bookPricesRaw: HolderBookPrices = {}
+) => {
   try {
     const stock = $stock.getState();
     const { books, fromHolderId, toHolderId } = newHolderTransfer;
@@ -20,6 +24,8 @@ export const addHolderTransferMultiAction = async (newHolderTransfer: HolderTran
       return console.error("holder not found");
     }
 
+    const bookPrices = addPrefixToKeys(bookPricesRaw, "bookPrices.");
+
     switch (newHolderTransfer.type) {
       // Приход, Корректировка, Найденные, Пожертвования
       case HolderTransferType.bbtIncome:
@@ -27,7 +33,10 @@ export const addHolderTransferMultiAction = async (newHolderTransfer: HolderTran
       case HolderTransferType.found:
       case HolderTransferType.donations: {
         return Promise.all([
-          updateHolder(stock.id, { books: calcObjectFields(stock.books, "+", books) }),
+          updateHolder(stock.id, {
+            books: calcObjectFields(stock.books, "+", books),
+            ...bookPrices,
+          }),
           addHolderTransfer(newHolderTransfer),
         ]);
       }
@@ -44,6 +53,7 @@ export const addHolderTransferMultiAction = async (newHolderTransfer: HolderTran
           updateHolder(stock.id, {
             books: calcObjectFields(stock.books, "-", books),
             [distributorPath]: calcObjectFields(stock.distributors?.[distributor.id], "+", books),
+            ...bookPrices,
           }),
           updateHolder(distributor.id, { books: calcObjectFields(distributor.books, "+", books) }),
         ]);
@@ -58,7 +68,10 @@ export const addHolderTransferMultiAction = async (newHolderTransfer: HolderTran
 
         // TODO: Учитывать в статистике распростроненных
         return Promise.all([
-          updateHolder(stock.id, { books: calcObjectFields(stock.books, "-", books) }),
+          updateHolder(stock.id, {
+            books: calcObjectFields(stock.books, "-", books),
+            ...bookPrices,
+          }),
           updateHolder(distributor.id, { books: calcObjectFields(distributor.books, "+", books) }),
           addHolderTransfer(newHolderTransfer),
         ]);
@@ -76,6 +89,7 @@ export const addHolderTransferMultiAction = async (newHolderTransfer: HolderTran
           updateHolder(stock.id, {
             books: calcObjectFields(stock.books, "+", books),
             [distributorPath]: calcObjectFields(stock.distributors?.[distributor.id], "-", books),
+            ...bookPrices,
           }),
           updateHolder(distributor.id, { books: calcObjectFields(distributor.books, "-", books) }),
         ]);
@@ -93,6 +107,7 @@ export const addHolderTransferMultiAction = async (newHolderTransfer: HolderTran
           addHolderTransfer(newHolderTransfer),
           updateHolder(stock.id, {
             [distributorPath]: calcObjectFields(stock.distributors?.[distributor.id], "-", books),
+            ...bookPrices,
           }),
         ]);
       }

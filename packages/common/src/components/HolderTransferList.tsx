@@ -82,7 +82,7 @@ export const HolderTransferList = (props: Props) => {
       );
     };
 
-    const { totalCount, length } = calcBooksCounts(holderTransfer.books);
+    const { totalCount, length } = calcBooksCounts(Object.entries(holderTransfer.books));
 
     const popoverContent = () => {
       const transferBooks = Object.entries(holderTransfer.books);
