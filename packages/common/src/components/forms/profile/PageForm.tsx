@@ -7,6 +7,7 @@ import telegram from "common/src/images/telegram.svg";
 import whats from "common/src/images/whatsapp.svg";
 import email from "common/src/images/email.svg";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
+import { routes } from "../../../../../tracker/src/shared/routes";
 
 export type PageFormValues = DonationPageDoc;
 
@@ -40,11 +41,26 @@ export const PageForm = (props: Props) => {
       autoComplete="off"
       initialValues={initialValues}
     >
-      <Space>
-        <Link copyable={{ text: myPageLink }} href={myPageLink} target="_blank">
-          Ваша страница
-        </Link>
-      </Space>
+      {switchState ? (
+        <Space>
+          <Link copyable={{ text: myPageLink }} href={myPageLink} target="_blank">
+            Ваша страница
+          </Link>
+        </Space>
+      ) : (
+        ""
+      )}
+
+      {switchState ? (
+        <Space style={{ marginLeft: 30 }}>
+          <Link href={routes.pagePdf} target="_blank">
+            распечатать визитки
+          </Link>
+        </Space>
+      ) : (
+        ""
+      )}
+
       <Form.Item name={"active"} label="Активировать страницу">
         <Switch
           checkedChildren={<CheckOutlined />}
@@ -53,6 +69,7 @@ export const PageForm = (props: Props) => {
           onChange={handleSwitchChange}
         />
       </Form.Item>
+
       <Form.List name="banks">
         {(fields, { add, remove }) => (
           <>
