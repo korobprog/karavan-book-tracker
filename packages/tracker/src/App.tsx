@@ -20,7 +20,6 @@ import { Reset } from "./pages/resetpass";
 
 import "antd/dist/reset.css";
 import "./App.less";
-import { PdfPrintDonation } from "../src/pages/PdfPrintDonation";
 
 const routesWithoutRedirect = [routes.registration, routes.auth, routes.resetpassemail];
 
@@ -67,7 +66,6 @@ function App() {
         <Route path={routes.team} element={<Team currentUser={currentUser} />} />
         <Route path={routes.teamEdit} element={<TeamEdit currentUser={currentUser} />} />
         <Route path={routes.pageDonations} element={<DonationsPage currentUser={currentUser} />} />
-        <Route path={routes.pagePdf} element={<PdfPrintDonation currentUser={currentUser} />} />
       </Routes>
     </div>
   );

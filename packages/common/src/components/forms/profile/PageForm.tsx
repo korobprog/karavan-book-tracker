@@ -1,5 +1,17 @@
 import React, { useState } from "react";
-import { Button, Form, Input, Space, Tooltip, Image, Divider, Switch, Typography } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  Space,
+  Tooltip,
+  Image,
+  Divider,
+  Switch,
+  Typography,
+  QRCode,
+} from "antd";
+import { PrinterTwoTone } from "@ant-design/icons";
 import { MinusCircleOutlined, PlusOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { DonationPageDoc } from "common/src/services/api/donation";
 import { InfoCircleOutlined } from "@ant-design/icons";
@@ -8,6 +20,8 @@ import whats from "common/src/images/whatsapp.svg";
 import email from "common/src/images/email.svg";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { routes } from "../../../../../tracker/src/shared/routes";
+import jsPDF from "jspdf";
+import logo from "../image/book-danation.svg";
 
 export type PageFormValues = DonationPageDoc;
 
@@ -23,6 +37,7 @@ export const PageForm = (props: Props) => {
   const { currentUser } = props;
 
   const userId = currentUser.profile?.id || currentUser.user?.uid;
+  const nameuser = currentUser.profile?.name;
 
   const [switchState, setSwitchState] = useState(initialValues.active);
 
@@ -32,6 +47,9 @@ export const PageForm = (props: Props) => {
 
   const { Link } = Typography;
   const myPageLink = `https://books-donation.web.app/page/${userId}`;
+  const [size] = useState<number>(160);
+
+  const { Text } = Typography;
 
   return (
     <Form
@@ -53,9 +71,10 @@ export const PageForm = (props: Props) => {
 
       {switchState ? (
         <Space style={{ marginLeft: 30 }}>
-          <Link href={routes.pagePdf} target="_blank">
+          <Link onClick={PdfPrintDonations} target="_blank">
             распечатать визитки
           </Link>
+          <PrinterTwoTone />
         </Space>
       ) : (
         ""
@@ -125,7 +144,7 @@ export const PageForm = (props: Props) => {
           flexFlow: "column nowrap",
           alignItems: "center",
           alignContent: "center",
-          height: 200,
+          height: 450,
         }}
       >
         <Space>
@@ -191,23 +210,100 @@ export const PageForm = (props: Props) => {
             />
           </Form.Item>
         </Space>
+        <Text>{nameuser} это Ваш QR странички донатов</Text>
+        {switchState ? (
+          <div id="myqrcode">
+            <QRCode
+              className="centred"
+              value={myPageLink}
+              bgColor="#fff"
+              style={{ marginBottom: 16 }}
+              errorLevel="H"
+              size={size}
+              iconSize={size / 4}
+              icon={logo}
+            />
+          </div>
+        ) : (
+          ""
+        )}
+
+        <Divider dashed />
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            СОХРАНИТЬ
+          </Button>
+        </Form.Item>
+        <Space
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            flexWrap: "wrap",
+            justifyContent: "flex-start",
+            alignContent: "center",
+            alignItems: "flex-start",
+          }}
+        ></Space>
       </div>
-      <Divider dashed />
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
-          СОХРАНИТЬ
-        </Button>
-      </Form.Item>
-      <Space
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          flexWrap: "wrap",
-          justifyContent: "flex-start",
-          alignContent: "center",
-          alignItems: "flex-start",
-        }}
-      ></Space>
     </Form>
   );
+};
+
+const PdfPrintDonations = () => {
+  let url;
+  const canvas = document.getElementById("myqrcode")?.querySelector<HTMLCanvasElement>("canvas");
+  if (canvas) {
+    url = canvas.toDataURL();
+    const aref = document.createElement("a");
+    aref.href = url;
+    const doc = new jsPDF({
+      format: "a4",
+      unit: "px",
+    });
+    //vertical lines
+    doc.line(335, 1, 335, 800);
+    doc.line(225, 1, 225, 800);
+    doc.line(115, 1, 115, 800);
+    //Horizontal lines
+    doc.line(500, 135, 1, 135);
+    doc.line(500, 270, 1, 270);
+    doc.line(500, 410, 1, 410);
+    //1 first line
+    doc.addImage(canvas, "JPEG", 10, 25, 100, 100);
+    doc.text("Donate to books", 10, 20);
+    doc.addImage(canvas, "JPEG", 120, 25, 100, 100);
+    doc.text("Donate to books", 120, 20);
+    doc.addImage(canvas, "JPEG", 230, 25, 100, 100);
+    doc.text("Donate to books", 230, 20);
+    doc.addImage(canvas, "JPEG", 340, 25, 100, 100);
+    doc.text("Donate to books", 340, 20);
+    //2 first line
+    doc.addImage(canvas, "JPEG", 10, 160, 100, 100);
+    doc.text("Donate to books", 10, 150);
+    doc.addImage(canvas, "JPEG", 120, 160, 100, 100);
+    doc.text("Donate to books", 120, 150);
+    doc.addImage(canvas, "JPEG", 230, 160, 100, 100);
+    doc.text("Donate to books", 230, 150);
+    doc.addImage(canvas, "JPEG", 340, 160, 100, 100);
+    doc.text("Donate to books", 340, 150);
+    //3 first line
+    doc.addImage(canvas, "JPEG", 10, 300, 100, 100);
+    doc.text("Donate to books", 10, 290);
+    doc.addImage(canvas, "JPEG", 120, 300, 100, 100);
+    doc.text("Donate to books", 120, 290);
+    doc.addImage(canvas, "JPEG", 230, 300, 100, 100);
+    doc.text("Donate to books", 230, 290);
+    doc.addImage(canvas, "JPEG", 340, 300, 100, 100);
+    doc.text("Donate to books", 340, 290);
+    //4 first line
+    doc.addImage(canvas, "JPEG", 10, 435, 100, 100);
+    doc.text("Donate to books", 10, 425);
+    doc.addImage(canvas, "JPEG", 120, 435, 100, 100);
+    doc.text("Donate to books", 120, 425);
+    doc.addImage(canvas, "JPEG", 230, 435, 100, 100);
+    doc.text("Donate to books", 230, 425);
+    doc.addImage(canvas, "JPEG", 340, 435, 100, 100);
+    doc.text("Donate to books", 340, 425);
+    doc.save("print.pdf");
+  }
 };
