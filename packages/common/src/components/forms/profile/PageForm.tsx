@@ -213,7 +213,7 @@ export const PageForm = (props: Props) => {
 
         {switchState ? (
           <div id="myqrcode">
-            <Text>{userName} это Ваш QR странички донатов</Text>
+            <Text>{userName}, это Ваш QR странички донатов</Text>
             <QRCode
               className="centred"
               value={myPageLink}
