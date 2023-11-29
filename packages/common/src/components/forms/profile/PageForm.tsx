@@ -1,5 +1,17 @@
 import React, { useState } from "react";
-import { Button, Form, Input, Space, Tooltip, Image, Divider, Switch, Typography } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  Space,
+  Tooltip,
+  Image,
+  Divider,
+  Switch,
+  Typography,
+  QRCode,
+} from "antd";
+import { PrinterTwoTone } from "@ant-design/icons";
 import { MinusCircleOutlined, PlusOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { DonationPageDoc } from "common/src/services/api/donation";
 import { InfoCircleOutlined } from "@ant-design/icons";
@@ -7,6 +19,10 @@ import telegram from "common/src/images/telegram.svg";
 import whats from "common/src/images/whatsapp.svg";
 import email from "common/src/images/email.svg";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
+import logo from "../../../images/book-danation.svg";
+import printPdfDonations from "./printPdfDonations";
+
+const QR_SIZE = 160;
 
 export type PageFormValues = DonationPageDoc;
 
@@ -22,6 +38,7 @@ export const PageForm = (props: Props) => {
   const { currentUser } = props;
 
   const userId = currentUser.profile?.id || currentUser.user?.uid;
+  const userName = currentUser.profile?.name;
 
   const [switchState, setSwitchState] = useState(initialValues.active);
 
@@ -32,6 +49,8 @@ export const PageForm = (props: Props) => {
   const { Link } = Typography;
   const myPageLink = `https://books-donation.web.app/page/${userId}`;
 
+  const { Text } = Typography;
+
   return (
     <Form
       name="pageDonationForm"
@@ -40,11 +59,27 @@ export const PageForm = (props: Props) => {
       autoComplete="off"
       initialValues={initialValues}
     >
-      <Space>
-        <Link copyable={{ text: myPageLink }} href={myPageLink} target="_blank">
-          Ваша страница
-        </Link>
-      </Space>
+      {switchState ? (
+        <Space>
+          <Link copyable={{ text: myPageLink }} href={myPageLink} target="_blank">
+            Ваша страница
+          </Link>
+        </Space>
+      ) : (
+        ""
+      )}
+
+      {switchState ? (
+        <Space style={{ marginLeft: 30 }}>
+          <Link onClick={printPdfDonations} target="_blank">
+            распечатать визитки
+          </Link>
+          <PrinterTwoTone />
+        </Space>
+      ) : (
+        ""
+      )}
+
       <Form.Item name={"active"} label="Активировать страницу">
         <Switch
           checkedChildren={<CheckOutlined />}
@@ -53,6 +88,7 @@ export const PageForm = (props: Props) => {
           onChange={handleSwitchChange}
         />
       </Form.Item>
+
       <Form.List name="banks">
         {(fields, { add, remove }) => (
           <>
@@ -108,7 +144,7 @@ export const PageForm = (props: Props) => {
           flexFlow: "column nowrap",
           alignItems: "center",
           alignContent: "center",
-          height: 200,
+          height: 450,
         }}
       >
         <Space>
@@ -174,23 +210,41 @@ export const PageForm = (props: Props) => {
             />
           </Form.Item>
         </Space>
+
+        {switchState ? (
+          <div id="myqrcode">
+            <Text>{userName}, это Ваш QR странички донатов</Text>
+            <QRCode
+              className="centred"
+              value={myPageLink}
+              bgColor="#fff"
+              style={{ marginBottom: 16 }}
+              errorLevel="H"
+              size={QR_SIZE}
+              iconSize={QR_SIZE / 4}
+              icon={logo}
+            />
+          </div>
+        ) : (
+          ""
+        )}
+        <Divider dashed />
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            СОХРАНИТЬ
+          </Button>
+        </Form.Item>
+        <Space
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            flexWrap: "wrap",
+            justifyContent: "flex-start",
+            alignContent: "center",
+            alignItems: "flex-start",
+          }}
+        ></Space>
       </div>
-      <Divider dashed />
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
-          СОХРАНИТЬ
-        </Button>
-      </Form.Item>
-      <Space
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          flexWrap: "wrap",
-          justifyContent: "flex-start",
-          alignContent: "center",
-          alignItems: "flex-start",
-        }}
-      ></Space>
     </Form>
   );
 };

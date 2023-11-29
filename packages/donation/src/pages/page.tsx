@@ -80,9 +80,9 @@ export const Page = () => {
             >
               {bankName && <Text strong>{bankName}</Text>}
               {cardNumber && (
-                <Paragraph copyable>
+                <Paragraph>
                   <CreditCardOutlined />
-                  <Text style={{ fontSize: "150%" }} code>
+                  <Text copyable={{ tooltips: false }} style={{ fontSize: "150%" }} code>
                     {cardNumber}
                   </Text>
                 </Paragraph>
