@@ -9,11 +9,12 @@ import {
   Checkbox,
   Row,
   Space,
-  DatePicker,
   Typography,
   message,
 } from "antd";
 import { PlusOutlined, MinusOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
+
+import { DatePicker } from "common/src/components/DatePicker";
 
 import { useUser } from "common/src/services/api/useUser";
 import * as storage from "common/src/services/localStorage/reportBooks";
