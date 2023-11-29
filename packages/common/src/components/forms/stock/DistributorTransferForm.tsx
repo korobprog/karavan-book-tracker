@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { useStore } from "effector-react";
-import { Button, List, Input, InputNumber, Form, Row, Space, DatePicker, Typography } from "antd";
+import { Button, List, Input, InputNumber, Form, Row, Space, Typography } from "antd";
+import { DatePicker } from "common/src/components/DatePicker";
 import {
   PlusOutlined,
   MinusOutlined,

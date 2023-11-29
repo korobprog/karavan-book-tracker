@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useStore } from "effector-react";
-import { Button, List, Input, InputNumber, Form, Row, Space, DatePicker, Typography } from "antd";
+import { Button, List, Input, InputNumber, Form, Row, Space, Typography } from "antd";
 import {
   PlusOutlined,
   MinusOutlined,
@@ -8,6 +8,8 @@ import {
   StarOutlined,
   SelectOutlined,
 } from "@ant-design/icons";
+
+import { DatePicker } from "common/src/components/DatePicker";
 
 import * as storage from "common/src/services/localStorage/reportBooks";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
