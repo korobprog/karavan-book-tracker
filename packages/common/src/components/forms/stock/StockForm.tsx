@@ -20,7 +20,6 @@ import moment from "moment";
 import { StockFormValues, calcBooksCountsFromValues, calcFormValuesFromBooks } from "./helpers";
 import { HolderTransferType } from "../../../services/api/holderTransfer";
 import { HolderBooks, HolderType } from "../../../services/api/holders";
-import "moment/locale/ru";
 
 type Props = {
   currentUser: CurrentUser;
