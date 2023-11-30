@@ -1,7 +1,7 @@
 import React from "react";
 import { Divider, QRCode, Typography, Image, Avatar, Button, Space } from "antd";
 import { BaseLayout } from "common/src/components/BaseLayout";
-import { CreditCardOutlined } from "@ant-design/icons";
+import { BankTwoTone, CreditCardOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import { Page404 } from "./404";
 import { DonationPageDoc } from "common/src/services/api/donation";
@@ -10,6 +10,7 @@ import { apiRefs } from "common/src/services/api/refs";
 import telegram from "common/src/images/telegram.svg";
 import whats from "common/src/images/whatsapp.svg";
 import email from "common/src/images/email.svg";
+import logo from "common/src/images/logo.png";
 
 export const Page = () => {
   const initialPageDoc: DonationPageDoc = {
@@ -20,6 +21,7 @@ export const Page = () => {
     socialLink: "",
     avatar: "",
     userName: "",
+    greetingText: "",
   };
 
   const { pageId } = useParams<{ pageId: string }>();
@@ -28,7 +30,8 @@ export const Page = () => {
     pageId ? apiRefs.donationPage(pageId) : null
   );
   const initialValues = donationPageDocData || initialPageDoc;
-  const { socialTelegram, socialWhats, socialLink, avatar, userName } = initialValues;
+
+  const { socialTelegram, socialWhats, socialLink, avatar, userName, greetingText } = initialValues;
 
   const downloadQRCode = () => {
     const canvas = document.getElementById("myqrcode")?.querySelector<HTMLCanvasElement>("canvas");
@@ -61,11 +64,18 @@ export const Page = () => {
       ) : (
         <>
           <Space style={{ display: "flex", justifyContent: "center" }}>
-            <Avatar size={80} src={<img src={avatar} alt={userName} />} />
+            <Avatar size={80} src={<img src={avatar || logo} alt={userName} />} />
           </Space>
           <Title className="site-page-title" level={4}>
-            {userName}
+            Получатель: {userName}
           </Title>
+          <Paragraph>
+            {greetingText ? (
+              <pre>{greetingText}</pre>
+            ) : (
+              <pre>Вы можете перевести за книги следующеми способами</pre>
+            )}
+          </Paragraph>
           {initialValues.banks.map(({ bankName, cardNumber, qrLink }) => (
             <Space
               key={bankName}
@@ -88,12 +98,17 @@ export const Page = () => {
                 </Paragraph>
               )}
               {qrLink && (
-                <QRCode
-                  className="centred"
-                  value={qrLink}
-                  bgColor="#fff"
-                  style={{ marginBottom: 16 }}
-                />
+                <>
+                  <Button href={qrLink} icon={<BankTwoTone />}>
+                    перевод в один клик онлайн банк {bankName}
+                  </Button>
+                  <QRCode
+                    className="centred"
+                    value={qrLink}
+                    bgColor="#fff"
+                    style={{ marginBottom: 16 }}
+                  />
+                </>
               )}
             </Space>
           ))}

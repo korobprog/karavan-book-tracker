@@ -50,6 +50,7 @@ export const PageForm = (props: Props) => {
   const myPageLink = `https://books-donation.web.app/page/${userId}`;
 
   const { Text } = Typography;
+  const { TextArea } = Input;
 
   return (
     <Form
@@ -88,7 +89,14 @@ export const PageForm = (props: Props) => {
           onChange={handleSwitchChange}
         />
       </Form.Item>
-
+      <Form.Item name={"greetingText"}>
+        <TextArea
+          showCount
+          maxLength={100}
+          placeholder="Написать приветствие на Вашей страничке донатов"
+          style={{ height: 120, resize: "none" }}
+        />
+      </Form.Item>
       <Form.List name="banks">
         {(fields, { add, remove }) => (
           <>
