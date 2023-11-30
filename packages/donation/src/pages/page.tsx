@@ -20,7 +20,7 @@ export const Page = () => {
     socialTelegram: "",
     socialWhats: "",
     socialLink: "",
-    socialeMail: "",
+    socialMail: "",
     avatar: "",
     userName: "",
     greetingText: "",
@@ -33,7 +33,7 @@ export const Page = () => {
   );
   const initialValues = donationPageDocData || initialPageDoc;
 
-  const { socialTelegram, socialWhats, socialLink, avatar, userName, greetingText, socialeMail } =
+  const { socialTelegram, socialWhats, socialLink, avatar, userName, greetingText, socialMail } =
     initialValues;
 
   const downloadQRCode = () => {
@@ -126,7 +126,7 @@ export const Page = () => {
               alignItems: "flex-start",
             }}
           >
-            {socialTelegram || socialWhats || socialeMail || socialLink ? (
+            {socialTelegram || socialWhats || socialMail || socialLink ? (
               <Text>My contacts</Text>
             ) : null}
             {!telegram || socialTelegram ? (
@@ -145,11 +145,11 @@ export const Page = () => {
                 </Link>
               </Paragraph>
             ) : null}
-            {!email || socialeMail ? (
+            {!email || socialMail ? (
               <Paragraph>
                 <Image alt="socialLink" src={email} height={30} width={30} preview={false} />
-                <Link style={{ marginLeft: 5 }} href={`mailto:${socialLink}`} target="_blank">
-                  {socialeMail}
+                <Link style={{ marginLeft: 5 }} href={`mailto:${socialMail}`} target="_blank">
+                  {socialMail}
                 </Link>
               </Paragraph>
             ) : null}
@@ -171,9 +171,6 @@ export const Page = () => {
                 bgColor="#fff"
                 style={{ marginBottom: 16 }}
               />
-              <Button className="centred" type="primary" onClick={downloadQRCode}>
-                Download QR
-              </Button>
             </div>
           )}
           <Divider dashed />

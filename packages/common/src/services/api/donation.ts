@@ -12,7 +12,7 @@ export type DonationPageDoc = {
   banks: BankItem[];
   socialTelegram?: string;
   socialWhats?: string;
-  socialeMail?: string;
+  socialMail?: string;
   socialLink?: string;
   avatar?: string;
   userName?: string;

@@ -53,6 +53,19 @@ export const PageForm = (props: Props) => {
   const { Text } = Typography;
   const { TextArea } = Input;
 
+  const downloadQRCode = () => {
+    const canvas = document.getElementById("myqrcode")?.querySelector<HTMLCanvasElement>("canvas");
+    if (canvas) {
+      const url = canvas.toDataURL();
+      const a = document.createElement("a");
+      a.download = "QRCode.png";
+      a.href = url;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  };
+
   return (
     <Form
       name="pageDonationForm"
@@ -153,7 +166,7 @@ export const PageForm = (props: Props) => {
           flexFlow: "column nowrap",
           alignItems: "center",
           alignContent: "center",
-          height: 450,
+          height: 550,
         }}
       >
         <Space>
@@ -207,7 +220,7 @@ export const PageForm = (props: Props) => {
             width={30}
             preview={false}
           />
-          <Form.Item name="socialeMail">
+          <Form.Item name="socialMail">
             <Input
               disabled={disabled}
               placeholder="eMail"
@@ -254,6 +267,9 @@ export const PageForm = (props: Props) => {
               iconSize={QR_SIZE / 4}
               icon={logo}
             />
+            <Button className="centred" type="primary" onClick={downloadQRCode}>
+              Download
+            </Button>
           </div>
         ) : (
           ""
