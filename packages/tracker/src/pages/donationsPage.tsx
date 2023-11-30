@@ -21,6 +21,7 @@ const PageDonations = ({ currentUser }: Props) => {
     active: false,
     socialTelegram: "",
     socialWhats: "",
+    socialeMail: "",
     socialLink: "",
     avatar: "",
     userName: "",
