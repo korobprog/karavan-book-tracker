@@ -1,7 +1,12 @@
 import React from "react";
 import { Divider, QRCode, Typography, Image, Avatar, Button, Space } from "antd";
 import { BaseLayout } from "common/src/components/BaseLayout";
-import { CreditCardOutlined } from "@ant-design/icons";
+import {
+  BankTwoTone,
+  CreditCardOutlined,
+  CreditCardTwoTone,
+  MobileTwoTone,
+} from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import { Page404 } from "./404";
 import { DonationPageDoc } from "common/src/services/api/donation";
@@ -10,6 +15,7 @@ import { apiRefs } from "common/src/services/api/refs";
 import telegram from "common/src/images/telegram.svg";
 import whats from "common/src/images/whatsapp.svg";
 import email from "common/src/images/email.svg";
+import { Content } from "antd/es/layout/layout";
 
 export const Page = () => {
   const initialPageDoc: DonationPageDoc = {
@@ -28,6 +34,7 @@ export const Page = () => {
     pageId ? apiRefs.donationPage(pageId) : null
   );
   const initialValues = donationPageDocData || initialPageDoc;
+
   const { socialTelegram, socialWhats, socialLink, avatar, userName } = initialValues;
 
   const downloadQRCode = () => {
@@ -88,12 +95,17 @@ export const Page = () => {
                 </Paragraph>
               )}
               {qrLink && (
-                <QRCode
-                  className="centred"
-                  value={qrLink}
-                  bgColor="#fff"
-                  style={{ marginBottom: 16 }}
-                />
+                <>
+                  <Button href={qrLink} icon={<BankTwoTone />}>
+                    перевод онлайн банк {bankName}
+                  </Button>
+                  <QRCode
+                    className="centred"
+                    value={qrLink}
+                    bgColor="#fff"
+                    style={{ marginBottom: 16 }}
+                  />
+                </>
               )}
             </Space>
           ))}
