@@ -10,6 +10,7 @@ import { apiRefs } from "common/src/services/api/refs";
 import telegram from "common/src/images/telegram.svg";
 import whats from "common/src/images/whatsapp.svg";
 import email from "common/src/images/email.svg";
+import link from "common/src/images/link_b.svg";
 import logo from "common/src/images/logo.png";
 
 export const Page = () => {
@@ -19,6 +20,7 @@ export const Page = () => {
     socialTelegram: "",
     socialWhats: "",
     socialLink: "",
+    socialeMail: "",
     avatar: "",
     userName: "",
     greetingText: "",
@@ -31,7 +33,8 @@ export const Page = () => {
   );
   const initialValues = donationPageDocData || initialPageDoc;
 
-  const { socialTelegram, socialWhats, socialLink, avatar, userName, greetingText } = initialValues;
+  const { socialTelegram, socialWhats, socialLink, avatar, userName, greetingText, socialeMail } =
+    initialValues;
 
   const downloadQRCode = () => {
     const canvas = document.getElementById("myqrcode")?.querySelector<HTMLCanvasElement>("canvas");
@@ -123,7 +126,9 @@ export const Page = () => {
               alignItems: "flex-start",
             }}
           >
-            {socialTelegram || socialWhats || socialLink ? <Text>My contacts</Text> : null}
+            {socialTelegram || socialWhats || socialeMail || socialLink ? (
+              <Text>My contacts</Text>
+            ) : null}
             {!telegram || socialTelegram ? (
               <Paragraph>
                 <Image alt="socialTelegram" src={telegram} height={30} width={30} preview={false} />
@@ -140,10 +145,18 @@ export const Page = () => {
                 </Link>
               </Paragraph>
             ) : null}
-            {!email || socialLink ? (
+            {!email || socialeMail ? (
               <Paragraph>
                 <Image alt="socialLink" src={email} height={30} width={30} preview={false} />
                 <Link style={{ marginLeft: 5 }} href={`mailto:${socialLink}`} target="_blank">
+                  {socialeMail}
+                </Link>
+              </Paragraph>
+            ) : null}
+            {!link || socialLink ? (
+              <Paragraph>
+                <Image alt="socialLink" src={link} height={30} width={30} preview={false} />
+                <Link style={{ marginLeft: 5 }} href={socialLink} target="_blank">
                   {socialLink}
                 </Link>
               </Paragraph>

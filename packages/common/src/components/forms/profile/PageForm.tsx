@@ -18,6 +18,7 @@ import { InfoCircleOutlined } from "@ant-design/icons";
 import telegram from "common/src/images/telegram.svg";
 import whats from "common/src/images/whatsapp.svg";
 import email from "common/src/images/email.svg";
+import link from "common/src/images/link_b.svg";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import logo from "../../../images/book-danation.svg";
 import printPdfDonations from "./printPdfDonations";
@@ -206,12 +207,33 @@ export const PageForm = (props: Props) => {
             width={30}
             preview={false}
           />
+          <Form.Item name="socialeMail">
+            <Input
+              disabled={disabled}
+              placeholder="eMail"
+              suffix={
+                <Tooltip title="Пример: mymail@mail.com">
+                  <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
+                </Tooltip>
+              }
+            />
+          </Form.Item>
+        </Space>
+        <Space>
+          <Image
+            style={{ position: "absolute", top: -10, left: 5 }}
+            alt="link"
+            src={link}
+            height={30}
+            width={30}
+            preview={false}
+          />
           <Form.Item name="socialLink">
             <Input
               disabled={disabled}
               placeholder="другие ссылки"
               suffix={
-                <Tooltip title="Пример: mymail@mail.com">
+                <Tooltip title="Пример: www.exemple.com">
                   <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
                 </Tooltip>
               }
