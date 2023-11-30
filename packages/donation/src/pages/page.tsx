@@ -10,6 +10,7 @@ import { apiRefs } from "common/src/services/api/refs";
 import telegram from "common/src/images/telegram.svg";
 import whats from "common/src/images/whatsapp.svg";
 import email from "common/src/images/email.svg";
+import logo from "common/src/images/logo.png";
 
 export const Page = () => {
   const initialPageDoc: DonationPageDoc = {
@@ -20,6 +21,7 @@ export const Page = () => {
     socialLink: "",
     avatar: "",
     userName: "",
+    greetingText: "",
   };
 
   const { pageId } = useParams<{ pageId: string }>();
@@ -29,7 +31,7 @@ export const Page = () => {
   );
   const initialValues = donationPageDocData || initialPageDoc;
 
-  const { socialTelegram, socialWhats, socialLink, avatar, userName } = initialValues;
+  const { socialTelegram, socialWhats, socialLink, avatar, userName, greetingText } = initialValues;
 
   const downloadQRCode = () => {
     const canvas = document.getElementById("myqrcode")?.querySelector<HTMLCanvasElement>("canvas");
@@ -62,13 +64,17 @@ export const Page = () => {
       ) : (
         <>
           <Space style={{ display: "flex", justifyContent: "center" }}>
-            <Avatar size={80} src={<img src={avatar} alt={userName} />} />
+            <Avatar size={80} src={<img src={avatar || logo} alt={userName} />} />
           </Space>
           <Title className="site-page-title" level={4}>
             Получатель: {userName}
           </Title>
           <Paragraph>
-            <pre>Вы можете перевести средства удобным для Вас способом по следующим реквезитам</pre>
+            {greetingText ? (
+              <pre>{greetingText}</pre>
+            ) : (
+              <pre>Вы можете перевести за книги следующеми способами</pre>
+            )}
           </Paragraph>
           {initialValues.banks.map(({ bankName, cardNumber, qrLink }) => (
             <Space

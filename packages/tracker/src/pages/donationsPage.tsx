@@ -24,6 +24,7 @@ const PageDonations = ({ currentUser }: Props) => {
     socialLink: "",
     avatar: "",
     userName: "",
+    greetingText: "",
   };
 
   const userId = profile?.id || user?.uid || "";

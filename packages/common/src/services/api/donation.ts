@@ -15,6 +15,7 @@ export type DonationPageDoc = {
   socialLink?: string;
   avatar?: string;
   userName?: string;
+  greetingText?: string;
 };
 
 export type DonationTransferDocWithId = DonationPageDoc & {
