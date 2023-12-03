@@ -35,7 +35,13 @@ export const BaseLayout = (props: React.PropsWithChildren<BaseLayoutProps>) => {
           onBack={onBack}
           avatar={{ src: Logo, style: { minWidth: 32 } }}
           extra={[
-            ...(version ? [<Typography.Text type="secondary">v.{version}</Typography.Text>] : []),
+            ...(version
+              ? [
+                  <Typography.Text key="version" type="secondary">
+                    v.{version}
+                  </Typography.Text>,
+                ]
+              : []),
             ...(headerActions ?? [
               <Tooltip title="Профиль" key="profile">
                 <Button

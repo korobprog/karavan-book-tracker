@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { generatePath, useParams, useSearchParams } from "react-router-dom";
-import { Divider, Form } from "antd";
+import { Divider, Empty, Form } from "antd";
 import { useStore } from "effector-react";
 
 import { routes } from "../shared/routes";
@@ -45,10 +45,10 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
   const { distributorId } = useParams<{ distributorId: string }>();
   const backPath = generatePath(routes.distributor, { distributorId });
 
-  function onFinish(formValues: DistributorTransferFormValues) {
+  function onFinish(formValues: DistributorTransferFormValues, totalPrice: number) {
     if (user && profile?.name && stock && distributorId) {
       setIsSubmitting(true);
-      const { date, transferType } = formValues;
+      const { date, transferType, priceMultiplier } = formValues;
 
       const newBooks = calcBooksCountsFromValues(formValues);
 
@@ -59,6 +59,8 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
         fromHolderId: stock.id,
         toHolderId: distributorId,
         books: newBooks.operationBooks,
+        priceMultiplier: priceMultiplier,
+        totalPrice,
       };
 
       if (TransferFromDistributorTypes.includes(transferType)) {
@@ -66,14 +68,14 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
         holderTransfer.toHolderId = stock.id;
       }
 
-      addHolderTransferMultiAction(holderTransfer)
+      addHolderTransferMultiAction(holderTransfer, {}, priceMultiplier)
         .then(() => navigate(backPath))
         .finally(() => setIsSubmitting(false));
     }
   }
 
   const distributorName = distributors.find(({ id }) => id === distributorId)?.name;
-  const distributorBooks = distributorId ? stock?.distributors?.[distributorId] : undefined;
+  const distributorBooks = distributorId ? stock?.distributors?.[distributorId].books : undefined;
 
   const availableBooks = TransferFromDistributorTypes.includes(typeParam)
     ? distributorBooks
@@ -82,7 +84,9 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
   const title = HolderTransferMap[typeParam].title;
   const label = TransferFromDistributorTypes.includes(typeParam) ? "От кого:" : "Кому";
 
-  return (
+  return !distributorId || !stock ? (
+    <Empty />
+  ) : (
     <StockBaseLayout
       title={title}
       backPath={backPath}
@@ -100,6 +104,10 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
         typeParam={typeParam}
         onTypeChange={onTypeChange}
         availableBooks={availableBooks}
+        bookPrices={stock?.bookPrices || {}}
+        priceMultiplier={
+          stock?.distributors?.[distributorId].priceMultiplier || stock?.priceMultiplier || 1
+        }
       />
     </StockBaseLayout>
   );

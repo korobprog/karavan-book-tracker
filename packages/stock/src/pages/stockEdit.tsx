@@ -5,7 +5,7 @@ import { Divider } from "antd";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { addHolderTransferMultiAction } from "common/src/services/api/stockMultiactions";
-import { HolderTransferDoc } from "common/src/services/api/holderTransfer";
+import { HolderTransferDoc, HolderTransferType } from "common/src/services/api/holderTransfer";
 import { StockBaseLayout } from "../shared/StockBaseLayout";
 import { StockForm } from "common/src/components/forms/stock/StockForm";
 import {
@@ -27,14 +27,13 @@ export const StockEdit = ({ currentUser }: Props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   function onFinish(formValues: StockFormValues) {
-    console.log("🚀 ~ onFinish ~ formValues:", formValues);
     if (user && profile?.name && stock) {
       setIsSubmitting(true);
-      const { transferType, date } = formValues;
+      const { transferType, date, priceMultiplier } = formValues;
 
       const { operationBooks, totalCount, bookPrices } = calcBooksCountsFromValues(formValues);
 
-      if (totalCount === 0) {
+      if (totalCount === 0 && transferType !== HolderTransferType.adjustment) {
         setIsSubmitting(false);
         return;
       }
@@ -46,9 +45,10 @@ export const StockEdit = ({ currentUser }: Props) => {
         fromHolderId: null,
         toHolderId: stock?.id,
         books: operationBooks,
+        priceMultiplier,
       };
 
-      addHolderTransferMultiAction(holderTransfer, bookPrices)
+      addHolderTransferMultiAction(holderTransfer, bookPrices, priceMultiplier)
         .then(() => navigate(routes.stock))
         .finally(() => setIsSubmitting(false));
     }
@@ -74,6 +74,7 @@ export const StockEdit = ({ currentUser }: Props) => {
         isSubmitting={isSubmitting}
         availableBooks={stock?.books}
         bookPrices={stock?.bookPrices}
+        initialValues={{ priceMultiplier: stock?.priceMultiplier }}
       />
     </StockBaseLayout>
   );

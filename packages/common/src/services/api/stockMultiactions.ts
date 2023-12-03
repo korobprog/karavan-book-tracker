@@ -1,8 +1,15 @@
-import { $distributors, $stock, HolderBookPrices } from "common/src/services/api/holders";
+import {
+  $distributors,
+  $stock,
+  HolderBookPrices,
+  HolderDistributorDoc,
+  HolderDoc,
+} from "common/src/services/api/holders";
 import { HolderTransferDoc, HolderTransferType, addHolderTransfer } from "./holderTransfer";
 import { updateHolder } from "./holders";
 import { calcObjectFields } from "../../utils/objects";
 import { addPrefixToKeys } from "../../components/forms/stock/helpers";
+import { WithId } from "./refs";
 
 const getDistributor = (id?: string | null) => {
   const distributors = $distributors.getState();
@@ -14,7 +21,8 @@ const getDistributor = (id?: string | null) => {
 
 export const addHolderTransferMultiAction = async (
   newHolderTransfer: HolderTransferDoc,
-  bookPricesRaw: HolderBookPrices = {}
+  bookPricesRaw: HolderBookPrices = {},
+  priceMultiplier?: number
 ) => {
   try {
     const stock = $stock.getState();
@@ -26,6 +34,21 @@ export const addHolderTransferMultiAction = async (
 
     const bookPrices = addPrefixToKeys(bookPricesRaw, "bookPrices.");
 
+    const updateStock = (id: string, data: Partial<HolderDoc>) => {
+      return updateHolder(id, {
+        ...data,
+        ...bookPrices,
+      });
+    };
+
+    const calcStockDistributorBooks = (
+      distributor: WithId<HolderDistributorDoc>,
+      operator: "+" | "-"
+    ) => calcObjectFields(stock.distributors?.[distributor.id].books, operator, books);
+
+    const distributorPriceMultiplier =
+      priceMultiplier === stock?.priceMultiplier ? null : priceMultiplier;
+
     switch (newHolderTransfer.type) {
       // Приход, Корректировка, Найденные, Пожертвования
       case HolderTransferType.bbtIncome:
@@ -33,9 +56,9 @@ export const addHolderTransferMultiAction = async (
       case HolderTransferType.found:
       case HolderTransferType.donations: {
         return Promise.all([
-          updateHolder(stock.id, {
+          updateStock(stock.id, {
             books: calcObjectFields(stock.books, "+", books),
-            ...bookPrices,
+            priceMultiplier: priceMultiplier || stock.priceMultiplier || 1,
           }),
           addHolderTransfer(newHolderTransfer),
         ]);
@@ -50,10 +73,10 @@ export const addHolderTransferMultiAction = async (
 
         return Promise.all([
           addHolderTransfer(newHolderTransfer),
-          updateHolder(stock.id, {
+          updateStock(stock.id, {
             books: calcObjectFields(stock.books, "-", books),
-            [distributorPath]: calcObjectFields(stock.distributors?.[distributor.id], "+", books),
-            ...bookPrices,
+            [`${distributorPath}.books`]: calcStockDistributorBooks(distributor, "+"),
+            [`${distributorPath}.priceMultiplier`]: distributorPriceMultiplier,
           }),
           updateHolder(distributor.id, { books: calcObjectFields(distributor.books, "+", books) }),
         ]);
@@ -61,16 +84,16 @@ export const addHolderTransferMultiAction = async (
 
       // Продажа
       case HolderTransferType.sale: {
-        const { distributor } = getDistributor(toHolderId);
+        const { distributor, distributorPath } = getDistributor(toHolderId);
         if (!distributor) {
           return console.error("distributor not found");
         }
 
         // TODO: Учитывать в статистике распростроненных
         return Promise.all([
-          updateHolder(stock.id, {
+          updateStock(stock.id, {
             books: calcObjectFields(stock.books, "-", books),
-            ...bookPrices,
+            [`${distributorPath}.priceMultiplier`]: distributorPriceMultiplier,
           }),
           updateHolder(distributor.id, { books: calcObjectFields(distributor.books, "+", books) }),
           addHolderTransfer(newHolderTransfer),
@@ -86,10 +109,10 @@ export const addHolderTransferMultiAction = async (
 
         return Promise.all([
           addHolderTransfer(newHolderTransfer),
-          updateHolder(stock.id, {
+          updateStock(stock.id, {
             books: calcObjectFields(stock.books, "+", books),
-            [distributorPath]: calcObjectFields(stock.distributors?.[distributor.id], "-", books),
-            ...bookPrices,
+            [`${distributorPath}.books`]: calcStockDistributorBooks(distributor, "-"),
+            [`${distributorPath}.priceMultiplier`]: distributorPriceMultiplier,
           }),
           updateHolder(distributor.id, { books: calcObjectFields(distributor.books, "-", books) }),
         ]);
@@ -102,12 +125,11 @@ export const addHolderTransferMultiAction = async (
           return console.error("distributor not found");
         }
 
-        // TODO: Учитывать в статистике распростроненных
         return Promise.all([
           addHolderTransfer(newHolderTransfer),
-          updateHolder(stock.id, {
-            [distributorPath]: calcObjectFields(stock.distributors?.[distributor.id], "-", books),
-            ...bookPrices,
+          updateStock(stock.id, {
+            [`${distributorPath}.books`]: calcStockDistributorBooks(distributor, "-"),
+            [`${distributorPath}.priceMultiplier`]: distributorPriceMultiplier,
           }),
         ]);
       }

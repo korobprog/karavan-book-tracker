@@ -12,13 +12,6 @@ import {
   Typography,
   Divider,
 } from "antd";
-import {
-  PlusOutlined,
-  MinusOutlined,
-  StarFilled,
-  StarOutlined,
-  SelectOutlined,
-} from "@ant-design/icons";
 
 import * as storage from "common/src/services/localStorage/reportBooks";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
@@ -35,12 +28,13 @@ import {
 } from "./helpers";
 import { HolderTransferType } from "../../../services/api/holderTransfer";
 import { HolderBookPrices, HolderBooks, HolderType } from "../../../services/api/holders";
+import { BookFormItem } from "./BookFormItem";
 
 type Props = {
   currentUser: CurrentUser;
   onFinish: (formValues: StockFormValues) => void;
   isSubmitting?: boolean;
-  initialValues?: StockFormValues;
+  initialValues?: Partial<StockFormValues>;
   availableBooks?: HolderBooks;
   bookPrices?: HolderBookPrices;
 };
@@ -68,26 +62,26 @@ export const StockForm = (props: Props) => {
 
   const booksLoading = useStore($booksLoading);
 
-  const [allowNegative, setAllowNegative] = useState(false);
+  const [form] = Form.useForm();
 
+  const transferType = Form.useWatch("transferType", form);
+  const isAdjustment = transferType === HolderTransferType.adjustment;
+  const allowNegative = isAdjustment;
+
+  // TODO: сделать сохранение промежуточного в localstorage
   const booksStorageInitialValues = calcFormValuesFromBooks(storage.getReportBooks());
 
-  const initialValues = {
+  const initialValues: StockFormValues = {
     date: moment(),
     transferType: HolderTransferType.bbtIncome,
     ...initialValuesProps,
+    priceMultiplier: initialValuesProps?.priceMultiplier || 1,
+    ...booksStorageInitialValues,
     ...addPrefixToKeys(bookPrices, `${PRICE_PREFIX}-`),
   };
 
-  const { date, transferType, ...booksPropsInitialValues } =
-    initialValuesProps || ({} as StockFormValues);
-
-  const getInitialBooks = (booksValues: Record<number, number>) => {
-    return Object.values(booksValues).reduce((acc, value) => acc + value, 0);
-  };
-
   const [totalBooksCount, setTotalBooksCount] = useState(
-    getInitialBooks(booksPropsInitialValues) || getInitialBooks(booksStorageInitialValues)
+    calcBooksCountsFromValues(initialValues).totalCount
   );
 
   const onSearchChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -96,19 +90,17 @@ export const StockForm = (props: Props) => {
 
   const onValuesChange = () => {
     const formValues: StockFormValues = form.getFieldsValue();
+    // TODO: calculate in use memo
+    const isAdjustment = formValues.transferType === HolderTransferType.adjustment;
 
-    const isAllowNegative = formValues.transferType === HolderTransferType.adjustment;
-    if (isAllowNegative !== allowNegative) {
-      setAllowNegative(isAllowNegative);
-      if (!isAllowNegative) {
-        const { date, transferType, ...currentBooks } = formValues;
-        for (const book in currentBooks) {
-          if (currentBooks[book] < 0) {
-            currentBooks[book] = 0;
-          }
+    if (!isAdjustment) {
+      const { date, transferType, ...currentBooks } = formValues;
+      for (const book in currentBooks) {
+        if (currentBooks[book] < 0) {
+          currentBooks[book] = 0;
         }
-        form.setFieldsValue(currentBooks);
       }
+      form.setFieldsValue(currentBooks);
     }
 
     const newformValues: StockFormValues = form.getFieldsValue();
@@ -125,13 +117,11 @@ export const StockForm = (props: Props) => {
 
   const { Search } = Input;
 
-  const [form] = Form.useForm();
-
   const onSelectClick = (bookId: string) => {
     const newBook = books.find((book) => book.id === bookId);
     if (newBook) {
       setSelectedBooks([...selectedBooks, newBook]);
-      form.setFieldsValue({ [bookId]: 1 });
+      form.setFieldsValue({ [bookId]: 0 });
     }
   };
 
@@ -157,63 +147,45 @@ export const StockForm = (props: Props) => {
   };
 
   const renderBookItem = (book: Book, isSelected: boolean) => {
-    const StarIcon = isSelected ? StarFilled : StarOutlined;
     const isBookFinded =
       book.name.toLowerCase().includes(searchString) ||
       book.short_name.toLowerCase().includes(searchString);
 
     const availableBookCount = availableBooks?.[book.id] || 0;
 
+    const bookCount = form.getFieldValue(book.id);
     const minCount = allowNegative ? -availableBookCount : 0;
     const maxCount = 10000;
     const bookCountText = availableBookCount > 0 ? `(На складе: ${availableBookCount})` : "";
 
     return isBookFinded ? (
-      <List.Item>
-        <StarIcon style={{ fontSize: "24px", marginRight: 12, color: "#bae0ff" }} />
-        <List.Item.Meta title={book.name} description={`${book.short_name} ${bookCountText}`} />
-
-        <Space>
-          {<Typography></Typography>}
-
-          {isSelected ? (
-            <Space>
-              <Form.Item name={`${PRICE_PREFIX}-${book.id}`} noStyle label="Цена">
-                <InputNumber
-                  min={0}
-                  style={{ width: 58 }}
-                  placeholder="Цена"
-                  pattern="\d*"
-                  controls={false}
-                />
-              </Form.Item>
-
-              <Divider />
-
-              <Button onClick={() => onMinusClick(book.id, minCount)} icon={<MinusOutlined />} />
-              <Form.Item name={book.id} noStyle>
-                <InputNumber
-                  min={minCount}
-                  max={maxCount}
-                  style={{ width: 70 }}
-                  type="number"
-                  inputMode="numeric"
-                  pattern="\d*"
-                />
-              </Form.Item>
-              <Button onClick={() => onPlusClick(book.id, maxCount)} icon={<PlusOutlined />} />
-            </Space>
-          ) : (
-            <Button onClick={() => onSelectClick(book.id)} icon={<SelectOutlined />}>
-              Выбрать
-            </Button>
-          )}
-        </Space>
-      </List.Item>
+      <BookFormItem
+        bookId={book.id}
+        title={book.name}
+        description={`${book.short_name} ${bookCountText}`}
+        isSelected={isSelected}
+        leftSlot={
+          <>
+            <Form.Item name={`${PRICE_PREFIX}-${book.id}`} noStyle label="Цена">
+              <InputNumber
+                min={0}
+                style={{ width: 58 }}
+                placeholder="Цена"
+                pattern="\d*"
+                controls={false}
+              />
+            </Form.Item>
+            <Divider />
+          </>
+        }
+        {...{ minCount, maxCount, bookCount, onMinusClick, onPlusClick, onSelectClick }}
+      />
     ) : (
       <Form.Item name={book.id} noStyle />
     );
   };
+
+  const disabledSubmit = !isAdjustment && totalBooksCount === 0;
 
   return (
     <Form
@@ -235,6 +207,17 @@ export const StockForm = (props: Props) => {
           format="DD.MM.YYYY"
         />
       </Form.Item>
+      <Form.Item name="priceMultiplier" label="Ценовой коэффициент">
+        <InputNumber
+          min={0}
+          max={10}
+          step={0.1}
+          style={{ width: 70 }}
+          type="number"
+          inputMode="numeric"
+          pattern="\d*"
+        />
+      </Form.Item>
 
       <Form.Item>
         <Space>
@@ -252,7 +235,7 @@ export const StockForm = (props: Props) => {
             type="primary"
             htmlType="submit"
             loading={isSubmitting || userDocLoading}
-            disabled={totalBooksCount === 0}
+            disabled={disabledSubmit}
           >
             {isSubmitting ? "Сохраняем..." : "Сохранить"}
           </Button>

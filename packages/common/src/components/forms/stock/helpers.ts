@@ -1,18 +1,21 @@
+import { roundPrice } from "common/src/utils/numbers";
 import type { Moment } from "moment";
 
 import { DistributedBook } from "../../../services/api/operations";
 import { $books } from "common/src/services/books";
 import { HolderBooks, HolderTransferType } from "../../../services/api/holderTransfer";
-import { HolderBookPrices } from "../../../services/api/holders";
+import { HolderBookPrices, HolderStockDoc } from "../../../services/api/holders";
 
 export type StockFormValues = Record<number, number> & {
   transferType: HolderTransferType;
   date: Moment;
+  priceMultiplier: number;
 };
 
 export type DistributorTransferFormValues = Record<number, number> & {
   transferType: HolderTransferType;
   date: Moment;
+  priceMultiplier: number;
 };
 
 export type StockDistributorFormValues = {
@@ -21,10 +24,10 @@ export type StockDistributorFormValues = {
 
 export type CountEntrise = [string, number][];
 
-export const PRICE_PREFIX = "price";
+export const PRICE_PREFIX = "_price";
 
 export const calcBooksCountsFromValues = (formValues: StockFormValues) => {
-  const { transferType, date, ...otherFieldValues } = formValues;
+  const { transferType, date, priceMultiplier, ...otherFieldValues } = formValues;
   const bookIdsWithCounts = [] as CountEntrise;
   const bookPrices = {} as HolderBookPrices;
   for (const key in otherFieldValues) {
@@ -43,12 +46,29 @@ export const calcBooksCountsFromValues = (formValues: StockFormValues) => {
   return { ...booksCounts, bookPrices };
 };
 
+export const calcTotalPrice = (
+  operationBooks: HolderBooks,
+  bookPrices: HolderBookPrices,
+  priceMultiplier: number
+) => {
+  let totalPrice = 0;
+  for (const key in operationBooks) {
+    const currentBookPrice = roundPrice(priceMultiplier * bookPrices[key]);
+    const currentBookTotalPrice = operationBooks[key] * currentBookPrice;
+    if (currentBookTotalPrice) {
+      totalPrice += currentBookTotalPrice;
+    }
+  }
+
+  return totalPrice;
+};
+
 export const calcBooksCounts = (bookIdsWithCounts: CountEntrise) => {
   const books = $books.getState();
   let totalCount = 0;
   let totalPoints = 0;
   const operationBooks = bookIdsWithCounts.reduce((acc, [id, count]) => {
-    if (count) {
+    if (Number(count)) {
       totalCount += count;
       totalPoints += (Number(books.find((book) => book.id === id)?.points) || 0) * count;
       acc[id] = count;
@@ -75,4 +95,17 @@ export const addPrefixToKeys = (obj: Record<string, number>, prefix: string) => 
   }
 
   return newObj;
+};
+
+export const calcTotalBooksAndSum = (stock: HolderStockDoc, distributorId: string) => {
+  const stockDistributor = stock?.distributors?.[distributorId];
+  const books = stockDistributor?.books || {};
+  const booksCounts = calcBooksCounts(Object.entries(books));
+  const { totalCount = 0 } = booksCounts || {};
+
+  const { bookPrices = {}, priceMultiplier = 1 } = stock || {};
+  const distributorPriceMultiplier = stockDistributor?.priceMultiplier || priceMultiplier;
+  const totalPrice = calcTotalPrice(books, bookPrices, distributorPriceMultiplier);
+
+  return { totalCount, totalPrice };
 };

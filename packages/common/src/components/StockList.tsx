@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useStore } from "effector-react";
-import { Row, List, Input, Typography } from "antd";
+import { Row, List, Input, Typography, Button, Space } from "antd";
+import { WalletOutlined, PercentageOutlined } from "@ant-design/icons";
 
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { $booksHashMap, $booksLoading, Book } from "common/src/services/books";
 import { HolderBookPrices, HolderBooks } from "../services/api/holders";
+import { roundPrice } from "../utils/numbers";
 
 type BookWithCount = Book & { count: number; price: number };
 
@@ -13,12 +15,14 @@ type Props = {
   holderBooks: HolderBooks;
   title?: string;
   prices?: HolderBookPrices;
+  priceMultiplier?: number;
 };
 
 export const StockList = (props: Props) => {
-  const { currentUser, holderBooks, title, prices = {} } = props;
+  const { currentUser, holderBooks, title, prices = {}, priceMultiplier = 1 } = props;
   const { userDocLoading } = currentUser;
   const [searchString, setSearchString] = useState("");
+  const [priceWithMultiplier, setPriceWithMultiplier] = useState(true);
 
   const booksHashMap = useStore($booksHashMap);
 
@@ -35,7 +39,9 @@ export const StockList = (props: Props) => {
   const { Search } = Input;
 
   const renderBookItem = (book: BookWithCount) => {
-    const priceString = book.price ? `(${book.price} р.) ` : "";
+    const displayedPrice = book.price * (priceWithMultiplier ? priceMultiplier : 1);
+    const roundedPrice = roundPrice(displayedPrice);
+    const priceString = book.price ? `(${roundedPrice} р.) ` : "";
     return book.count ? (
       <List.Item key={book.id}>
         <List.Item.Meta title={book.name} />
@@ -49,10 +55,25 @@ export const StockList = (props: Props) => {
   };
 
   const filteredBooks = books.filter((book) => book.name?.toLowerCase().includes(searchString));
+  const priceTitle = `Цена ${priceWithMultiplier ? "с учетом" : "без учета"} коэффициента:`;
 
   return (
     <div>
-      <Typography.Title level={3}>{title}</Typography.Title>
+      <Row justify={"space-between"} align="middle">
+        <Typography.Title level={4}>{title}</Typography.Title>
+
+        <Space align="center">
+          <Typography.Text type="secondary">
+            {priceTitle} <b>{priceMultiplier}</b>
+          </Typography.Text>
+
+          <Button
+            shape="circle"
+            icon={priceWithMultiplier ? <PercentageOutlined /> : <WalletOutlined />}
+            onClick={() => setPriceWithMultiplier((value) => !value)}
+          />
+        </Space>
+      </Row>
       <Row>
         <Search
           placeholder="поиск книги"

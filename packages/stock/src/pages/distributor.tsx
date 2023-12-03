@@ -22,6 +22,7 @@ import {
 } from "common/src/services/api/holderTransfer";
 import { WithId } from "common/src/services/api/refs";
 import { HolderTransferList } from "common/src/components/HolderTransferList";
+import { calcTotalBooksAndSum } from "common/src/components/forms/stock/helpers";
 
 type Props = {
   currentUser: CurrentUser;
@@ -84,6 +85,9 @@ export const Distributor = ({ currentUser }: Props) => {
     );
   };
 
+  const { totalCount = 0, totalPrice = 0 } =
+    stock && distributorId ? calcTotalBooksAndSum(stock, distributorId) : {};
+
   return (
     <StockBaseLayout
       title={currentDistributor?.name || "Распространитель не найден"}
@@ -111,9 +115,13 @@ export const Distributor = ({ currentUser }: Props) => {
           <Divider dashed />
 
           <StockList
-            title="Подотчетные книги у распространителя:"
+            title={`Книги на руках: ${totalCount} шт. на ${totalPrice} руб.`}
             currentUser={currentUser}
-            holderBooks={stock.distributors?.[distributorId] || {}}
+            holderBooks={stock.distributors?.[distributorId].books || {}}
+            prices={stock.bookPrices}
+            priceMultiplier={
+              stock.distributors?.[distributorId].priceMultiplier || stock.priceMultiplier
+            }
           />
           <Divider dashed />
 

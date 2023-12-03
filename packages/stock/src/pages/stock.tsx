@@ -54,6 +54,7 @@ export const Stock = ({ currentUser }: Props) => {
         currentUser={currentUser}
         holderBooks={stockBooks}
         prices={stockBookPrices}
+        priceMultiplier={stock?.priceMultiplier}
       />
 
       <Divider dashed />

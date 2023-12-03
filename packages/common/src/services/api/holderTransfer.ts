@@ -83,6 +83,8 @@ export type HolderTransferDoc = {
   fromHolderId: string | null;
   toHolderId: string | null;
   books: HolderBooks;
+  priceMultiplier: number;
+  totalPrice?: number;
 };
 
 export type HolderTransferDocWithId = HolderTransferDoc & {

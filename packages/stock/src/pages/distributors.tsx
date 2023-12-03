@@ -8,7 +8,11 @@ import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { StockBaseLayout } from "../shared/StockBaseLayout";
 import { useStore } from "effector-react";
 import { $distributors, $stock } from "common/src/services/api/holders";
-import { calcBooksCounts } from "common/src/components/forms/stock/helpers";
+import {
+  calcBooksCounts,
+  calcTotalBooksAndSum,
+  calcTotalPrice,
+} from "common/src/components/forms/stock/helpers";
 import Search from "antd/es/input/Search";
 
 type Props = {
@@ -38,6 +42,14 @@ export const Distributors = ({ currentUser }: Props) => {
     distributors.name?.toLowerCase().includes(searchString)
   );
 
+  if (!stock) {
+    return (
+      <StockBaseLayout title="Распространители" headerActions={[]}>
+        loading...
+      </StockBaseLayout>
+    );
+  }
+
   return (
     <StockBaseLayout
       title="Распространители"
@@ -65,10 +77,7 @@ export const Distributors = ({ currentUser }: Props) => {
         itemLayout="horizontal"
         dataSource={filteredDistributors}
         renderItem={(distributor) => {
-          const stockDistributor = stock?.distributors?.[distributor.id];
-          const booksCounts = stockDistributor
-            ? calcBooksCounts(Object.entries(stockDistributor)).totalCount
-            : 0;
+          const { totalCount, totalPrice } = calcTotalBooksAndSum(stock, distributor.id);
 
           return (
             <Link
@@ -78,7 +87,7 @@ export const Distributors = ({ currentUser }: Props) => {
               <List.Item className="list-item-clickable">
                 <List.Item.Meta
                   title={distributor.name}
-                  description={`Книг на руках: ${booksCounts}`}
+                  description={`Книг на руках: ${totalCount} шт. на ${totalPrice} руб.`}
                 />
               </List.Item>
             </Link>

@@ -9,10 +9,14 @@ export type BookCount = number;
 export type BookPrice = number;
 export type HolderBooks = Record<string, BookCount>;
 export type HolderBookPrices = Record<string, BookPrice>;
-export type DistributorBooks = { id: string; count: BookCount }[];
+
+export type StockDistiributor = {
+  books: HolderBooks;
+  priceMultiplier?: number;
+};
 
 // ! Тут еще и ID понадобится и заметка наверное массив лучше, или запись с ID
-export type StockDistiributors = Record<string, HolderBooks>;
+export type StockDistiributors = Record<string, StockDistiributor>;
 
 export enum HolderType {
   stock = "stock",
@@ -29,6 +33,7 @@ export type HolderStockDoc = {
   books?: HolderBooks; // по умолчанию это пустой объект {}, в этой задаче его не наполняем
   bookPrices?: HolderBookPrices; // цены книг
   distributors?: StockDistiributors;
+  priceMultiplier?: number;
 };
 
 export type HolderDistributorDoc = {
@@ -38,6 +43,7 @@ export type HolderDistributorDoc = {
   creatorId: string; // id текущего пользователя (в форме не отображаем)
   name: string; // название склада - в форме отображаем (не обязательное)
   books?: HolderBooks; // по умолчанию это пустой объект {}, в этой задаче его не наполняем
+  priceMultiplier?: number;
 };
 
 export const addHolder = async (data: HolderDoc) => {
