@@ -70,13 +70,13 @@ export const Page = () => {
             <Avatar size={80} src={<img src={avatar || logo} alt={userName} />} />
           </Space>
           <Title className="site-page-title" level={4}>
-            Получатель: {userName}
+            {userName}
           </Title>
           <Paragraph>
             {greetingText ? (
               <pre>{greetingText}</pre>
             ) : (
-              <pre>Вы можете перевести за книги следующеми способами</pre>
+              <pre>Вы можете пожертвовать на печать и выкуп книг</pre>
             )}
           </Paragraph>
           {initialValues.banks.map(({ bankName, cardNumber, qrLink }) => (

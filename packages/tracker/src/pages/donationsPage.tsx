@@ -39,6 +39,7 @@ const PageDonations = ({ currentUser }: Props) => {
   const onFinish = async (formValues: DonationPageDoc) => {
     if (userId) {
       editDonationPageDoc(userId, formValues);
+      console.log("🚀 ~ file: donationsPage.tsx:42 ~ onFinish ~ formValues:", formValues);
       const updatedValues: DonationPageDoc = {
         ...formValues,
         avatar: profile?.avatar,
