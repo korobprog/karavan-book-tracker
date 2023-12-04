@@ -33,8 +33,16 @@ export const Page = () => {
   );
   const initialValues = donationPageDocData || initialPageDoc;
 
-  const { socialTelegram, socialWhats, socialLink, avatar, userName, greetingText, socialMail } =
-    initialValues;
+  const {
+    socialTelegram,
+    socialWhats,
+    socialLink,
+    avatar,
+    userName,
+    greetingText,
+    socialMail,
+    buttonBank,
+  } = initialValues;
 
   const downloadQRCode = () => {
     const canvas = document.getElementById("myqrcode")?.querySelector<HTMLCanvasElement>("canvas");
@@ -51,6 +59,8 @@ export const Page = () => {
   const { Paragraph, Text, Link, Title } = Typography;
 
   const plug = !pageId || !initialValues.active;
+
+  const textButton = "перевод в один клик онлайн банк Сбербанк";
 
   if (donationPageDocLoading) {
     return (
@@ -102,9 +112,15 @@ export const Page = () => {
               )}
               {qrLink && (
                 <>
-                  <Button href={qrLink} icon={<BankTwoTone />}>
-                    перевод в один клик онлайн банк {bankName}
-                  </Button>
+                  {buttonBank ? (
+                    <Button href={qrLink} icon={<BankTwoTone />}>
+                      {buttonBank} {bankName}
+                    </Button>
+                  ) : (
+                    <Button href={qrLink} icon={<BankTwoTone />}>
+                      {textButton} {bankName}
+                    </Button>
+                  )}
                   <QRCode
                     className="centred"
                     value={qrLink}

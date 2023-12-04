@@ -111,11 +111,25 @@ export const PageForm = (props: Props) => {
           style={{ height: 120, resize: "none" }}
         />
       </Form.Item>
+      <Space>
+        <Form.Item name="buttonBank">
+          <Input
+            disabled={disabled}
+            placeholder="Текст кнопки перевода"
+            suffix={
+              <Tooltip title="Текст кнопки - перевода онлайн">
+                <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
+              </Tooltip>
+            }
+          />
+        </Form.Item>
+      </Space>
       <Form.List name="banks">
         {(fields, { add, remove }) => (
           <>
             {fields.map(({ key, name, ...restField }) => (
               <Space key={key} style={{ display: "flex", marginBottom: 8 }} align="baseline">
+                я
                 <Form.Item
                   {...restField}
                   name={[name, "bankName"]}
@@ -126,7 +140,7 @@ export const PageForm = (props: Props) => {
                 <Form.Item
                   {...restField}
                   name={[name, "cardNumber"]}
-                  rules={[{ required: true, message: "Введите номер карты" }]}
+                  rules={[{ required: false, message: "Введите номер карты" }]}
                 >
                   <Input disabled={disabled} placeholder="№-карты" />
                 </Form.Item>
@@ -180,10 +194,11 @@ export const PageForm = (props: Props) => {
           />
           <Form.Item name="socialTelegram">
             <Input
+              addonBefore="https://t.me/"
               disabled={disabled}
               placeholder="ссылка на Telegram"
               suffix={
-                <Tooltip title="Пример: https://t.me/ваш_догин">
+                <Tooltip title="Пример: mylogin">
                   <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
                 </Tooltip>
               }
