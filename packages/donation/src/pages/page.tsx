@@ -43,6 +43,7 @@ export const Page = () => {
     socialMail,
     buttonBank,
   } = initialValues;
+  console.log("🚀 ~ file: page.tsx:46 ~ Page ~ socialTelegram:", socialTelegram);
 
   const downloadQRCode = () => {
     const canvas = document.getElementById("myqrcode")?.querySelector<HTMLCanvasElement>("canvas");
@@ -148,8 +149,12 @@ export const Page = () => {
             {!telegram || socialTelegram ? (
               <Paragraph>
                 <Image alt="socialTelegram" src={telegram} height={30} width={30} preview={false} />
-                <Link style={{ marginLeft: 5 }} href={socialTelegram} target="_blank">
-                  {socialTelegram}
+                <Link
+                  style={{ marginLeft: 5 }}
+                  href={`https://t.me/${socialTelegram}`}
+                  target="_blank"
+                >
+                  {`@${socialTelegram}`}
                 </Link>
               </Paragraph>
             ) : null}
