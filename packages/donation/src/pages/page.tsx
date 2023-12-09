@@ -61,7 +61,7 @@ export const Page = () => {
 
   const plug = !pageId || !initialValues.active;
 
-  const textButton = "перевод в один клик онлайн банк Сбербанк";
+  const textButton = "OnlinePay";
 
   if (donationPageDocLoading) {
     return (

@@ -2,7 +2,7 @@ import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { DonationPageDoc, editDonationPageDoc } from "common/src/services/api/donation";
 import { apiRefs } from "common/src/services/api/refs";
 import { useDocumentData } from "react-firebase-hooks/firestore";
-import { PageForm } from "common/src/components/forms/profile/PageForm";
+import { PageForm } from "common/src/components/forms/profile/pagedonation/PageForm";
 import { Typography, notification } from "antd";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { routes } from "../shared/routes";

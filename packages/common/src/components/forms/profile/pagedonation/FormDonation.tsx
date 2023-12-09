@@ -20,8 +20,7 @@ import whats from "common/src/images/whatsapp.svg";
 import email from "common/src/images/email.svg";
 import link from "common/src/images/link_b.svg";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import logo from "../../../images/book-danation.svg";
-import printPdfDonations from "./printPdfDonations";
+import logo from "../../../../images/logo.png";
 
 const QR_SIZE = 160;
 
@@ -34,7 +33,7 @@ type Props = {
   currentUser: CurrentUser;
 };
 
-export const PageForm = (props: Props) => {
+export const FormDonation = (props: Props) => {
   const { onFinish, initialValues, disabled } = props;
   const { currentUser } = props;
 
@@ -47,7 +46,6 @@ export const PageForm = (props: Props) => {
     setSwitchState(checked);
   };
 
-  const { Link } = Typography;
   const myPageLink = `https://books-donation.web.app/page/${userId}`;
 
   const { Text } = Typography;
@@ -66,6 +64,10 @@ export const PageForm = (props: Props) => {
     }
   };
 
+  const titleBank = "Введите названия банка";
+  const titleCard = "Введите номер карты";
+  const titleQr = "Введите сслыку на QR";
+
   return (
     <Form
       name="pageDonationForm"
@@ -74,87 +76,65 @@ export const PageForm = (props: Props) => {
       autoComplete="off"
       initialValues={initialValues}
     >
-      {switchState ? (
-        <Space>
-          <Link copyable={{ text: myPageLink }} href={myPageLink} target="_blank">
-            Ваша страница
-          </Link>
-        </Space>
-      ) : (
-        ""
-      )}
-
-      {switchState ? (
-        <Space style={{ marginLeft: 30 }}>
-          <Link onClick={printPdfDonations} target="_blank">
-            распечатать визитки
-          </Link>
-          <PrinterTwoTone />
-        </Space>
-      ) : (
-        ""
-      )}
-
-      <Form.Item name={"active"} label="Активировать страницу">
-        <Switch
-          checkedChildren={<CheckOutlined />}
-          unCheckedChildren={<CloseOutlined />}
-          checked={switchState}
-          onChange={handleSwitchChange}
-        />
-      </Form.Item>
       <Form.Item name={"greetingText"}>
         <TextArea
           showCount
-          maxLength={100}
+          maxLength={200}
           placeholder="Написать приветствие на Вашей страничке донатов"
           style={{ height: 120, resize: "none" }}
         />
       </Form.Item>
-      <Space>
-        <Form.Item name="buttonBank">
-          <Input
-            disabled={disabled}
-            placeholder="Текст кнопки перевода"
-            suffix={
-              <Tooltip title="Текст кнопки - перевода онлайн">
-                <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
-              </Tooltip>
-            }
-          />
-        </Form.Item>
-      </Space>
       <Form.List name="banks">
         {(fields, { add, remove }) => (
           <>
             {fields.map(({ key, name, ...restField }) => (
               <Space key={key} style={{ display: "flex", marginBottom: 8 }} align="baseline">
-                я
-                <Form.Item
-                  {...restField}
-                  name={[name, "bankName"]}
-                  rules={[{ required: true, message: "Введите название банка" }]}
+                <Tooltip
+                  trigger={["focus"]}
+                  placement="topLeft"
+                  overlayClassName="numeric-input"
+                  title={titleBank}
                 >
-                  <Input disabled={disabled} placeholder="Банк" />
-                </Form.Item>
-                <Form.Item
-                  {...restField}
-                  name={[name, "cardNumber"]}
-                  rules={[{ required: false, message: "Введите номер карты" }]}
+                  <Form.Item
+                    {...restField}
+                    name={[name, "bankName"]}
+                    rules={[{ required: true, message: "Введите название банка" }]}
+                  >
+                    <Input disabled={disabled} placeholder="Банк..." />
+                  </Form.Item>{" "}
+                </Tooltip>
+                <Tooltip
+                  trigger={["focus"]}
+                  placement="topLeft"
+                  overlayClassName="numeric-input"
+                  title={titleCard}
                 >
-                  <Input disabled={disabled} placeholder="№-карты" />
-                </Form.Item>
-                <Form.Item {...restField} name={[name, "qrLink"]} initialValue="">
-                  <Input
-                    suffix={
-                      <Tooltip title="Скопируйте ссылку с Вашего банковского приложения">
-                        <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
-                      </Tooltip>
-                    }
-                    disabled={disabled}
-                    placeholder="QR"
-                  />
-                </Form.Item>
+                  <Form.Item
+                    {...restField}
+                    name={[name, "cardNumber"]}
+                    rules={[{ required: false, message: "Введите номер карты" }]}
+                  >
+                    <Input disabled={disabled} placeholder="99009..." />
+                  </Form.Item>
+                </Tooltip>
+                <Tooltip
+                  trigger={["focus"]}
+                  placement="topLeft"
+                  overlayClassName="numeric-input"
+                  title={titleQr}
+                >
+                  <Form.Item {...restField} name={[name, "qrLink"]} initialValue="">
+                    <Input
+                      suffix={
+                        <Tooltip title="Скопируйте ссылку с Вашего банковского приложения">
+                          <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
+                        </Tooltip>
+                      }
+                      disabled={disabled}
+                      placeholder="http://site..."
+                    />
+                  </Form.Item>
+                </Tooltip>
                 <MinusCircleOutlined onClick={() => remove(name)} />
               </Space>
             ))}
@@ -172,6 +152,20 @@ export const PageForm = (props: Props) => {
           </>
         )}
       </Form.List>
+      <Space>
+        <Form.Item name="buttonBank">
+          <Text italic>Текст кнопки - перевода онлайн</Text>
+          <Input
+            disabled={disabled}
+            placeholder="OnlinePay"
+            suffix={
+              <Tooltip title="OnlinePay...">
+                <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
+              </Tooltip>
+            }
+          />
+        </Form.Item>
+      </Space>
       <Divider dashed />
       <div
         style={{
@@ -283,7 +277,7 @@ export const PageForm = (props: Props) => {
               icon={logo}
             />
             <Button className="centred" type="primary" onClick={downloadQRCode}>
-              Download
+              Скачать QR на устройство
             </Button>
           </div>
         ) : (
