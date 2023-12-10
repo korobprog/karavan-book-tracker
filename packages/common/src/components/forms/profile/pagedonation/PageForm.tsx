@@ -186,8 +186,8 @@ export const PageForm = (props: Props) => {
         )}
       </Form.List>
       <Space>
+        <Text italic>Текст кнопки - перевода онлайн</Text>
         <Form.Item name="buttonBank">
-          <Text italic>Текст кнопки - перевода онлайн</Text>
           <Input
             disabled={disabled}
             placeholder="OnlinePay"

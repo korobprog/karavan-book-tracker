@@ -1,18 +1,6 @@
 import React, { useState } from "react";
-import {
-  Button,
-  Form,
-  Input,
-  Space,
-  Tooltip,
-  Image,
-  Divider,
-  Switch,
-  Typography,
-  QRCode,
-} from "antd";
-import { PrinterTwoTone } from "@ant-design/icons";
-import { MinusCircleOutlined, PlusOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import { Button, Form, Input, Space, Tooltip, Image, Divider, Typography, QRCode } from "antd";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { DonationPageDoc } from "common/src/services/api/donation";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import telegram from "common/src/images/telegram.svg";
@@ -153,8 +141,8 @@ export const FormDonation = (props: Props) => {
         )}
       </Form.List>
       <Space>
+        <Text italic>Текст кнопки - перевода онлайн</Text>
         <Form.Item name="buttonBank">
-          <Text italic>Текст кнопки - перевода онлайн</Text>
           <Input
             disabled={disabled}
             placeholder="OnlinePay"

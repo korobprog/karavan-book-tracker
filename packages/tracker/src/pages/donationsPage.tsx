@@ -26,6 +26,7 @@ const PageDonations = ({ currentUser }: Props) => {
     avatar: "",
     userName: "",
     greetingText: "",
+    buttonBank: "",
   };
 
   const userId = profile?.id || user?.uid || "";
