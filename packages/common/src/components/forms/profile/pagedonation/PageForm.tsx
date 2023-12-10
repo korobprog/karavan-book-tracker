@@ -20,7 +20,7 @@ import whats from "common/src/images/whatsapp.svg";
 import email from "common/src/images/email.svg";
 import link from "common/src/images/link_b.svg";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import logo from "../../../images/book-danation.svg";
+import logo from "../../../../images/logo.png";
 import printPdfDonations from "./printPdfDonations";
 
 const QR_SIZE = 160;
@@ -53,6 +53,23 @@ export const PageForm = (props: Props) => {
   const { Text } = Typography;
   const { TextArea } = Input;
 
+  const downloadQRCode = () => {
+    const canvas = document.getElementById("myqrcode")?.querySelector<HTMLCanvasElement>("canvas");
+    if (canvas) {
+      const url = canvas.toDataURL();
+      const a = document.createElement("a");
+      a.download = "QRCode.png";
+      a.href = url;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  };
+
+  const titleBank = "Введите названия банка";
+  const titleCard = "Введите номер карты";
+  const titleQr = "Введите сслыку на QR";
+
   return (
     <Form
       name="pageDonationForm"
@@ -61,27 +78,6 @@ export const PageForm = (props: Props) => {
       autoComplete="off"
       initialValues={initialValues}
     >
-      {switchState ? (
-        <Space>
-          <Link copyable={{ text: myPageLink }} href={myPageLink} target="_blank">
-            Ваша страница
-          </Link>
-        </Space>
-      ) : (
-        ""
-      )}
-
-      {switchState ? (
-        <Space style={{ marginLeft: 30 }}>
-          <Link onClick={printPdfDonations} target="_blank">
-            распечатать визитки
-          </Link>
-          <PrinterTwoTone />
-        </Space>
-      ) : (
-        ""
-      )}
-
       <Form.Item name={"active"} label="Активировать страницу">
         <Switch
           checkedChildren={<CheckOutlined />}
@@ -90,10 +86,33 @@ export const PageForm = (props: Props) => {
           onChange={handleSwitchChange}
         />
       </Form.Item>
+      {switchState ? (
+        <Space>
+          <Button type="primary" ghost>
+            <Link copyable={{ text: myPageLink }} href={myPageLink} target="_blank">
+              Ваша страница визитки
+            </Link>
+          </Button>
+        </Space>
+      ) : (
+        ""
+      )}
+      {switchState ? (
+        <Space style={{ marginLeft: 30, marginBottom: 30 }}>
+          <Button type="primary" ghost icon={<PrinterTwoTone />}>
+            <Link onClick={printPdfDonations} target="_blank">
+              распечатать визитки
+            </Link>
+          </Button>
+        </Space>
+      ) : (
+        ""
+      )}
+
       <Form.Item name={"greetingText"}>
         <TextArea
           showCount
-          maxLength={100}
+          maxLength={200}
           placeholder="Написать приветствие на Вашей страничке донатов"
           style={{ height: 120, resize: "none" }}
         />
@@ -103,31 +122,52 @@ export const PageForm = (props: Props) => {
           <>
             {fields.map(({ key, name, ...restField }) => (
               <Space key={key} style={{ display: "flex", marginBottom: 8 }} align="baseline">
-                <Form.Item
-                  {...restField}
-                  name={[name, "bankName"]}
-                  rules={[{ required: true, message: "Введите название банка" }]}
+                <Tooltip
+                  trigger={["focus"]}
+                  placement="topLeft"
+                  overlayClassName="numeric-input"
+                  title={titleBank}
                 >
-                  <Input disabled={disabled} placeholder="Банк" />
-                </Form.Item>
-                <Form.Item
-                  {...restField}
-                  name={[name, "cardNumber"]}
-                  rules={[{ required: true, message: "Введите номер карты" }]}
+                  <Form.Item
+                    {...restField}
+                    name={[name, "bankName"]}
+                    rules={[{ required: true, message: "Введите название банка" }]}
+                  >
+                    <Input disabled={disabled} placeholder="Банк..." />
+                  </Form.Item>{" "}
+                </Tooltip>
+                <Tooltip
+                  trigger={["focus"]}
+                  placement="topLeft"
+                  overlayClassName="numeric-input"
+                  title={titleCard}
                 >
-                  <Input disabled={disabled} placeholder="№-карты" />
-                </Form.Item>
-                <Form.Item {...restField} name={[name, "qrLink"]} initialValue="">
-                  <Input
-                    suffix={
-                      <Tooltip title="Скопируйте ссылку с Вашего банковского приложения">
-                        <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
-                      </Tooltip>
-                    }
-                    disabled={disabled}
-                    placeholder="QR"
-                  />
-                </Form.Item>
+                  <Form.Item
+                    {...restField}
+                    name={[name, "cardNumber"]}
+                    rules={[{ required: false, message: "Введите номер карты" }]}
+                  >
+                    <Input disabled={disabled} placeholder="99009..." />
+                  </Form.Item>
+                </Tooltip>
+                <Tooltip
+                  trigger={["focus"]}
+                  placement="topLeft"
+                  overlayClassName="numeric-input"
+                  title={titleQr}
+                >
+                  <Form.Item {...restField} name={[name, "qrLink"]} initialValue="">
+                    <Input
+                      suffix={
+                        <Tooltip title="Скопируйте ссылку с Вашего банковского приложения">
+                          <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
+                        </Tooltip>
+                      }
+                      disabled={disabled}
+                      placeholder="http://site..."
+                    />
+                  </Form.Item>
+                </Tooltip>
                 <MinusCircleOutlined onClick={() => remove(name)} />
               </Space>
             ))}
@@ -145,6 +185,20 @@ export const PageForm = (props: Props) => {
           </>
         )}
       </Form.List>
+      <Space>
+        <Text italic>Текст кнопки - перевода онлайн</Text>
+        <Form.Item name="buttonBank">
+          <Input
+            disabled={disabled}
+            placeholder="OnlinePay"
+            suffix={
+              <Tooltip title="OnlinePay...">
+                <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
+              </Tooltip>
+            }
+          />
+        </Form.Item>
+      </Space>
       <Divider dashed />
       <div
         style={{
@@ -153,7 +207,7 @@ export const PageForm = (props: Props) => {
           flexFlow: "column nowrap",
           alignItems: "center",
           alignContent: "center",
-          height: 450,
+          height: 550,
         }}
       >
         <Space>
@@ -167,10 +221,11 @@ export const PageForm = (props: Props) => {
           />
           <Form.Item name="socialTelegram">
             <Input
+              addonBefore="https://t.me/"
               disabled={disabled}
               placeholder="ссылка на Telegram"
               suffix={
-                <Tooltip title="Пример: https://t.me/ваш_догин">
+                <Tooltip title="Пример: mylogin">
                   <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
                 </Tooltip>
               }
@@ -207,7 +262,7 @@ export const PageForm = (props: Props) => {
             width={30}
             preview={false}
           />
-          <Form.Item name="socialeMail">
+          <Form.Item name="socialMail">
             <Input
               disabled={disabled}
               placeholder="eMail"
@@ -254,6 +309,9 @@ export const PageForm = (props: Props) => {
               iconSize={QR_SIZE / 4}
               icon={logo}
             />
+            <Button className="centred" type="primary" onClick={downloadQRCode}>
+              Скачать QR на устройство
+            </Button>
           </div>
         ) : (
           ""

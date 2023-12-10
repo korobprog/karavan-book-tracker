@@ -20,7 +20,7 @@ export const Page = () => {
     socialTelegram: "",
     socialWhats: "",
     socialLink: "",
-    socialeMail: "",
+    socialMail: "",
     avatar: "",
     userName: "",
     greetingText: "",
@@ -33,8 +33,17 @@ export const Page = () => {
   );
   const initialValues = donationPageDocData || initialPageDoc;
 
-  const { socialTelegram, socialWhats, socialLink, avatar, userName, greetingText, socialeMail } =
-    initialValues;
+  const {
+    socialTelegram,
+    socialWhats,
+    socialLink,
+    avatar,
+    userName,
+    greetingText,
+    socialMail,
+    buttonBank,
+  } = initialValues;
+  console.log("🚀 ~ file: page.tsx:46 ~ Page ~ socialTelegram:", socialTelegram);
 
   const downloadQRCode = () => {
     const canvas = document.getElementById("myqrcode")?.querySelector<HTMLCanvasElement>("canvas");
@@ -51,6 +60,8 @@ export const Page = () => {
   const { Paragraph, Text, Link, Title } = Typography;
 
   const plug = !pageId || !initialValues.active;
+
+  const textButton = "OnlinePay";
 
   if (donationPageDocLoading) {
     return (
@@ -70,13 +81,13 @@ export const Page = () => {
             <Avatar size={80} src={<img src={avatar || logo} alt={userName} />} />
           </Space>
           <Title className="site-page-title" level={4}>
-            Получатель: {userName}
+            {userName}
           </Title>
           <Paragraph>
             {greetingText ? (
               <pre>{greetingText}</pre>
             ) : (
-              <pre>Вы можете перевести за книги следующеми способами</pre>
+              <pre>Вы можете пожертвовать на печать и выкуп книг</pre>
             )}
           </Paragraph>
           {initialValues.banks.map(({ bankName, cardNumber, qrLink }) => (
@@ -102,9 +113,15 @@ export const Page = () => {
               )}
               {qrLink && (
                 <>
-                  <Button href={qrLink} icon={<BankTwoTone />}>
-                    перевод в один клик онлайн банк {bankName}
-                  </Button>
+                  {buttonBank ? (
+                    <Button href={qrLink} icon={<BankTwoTone />}>
+                      {buttonBank} {bankName}
+                    </Button>
+                  ) : (
+                    <Button href={qrLink} icon={<BankTwoTone />}>
+                      {textButton} {bankName}
+                    </Button>
+                  )}
                   <QRCode
                     className="centred"
                     value={qrLink}
@@ -126,14 +143,18 @@ export const Page = () => {
               alignItems: "flex-start",
             }}
           >
-            {socialTelegram || socialWhats || socialeMail || socialLink ? (
+            {socialTelegram || socialWhats || socialMail || socialLink ? (
               <Text>My contacts</Text>
             ) : null}
             {!telegram || socialTelegram ? (
               <Paragraph>
                 <Image alt="socialTelegram" src={telegram} height={30} width={30} preview={false} />
-                <Link style={{ marginLeft: 5 }} href={socialTelegram} target="_blank">
-                  {socialTelegram}
+                <Link
+                  style={{ marginLeft: 5 }}
+                  href={`https://t.me/${socialTelegram}`}
+                  target="_blank"
+                >
+                  {`@${socialTelegram}`}
                 </Link>
               </Paragraph>
             ) : null}
@@ -145,11 +166,11 @@ export const Page = () => {
                 </Link>
               </Paragraph>
             ) : null}
-            {!email || socialeMail ? (
+            {!email || socialMail ? (
               <Paragraph>
                 <Image alt="socialLink" src={email} height={30} width={30} preview={false} />
-                <Link style={{ marginLeft: 5 }} href={`mailto:${socialLink}`} target="_blank">
-                  {socialeMail}
+                <Link style={{ marginLeft: 5 }} href={`mailto:${socialMail}`} target="_blank">
+                  {socialMail}
                 </Link>
               </Paragraph>
             ) : null}
@@ -171,9 +192,6 @@ export const Page = () => {
                 bgColor="#fff"
                 style={{ marginBottom: 16 }}
               />
-              <Button className="centred" type="primary" onClick={downloadQRCode}>
-                Download QR
-              </Button>
             </div>
           )}
           <Divider dashed />
