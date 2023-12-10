@@ -7,7 +7,7 @@ import {
 } from "common/src/services/api/holders";
 import { HolderTransferDoc, HolderTransferType, addHolderTransfer } from "./holderTransfer";
 import { updateHolder } from "./holders";
-import { calcObjectFields } from "../../utils/objects";
+import { calcObjectFields, removeEmptyFields } from "../../utils/objects";
 import { addPrefixToKeys } from "../../components/forms/stock/helpers";
 import { WithId } from "./refs";
 
@@ -20,13 +20,14 @@ const getDistributor = (id?: string | null) => {
 };
 
 export const addHolderTransferMultiAction = async (
-  newHolderTransfer: HolderTransferDoc,
+  holderTransfer: HolderTransferDoc,
   bookPricesRaw: HolderBookPrices = {},
   priceMultiplier?: number
 ) => {
   try {
     const stock = $stock.getState();
-    const { books, fromHolderId, toHolderId } = newHolderTransfer;
+    const newHolderTransfer = removeEmptyFields(holderTransfer);
+    const { books, fromHolderId, toHolderId, changedAccount } = newHolderTransfer;
 
     if (!stock) {
       return console.error("holder not found");
@@ -119,19 +120,26 @@ export const addHolderTransferMultiAction = async (
       }
 
       // Принять отчет и платеж по выданным ранее книгам
-      case HolderTransferType.report: {
+      case HolderTransferType.report:
+      case HolderTransferType.reportByMoney: {
         const { distributor, distributorPath } = getDistributor(fromHolderId);
         if (!distributor) {
           return console.error("distributor not found");
         }
 
-        return Promise.all([
-          addHolderTransfer(newHolderTransfer),
-          updateStock(stock.id, {
-            [`${distributorPath}.books`]: calcStockDistributorBooks(distributor, "-"),
-            [`${distributorPath}.priceMultiplier`]: distributorPriceMultiplier,
-          }),
-        ]);
+        const data = {
+          [`${distributorPath}.books`]: calcStockDistributorBooks(distributor, "-"),
+          [`${distributorPath}.priceMultiplier`]: distributorPriceMultiplier,
+        };
+
+        if (changedAccount !== undefined) {
+          console.log("🚀 ~ changedAccount:!!!!!!!!!!!!", changedAccount);
+
+          data[`${distributorPath}.account`] = changedAccount;
+        }
+        console.log("🚀 ~ data:", data);
+
+        return Promise.all([addHolderTransfer(newHolderTransfer), updateStock(stock.id, data)]);
       }
     }
 

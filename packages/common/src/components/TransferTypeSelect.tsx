@@ -15,6 +15,7 @@ export type DistributorTransferType =
   | HolderTransferType.installments
   | HolderTransferType.sale
   | HolderTransferType.report
+  | HolderTransferType.reportByMoney
   | HolderTransferType.return;
 
 const selectebleDistributorTransferTypes = [

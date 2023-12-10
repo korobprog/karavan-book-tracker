@@ -125,7 +125,7 @@ export const HolderTransferList = (props: Props) => {
     <>
       {dataSource.length > 0 && (
         <div>
-          <Row justify={"space-between"}>
+          <Row justify={"space-between"} className="sticky">
             <Typography.Title level={4}>{title}</Typography.Title>
             {sortedHolderTransfers.length > displayedTransersCount && (
               <Button

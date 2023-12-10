@@ -11,7 +11,7 @@ export type BookFormItemProps = {
   bookCount: number;
   bookId: string;
   leftSlot?: React.ReactNode;
-  bottomSlor?: React.ReactNode;
+  bottomSlot?: React.ReactNode;
   onMinusClick: (bookId: string, minCount: number) => void;
   onPlusClick: (bookId: string, maxCount: number) => void;
   onSelectClick: (bookId: string) => void;
@@ -24,7 +24,7 @@ export const BookFormItem = (props: BookFormItemProps) => {
     description,
     isSelected,
     leftSlot,
-    bottomSlor,
+    bottomSlot,
     minCount,
     maxCount,
     bookCount,
@@ -47,7 +47,7 @@ export const BookFormItem = (props: BookFormItemProps) => {
                 <InputNumber
                   min={minCount}
                   max={maxCount}
-                  style={{ width: 70 }}
+                  style={{ width: 65 }}
                   type="number"
                   inputMode="numeric"
                   pattern="\d*"
@@ -59,7 +59,7 @@ export const BookFormItem = (props: BookFormItemProps) => {
                 disabled={bookCount === maxCount}
               />
             </Space>
-            {bottomSlor}
+            {bottomSlot}
           </Space>
         ) : (
           <Button onClick={() => onSelectClick(bookId)} icon={<SelectOutlined />}>

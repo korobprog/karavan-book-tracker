@@ -59,7 +59,7 @@ export const StockList = (props: Props) => {
 
   return (
     <div>
-      <Row justify={"space-between"} align="middle">
+      <Row justify={"space-between"} align="middle" className="sticky">
         <Typography.Title level={4}>{title}</Typography.Title>
 
         <Space align="center">

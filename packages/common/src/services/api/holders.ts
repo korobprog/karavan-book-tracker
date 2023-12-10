@@ -13,6 +13,7 @@ export type HolderBookPrices = Record<string, BookPrice>;
 export type StockDistiributor = {
   books: HolderBooks;
   priceMultiplier?: number;
+  account?: number; // счет санкиртанщика (руб.)
 };
 
 // ! Тут еще и ID понадобится и заметка наверное массив лучше, или запись с ID

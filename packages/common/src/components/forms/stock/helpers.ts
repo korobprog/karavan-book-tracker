@@ -18,6 +18,11 @@ export type DistributorTransferFormValues = Record<number, number> & {
   priceMultiplier: number;
 };
 
+export type DistributorTransferReportByMoneyFormValues = Record<number, number> & {
+  date: Moment;
+  priceMultiplier: number;
+};
+
 export type StockDistributorFormValues = {
   name: string;
 };
@@ -108,4 +113,29 @@ export const calcTotalBooksAndSum = (stock: HolderStockDoc, distributorId: strin
   const totalPrice = calcTotalPrice(books, bookPrices, distributorPriceMultiplier);
 
   return { totalCount, totalPrice };
+};
+
+export const findBooksForSum = (
+  availableBooks: Record<string, number>,
+  bookPrices: Record<string, number>,
+  reportSum: number,
+  priceMultiplier: number
+) => {
+  const selectedBooks: Record<string, number> = {};
+  let remainingSum = reportSum;
+
+  const sortedBooks = Object.keys(availableBooks).sort((a, b) => bookPrices[a] - bookPrices[b]);
+
+  for (const bookId of sortedBooks) {
+    const price = bookPrices[bookId] * priceMultiplier;
+    const availableCount = availableBooks[bookId] || 0;
+
+    const maxBooks = Math.min(Math.floor(remainingSum / price), availableCount);
+    if (price && maxBooks) {
+      selectedBooks[bookId] = maxBooks;
+      remainingSum -= maxBooks * price;
+    }
+  }
+
+  return { selectedBooks, remainingSum };
 };

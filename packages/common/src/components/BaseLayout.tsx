@@ -59,7 +59,7 @@ export const BaseLayout = (props: React.PropsWithChildren<BaseLayoutProps>) => {
         />
       </Header>
       <Content>
-        <div className="site-layout-content">{children}</div>
+        <div className="site-layout-content">{userDocLoading ? "loading" : children}</div>
       </Content>
     </Layout>
   );

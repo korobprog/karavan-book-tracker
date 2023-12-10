@@ -4,7 +4,6 @@ import { Button, List, Input, InputNumber, Form, Row, Space, DatePicker, Typogra
 import moment from "moment";
 
 import * as storage from "common/src/services/localStorage/reportBooks";
-import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { $books, $booksLoading, Book } from "common/src/services/books";
 import { roundPrice } from "common/src/utils/numbers";
 import {
@@ -22,7 +21,6 @@ import { BookFormItem } from "./BookFormItem";
 import { HolderBookPrices, HolderBooks, HolderType } from "../../../services/api/holders";
 
 type Props = {
-  currentUser: CurrentUser;
   onFinish: (formValues: StockFormValues, totalPrice: number) => void;
   isSubmitting?: boolean;
   initialValues?: StockFormValues;
@@ -35,7 +33,6 @@ type Props = {
 
 export const DistributorTransferForm = (props: Props) => {
   const {
-    currentUser,
     onFinish,
     isSubmitting,
     initialValues: initialValuesProps,
@@ -45,7 +42,6 @@ export const DistributorTransferForm = (props: Props) => {
     bookPrices,
     priceMultiplier: initPriceMultiplier,
   } = props;
-  const { userDocLoading } = currentUser;
   const [searchString, setSearchString] = useState("");
   const [selectedBooks, setSelectedBooks] = useState<Book[]>([]);
 
@@ -151,7 +147,7 @@ export const DistributorTransferForm = (props: Props) => {
         title={book.name}
         description={`${book.short_name} ${bookCountText}`}
         isSelected={isSelected}
-        bottomSlor={
+        bottomSlot={
           <Typography.Text type="secondary">
             по {roundedPrice} р. на {bookTotalPrice} р.
           </Typography.Text>
@@ -202,7 +198,7 @@ export const DistributorTransferForm = (props: Props) => {
         </Typography>
         <Button
           type="default"
-          disabled={isSubmitting || userDocLoading || totalBooksCount === 0}
+          disabled={isSubmitting || totalBooksCount === 0}
           onClick={onBooksReset}
         >
           Сбросить
@@ -210,7 +206,7 @@ export const DistributorTransferForm = (props: Props) => {
         <Button
           type="primary"
           htmlType="submit"
-          loading={isSubmitting || userDocLoading}
+          loading={isSubmitting}
           disabled={totalBooksCount === 0}
         >
           {isSubmitting ? "Сохраняем..." : "Сохранить"}
@@ -238,7 +234,7 @@ export const DistributorTransferForm = (props: Props) => {
       <List
         itemLayout="horizontal"
         dataSource={newBooks}
-        loading={booksLoading || userDocLoading}
+        loading={booksLoading}
         locale={{ emptyText: "Не найдено книг" }}
         renderItem={(book) => renderBookItem(book, false)}
       />

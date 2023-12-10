@@ -7,6 +7,7 @@ import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { StockBaseLayout } from "../shared/StockBaseLayout";
 import { DistributorTransferForm } from "common/src/components/forms/stock";
+import { DistributorTransferReportByMoneyForm } from "common/src/components/forms/stock";
 import {
   DistributorTransferFormValues,
   calcBooksCountsFromValues,
@@ -45,7 +46,11 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
   const { distributorId } = useParams<{ distributorId: string }>();
   const backPath = generatePath(routes.distributor, { distributorId });
 
-  function onFinish(formValues: DistributorTransferFormValues, totalPrice: number) {
+  function onFinish(
+    formValues: DistributorTransferFormValues,
+    totalPrice: number,
+    changedAccount?: number
+  ) {
     if (user && profile?.name && stock && distributorId) {
       setIsSubmitting(true);
       const { date, transferType, priceMultiplier } = formValues;
@@ -61,6 +66,8 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
         books: newBooks.operationBooks,
         priceMultiplier: priceMultiplier,
         totalPrice,
+        changedAccount,
+        // TODO: ГДЕТО ТУТ БАГ - не добавляется account
       };
 
       if (TransferFromDistributorTypes.includes(transferType)) {
@@ -84,6 +91,17 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
   const title = HolderTransferMap[typeParam].title;
   const label = TransferFromDistributorTypes.includes(typeParam) ? "От кого:" : "Кому";
 
+  const formProps = {
+    onFinish,
+    isSubmitting,
+    availableBooks,
+    bookPrices: stock?.bookPrices || {},
+    priceMultiplier:
+      (distributorId && stock?.distributors?.[distributorId].priceMultiplier) ||
+      stock?.priceMultiplier ||
+      1,
+  };
+
   return !distributorId || !stock ? (
     <Empty />
   ) : (
@@ -94,21 +112,15 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
       avatar={avatar}
     >
       <Divider dashed />
-      <Form.Item name="transferType" label={label}>
-        {distributorName}
-      </Form.Item>
-      <DistributorTransferForm
-        currentUser={currentUser}
-        onFinish={onFinish}
-        isSubmitting={isSubmitting}
-        typeParam={typeParam}
-        onTypeChange={onTypeChange}
-        availableBooks={availableBooks}
-        bookPrices={stock?.bookPrices || {}}
-        priceMultiplier={
-          stock?.distributors?.[distributorId].priceMultiplier || stock?.priceMultiplier || 1
-        }
-      />
+      <Form.Item label={label}>{distributorName}</Form.Item>
+      {typeParam === HolderTransferType.reportByMoney ? (
+        <DistributorTransferReportByMoneyForm
+          {...formProps}
+          account={stock?.distributors?.[distributorId].account || 0}
+        />
+      ) : (
+        <DistributorTransferForm {...formProps} typeParam={typeParam} onTypeChange={onTypeChange} />
+      )}
     </StockBaseLayout>
   );
 };

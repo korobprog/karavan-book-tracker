@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 import { generatePath, useParams } from "react-router-dom";
-import { Button, Divider, Tooltip, Space, Empty } from "antd";
+import { Button, Divider, Tooltip, Space, Empty, Statistic } from "antd";
 import { BaseButtonProps } from "antd/es/button/button";
 import { useStore } from "effector-react";
 import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
@@ -88,6 +88,8 @@ export const Distributor = ({ currentUser }: Props) => {
   const { totalCount = 0, totalPrice = 0 } =
     stock && distributorId ? calcTotalBooksAndSum(stock, distributorId) : {};
 
+  const account = (distributorId && stock?.distributors?.[distributorId].account) || 0;
+
   return (
     <StockBaseLayout
       title={currentDistributor?.name || "Распространитель не найден"}
@@ -102,9 +104,14 @@ export const Distributor = ({ currentUser }: Props) => {
           <Space wrap>
             {getButtonWithTooltip(HolderTransferType.installments, "primary")}
             {getButtonWithTooltip(HolderTransferType.sale)}
-            {getButtonWithTooltip(HolderTransferType.report)}
             {getButtonWithTooltip(HolderTransferType.return)}
+            {getButtonWithTooltip(HolderTransferType.report)}
+            {getButtonWithTooltip(HolderTransferType.reportByMoney)}
           </Space>
+
+          <Divider dashed />
+          {<Statistic title="Счет санкиртанщика" value={`${account} руб.`} />}
+
           <Divider dashed />
 
           <HolderTransferList
