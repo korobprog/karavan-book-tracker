@@ -2,7 +2,7 @@ import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { DonationPageDoc, editDonationPageDoc } from "common/src/services/api/donation";
 import { apiRefs } from "common/src/services/api/refs";
 import { useDocumentData } from "react-firebase-hooks/firestore";
-import { PageForm } from "common/src/components/forms/profile/PageForm";
+import { PageForm } from "common/src/components/forms/profile/pagedonation/PageForm";
 import { Typography, notification } from "antd";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { routes } from "../shared/routes";
@@ -21,9 +21,12 @@ const PageDonations = ({ currentUser }: Props) => {
     active: false,
     socialTelegram: "",
     socialWhats: "",
+    socialMail: "",
     socialLink: "",
     avatar: "",
     userName: "",
+    greetingText: "",
+    buttonBank: "",
   };
 
   const userId = profile?.id || user?.uid || "";
@@ -37,6 +40,7 @@ const PageDonations = ({ currentUser }: Props) => {
   const onFinish = async (formValues: DonationPageDoc) => {
     if (userId) {
       editDonationPageDoc(userId, formValues);
+      console.log("🚀 ~ file: donationsPage.tsx:42 ~ onFinish ~ formValues:", formValues);
       const updatedValues: DonationPageDoc = {
         ...formValues,
         avatar: profile?.avatar,

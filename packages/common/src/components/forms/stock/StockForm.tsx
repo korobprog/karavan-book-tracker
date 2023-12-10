@@ -1,18 +1,8 @@
 import React, { useState, useMemo } from "react";
 import { useStore } from "effector-react";
-import {
-  Button,
-  List,
-  Input,
-  InputNumber,
-  Form,
-  Row,
-  Space,
-  DatePicker,
-  Typography,
-  Divider,
-} from "antd";
+import { Button, List, Input, InputNumber, Form, Row, Space, Typography, Divider } from "antd";
 
+import { DatePicker } from "common/src/components/DatePicker";
 import * as storage from "common/src/services/localStorage/reportBooks";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { $books, $booksLoading, Book } from "common/src/services/books";

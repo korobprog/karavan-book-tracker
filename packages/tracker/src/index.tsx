@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import "common/src/app/clientApp";
 import { Offline, register as registerServiceWorker } from "common/src/app/offline";
-import ru_RU from "antd/lib/locale/ru_RU";
+import ru_RU from "antd/locale/ru_RU";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { ConfigProvider } from "antd";

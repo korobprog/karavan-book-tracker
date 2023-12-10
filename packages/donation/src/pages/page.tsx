@@ -1,7 +1,7 @@
 import React from "react";
 import { Divider, QRCode, Typography, Image, Avatar, Button, Space } from "antd";
 import { BaseLayout } from "common/src/components/BaseLayout";
-import { CreditCardOutlined } from "@ant-design/icons";
+import { BankTwoTone, CreditCardOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import { Page404 } from "./404";
 import { DonationPageDoc } from "common/src/services/api/donation";
@@ -10,6 +10,8 @@ import { apiRefs } from "common/src/services/api/refs";
 import telegram from "common/src/images/telegram.svg";
 import whats from "common/src/images/whatsapp.svg";
 import email from "common/src/images/email.svg";
+import link from "common/src/images/link_b.svg";
+import logo from "common/src/images/logo.png";
 
 export const Page = () => {
   const initialPageDoc: DonationPageDoc = {
@@ -18,8 +20,10 @@ export const Page = () => {
     socialTelegram: "",
     socialWhats: "",
     socialLink: "",
+    socialMail: "",
     avatar: "",
     userName: "",
+    greetingText: "",
   };
 
   const { pageId } = useParams<{ pageId: string }>();
@@ -28,7 +32,18 @@ export const Page = () => {
     pageId ? apiRefs.donationPage(pageId) : null
   );
   const initialValues = donationPageDocData || initialPageDoc;
-  const { socialTelegram, socialWhats, socialLink, avatar, userName } = initialValues;
+
+  const {
+    socialTelegram,
+    socialWhats,
+    socialLink,
+    avatar,
+    userName,
+    greetingText,
+    socialMail,
+    buttonBank,
+  } = initialValues;
+  console.log("🚀 ~ file: page.tsx:46 ~ Page ~ socialTelegram:", socialTelegram);
 
   const downloadQRCode = () => {
     const canvas = document.getElementById("myqrcode")?.querySelector<HTMLCanvasElement>("canvas");
@@ -46,6 +61,8 @@ export const Page = () => {
 
   const plug = !pageId || !initialValues.active;
 
+  const textButton = "OnlinePay";
+
   if (donationPageDocLoading) {
     return (
       <BaseLayout title="Book Donation" headerActions={[]}>
@@ -61,11 +78,18 @@ export const Page = () => {
       ) : (
         <>
           <Space style={{ display: "flex", justifyContent: "center" }}>
-            <Avatar size={80} src={<img src={avatar} alt={userName} />} />
+            <Avatar size={80} src={<img src={avatar || logo} alt={userName} />} />
           </Space>
           <Title className="site-page-title" level={4}>
             {userName}
           </Title>
+          <Paragraph>
+            {greetingText ? (
+              <pre>{greetingText}</pre>
+            ) : (
+              <pre>Вы можете пожертвовать на печать и выкуп книг</pre>
+            )}
+          </Paragraph>
           {initialValues.banks.map(({ bankName, cardNumber, qrLink }) => (
             <Space
               key={bankName}
@@ -80,20 +104,31 @@ export const Page = () => {
             >
               {bankName && <Text strong>{bankName}</Text>}
               {cardNumber && (
-                <Paragraph copyable>
+                <Paragraph>
                   <CreditCardOutlined />
-                  <Text style={{ fontSize: "150%" }} code>
+                  <Text copyable={{ tooltips: false }} style={{ fontSize: "150%" }} code>
                     {cardNumber}
                   </Text>
                 </Paragraph>
               )}
               {qrLink && (
-                <QRCode
-                  className="centred"
-                  value={qrLink}
-                  bgColor="#fff"
-                  style={{ marginBottom: 16 }}
-                />
+                <>
+                  {buttonBank ? (
+                    <Button href={qrLink} icon={<BankTwoTone />}>
+                      {buttonBank} {bankName}
+                    </Button>
+                  ) : (
+                    <Button href={qrLink} icon={<BankTwoTone />}>
+                      {textButton} {bankName}
+                    </Button>
+                  )}
+                  <QRCode
+                    className="centred"
+                    value={qrLink}
+                    bgColor="#fff"
+                    style={{ marginBottom: 16 }}
+                  />
+                </>
               )}
             </Space>
           ))}
@@ -108,12 +143,18 @@ export const Page = () => {
               alignItems: "flex-start",
             }}
           >
-            {socialTelegram || socialWhats || socialLink ? <Text>My contacts</Text> : null}
+            {socialTelegram || socialWhats || socialMail || socialLink ? (
+              <Text>My contacts</Text>
+            ) : null}
             {!telegram || socialTelegram ? (
               <Paragraph>
                 <Image alt="socialTelegram" src={telegram} height={30} width={30} preview={false} />
-                <Link style={{ marginLeft: 5 }} href={socialTelegram} target="_blank">
-                  {socialTelegram}
+                <Link
+                  style={{ marginLeft: 5 }}
+                  href={`https://t.me/${socialTelegram}`}
+                  target="_blank"
+                >
+                  {`@${socialTelegram}`}
                 </Link>
               </Paragraph>
             ) : null}
@@ -125,10 +166,18 @@ export const Page = () => {
                 </Link>
               </Paragraph>
             ) : null}
-            {!email || socialLink ? (
+            {!email || socialMail ? (
               <Paragraph>
                 <Image alt="socialLink" src={email} height={30} width={30} preview={false} />
-                <Link style={{ marginLeft: 5 }} href={`mailto:${socialLink}`} target="_blank">
+                <Link style={{ marginLeft: 5 }} href={`mailto:${socialMail}`} target="_blank">
+                  {socialMail}
+                </Link>
+              </Paragraph>
+            ) : null}
+            {!link || socialLink ? (
+              <Paragraph>
+                <Image alt="socialLink" src={link} height={30} width={30} preview={false} />
+                <Link style={{ marginLeft: 5 }} href={socialLink} target="_blank">
                   {socialLink}
                 </Link>
               </Paragraph>
@@ -143,9 +192,6 @@ export const Page = () => {
                 bgColor="#fff"
                 style={{ marginBottom: 16 }}
               />
-              <Button className="centred" type="primary" onClick={downloadQRCode}>
-                Download QR
-              </Button>
             </div>
           )}
           <Divider dashed />

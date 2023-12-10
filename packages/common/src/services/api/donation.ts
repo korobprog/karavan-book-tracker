@@ -3,7 +3,7 @@ import { apiRefs } from "./refs";
 
 export type BankItem = {
   bankName: string;
-  cardNumber: string;
+  cardNumber?: string;
   qrLink?: string;
 };
 
@@ -12,9 +12,12 @@ export type DonationPageDoc = {
   banks: BankItem[];
   socialTelegram?: string;
   socialWhats?: string;
+  socialMail?: string;
   socialLink?: string;
   avatar?: string;
   userName?: string;
+  greetingText?: string;
+  buttonBank?: string;
 };
 
 export type DonationTransferDocWithId = DonationPageDoc & {
