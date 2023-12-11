@@ -2,13 +2,13 @@ import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { DonationPageDoc, editDonationPageDoc } from "common/src/services/api/donation";
 import { apiRefs } from "common/src/services/api/refs";
 import { useDocumentData } from "react-firebase-hooks/firestore";
-import { Space, Typography, notification } from "antd";
+import { Form, Space, Typography, notification } from "antd";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { routes } from "../shared/routes";
 import { PageForm } from "common/src/components/forms/profile/pagedonation/PageForm";
 import { Preview } from "common/src/components/forms/profile/pagedonation/preview";
 import { Switch } from "antd";
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import { CheckOutlined, CloseOutlined, EyeInvisibleFilled, EyeTwoTone } from "@ant-design/icons";
 import { useState } from "react";
 
 type Props = {
@@ -62,6 +62,17 @@ const PageDonations = ({ currentUser }: Props) => {
   return (
     <>
       <BaseLayout title="Страница для пожертвований" isAdmin backPath={routes.root} avatar={avatar}>
+        <Form layout="vertical">
+          <Form.Item label="показать как выглядит страница визитка">
+            <Switch
+              checkedChildren={<EyeTwoTone />}
+              unCheckedChildren={<EyeInvisibleFilled />}
+              checked={switchState}
+              onChange={handleSwitchChange}
+            />
+          </Form.Item>
+        </Form>
+
         {donationDocLoading || !initialPageDoc ? (
           <Typography.Title className="site-page-title" level={5}>
             Загрузка...
@@ -81,13 +92,6 @@ const PageDonations = ({ currentUser }: Props) => {
                 currentUser={currentUser}
               />
             )}
-            Предпросмотр Вашей страницы для сбора пожертвований:
-            <Switch
-              checkedChildren={<CheckOutlined />}
-              unCheckedChildren={<CloseOutlined />}
-              checked={switchState}
-              onChange={handleSwitchChange}
-            />
           </>
         )}
       </BaseLayout>

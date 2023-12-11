@@ -83,15 +83,6 @@ export const PageForm = (props: Props) => {
       initialValues={initialValues}
       layout="vertical"
     >
-      <Space direction="vertical">
-        <Alert
-          message="Настройте страницу визитки"
-          description="Вы можете настроить свою страничку пожертвований, а также распечать QR
-          коды для книг в качестве Ваших визиток."
-          type="info"
-          showIcon
-        />
-      </Space>
       <Form.Item name={"active"} label="активировать страницу пожертвований">
         <Switch
           checkedChildren={<CheckOutlined />}
@@ -100,8 +91,13 @@ export const PageForm = (props: Props) => {
           onChange={handleSwitchChange}
         />
       </Form.Item>
+      <Form.Item>
+        <Button type="primary" htmlType="submit">
+          СОХРАНИТЬ
+        </Button>
+      </Form.Item>
       {switchState ? (
-        <Space style={{ marginLeft: 30, marginBottom: 15 }}>
+        <Space style={{ marginLeft: 30, marginBottom: 15, marginTop: 15 }}>
           <Button type="primary" ghost>
             <Link copyable={{ text: myPageLink }} href={myPageLink} target="_blank">
               Ваша страница визитки
@@ -112,7 +108,7 @@ export const PageForm = (props: Props) => {
         ""
       )}
       {switchState ? (
-        <Space style={{ marginLeft: 30, marginBottom: 25 }}>
+        <Space style={{ marginLeft: 30, marginBottom: 25, marginTop: 15 }}>
           <Button type="primary" ghost icon={<PrinterTwoTone />}>
             <Link onClick={printPdfDonations} target="_blank">
               распечатать визитки
@@ -122,7 +118,18 @@ export const PageForm = (props: Props) => {
       ) : (
         ""
       )}
-      <Space direction="vertical" style={{ width: "100%" }}>
+
+      <Space direction="vertical">
+        <Alert
+          message="Настройте страницу визитки"
+          description="Вы можете настроить свою страничку пожертвований, а также распечать QR
+          коды для книг в качестве Ваших визиток."
+          type="info"
+          showIcon
+        />
+      </Space>
+
+      <Space direction="vertical" style={{ width: "100%", marginTop: 15 }}>
         <Form.Item name={"greetingText"} label="Текст приветствия">
           <TextArea
             showCount
