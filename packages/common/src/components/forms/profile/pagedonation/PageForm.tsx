@@ -22,6 +22,7 @@ import link from "common/src/images/link_b.svg";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import logo from "../../../../images/logo.png";
 import printPdfDonations from "./printPdfDonations";
+import { Preview } from "./preview";
 
 const QR_SIZE = 160;
 
@@ -36,6 +37,7 @@ type Props = {
 
 export const PageForm = (props: Props) => {
   const { onFinish, initialValues, disabled } = props;
+
   const { currentUser } = props;
 
   const userId = currentUser.profile?.id || currentUser.user?.uid;
