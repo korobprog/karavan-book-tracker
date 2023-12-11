@@ -63,13 +63,6 @@ const PageDonations = ({ currentUser }: Props) => {
   return (
     <>
       <BaseLayout title="Страница для пожертвований" isAdmin backPath={routes.root} avatar={avatar}>
-        Предосмотр:
-        <Switch
-          checkedChildren={<CheckOutlined />}
-          unCheckedChildren={<CloseOutlined />}
-          checked={switchState}
-          onChange={handleSwitchChange}
-        />
         {donationDocLoading || !initialPageDoc ? (
           <Typography.Title className="site-page-title" level={5}>
             Загрузка...
@@ -100,7 +93,7 @@ const PageDonations = ({ currentUser }: Props) => {
                 alignItems: "flex-start",
               }}
             >
-              Предосмотр:
+              Предосмотр Вашей страницы для сбора пожертвований:
               <Switch
                 checkedChildren={<CheckOutlined />}
                 unCheckedChildren={<CloseOutlined />}

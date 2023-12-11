@@ -80,7 +80,14 @@ export const PageForm = (props: Props) => {
       autoComplete="off"
       initialValues={initialValues}
     >
-      <Form.Item name={"active"} label="Активировать страницу">
+      <Text keyboard>
+        {userName}, Здесь Вы можете настроить свою страничку пожертвований, а также распечать QR
+        коды для книг в качестве Ваших визток.
+      </Text>
+      <Form.Item
+        name={"active"}
+        label="Включите/выключите чтобы активировать страницу пожертвований"
+      >
         <Switch
           checkedChildren={<CheckOutlined />}
           unCheckedChildren={<CloseOutlined />}
@@ -89,7 +96,7 @@ export const PageForm = (props: Props) => {
         />
       </Form.Item>
       {switchState ? (
-        <Space>
+        <Space style={{ marginLeft: 30, marginBottom: 15 }}>
           <Button type="primary" ghost>
             <Link copyable={{ text: myPageLink }} href={myPageLink} target="_blank">
               Ваша страница визитки
@@ -100,7 +107,7 @@ export const PageForm = (props: Props) => {
         ""
       )}
       {switchState ? (
-        <Space style={{ marginLeft: 30, marginBottom: 30 }}>
+        <Space style={{ marginLeft: 30, marginBottom: 25 }}>
           <Button type="primary" ghost icon={<PrinterTwoTone />}>
             <Link onClick={printPdfDonations} target="_blank">
               распечатать визитки
@@ -110,8 +117,9 @@ export const PageForm = (props: Props) => {
       ) : (
         ""
       )}
-
       <Form.Item name={"greetingText"}>
+        Введите текст приветствия, либо оставьте пустым, по умолчанию будет написанно - "Вы можете
+        пожертвовать на печать и выкуп книг"
         <TextArea
           showCount
           maxLength={200}
@@ -119,6 +127,8 @@ export const PageForm = (props: Props) => {
           style={{ height: 120, resize: "none" }}
         />
       </Form.Item>
+      Введите реквизыты - название банка, номер банковской карты и ссылку на QR код с вашего
+      банковского приложения:
       <Form.List name="banks">
         {(fields, { add, remove }) => (
           <>
@@ -212,6 +222,7 @@ export const PageForm = (props: Props) => {
           height: 550,
         }}
       >
+        <Text italic>Здесь Вы можете ввести свои контактные данные:</Text>
         <Space>
           <Image
             style={{ position: "absolute", top: -10, left: 5 }}
@@ -297,10 +308,9 @@ export const PageForm = (props: Props) => {
             />
           </Form.Item>
         </Space>
-
         {switchState ? (
           <div id="myqrcode">
-            <Text>{userName}, это Ваш QR странички донатов</Text>
+            <Text italic>{userName}, это Ваш QR странички донатов</Text>
             <QRCode
               className="centred"
               value={myPageLink}
