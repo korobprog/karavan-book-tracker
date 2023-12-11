@@ -10,7 +10,6 @@ import { Preview } from "common/src/components/forms/profile/pagedonation/previe
 import { Switch } from "antd";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
 
 type Props = {
   currentUser: CurrentUser;
@@ -82,25 +81,13 @@ const PageDonations = ({ currentUser }: Props) => {
                 currentUser={currentUser}
               />
             )}
-            `
-            <Space
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                flexWrap: "wrap",
-                justifyContent: "flex-start",
-                alignContent: "center",
-                alignItems: "flex-start",
-              }}
-            >
-              Предосмотр Вашей страницы для сбора пожертвований:
-              <Switch
-                checkedChildren={<CheckOutlined />}
-                unCheckedChildren={<CloseOutlined />}
-                checked={switchState}
-                onChange={handleSwitchChange}
-              />
-            </Space>
+            Предпросмотр Вашей страницы для сбора пожертвований:
+            <Switch
+              checkedChildren={<CheckOutlined />}
+              unCheckedChildren={<CloseOutlined />}
+              checked={switchState}
+              onChange={handleSwitchChange}
+            />
           </>
         )}
       </BaseLayout>

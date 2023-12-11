@@ -222,7 +222,7 @@ export const PageForm = (props: Props) => {
           height: 550,
         }}
       >
-        <Text italic>Здесь Вы можете ввести свои контактные данные:</Text>
+        <Text italic>Здесь Вы можете указать свои контакты и ссылки:</Text>
         <Space>
           <Image
             style={{ position: "absolute", top: -10, left: 5 }}
