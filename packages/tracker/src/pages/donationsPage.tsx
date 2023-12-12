@@ -59,7 +59,8 @@ const PageDonations = ({ currentUser }: Props) => {
     setSwitchState(checked);
   };
   const dnone = "none";
-  const plug = switchState ? "" : dnone;
+  const plug1 = switchState ? "" : dnone;
+  const plug2 = switchState ? dnone : "";
 
   return (
     <>
@@ -81,14 +82,20 @@ const PageDonations = ({ currentUser }: Props) => {
           </Typography.Title>
         ) : (
           <>
-            <Space style={{ display: `${switchState ? "" : plug}` }}>
+            <Space style={{ display: `${switchState ? "" : plug1}` }}>
               <Preview
                 initialValues={initialValues}
                 onFinish={onFinish}
                 currentUser={currentUser}
               />
             </Space>
-            <PageForm initialValues={initialValues} onFinish={onFinish} currentUser={currentUser} />
+            <Space style={{ display: `${switchState ? plug2 : ""}` }}>
+              <PageForm
+                initialValues={initialValues}
+                onFinish={onFinish}
+                currentUser={currentUser}
+              />
+            </Space>
           </>
         )}
       </BaseLayout>
