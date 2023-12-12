@@ -58,7 +58,8 @@ const PageDonations = ({ currentUser }: Props) => {
   const handleSwitchChange = (checked: boolean | ((prevState: boolean) => boolean)) => {
     setSwitchState(checked);
   };
-
+  const dnone = "none";
+  const plug = switchState ? dnone : "";
   return (
     <>
       <BaseLayout title="Страница для пожертвований" isAdmin backPath={routes.root} avatar={avatar}>
@@ -79,19 +80,14 @@ const PageDonations = ({ currentUser }: Props) => {
           </Typography.Title>
         ) : (
           <>
-            {switchState ? (
+            <Space style={{ display: `${switchState ? plug : ""}` }}>
               <Preview
                 initialValues={initialValues}
                 onFinish={onFinish}
                 currentUser={currentUser}
               />
-            ) : (
-              <PageForm
-                initialValues={initialValues}
-                onFinish={onFinish}
-                currentUser={currentUser}
-              />
-            )}
+            </Space>
+            <PageForm initialValues={initialValues} onFinish={onFinish} currentUser={currentUser} />
           </>
         )}
       </BaseLayout>
