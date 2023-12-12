@@ -72,6 +72,7 @@ export const PageForm = (props: Props) => {
     titleBank: "Введите названия банка",
     titleCard: "Введите номер карты",
     titleQr: "Введите сслыку на QR",
+    titleButton: "Введите свое название",
   };
 
   return (
@@ -83,6 +84,20 @@ export const PageForm = (props: Props) => {
       initialValues={initialValues}
       layout="vertical"
     >
+      <Form.Item>
+        <Button type="primary" htmlType="submit">
+          СОХРАНИТЬ
+        </Button>
+      </Form.Item>
+      <Space direction="vertical" style={{ marginBottom: 15 }}>
+        <Alert
+          message="Настройте страницу визитки"
+          description="Вы можете настроить свою страничку пожертвований, а также распечать QR
+      коды для книг в качестве Ваших визиток."
+          type="info"
+          showIcon
+        />
+      </Space>
       <Form.Item name={"active"} label="активировать страницу пожертвований">
         <Switch
           checkedChildren={<CheckOutlined />}
@@ -91,13 +106,8 @@ export const PageForm = (props: Props) => {
           onChange={handleSwitchChange}
         />
       </Form.Item>
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
-          СОХРАНИТЬ
-        </Button>
-      </Form.Item>
       {switchState ? (
-        <Space style={{ marginLeft: 30, marginBottom: 15, marginTop: 15 }}>
+        <Space style={{ marginLeft: 30, marginBottom: 3, marginTop: 15 }}>
           <Button type="primary" ghost>
             <Link copyable={{ text: myPageLink }} href={myPageLink} target="_blank">
               Ваша страница визитки
@@ -108,7 +118,7 @@ export const PageForm = (props: Props) => {
         ""
       )}
       {switchState ? (
-        <Space style={{ marginLeft: 30, marginBottom: 25, marginTop: 15 }}>
+        <Space style={{ marginLeft: 30, marginBottom: 15, marginTop: 15 }}>
           <Button type="primary" ghost icon={<PrinterTwoTone />}>
             <Link onClick={printPdfDonations} target="_blank">
               распечатать визитки
@@ -119,17 +129,7 @@ export const PageForm = (props: Props) => {
         ""
       )}
 
-      <Space direction="vertical">
-        <Alert
-          message="Настройте страницу визитки"
-          description="Вы можете настроить свою страничку пожертвований, а также распечать QR
-          коды для книг в качестве Ваших визиток."
-          type="info"
-          showIcon
-        />
-      </Space>
-
-      <Space direction="vertical" style={{ width: "100%", marginTop: 15 }}>
+      <Space direction="vertical" style={{ width: "100%" }}>
         <Form.Item name={"greetingText"} label="Текст приветствия">
           <TextArea
             showCount
@@ -153,7 +153,7 @@ export const PageForm = (props: Props) => {
                       {...restField}
                       name={[name, "bankName"]}
                       rules={[{ required: true, message: "Введите название банка" }]}
-                      label="название банка"
+                      label="Банк"
                     >
                       <Input disabled={disabled} placeholder="Банк..." />
                     </Form.Item>{" "}
@@ -172,7 +172,7 @@ export const PageForm = (props: Props) => {
                           required: false,
                         },
                       ]}
-                      label="номер карты"
+                      label="№ карты"
                     >
                       <Input disabled={disabled} placeholder="99009..." />
                     </Form.Item>
@@ -217,22 +217,23 @@ export const PageForm = (props: Props) => {
             </>
           )}
         </Form.List>
-
-        <Form.Item
-          name="buttonBank"
-          label="Текст кнопки
-"
+        <Tooltip
+          trigger={["focus"]}
+          placement="topLeft"
+          overlayClassName="numeric-input"
+          title={title.titleButton}
         >
-          <Input
-            disabled={disabled}
-            placeholder="Ихменить текст кнопки перевода средств в онлайн банк"
-            suffix={
-              <Tooltip title="OnlinePay...">
-                <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
-              </Tooltip>
-            }
-          />
-        </Form.Item>
+          <Form.Item
+            name="buttonBank"
+            label="Текст кнопки
+"
+          >
+            <Input
+              disabled={disabled}
+              placeholder="По умолчанию - Пожертвуйте на выкуп книг от сердца"
+            />
+          </Form.Item>
+        </Tooltip>
       </Space>
 
       <Divider dashed />
