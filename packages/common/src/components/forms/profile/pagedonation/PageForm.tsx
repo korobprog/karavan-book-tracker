@@ -11,6 +11,8 @@ import {
   Typography,
   QRCode,
   Alert,
+  Radio,
+  RadioChangeEvent,
 } from "antd";
 import { PrinterTwoTone } from "@ant-design/icons";
 import { MinusCircleOutlined, PlusOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
@@ -23,6 +25,7 @@ import link from "common/src/images/link_b.svg";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import logo from "../../../../images/logo.png";
 import printPdfDonations from "./printPdfDonations";
+import printPdfDonations88 from "./printPdfDonations88";
 
 const QR_SIZE = 160;
 
@@ -75,52 +78,78 @@ export const PageForm = (props: Props) => {
     titleButton: "Введите свое название",
   };
 
+  const [value, setValue] = useState(true);
+  console.log("🚀 ~ file: PageForm.tsx:82 ~ PageForm ~ value:", value);
+
+  const onChange = (e: RadioChangeEvent) => {
+    //console.log("radio checked", e.target.value);
+    setValue(e.target.value);
+  };
+
   return (
     <Form
       name="pageDonationForm"
       onFinish={onFinish}
-      style={{ maxWidth: 600 }}
       autoComplete="off"
       initialValues={initialValues}
       layout="vertical"
     >
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
-          СОХРАНИТЬ
-        </Button>
-      </Form.Item>
-      <Space direction="vertical" style={{ marginBottom: 15 }}>
-        <Alert
-          message="Настройте страницу визитки"
-          description="Вы можете настроить свою страничку пожертвований, а также распечать QR
-      коды для книг в качестве Ваших визиток."
-          type="info"
-          showIcon
-        />
+      <Space style={{ display: "flex", flexFlow: "column", alignItems: "flex-end" }}>
+        <Form.Item name={"active"}>
+          <Switch
+            checkedChildren={<CheckOutlined />}
+            unCheckedChildren={<CloseOutlined />}
+            checked={switchState}
+            onChange={handleSwitchChange}
+          />
+        </Form.Item>
       </Space>
-      <Form.Item name={"active"} label="активировать страницу пожертвований">
-        <Switch
-          checkedChildren={<CheckOutlined />}
-          unCheckedChildren={<CloseOutlined />}
-          checked={switchState}
-          onChange={handleSwitchChange}
-        />
-      </Form.Item>
-      {switchState ? (
-        <Space style={{ marginLeft: 30, marginBottom: 3, marginTop: 15 }}>
+
+      <Alert
+        message="Настройте страницу визитки"
+        description="Вы можете настроить свою страничку пожертвований, а также распечать QR
+      коды для книг в качестве Ваших визиток."
+        type="info"
+        showIcon
+      />
+
+      <Space
+        direction="horizontal"
+        style={{
+          display: "flex",
+          marginBottom: 15,
+          flexFlow: "column",
+          alignItems: "center",
+          marginTop: 25,
+        }}
+      >
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            СОХРАНИТЬ
+          </Button>
+        </Form.Item>
+        {switchState ? (
           <Button type="primary" ghost>
             <Link copyable={{ text: myPageLink }} href={myPageLink} target="_blank">
               Ваша страница визитки
             </Link>
           </Button>
-        </Space>
-      ) : (
-        ""
-      )}
+        ) : (
+          ""
+        )}
+      </Space>
+
       {switchState ? (
-        <Space style={{ marginLeft: 30, marginBottom: 15, marginTop: 15 }}>
+        <Space
+          direction="vertical"
+          style={{ display: "flex", flexFlow: "column", alignItems: "center", marginBottom: 15 }}
+        >
+          <Radio.Group name="radiogroup" defaultValue={1} onChange={onChange} value={value}>
+            <Radio value={true}>16 QR</Radio>
+            <Radio value={false}>88 QR</Radio>
+          </Radio.Group>
           <Button type="primary" ghost icon={<PrinterTwoTone />}>
-            <Link onClick={printPdfDonations} target="_blank">
+            <Link onClick={value ? printPdfDonations : printPdfDonations88} target="_blank">
               распечатать визитки
             </Link>
           </Button>
@@ -129,127 +158,118 @@ export const PageForm = (props: Props) => {
         ""
       )}
 
-      <Space direction="vertical" style={{ width: "100%" }}>
-        <Form.Item name={"greetingText"} label="Текст приветствия">
-          <TextArea
-            showCount
-            maxLength={200}
-            placeholder="Введите текст приветствия, либо оставьте пустым, по умолчанию будет написанно - Вы можете пожертвовать на печать и выкуп книг"
-            style={{ height: 120, resize: "none" }}
+      <Form.Item name={"greetingText"} label="Текст приветствия">
+        <TextArea
+          showCount
+          maxLength={200}
+          placeholder="Введите текст приветствия, либо оставьте пустым, по умолчанию будет написанно - Вы можете пожертвовать на печать и выкуп книг"
+          style={{ height: 120, resize: "none" }}
+        />
+      </Form.Item>
+
+      <Form.List name="banks">
+        {(fields, { add, remove }) => (
+          <>
+            {fields.map(({ key, name, ...restField }) => (
+              <Space key={key}>
+                <Tooltip
+                  trigger={["focus"]}
+                  placement="top"
+                  overlayClassName="numeric-input"
+                  title={title.titleBank}
+                >
+                  <Form.Item
+                    {...restField}
+                    name={[name, "bankName"]}
+                    rules={[{ required: true, message: "Введите название банка" }]}
+                    label="Банк"
+                  >
+                    <Input disabled={disabled} placeholder="Банк..." />
+                  </Form.Item>
+                </Tooltip>
+                <Tooltip
+                  trigger={["focus"]}
+                  placement="top"
+                  overlayClassName="numeric-input"
+                  title={title.titleCard}
+                >
+                  <Form.Item
+                    {...restField}
+                    name={[name, "cardNumber"]}
+                    rules={[
+                      {
+                        required: false,
+                      },
+                    ]}
+                    label="№ карты"
+                  >
+                    <Input disabled={disabled} placeholder="99009..." />
+                  </Form.Item>
+                </Tooltip>
+                <Tooltip
+                  trigger={["focus"]}
+                  placement="top"
+                  overlayClassName="numeric-input"
+                  title={title.titleQr}
+                >
+                  <Form.Item
+                    {...restField}
+                    name={[name, "qrLink"]}
+                    initialValue=""
+                    label="cсылка на QR"
+                  >
+                    <Input
+                      suffix={
+                        <Tooltip title="Скопируйте ссылку с Вашего банковского приложения">
+                          <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
+                        </Tooltip>
+                      }
+                      disabled={disabled}
+                      placeholder="http://site..."
+                    />
+                  </Form.Item>
+                </Tooltip>
+                <MinusCircleOutlined onClick={() => remove(name)} />
+              </Space>
+            ))}
+            <Form.Item>
+              <Button
+                disabled={disabled}
+                type="dashed"
+                onClick={() => add()}
+                block
+                icon={<PlusOutlined />}
+                style={{ width: "95%" }}
+              >
+                Добавить новые реквизиты
+              </Button>
+            </Form.Item>
+          </>
+        )}
+      </Form.List>
+      <Tooltip
+        trigger={["focus"]}
+        placement="topLeft"
+        overlayClassName="numeric-input"
+        title={title.titleButton}
+      >
+        <Form.Item
+          name="buttonBank"
+          label="Текст кнопки
+"
+        >
+          <Input
+            disabled={disabled}
+            placeholder="По умолчанию - OnlinePay"
+            style={{ width: "60%" }}
+            maxLength={25}
           />
         </Form.Item>
-
-        <Form.List name="banks">
-          {(fields, { add, remove }) => (
-            <>
-              {fields.map(({ key, name, ...restField }) => (
-                <Space key={key} style={{ display: "flex", marginBottom: 8 }} align="baseline">
-                  <Tooltip
-                    trigger={["focus"]}
-                    placement="topLeft"
-                    overlayClassName="numeric-input"
-                    title={title.titleBank}
-                  >
-                    <Form.Item
-                      {...restField}
-                      name={[name, "bankName"]}
-                      rules={[{ required: true, message: "Введите название банка" }]}
-                      label="Банк"
-                    >
-                      <Input disabled={disabled} placeholder="Банк..." />
-                    </Form.Item>{" "}
-                  </Tooltip>
-                  <Tooltip
-                    trigger={["focus"]}
-                    placement="topLeft"
-                    overlayClassName="numeric-input"
-                    title={title.titleCard}
-                  >
-                    <Form.Item
-                      {...restField}
-                      name={[name, "cardNumber"]}
-                      rules={[
-                        {
-                          required: false,
-                        },
-                      ]}
-                      label="№ карты"
-                    >
-                      <Input disabled={disabled} placeholder="99009..." />
-                    </Form.Item>
-                  </Tooltip>
-                  <Tooltip
-                    trigger={["focus"]}
-                    placement="topLeft"
-                    overlayClassName="numeric-input"
-                    title={title.titleQr}
-                  >
-                    <Form.Item
-                      {...restField}
-                      name={[name, "qrLink"]}
-                      initialValue=""
-                      label="cсылка на QR"
-                    >
-                      <Input
-                        suffix={
-                          <Tooltip title="Скопируйте ссылку с Вашего банковского приложения">
-                            <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
-                          </Tooltip>
-                        }
-                        disabled={disabled}
-                        placeholder="http://site..."
-                      />
-                    </Form.Item>
-                  </Tooltip>
-                  <MinusCircleOutlined onClick={() => remove(name)} />
-                </Space>
-              ))}
-              <Form.Item>
-                <Button
-                  disabled={disabled}
-                  type="dashed"
-                  onClick={() => add()}
-                  block
-                  icon={<PlusOutlined />}
-                >
-                  Добавить новые реквизиты
-                </Button>
-              </Form.Item>
-            </>
-          )}
-        </Form.List>
-        <Tooltip
-          trigger={["focus"]}
-          placement="topLeft"
-          overlayClassName="numeric-input"
-          title={title.titleButton}
-        >
-          <Form.Item
-            name="buttonBank"
-            label="Текст кнопки
-"
-          >
-            <Input
-              disabled={disabled}
-              placeholder="По умолчанию - Пожертвуйте на выкуп книг от сердца"
-            />
-          </Form.Item>
-        </Tooltip>
-      </Space>
-
+      </Tooltip>
       <Divider dashed />
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          flexFlow: "column nowrap",
-          alignItems: "center",
-          alignContent: "center",
-          height: 550,
-        }}
-      >
+      <Space direction="vertical" style={{ marginTop: 15, display: "flex", alignItems: "center" }}>
         <Text italic>Здесь Вы можете указать свои контакты и ссылки:</Text>
-        <Space>
+        <Space style={{ marginTop: 15 }}>
           <Image
             style={{ position: "absolute", top: -10, left: 5 }}
             alt="telegram"
@@ -334,8 +354,14 @@ export const PageForm = (props: Props) => {
             />
           </Form.Item>
         </Space>
-        {switchState ? (
-          <div id="myqrcode">
+      </Space>
+
+      {switchState ? (
+        <div id="myqrcode">
+          <Space
+            direction="vertical"
+            style={{ marginTop: 15, display: "flex", alignItems: "center" }}
+          >
             <Text italic>{userName}, это Ваш QR странички донатов</Text>
             <QRCode
               className="centred"
@@ -347,30 +373,22 @@ export const PageForm = (props: Props) => {
               iconSize={QR_SIZE / 4}
               icon={logo}
             />
-            <Button className="centred" type="primary" onClick={downloadQRCode}>
+            <Button type="primary" onClick={downloadQRCode}>
               Скачать QR на устройство
             </Button>
-          </div>
-        ) : (
-          ""
-        )}
-        <Divider dashed />
+          </Space>
+        </div>
+      ) : (
+        ""
+      )}
+      <Divider dashed />
+      <Space direction="vertical" style={{ marginTop: 15, display: "flex", alignItems: "center" }}>
         <Form.Item>
           <Button type="primary" htmlType="submit">
             СОХРАНИТЬ
           </Button>
         </Form.Item>
-        <Space
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            flexWrap: "wrap",
-            justifyContent: "flex-start",
-            alignContent: "center",
-            alignItems: "flex-start",
-          }}
-        ></Space>
-      </div>
+      </Space>
     </Form>
   );
 };
