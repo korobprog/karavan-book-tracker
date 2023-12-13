@@ -239,6 +239,7 @@ export const PageForm = (props: Props) => {
                 onClick={() => add()}
                 block
                 icon={<PlusOutlined />}
+                style={{ width: "95%" }}
               >
                 Добавить новые реквизиты
               </Button>
@@ -259,104 +260,109 @@ export const PageForm = (props: Props) => {
         >
           <Input
             disabled={disabled}
-            placeholder="По умолчанию - Пожертвуйте на выкуп книг от сердца"
+            placeholder="По умолчанию - OnlinePay"
+            style={{ width: "60%" }}
+            maxLength={25}
           />
         </Form.Item>
       </Tooltip>
       <Divider dashed />
-      <Text italic>Здесь Вы можете указать свои контакты и ссылки:</Text>
-      <Space style={{ marginTop: 15 }}>
-        <Image
-          style={{ position: "absolute", top: -10, left: 5 }}
-          alt="telegram"
-          src={telegram}
-          height={30}
-          width={30}
-          preview={false}
-        />
-        <Form.Item name="socialTelegram">
-          <Input
-            addonBefore="https://t.me/"
-            disabled={disabled}
-            placeholder="ссылка на Telegram"
-            suffix={
-              <Tooltip title="Пример: mylogin">
-                <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
-              </Tooltip>
-            }
+      <Space direction="vertical" style={{ marginTop: 15, display: "flex", alignItems: "center" }}>
+        <Text italic>Здесь Вы можете указать свои контакты и ссылки:</Text>
+        <Space style={{ marginTop: 15 }}>
+          <Image
+            style={{ position: "absolute", top: -10, left: 5 }}
+            alt="telegram"
+            src={telegram}
+            height={30}
+            width={30}
+            preview={false}
           />
-        </Form.Item>
-      </Space>
-      <Space>
-        <Image
-          style={{ position: "absolute", top: -10, left: 5 }}
-          alt="whats"
-          src={whats}
-          height={30}
-          width={30}
-          preview={false}
-        />
-        <Form.Item name="socialWhats">
-          <Input
-            disabled={disabled}
-            placeholder="ссылка на Whats"
-            suffix={
-              <Tooltip title="Пример: 7xxxxxxxx">
-                <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
-              </Tooltip>
-            }
+          <Form.Item name="socialTelegram">
+            <Input
+              addonBefore="https://t.me/"
+              disabled={disabled}
+              placeholder="ссылка на Telegram"
+              suffix={
+                <Tooltip title="Пример: mylogin">
+                  <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
+                </Tooltip>
+              }
+            />
+          </Form.Item>
+        </Space>
+        <Space>
+          <Image
+            style={{ position: "absolute", top: -10, left: 5 }}
+            alt="whats"
+            src={whats}
+            height={30}
+            width={30}
+            preview={false}
           />
-        </Form.Item>
-      </Space>
-      <Space>
-        <Image
-          style={{ position: "absolute", top: -10, left: 5 }}
-          alt="email"
-          src={email}
-          height={30}
-          width={30}
-          preview={false}
-        />
-        <Form.Item name="socialMail">
-          <Input
-            disabled={disabled}
-            placeholder="eMail"
-            suffix={
-              <Tooltip title="Пример: mymail@mail.com">
-                <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
-              </Tooltip>
-            }
+          <Form.Item name="socialWhats">
+            <Input
+              disabled={disabled}
+              placeholder="ссылка на Whats"
+              suffix={
+                <Tooltip title="Пример: 7xxxxxxxx">
+                  <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
+                </Tooltip>
+              }
+            />
+          </Form.Item>
+        </Space>
+        <Space>
+          <Image
+            style={{ position: "absolute", top: -10, left: 5 }}
+            alt="email"
+            src={email}
+            height={30}
+            width={30}
+            preview={false}
           />
-        </Form.Item>
-      </Space>
-      <Space>
-        <Image
-          style={{ position: "absolute", top: -10, left: 5 }}
-          alt="link"
-          src={link}
-          height={30}
-          width={30}
-          preview={false}
-        />
-        <Form.Item name="socialLink">
-          <Input
-            disabled={disabled}
-            placeholder="другие ссылки"
-            suffix={
-              <Tooltip title="Пример: www.exemple.com">
-                <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
-              </Tooltip>
-            }
+          <Form.Item name="socialMail">
+            <Input
+              disabled={disabled}
+              placeholder="eMail"
+              suffix={
+                <Tooltip title="Пример: mymail@mail.com">
+                  <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
+                </Tooltip>
+              }
+            />
+          </Form.Item>
+        </Space>
+        <Space>
+          <Image
+            style={{ position: "absolute", top: -10, left: 5 }}
+            alt="link"
+            src={link}
+            height={30}
+            width={30}
+            preview={false}
           />
-        </Form.Item>
+          <Form.Item name="socialLink">
+            <Input
+              disabled={disabled}
+              placeholder="другие ссылки"
+              suffix={
+                <Tooltip title="Пример: www.exemple.com">
+                  <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
+                </Tooltip>
+              }
+            />
+          </Form.Item>
+        </Space>
       </Space>
+
       {switchState ? (
-        <Space id="myqrcode">
-          <Text italic>{userName}, это Ваш QR странички донатов</Text>
+        <div id="myqrcode">
           <Space
             direction="vertical"
             style={{ marginTop: 15, display: "flex", alignItems: "center" }}
           >
+            <Text italic>{userName}, это Ваш QR странички донатов</Text>
             <QRCode
               className="centred"
               value={myPageLink}
@@ -371,7 +377,7 @@ export const PageForm = (props: Props) => {
               Скачать QR на устройство
             </Button>
           </Space>
-        </Space>
+        </div>
       ) : (
         ""
       )}
