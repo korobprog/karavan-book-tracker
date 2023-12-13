@@ -1,6 +1,4 @@
 import { DonationPageDoc } from "common/src/services/api/donation";
-import { useDocumentData } from "react-firebase-hooks/firestore";
-import { apiRefs } from "common/src/services/api/refs";
 import { useParams } from "react-router-dom";
 import telegram from "common/src/images/telegram.svg";
 import whats from "common/src/images/whatsapp.svg";
@@ -10,6 +8,7 @@ import logo from "common/src/images/logo.png";
 import { Divider, QRCode, Typography, Image, Avatar, Button, Space } from "antd";
 import { CurrentUser } from "../../../../services/api/useCurrentUser";
 import { BankTwoTone, CreditCardOutlined } from "@ant-design/icons";
+import React from "react";
 
 type Props = {
   onFinish: (formValues: PageFormValues) => Promise<void>;
@@ -152,7 +151,6 @@ export const Preview = (props: Props) => {
             </Link>
           </Paragraph>
         ) : null}
-        <Text>Leave donation here</Text>
       </Space>
       {pageId && (
         <div id="myqrcode">

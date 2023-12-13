@@ -65,16 +65,18 @@ const PageDonations = ({ currentUser }: Props) => {
   return (
     <>
       <BaseLayout title="Страница для пожертвований" isAdmin backPath={routes.root} avatar={avatar}>
-        <Form layout="vertical">
-          <Form.Item label="показать как выглядит страница визитка">
-            <Switch
-              checkedChildren={<EyeTwoTone />}
-              unCheckedChildren={<EyeInvisibleFilled />}
-              checked={switchState}
-              onChange={handleSwitchChange}
-            />
-          </Form.Item>
-        </Form>
+        <Space style={{ display: "flex", flexFlow: "column", alignItems: "flex-end" }}>
+          <Form layout="vertical">
+            <Form.Item>
+              <Switch
+                checkedChildren={<EyeTwoTone />}
+                unCheckedChildren={<EyeInvisibleFilled />}
+                checked={switchState}
+                onChange={handleSwitchChange}
+              />
+            </Form.Item>
+          </Form>
+        </Space>
 
         {donationDocLoading || !initialPageDoc ? (
           <Typography.Title className="site-page-title" level={5}>
@@ -89,7 +91,11 @@ const PageDonations = ({ currentUser }: Props) => {
                 currentUser={currentUser}
               />
             </Space>
-            <Space style={{ display: `${switchState ? plug2 : ""}` }}>
+            <Space
+              style={{
+                display: `${switchState ? plug2 : ""}`,
+              }}
+            >
               <PageForm
                 initialValues={initialValues}
                 onFinish={onFinish}
