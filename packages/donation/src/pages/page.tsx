@@ -109,7 +109,7 @@ export const Page = () => {
                           {buttonBank} {bankName}
                         </Button>
                       ) : (
-                        <Button href={qrLink} icon={<BankTwoTone />}>
+                        <Button style={{ marginBottom: 10 }} href={qrLink} icon={<BankTwoTone />}>
                           {textButton} {bankName}
                         </Button>
                       )}
