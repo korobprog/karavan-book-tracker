@@ -43,7 +43,6 @@ export const Page = () => {
     socialMail,
     buttonBank,
   } = initialValues;
-  console.log("🚀 ~ file: page.tsx:46 ~ Page ~ socialTelegram:", socialTelegram);
 
   const downloadQRCode = () => {
     const canvas = document.getElementById("myqrcode")?.querySelector<HTMLCanvasElement>("canvas");
