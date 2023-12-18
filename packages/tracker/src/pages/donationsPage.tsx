@@ -15,6 +15,7 @@ import {
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { routes } from "../shared/routes";
 import { PageForm } from "common/src/components/forms/profile/pagedonation/PageForm";
+import PageMenu from "common/src/components/forms/profile/pagedonation/PageMenu";
 import { Preview } from "common/src/components/forms/profile/pagedonation/preview";
 import { Switch } from "antd";
 import { CloseOutlined, EyeInvisibleFilled, EyeTwoTone, PrinterTwoTone } from "@ant-design/icons";
@@ -132,34 +133,6 @@ const PageDonations = ({ currentUser }: Props) => {
           </Form>
         </Space>
 
-        {switchState ? (
-          <Button type="primary" ghost>
-            <Link copyable={{ text: myPageLink }} href={myPageLink} target="_blank">
-              Ваша страница визитки
-            </Link>
-          </Button>
-        ) : (
-          ""
-        )}
-
-        {initialValues.active ? (
-          <Space
-            direction="vertical"
-            style={{ display: "flex", flexFlow: "column", alignItems: "center", marginBottom: 15 }}
-          >
-            <Radio.Group name="radiogroup" defaultValue={1} onChange={onChange} value={value}>
-              <Radio value={true}>16 QR</Radio>
-              <Radio value={false}>88 QR</Radio>
-            </Radio.Group>
-            <Button type="primary" ghost icon={<PrinterTwoTone />}>
-              <Link onClick={value ? printPdfDonations : printPdfDonations88} target="_blank">
-                распечатать визитки
-              </Link>
-            </Button>
-          </Space>
-        ) : (
-          ""
-        )}
         <Space style={{ display: "flex", flexFlow: "column", alignItems: "center" }}>
           {!isChecked ? (
             <Button type="primary" onClick={toggleDisabled} style={{ marginTop: 16 }}>
@@ -176,6 +149,8 @@ const PageDonations = ({ currentUser }: Props) => {
           </Typography.Title>
         ) : (
           <>
+            {!isChecked && <PageMenu initialValues={initialValues} currentUser={currentUser} />}
+
             <Space style={{ display: `${switchState ? "" : plug1}` }}>
               <Preview
                 initialValues={initialValues}
