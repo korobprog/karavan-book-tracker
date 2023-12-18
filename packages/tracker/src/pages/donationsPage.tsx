@@ -2,7 +2,7 @@ import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { DonationPageDoc, editDonationPageDoc } from "common/src/services/api/donation";
 import { apiRefs } from "common/src/services/api/refs";
 import { useDocumentData } from "react-firebase-hooks/firestore";
-import { Form, Space, Typography, notification } from "antd";
+import { Button, Form, Radio, RadioChangeEvent, Space, Typography, notification } from "antd";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { routes } from "../shared/routes";
 import { PageForm } from "common/src/components/forms/profile/pagedonation/PageForm";
@@ -58,6 +58,13 @@ const PageDonations = ({ currentUser }: Props) => {
   const handleSwitchChange = (checked: boolean | ((prevState: boolean) => boolean)) => {
     setSwitchState(checked);
   };
+
+  const [isChecked, setIsChecked] = useState(false);
+
+  const toggleDisabled = () => {
+    setIsChecked(true);
+  };
+
   const dnone = "none";
   const plug1 = switchState ? "" : dnone;
   const plug2 = switchState ? dnone : "";
@@ -76,6 +83,15 @@ const PageDonations = ({ currentUser }: Props) => {
               />
             </Form.Item>
           </Form>
+        </Space>
+        <Space style={{ display: "flex", flexFlow: "column", alignItems: "center" }}>
+          {!isChecked ? (
+            <Button type="primary" onClick={toggleDisabled} style={{ marginTop: 16 }}>
+              Настроить страницу визитки
+            </Button>
+          ) : (
+            ""
+          )}
         </Space>
 
         {donationDocLoading || !initialPageDoc ? (
@@ -96,11 +112,13 @@ const PageDonations = ({ currentUser }: Props) => {
                 display: `${switchState ? plug2 : ""}`,
               }}
             >
-              <PageForm
-                initialValues={initialValues}
-                onFinish={onFinish}
-                currentUser={currentUser}
-              />
+              <div id="elem" style={{ display: `${isChecked ? "" : plug1}` }}>
+                <PageForm
+                  initialValues={initialValues}
+                  onFinish={onFinish}
+                  currentUser={currentUser}
+                />
+              </div>
             </Space>
           </>
         )}
