@@ -27,7 +27,6 @@ export const StockEdit = ({ currentUser }: Props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   function onFinish(formValues: StockFormValues) {
-    console.log("🚀 ~ onFinish ~ formValues:", formValues);
     if (user && profile?.name && stock) {
       setIsSubmitting(true);
       const { transferType, date } = formValues;

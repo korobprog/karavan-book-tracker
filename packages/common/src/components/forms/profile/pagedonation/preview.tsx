@@ -43,7 +43,6 @@ export const Preview = (props: Props) => {
     socialMail,
     buttonBank,
   } = initialValues;
-  console.log("🚀 ~ file: preview.tsx:36 ~ Preview ~ initialValues:", initialValues);
 
   const { Paragraph, Text, Link, Title } = Typography;
   const textButton = "OnlinePay";

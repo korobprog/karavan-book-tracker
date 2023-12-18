@@ -65,7 +65,26 @@ function App() {
         <Route path={routes.resetpassemail} element={<Reset currentUser={currentUser} />} />
         <Route path={routes.team} element={<Team currentUser={currentUser} />} />
         <Route path={routes.teamEdit} element={<TeamEdit currentUser={currentUser} />} />
-        <Route path={routes.pageDonations} element={<DonationsPage currentUser={currentUser} />} />
+        <Route
+          path={routes.pageDonations}
+          element={
+            <DonationsPage
+              currentUser={currentUser}
+              initialValues={{
+                active: false,
+                banks: [],
+                socialTelegram: undefined,
+                socialWhats: undefined,
+                socialMail: undefined,
+                socialLink: undefined,
+                avatar: undefined,
+                userName: undefined,
+                greetingText: undefined,
+                buttonBank: undefined,
+              }}
+            />
+          }
+        />
       </Routes>
     </div>
   );
