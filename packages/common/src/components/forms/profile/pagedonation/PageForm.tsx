@@ -23,9 +23,6 @@ import whats from "common/src/images/whatsapp.svg";
 import email from "common/src/images/email.svg";
 import link from "common/src/images/link_b.svg";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import logo from "../../../../images/logo.png";
-import printPdfDonations from "./printPdfDonations";
-import printPdfDonations88 from "./printPdfDonations88";
 
 export type PageFormValues = DonationPageDoc;
 
@@ -73,14 +70,11 @@ export const PageForm = (props: Props) => {
           />
         </Form.Item>
       </Space>
-
-      <Alert
-        message="Настройте страницу визитки"
-        description="Вы можете настроить свою страничку пожертвований, а также распечать QR
-      коды для книг в качестве Ваших визиток."
-        type="info"
-        showIcon
-      />
+      <Form.Item>
+        <Button type="primary" htmlType="submit">
+          СОХРАНИТЬ
+        </Button>
+      </Form.Item>
       <Space
         direction="horizontal"
         style={{
@@ -91,13 +85,14 @@ export const PageForm = (props: Props) => {
           marginTop: 25,
         }}
       >
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            СОХРАНИТЬ
-          </Button>
-        </Form.Item>
+        <Alert
+          message="Настройте страницу визитки"
+          description="Вы можете настроить свою страничку пожертвований, а также распечать QR
+      коды для книг в качестве Ваших визиток."
+          type="info"
+          showIcon
+        />
       </Space>
-
       <Form.Item name={"greetingText"} label="Текст приветствия">
         <TextArea
           showCount

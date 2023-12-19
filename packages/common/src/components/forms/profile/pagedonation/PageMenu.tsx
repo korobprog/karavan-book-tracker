@@ -1,15 +1,13 @@
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import { DonationPageDoc, editDonationPageDoc } from "common/src/services/api/donation";
+import { DonationPageDoc } from "common/src/services/api/donation";
 import { apiRefs } from "common/src/services/api/refs";
 import { useDocumentData } from "react-firebase-hooks/firestore";
-import { Button, Form, Radio, RadioChangeEvent, Space, Switch, Modal } from "antd";
-
-import { EyeInvisibleFilled, EyeTwoTone, PrinterTwoTone } from "@ant-design/icons";
+import { Button, Radio, RadioChangeEvent, Space, Switch, Modal } from "antd";
+import { PrinterTwoTone, LinkOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import Link from "antd/es/typography/Link";
 import printPdfDonations from "common/src/components/forms/profile/pagedonation/printPdfDonations";
 import printPdfDonations88 from "common/src/components/forms/profile/pagedonation/printPdfDonations88";
-import React from "react";
 
 export type PageFormValues = DonationPageDoc;
 
@@ -37,27 +35,13 @@ const PageMenu = ({ currentUser }: Props) => {
 
   const userId = profile?.id || user?.uid || "";
 
-  const [donationPageDocData, donationDocLoading] = useDocumentData<DonationPageDoc>(
+  const [donationPageDocData] = useDocumentData<DonationPageDoc>(
     userId ? apiRefs.donationPage(userId) : null
   );
 
   const initialValues = donationPageDocData || initialPageDoc;
 
   const [switchState, setSwitchState] = useState(initialValues.active);
-
-  const handleSwitchChange = (checked: boolean | ((prevState: boolean) => boolean)) => {
-    setSwitchState(checked);
-  };
-
-  const [isChecked, setIsChecked] = useState(false);
-
-  const toggleDisabled = () => {
-    setIsChecked(true);
-  };
-
-  const toggleEnabled = () => {
-    setIsChecked(false);
-  };
 
   const myPageLink = `https://books-donation.web.app/page/${userId}`;
 
@@ -84,21 +68,27 @@ const PageMenu = ({ currentUser }: Props) => {
 
   return (
     <>
-      {switchState ? (
-        <Button type="primary" ghost>
-          <Link copyable={{ text: myPageLink }} href={myPageLink} target="_blank">
-            Ваша страница визитки
-          </Link>
-        </Button>
-      ) : (
-        ""
-      )}
-      <Space style={{ display: "flex", flexFlow: "column", alignItems: "center", marginTop: 15 }}>
-        <Button type="primary" onClick={showModal} icon={<PrinterTwoTone />}>
-          Распечатать визитки
-        </Button>
+      <Space
+        direction="vertical"
+        style={{ display: "flex", flexFlow: "column", alignItems: "center", marginTop: 20 }}
+      >
+        {initialValues.active ? (
+          <Button type="primary" ghost icon={<LinkOutlined />}>
+            <Link copyable={{ text: myPageLink }} href={myPageLink} target="_blank">
+              Ваша страница визитки
+            </Link>
+          </Button>
+        ) : (
+          ""
+        )}
+        {initialValues.active ? (
+          <Button type="dashed" onClick={showModal} icon={<PrinterTwoTone />}>
+            Распечатать визитки
+          </Button>
+        ) : (
+          ""
+        )}{" "}
       </Space>
-
       {initialValues.active ? (
         <Space
           direction="vertical"

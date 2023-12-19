@@ -18,7 +18,13 @@ import { PageForm } from "common/src/components/forms/profile/pagedonation/PageF
 import PageMenu from "common/src/components/forms/profile/pagedonation/PageMenu";
 import { Preview } from "common/src/components/forms/profile/pagedonation/preview";
 import { Switch } from "antd";
-import { CloseOutlined, EyeInvisibleFilled, EyeTwoTone, PrinterTwoTone } from "@ant-design/icons";
+import {
+  CloseOutlined,
+  EyeInvisibleFilled,
+  EyeTwoTone,
+  PrinterTwoTone,
+  ToolTwoTone,
+} from "@ant-design/icons";
 import { useState } from "react";
 import logo from "common/src/images/logo.png";
 import Link from "antd/es/typography/Link";
@@ -79,11 +85,6 @@ const PageDonations = ({ currentUser }: Props) => {
     setSwitchState(checked);
   };
   const userName = currentUser.profile?.name;
-  const [isChecked, setIsChecked] = useState(false);
-
-  const toggleDisabled = () => {
-    setIsChecked(true);
-  };
   const QR_SIZE = 160;
   const downloadQRCode = () => {
     const canvas = document.getElementById("myqrcode")?.querySelector<HTMLCanvasElement>("canvas");
@@ -99,43 +100,43 @@ const PageDonations = ({ currentUser }: Props) => {
   };
 
   const { Text } = Typography;
-
-  const toggleEnabled = () => {
-    setIsChecked(false);
-  };
-
   const myPageLink = `https://books-donation.web.app/page/${userId}`;
-
   const dnone = "none";
   const plug1 = switchState ? "" : dnone;
   const plug2 = switchState ? dnone : "";
 
-  const [value, setValue] = useState(true);
-
-  const onChange = (e: RadioChangeEvent) => {
-    //console.log("radio checked", e.target.value);
-    setValue(e.target.value);
+  const [isChecked, setIsChecked] = useState(false);
+  const toggleDisabled = () => {
+    setIsChecked(true);
   };
-
   return (
     <>
       <BaseLayout title="Страница для пожертвований" isAdmin backPath={routes.root} avatar={avatar}>
-        <Space style={{ display: "flex", flexFlow: "column", alignItems: "flex-end" }}>
-          <Form layout="vertical">
-            <Form.Item>
-              <Switch
-                checkedChildren={<EyeTwoTone />}
-                unCheckedChildren={<EyeInvisibleFilled />}
-                checked={switchState}
-                onChange={handleSwitchChange}
-              />
-            </Form.Item>
-          </Form>
-        </Space>
+        {isChecked ? (
+          <Space style={{ display: "flex", flexFlow: "column", alignItems: "flex-start" }}>
+            <Form layout="vertical">
+              <Form.Item>
+                <Switch
+                  checkedChildren={<EyeTwoTone />}
+                  unCheckedChildren={<EyeInvisibleFilled />}
+                  checked={switchState}
+                  onChange={handleSwitchChange}
+                />
+              </Form.Item>
+            </Form>
+          </Space>
+        ) : (
+          ""
+        )}
 
         <Space style={{ display: "flex", flexFlow: "column", alignItems: "center" }}>
           {!isChecked ? (
-            <Button type="primary" onClick={toggleDisabled} style={{ marginTop: 16 }}>
+            <Button
+              type="primary"
+              onClick={toggleDisabled}
+              style={{ marginTop: 16 }}
+              icon={<ToolTwoTone />}
+            >
               Настроить страницу визитки
             </Button>
           ) : (
@@ -171,7 +172,7 @@ const PageDonations = ({ currentUser }: Props) => {
                 />
               </div>
             </Space>
-            {initialValues.active ? (
+            {initialValues.active && !isChecked ? (
               <div id="myqrcode">
                 <Space
                   direction="vertical"
