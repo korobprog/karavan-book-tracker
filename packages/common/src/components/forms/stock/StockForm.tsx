@@ -188,6 +188,11 @@ export const StockForm = (props: Props) => {
       <Form.Item name="transferType" label="Тип перемещения">
         <TransferTypeSelect type={HolderType.stock} />
       </Form.Item>
+      {transferType === HolderTransferType.adjustment && (
+        <Form.Item name="comment" label="Комментарий" rules={[{ required: true }]}>
+          <Input />
+        </Form.Item>
+      )}
       <Form.Item name="date" label="Дата">
         <DatePicker
           disabledDate={(current) => {

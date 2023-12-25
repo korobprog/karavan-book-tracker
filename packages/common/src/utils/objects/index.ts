@@ -8,6 +8,16 @@ export const removeEmptyFields = (obj: Record<string, any>): any => {
   return newObj;
 };
 
+export const removeZeroFields = (obj: Record<string, any>): any => {
+  const newObj = { ...obj };
+  Object.keys(newObj).forEach((key) => {
+    if (newObj[key] === 0) {
+      delete newObj[key];
+    }
+  });
+  return newObj;
+};
+
 export const calcObjectFields = <Obj extends Record<string, any>>(
   prev: Obj = {} as Obj,
   operator: "+" | "-",

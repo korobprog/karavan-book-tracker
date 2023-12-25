@@ -28,8 +28,8 @@ const routesWithoutRedirect = [routes.registration, routes.auth, routes.resetpas
 function App() {
   const currentUser = useCurrentUser();
   const { profile, loading, user, userDocLoading } = currentUser;
-  const { stock } = useHolders(profile?.stockId);
-  const isStockLoading = profile?.stockId && !stock;
+  const { stock, stockLoading } = useHolders(profile?.stockId);
+  // const isStockLoading = profile?.stockId && !stock;
   const navigate = useTransitionNavigate();
   const location = useLocation();
   const { loading: booksLoading } = useBooks();
@@ -44,16 +44,19 @@ function App() {
       // Авторизованный пользователь с незаполненым профилем
       if (
         user &&
+        !loading &&
+        !stock &&
         !profile?.stockId &&
+        !stockLoading &&
         location.pathname !== routes.profile &&
         !routesWithoutRedirect.includes(location.pathname)
       ) {
         navigate(routes.profile);
       }
     }
-  }, [loading, user, profile, navigate, location.pathname, userDocLoading]);
+  }, [loading, user, profile, navigate, location.pathname, userDocLoading, stockLoading, stock]);
 
-  if (loading || isStockLoading || holderTransfersLoading || booksLoading) {
+  if (loading || stockLoading || holderTransfersLoading || booksLoading) {
     return <Loading currentUser={currentUser} />;
   }
 

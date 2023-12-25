@@ -27,6 +27,8 @@ export const Home = ({ currentUser }: Props) => {
   const avatar = profile?.avatar;
   const { Title } = Typography;
 
+  const stockTitle = "Склад книг";
+
   return (
     <StockBaseLayout title="Book Stock" userDocLoading={userDocLoading} avatar={avatar}>
       <Title className="site-page-title" level={2}>
@@ -36,7 +38,7 @@ export const Home = ({ currentUser }: Props) => {
       </Title>
       <Divider dashed />
       <Button type="primary" block size="large" icon={<ReadOutlined />} onClick={onStockClick}>
-        Склад книг
+        {stockTitle}
       </Button>
       <Divider dashed />
       <Button
@@ -46,7 +48,7 @@ export const Home = ({ currentUser }: Props) => {
         icon={<TeamOutlined />}
         onClick={onDitributorsClick}
       >
-        Распространители: выдача книг
+        Распространители
       </Button>
       <Divider dashed />
       <DistributionStatistic holderTransfers={holderTransfers} />

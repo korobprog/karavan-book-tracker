@@ -39,7 +39,7 @@ export const DistributorEdit = ({ currentUser }: Props) => {
         name,
       }).then((holder) => {
         const distributors: StockDistiributors = { ...stock.distributors };
-        distributors[holder.id] = { books: {} };
+        distributors[holder.id] = { books: {}, statistic: {} };
 
         updateStockHolder(stock.id, { distributors })
           .then(() => navigate(routes.distributors))

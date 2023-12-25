@@ -10,6 +10,7 @@ export type StockFormValues = Record<number, number> & {
   transferType: HolderTransferType;
   date: Moment;
   priceMultiplier: number;
+  comment?: string;
 };
 
 export type DistributorTransferFormValues = Record<number, number> & {
@@ -69,6 +70,7 @@ export const calcTotalPrice = (
 };
 
 export const calcBooksCounts = (bookIdsWithCounts: CountEntrise) => {
+  // export const calcBooksCounts = (bookIdsWithCounts: Record<number, number> = {}) => {
   const books = $books.getState();
   let totalCount = 0;
   let totalPoints = 0;

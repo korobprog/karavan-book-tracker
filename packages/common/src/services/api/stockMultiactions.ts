@@ -10,6 +10,7 @@ import { updateHolder } from "./holders";
 import { calcObjectFields, removeEmptyFields } from "../../utils/objects";
 import { addPrefixToKeys } from "../../components/forms/stock/helpers";
 import { WithId } from "./refs";
+import { calcHolderStat } from "../statistic/holder";
 
 const getDistributor = (id?: string | null) => {
   const distributors = $distributors.getState();
@@ -95,8 +96,16 @@ export const addHolderTransferMultiAction = async (
           updateStock(stock.id, {
             books: calcObjectFields(stock.books, "-", books),
             [`${distributorPath}.priceMultiplier`]: distributorPriceMultiplier,
+            [`${distributorPath}.statistic`]: calcHolderStat(
+              stock.distributors?.[distributor.id].statistic,
+              "+",
+              newHolderTransfer
+            ),
           }),
-          updateHolder(distributor.id, { books: calcObjectFields(distributor.books, "+", books) }),
+          updateHolder(distributor.id, {
+            books: calcObjectFields(distributor.books, "+", books),
+            // statistic: calcHolderStat(distributor.statistic, "+", newHolderTransfer),
+          }),
           addHolderTransfer(newHolderTransfer),
         ]);
       }
@@ -130,6 +139,11 @@ export const addHolderTransferMultiAction = async (
         const data = {
           [`${distributorPath}.books`]: calcStockDistributorBooks(distributor, "-"),
           [`${distributorPath}.priceMultiplier`]: distributorPriceMultiplier,
+          [`${distributorPath}.statistic`]: calcHolderStat(
+            stock.distributors?.[distributor.id].statistic,
+            "+",
+            newHolderTransfer
+          ),
         };
 
         if (changedAccount !== undefined) {
