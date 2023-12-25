@@ -1,5 +1,5 @@
 import React from "react";
-import { Divider, QRCode, Typography, Image, Avatar, Button, Space } from "antd";
+import { Divider, QRCode, Typography, Image, Avatar, Button, Space, Row, Col } from "antd";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { BankTwoTone, CreditCardOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
@@ -43,7 +43,6 @@ export const Page = () => {
     socialMail,
     buttonBank,
   } = initialValues;
-  console.log("🚀 ~ file: page.tsx:46 ~ Page ~ socialTelegram:", socialTelegram);
 
   const downloadQRCode = () => {
     const canvas = document.getElementById("myqrcode")?.querySelector<HTMLCanvasElement>("canvas");
@@ -91,56 +90,50 @@ export const Page = () => {
             )}
           </Paragraph>
           {initialValues.banks.map(({ bankName, cardNumber, qrLink }) => (
-            <Space
-              key={bankName}
-              style={{
-                display: "flex",
-                marginBottom: 8,
-                flexFlow: "column nowrap",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              align="baseline"
-            >
-              {bankName && <Text strong>{bankName}</Text>}
-              {cardNumber && (
-                <Paragraph>
-                  <CreditCardOutlined />
-                  <Text copyable={{ tooltips: false }} style={{ fontSize: "150%" }} code>
-                    {cardNumber}
-                  </Text>
-                </Paragraph>
-              )}
-              {qrLink && (
-                <>
-                  {buttonBank ? (
-                    <Button href={qrLink} icon={<BankTwoTone />}>
-                      {buttonBank} {bankName}
-                    </Button>
-                  ) : (
-                    <Button href={qrLink} icon={<BankTwoTone />}>
-                      {textButton} {bankName}
-                    </Button>
+            <Row justify="center" align="top">
+              <Space key={bankName}>
+                <Col span={24}>
+                  {bankName && <Text strong>{bankName}</Text>}
+                  {cardNumber && (
+                    <Paragraph>
+                      <CreditCardOutlined />
+                      <Text copyable={{ tooltips: false }} style={{ fontSize: "150%" }} code>
+                        {cardNumber}
+                      </Text>
+                    </Paragraph>
                   )}
-                  <QRCode
-                    className="centred"
-                    value={qrLink}
-                    bgColor="#fff"
-                    style={{ marginBottom: 16 }}
-                  />
-                </>
-              )}
-            </Space>
+                  {qrLink && (
+                    <>
+                      {buttonBank ? (
+                        <Button href={qrLink} icon={<BankTwoTone />}>
+                          {buttonBank} {bankName}
+                        </Button>
+                      ) : (
+                        <Button style={{ marginBottom: 10 }} href={qrLink} icon={<BankTwoTone />}>
+                          {textButton} {bankName}
+                        </Button>
+                      )}
+                      <QRCode
+                        className="centred"
+                        value={qrLink}
+                        bgColor="#fff"
+                        style={{ marginBottom: 16 }}
+                      />
+                    </>
+                  )}
+                </Col>
+              </Space>
+            </Row>
           ))}
           <Divider dashed />
           <Space
+            direction="vertical"
             style={{
               display: "flex",
-              flexDirection: "column",
-              flexWrap: "wrap",
-              justifyContent: "flex-start",
-              alignContent: "center",
-              alignItems: "flex-start",
+              marginBottom: 8,
+              flexFlow: "column nowrap",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             {socialTelegram || socialWhats || socialMail || socialLink ? (
