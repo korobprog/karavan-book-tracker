@@ -4,13 +4,17 @@ import { useDocumentData, useCollectionData } from "react-firebase-hooks/firesto
 import { addDoc, updateDoc, query, where, documentId } from "firebase/firestore";
 import { WithId, apiRefs } from "./refs";
 import { usePreloadedData } from "../../utils/memo/usePreloadedData";
+import { BaseStatistic } from "./statistic";
 
 export type BookCount = number;
 export type HolderBooks = Record<string, BookCount>;
+export type StockDistiributor = {
+  books: HolderBooks;
+  statistic: BaseStatistic;
+};
 export type DistributorBooks = { id: string; count: BookCount }[];
 
-// ! Тут еще и ID понадобится и заметка наверное массив лучше, или запись с ID
-export type StockDistiributors = Record<string, HolderBooks>;
+export type StockDistiributors = Record<string, StockDistiributor>;
 
 export enum HolderType {
   stock = "stock",
@@ -35,6 +39,7 @@ export type HolderDistributorDoc = {
   creatorId: string; // id текущего пользователя (в форме не отображаем)
   name: string; // название склада - в форме отображаем (не обязательное)
   books?: HolderBooks; // по умолчанию это пустой объект {}, в этой задаче его не наполняем
+  // statistic?: BaseStatistic;
 };
 
 export const addHolder = async (data: HolderDoc) => {
@@ -53,10 +58,13 @@ export const updateStockHolder = async (id: string, data: Partial<HolderDoc>) =>
 
 export const stockChanged = createEvent<WithId<HolderStockDoc> | null>();
 export const $stock = createStore<WithId<HolderStockDoc> | null>(null);
+export const stockLoadingChanged = createEvent<boolean>();
+export const $stockLoading = createStore<boolean>(false);
 export const distributorsChanged = createEvent<WithId<HolderDistributorDoc>[]>();
 export const $distributors = createStore<WithId<HolderDistributorDoc>[]>([]);
 
 $stock.on(stockChanged, (_state, stock) => stock);
+$stockLoading.on(stockLoadingChanged, (_state, loading) => loading);
 $distributors.on(distributorsChanged, (_state, distributors) => distributors);
 
 export const useHolders = (holderId?: string) => {
@@ -79,8 +87,9 @@ export const useHolders = (holderId?: string) => {
 
   useEffect(() => {
     stockChanged(stock || null);
+    stockLoadingChanged(stockDocLoading);
     distributorsChanged(distributors || []);
-  }, [stock, distributors]);
+  }, [stock, distributors, stockDocLoading]);
 
   return {
     stock,

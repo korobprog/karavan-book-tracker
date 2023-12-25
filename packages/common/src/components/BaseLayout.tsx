@@ -3,6 +3,7 @@ import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavig
 import { Button, Layout, Tooltip, Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { PageHeader } from "@ant-design/pro-layout";
+import { getViewTransitionStyles } from "../utils/transition";
 import Logo from "../images/logo.png";
 
 type BaseLayoutProps = {
@@ -12,6 +13,7 @@ type BaseLayoutProps = {
   userDocLoading?: boolean;
   avatar?: string;
   isAdmin?: boolean;
+  transitionName?: string;
 };
 
 export const BaseLayout = (props: React.PropsWithChildren<BaseLayoutProps>) => {
@@ -28,10 +30,13 @@ export const BaseLayout = (props: React.PropsWithChildren<BaseLayoutProps>) => {
     <Layout>
       <Header className="site-page-header">
         <PageHeader
-          title={title}
+          title={<span style={getViewTransitionStyles("TitleTransition")}>{title}</span>}
           className="page-header"
           onBack={onBack}
-          avatar={{ src: Logo, style: { minWidth: 32 } }}
+          avatar={{
+            src: Logo,
+            style: { minWidth: 32, ...getViewTransitionStyles("logo-icon") },
+          }}
           extra={
             headerActions ?? [
               <Tooltip title="Профиль" key="profile">
@@ -39,7 +44,13 @@ export const BaseLayout = (props: React.PropsWithChildren<BaseLayoutProps>) => {
                   type="text"
                   size="middle"
                   shape="circle"
-                  icon={avatar ? <Avatar src={avatar} /> : <UserOutlined />}
+                  icon={
+                    avatar ? (
+                      <Avatar src={avatar} style={getViewTransitionStyles("avatar")} />
+                    ) : (
+                      <UserOutlined />
+                    )
+                  }
                   onClick={() => navigate("/profile")}
                   loading={userDocLoading}
                 />

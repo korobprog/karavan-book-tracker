@@ -73,7 +73,7 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
   }
 
   const distributorName = distributors.find(({ id }) => id === distributorId)?.name;
-  const distributorBooks = distributorId ? stock?.distributors?.[distributorId] : undefined;
+  const distributorBooks = distributorId ? stock?.distributors?.[distributorId].books : undefined;
 
   const availableBooks = TransferFromDistributorTypes.includes(typeParam)
     ? distributorBooks
@@ -85,9 +85,7 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
   return (
     <BaseLayout title={title} backPath={backPath} userDocLoading={userDocLoading} avatar={avatar}>
       <Divider dashed />
-      <Form.Item name="transferType" label={label}>
-        {distributorName}
-      </Form.Item>
+      <Form.Item label={label}>{distributorName}</Form.Item>
       <DistributorTransferForm
         currentUser={currentUser}
         onFinish={onFinish}

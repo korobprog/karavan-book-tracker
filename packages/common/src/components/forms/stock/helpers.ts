@@ -7,6 +7,7 @@ import { HolderBooks, HolderTransferType } from "../../../services/api/holderTra
 export type StockFormValues = Record<number, number> & {
   transferType: HolderTransferType;
   date: Moment;
+  comment?: string;
 };
 
 export type DistributorTransferFormValues = Record<number, number> & {
@@ -24,7 +25,7 @@ export const calcBooksCountsFromValues = (formValues: StockFormValues) => {
   return calcBooksCounts(bookIdsWithCounts);
 };
 
-export const calcBooksCounts = (bookIdsWithCounts: Record<number, number>) => {
+export const calcBooksCounts = (bookIdsWithCounts: Record<number, number> = {}) => {
   const books = $books.getState();
   let totalCount = 0;
   let totalPoints = 0;

@@ -105,6 +105,9 @@ export const DistributorTransferForm = (props: Props) => {
     if (newBook) {
       setSelectedBooks([...selectedBooks, newBook]);
       form.setFieldsValue({ [bookId]: 1 });
+      setTimeout(() => {
+        onValuesChange();
+      });
     }
   };
 

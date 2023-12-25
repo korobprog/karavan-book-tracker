@@ -8,13 +8,14 @@ type TotalStaticticData = {
 
 type Props = {
   data: TotalStaticticData;
+  style?: React.CSSProperties;
 };
 
 export const TotalStatistic = (props: Props) => {
-  const { data } = props;
+  const { data, style } = props;
 
   return (
-    <Row justify="space-between" style={{ padding: 14 }}>
+    <Row justify="space-between" style={style}>
       {data.map(({ title, value }) => (
         <AntdStatistic key={title} title={title} value={value} groupSeparator="" />
       ))}

@@ -2,6 +2,7 @@ import { $distributors, $stock } from "common/src/services/api/holders";
 import { HolderTransferDoc, HolderTransferType, addHolderTransfer } from "./holderTransfer";
 import { updateHolder } from "./holders";
 import { calcObjectFields } from "../../utils/objects";
+import { calcHolderStat } from "../statistic/holder";
 
 const getDistributor = (id?: string | null) => {
   const distributors = $distributors.getState();
@@ -43,7 +44,11 @@ export const addHolderTransferMultiAction = async (newHolderTransfer: HolderTran
           addHolderTransfer(newHolderTransfer),
           updateHolder(stock.id, {
             books: calcObjectFields(stock.books, "-", books),
-            [distributorPath]: calcObjectFields(stock.distributors?.[distributor.id], "+", books),
+            [`${distributorPath}.books`]: calcObjectFields(
+              stock.distributors?.[distributor.id].books,
+              "+",
+              books
+            ),
           }),
           updateHolder(distributor.id, { books: calcObjectFields(distributor.books, "+", books) }),
         ]);
@@ -51,15 +56,27 @@ export const addHolderTransferMultiAction = async (newHolderTransfer: HolderTran
 
       // Продажа
       case HolderTransferType.sale: {
-        const { distributor } = getDistributor(toHolderId);
+        const { distributor, distributorPath } = getDistributor(toHolderId);
         if (!distributor) {
           return console.error("distributor not found");
         }
 
         // TODO: Учитывать в статистике распростроненных
         return Promise.all([
-          updateHolder(stock.id, { books: calcObjectFields(stock.books, "-", books) }),
-          updateHolder(distributor.id, { books: calcObjectFields(distributor.books, "+", books) }),
+          updateHolder(stock.id, {
+            books: calcObjectFields(stock.books, "-", books),
+            [distributorPath]: {
+              statistic: calcHolderStat(
+                stock.distributors?.[distributor.id].statistic,
+                "+",
+                newHolderTransfer
+              ),
+            },
+          }),
+          updateHolder(distributor.id, {
+            books: calcObjectFields(distributor.books, "+", books),
+            // statistic: calcHolderStat(distributor.statistic, "+", newHolderTransfer),
+          }),
           addHolderTransfer(newHolderTransfer),
         ]);
       }
@@ -75,7 +92,11 @@ export const addHolderTransferMultiAction = async (newHolderTransfer: HolderTran
           addHolderTransfer(newHolderTransfer),
           updateHolder(stock.id, {
             books: calcObjectFields(stock.books, "+", books),
-            [distributorPath]: calcObjectFields(stock.distributors?.[distributor.id], "-", books),
+            [`${distributorPath}.books`]: calcObjectFields(
+              stock.distributors?.[distributor.id].books,
+              "-",
+              books
+            ),
           }),
           updateHolder(distributor.id, { books: calcObjectFields(distributor.books, "-", books) }),
         ]);
@@ -92,7 +113,14 @@ export const addHolderTransferMultiAction = async (newHolderTransfer: HolderTran
         return Promise.all([
           addHolderTransfer(newHolderTransfer),
           updateHolder(stock.id, {
-            [distributorPath]: calcObjectFields(stock.distributors?.[distributor.id], "-", books),
+            [distributorPath]: {
+              books: calcObjectFields(stock.distributors?.[distributor.id].books, "-", books),
+              statistic: calcHolderStat(
+                stock.distributors?.[distributor.id].statistic,
+                "+",
+                newHolderTransfer
+              ),
+            },
           }),
         ]);
       }

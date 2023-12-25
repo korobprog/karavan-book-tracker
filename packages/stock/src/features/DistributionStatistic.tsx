@@ -86,7 +86,7 @@ export const DistributionStatistic = (props: Props) => {
           />
         </Space>
       </Row>
-      <TotalStatistic data={data} />;
+      <TotalStatistic data={data} style={{ padding: 14 }} />
     </>
   );
 };
