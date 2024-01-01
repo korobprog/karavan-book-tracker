@@ -5,7 +5,7 @@ import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { AuthError } from "firebase/auth";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import { BaseLayout } from "common/src/components/BaseLayout";
+import { StockBaseLayout } from "../shared/StockBaseLayout";
 import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 
 type Props = {
@@ -49,7 +49,7 @@ export const Registration = ({ currentUser }: Props) => {
   const { Title, Text } = Typography;
 
   return (
-    <BaseLayout title="Регистрация" headerActions={[]}>
+    <StockBaseLayout title="Регистрация" headerActions={[]}>
       <Title className="site-page-title" level={2}>
         СТРАНИЦА РЕГИСТРАЦИИ
       </Title>
@@ -119,6 +119,6 @@ export const Registration = ({ currentUser }: Props) => {
           <Link to={routes.auth}>Уже есть аккаунт</Link>
         </Space>
       </Form>
-    </BaseLayout>
+    </StockBaseLayout>
   );
 };

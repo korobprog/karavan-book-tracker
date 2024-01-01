@@ -7,13 +7,16 @@ import { usePreloadedData } from "../../utils/memo/usePreloadedData";
 import { BaseStatistic } from "./statistic";
 
 export type BookCount = number;
+export type BookPrice = number;
 export type HolderBooks = Record<string, BookCount>;
+export type HolderBookPrices = Record<string, BookPrice>;
+
 export type StockDistiributor = {
   books: HolderBooks;
+  priceMultiplier?: number;
+  account?: number; // счет санкиртанщика (руб.)
   statistic: BaseStatistic;
 };
-export type DistributorBooks = { id: string; count: BookCount }[];
-
 export type StockDistiributors = Record<string, StockDistiributor>;
 
 export enum HolderType {
@@ -22,6 +25,7 @@ export enum HolderType {
 }
 
 export type HolderDoc = HolderStockDoc | HolderDistributorDoc;
+
 export type HolderStockDoc = {
   id?: string;
   type: HolderType.stock;
@@ -29,7 +33,11 @@ export type HolderStockDoc = {
   name: string; // название склада - в форме отображаем (не обязательное)
   locationId: string; // местоположение склада - в форме это locationSelect (обязательное)
   books?: HolderBooks; // по умолчанию это пустой объект {}, в этой задаче его не наполняем
+  bookPrices?: HolderBookPrices; // цены книг
   distributors?: StockDistiributors;
+  priceMultiplier?: number;
+  statistic?: BaseStatistic;
+  region?: string;
 };
 
 export type HolderDistributorDoc = {
@@ -39,7 +47,8 @@ export type HolderDistributorDoc = {
   creatorId: string; // id текущего пользователя (в форме не отображаем)
   name: string; // название склада - в форме отображаем (не обязательное)
   books?: HolderBooks; // по умолчанию это пустой объект {}, в этой задаче его не наполняем
-  // statistic?: BaseStatistic;
+  priceMultiplier?: number;
+  statistic?: BaseStatistic;
 };
 
 export const addHolder = async (data: HolderDoc) => {
@@ -67,9 +76,9 @@ $stock.on(stockChanged, (_state, stock) => stock);
 $stockLoading.on(stockLoadingChanged, (_state, loading) => loading);
 $distributors.on(distributorsChanged, (_state, distributors) => distributors);
 
-export const useHolders = (holderId?: string) => {
+export const useStockHolders = (stockId?: string) => {
   const [stockDocData, stockDocLoading] = useDocumentData<WithId<HolderStockDoc>>(
-    holderId ? apiRefs.stock(holderId) : null
+    stockId ? apiRefs.stock(stockId) : null
   );
   const stock = usePreloadedData(stockDocData, stockDocLoading);
 
@@ -97,4 +106,14 @@ export const useHolders = (holderId?: string) => {
     distributors,
     distributorsLoading: distributorDocsLoading,
   };
+};
+
+export const useAllHolders = () => {
+  const [holderDocsData, holderDocsLoading] = useCollectionData<WithId<HolderDoc>>(
+    apiRefs.holdersWithId
+  );
+
+  const holders = usePreloadedData(holderDocsData, holderDocsLoading);
+
+  return { holders, holdersLoading: holderDocsLoading };
 };

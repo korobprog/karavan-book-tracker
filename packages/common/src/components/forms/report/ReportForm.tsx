@@ -12,6 +12,7 @@ import {
   Typography,
   message,
 } from "antd";
+import { DatePicker } from "common/src/components/DatePicker";
 import { PlusOutlined, MinusOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
 
 import { DatePicker } from "common/src/components/DatePicker";

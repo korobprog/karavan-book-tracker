@@ -82,7 +82,7 @@ export const HolderTransferList = (props: Props) => {
       );
     };
 
-    const { totalCount, length } = calcBooksCounts(holderTransfer.books);
+    const { totalCount, length } = calcBooksCounts(Object.entries(holderTransfer.books));
 
     const popoverContent = () => {
       const transferBooks = Object.entries(holderTransfer.books);
@@ -98,11 +98,13 @@ export const HolderTransferList = (props: Props) => {
     ) : (
       <MinusOutlined />
     );
+    const price = holderTransfer.totalPrice ? ` на ${holderTransfer.totalPrice} руб.` : "";
+    const title = HolderTransferMap[holderTransfer.type].title;
     return (
       <List.Item key={holderTransfer.id}>
         {Icon && <Icon size={50} style={{ fontSize: "24px", marginRight: 12 }} />}
         <List.Item.Meta
-          title={HolderTransferMap[holderTransfer.type].title}
+          title={`${title} ${price}`}
           description={moment(holderTransfer.date).calendar()}
         />
 
@@ -123,8 +125,8 @@ export const HolderTransferList = (props: Props) => {
     <>
       {dataSource.length > 0 && (
         <div>
-          <Row justify={"space-between"}>
-            <Typography.Title level={3}>{title}</Typography.Title>
+          <Row justify={"space-between"} className="sticky">
+            <Typography.Title level={4}>{title}</Typography.Title>
             {sortedHolderTransfers.length > displayedTransersCount && (
               <Button
                 shape="circle"

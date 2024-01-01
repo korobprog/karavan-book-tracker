@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { generatePath, useParams, useSearchParams } from "react-router-dom";
-import { Divider, Form } from "antd";
+import { Divider, Empty, Form } from "antd";
 import { useStore } from "effector-react";
 
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import { BaseLayout } from "common/src/components/BaseLayout";
+import { StockBaseLayout } from "../shared/StockBaseLayout";
 import { DistributorTransferForm } from "common/src/components/forms/stock";
+import { DistributorTransferReportByMoneyForm } from "common/src/components/forms/stock";
 import {
   DistributorTransferFormValues,
   calcBooksCountsFromValues,
@@ -45,10 +46,14 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
   const { distributorId } = useParams<{ distributorId: string }>();
   const backPath = generatePath(routes.distributor, { distributorId });
 
-  function onFinish(formValues: DistributorTransferFormValues) {
+  function onFinish(
+    formValues: DistributorTransferFormValues,
+    totalPrice: number,
+    changedAccount?: number
+  ) {
     if (user && profile?.name && stock && distributorId) {
       setIsSubmitting(true);
-      const { date, transferType } = formValues;
+      const { date, transferType, priceMultiplier } = formValues;
 
       const newBooks = calcBooksCountsFromValues(formValues);
 
@@ -59,6 +64,10 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
         fromHolderId: stock.id,
         toHolderId: distributorId,
         books: newBooks.operationBooks,
+        priceMultiplier: priceMultiplier,
+        totalPrice,
+        changedAccount,
+        // TODO: ГДЕТО ТУТ БАГ - не добавляется account
       };
 
       if (TransferFromDistributorTypes.includes(transferType)) {
@@ -66,7 +75,7 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
         holderTransfer.toHolderId = stock.id;
       }
 
-      addHolderTransferMultiAction(holderTransfer)
+      addHolderTransferMultiAction(holderTransfer, {}, priceMultiplier)
         .then(() => navigate(backPath))
         .finally(() => setIsSubmitting(false));
     }
@@ -82,18 +91,36 @@ export const DistributorTransfer = ({ currentUser }: Props) => {
   const title = HolderTransferMap[typeParam].title;
   const label = TransferFromDistributorTypes.includes(typeParam) ? "От кого:" : "Кому";
 
-  return (
-    <BaseLayout title={title} backPath={backPath} userDocLoading={userDocLoading} avatar={avatar}>
+  const formProps = {
+    onFinish,
+    isSubmitting,
+    availableBooks,
+    bookPrices: stock?.bookPrices || {},
+    priceMultiplier:
+      (distributorId && stock?.distributors?.[distributorId].priceMultiplier) ||
+      stock?.priceMultiplier ||
+      1,
+  };
+
+  return !distributorId || !stock ? (
+    <Empty />
+  ) : (
+    <StockBaseLayout
+      title={title}
+      backPath={backPath}
+      userDocLoading={userDocLoading}
+      avatar={avatar}
+    >
       <Divider dashed />
       <Form.Item label={label}>{distributorName}</Form.Item>
-      <DistributorTransferForm
-        currentUser={currentUser}
-        onFinish={onFinish}
-        isSubmitting={isSubmitting}
-        typeParam={typeParam}
-        onTypeChange={onTypeChange}
-        availableBooks={availableBooks}
-      />
-    </BaseLayout>
+      {typeParam === HolderTransferType.reportByMoney ? (
+        <DistributorTransferReportByMoneyForm
+          {...formProps}
+          account={stock?.distributors?.[distributorId].account || 0}
+        />
+      ) : (
+        <DistributorTransferForm {...formProps} typeParam={typeParam} onTypeChange={onTypeChange} />
+      )}
+    </StockBaseLayout>
   );
 };

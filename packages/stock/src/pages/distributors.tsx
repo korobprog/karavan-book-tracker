@@ -6,9 +6,9 @@ import { Button, Divider, List, Radio, RadioChangeEvent, Row, Space, Statistic }
 import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import { BaseLayout } from "common/src/components/BaseLayout";
+import { StockBaseLayout } from "../shared/StockBaseLayout";
 import { $distributors, $stock } from "common/src/services/api/holders";
-import { calcBooksCounts } from "common/src/components/forms/stock/helpers";
+import { calcBooksCounts, calcTotalBooksAndSum } from "common/src/components/forms/stock/helpers";
 import Search from "antd/es/input/Search";
 import {
   StatisticDateKeys,
@@ -65,7 +65,7 @@ export const Distributors = ({ currentUser }: Props) => {
       .map(({ id, name }) => {
         const stockDistributor = stock?.distributors?.[id];
         const booksCounts = stockDistributor
-          ? calcBooksCounts(stockDistributor.books).totalCount
+          ? calcBooksCounts(Object.entries(stockDistributor.books)).totalCount
           : 0;
         const points = calcStaticticPointsSum(stockDistributor?.statistic?.[currentPeriod]);
         return { booksCounts, points, id, name };
@@ -74,8 +74,16 @@ export const Distributors = ({ currentUser }: Props) => {
     return filteredDistributors.sort((a, b) => (a.points < b.points ? 1 : -1));
   }, [distributors, searchString, stock, currentPeriod]);
 
+  if (!stock) {
+    return (
+      <StockBaseLayout title="Распространители" headerActions={[]}>
+        loading...
+      </StockBaseLayout>
+    );
+  }
+
   return (
-    <BaseLayout
+    <StockBaseLayout
       title="Распространители"
       backPath={routes.root}
       userDocLoading={userDocLoading}
@@ -111,6 +119,7 @@ export const Distributors = ({ currentUser }: Props) => {
         itemLayout="horizontal"
         dataSource={displayedDistributors}
         renderItem={(distributor) => {
+          const { totalCount, totalPrice } = calcTotalBooksAndSum(stock, distributor.id);
           const onUserClick = () => {
             navigate(generatePath(routes.distributor, { distributorId: distributor.id }));
           };
@@ -119,7 +128,7 @@ export const Distributors = ({ currentUser }: Props) => {
             <List.Item key={distributor.id} className="list-item-clickable" onClick={onUserClick}>
               <List.Item.Meta
                 title={distributor.name}
-                description={`Наименований на руках: ${distributor.booksCounts}`}
+                description={`Книг на руках: ${totalCount} шт. на ${totalPrice} руб.`}
               />
               <Statistic title="Очки" value={distributor.points} style={{ textAlign: "right" }} />
             </List.Item>
@@ -127,6 +136,6 @@ export const Distributors = ({ currentUser }: Props) => {
         }}
       />
       <Divider dashed />
-    </BaseLayout>
+    </StockBaseLayout>
   );
 };

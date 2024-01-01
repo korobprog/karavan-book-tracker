@@ -1,48 +1,48 @@
 import React, { useState, useMemo } from "react";
 import { useStore } from "effector-react";
 import { Button, List, Input, InputNumber, Form, Row, Space, Typography } from "antd";
-import { DatePicker } from "common/src/components/DatePicker";
-import {
-  PlusOutlined,
-  MinusOutlined,
-  StarFilled,
-  StarOutlined,
-  SelectOutlined,
-} from "@ant-design/icons";
+import moment from "moment";
 
+import { DatePicker } from "common/src/components/DatePicker";
 import * as storage from "common/src/services/localStorage/reportBooks";
-import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { $books, $booksLoading, Book } from "common/src/services/books";
+import { roundPrice } from "common/src/utils/numbers";
 import {
   DistributorTransferType,
   TransferTypeSelect,
 } from "common/src/components/TransferTypeSelect";
 
-import moment from "moment";
-import { StockFormValues, calcBooksCountsFromValues, calcFormValuesFromBooks } from "./helpers";
-import { HolderBooks, HolderType } from "../../../services/api/holders";
+import {
+  DistributorTransferFormValues,
+  StockFormValues,
+  calcBooksCountsFromValues,
+  calcTotalPrice,
+} from "./helpers";
+import { BookFormItem } from "./BookFormItem";
+import { HolderBookPrices, HolderBooks, HolderType } from "../../../services/api/holders";
 
 type Props = {
-  currentUser: CurrentUser;
-  onFinish: (formValues: StockFormValues) => void;
+  onFinish: (formValues: StockFormValues, totalPrice: number) => void;
   isSubmitting?: boolean;
   initialValues?: StockFormValues;
   typeParam: DistributorTransferType;
   onTypeChange: (value: DistributorTransferType) => void;
+  bookPrices: HolderBookPrices;
+  priceMultiplier: number;
   availableBooks?: HolderBooks;
 };
 
 export const DistributorTransferForm = (props: Props) => {
   const {
-    currentUser,
     onFinish,
     isSubmitting,
     initialValues: initialValuesProps,
     typeParam,
     onTypeChange,
     availableBooks,
+    bookPrices,
+    priceMultiplier: initPriceMultiplier,
   } = props;
-  const { userDocLoading } = currentUser;
   const [searchString, setSearchString] = useState("");
   const [selectedBooks, setSelectedBooks] = useState<Book[]>([]);
 
@@ -56,24 +56,21 @@ export const DistributorTransferForm = (props: Props) => {
 
   const booksLoading = useStore($booksLoading);
 
-  const booksStorageInitialValues = calcFormValuesFromBooks(storage.getReportBooks());
-
-  const initialValues = {
+  const initialValues: StockFormValues = {
     date: moment(),
     transferType: typeParam,
     ...initialValuesProps,
-  };
-
-  const { date, transferType, ...booksPropsInitialValues } =
-    initialValuesProps || ({} as StockFormValues);
-
-  const getInitialBooks = (booksValues: Record<number, number>) => {
-    return Object.values(booksValues).reduce((acc, value) => acc + value, 0);
+    priceMultiplier: initPriceMultiplier,
   };
 
   const [totalBooksCount, setTotalBooksCount] = useState(
-    getInitialBooks(booksPropsInitialValues) || getInitialBooks(booksStorageInitialValues)
+    calcBooksCountsFromValues(initialValues).totalCount
   );
+
+  const [form] = Form.useForm();
+  const priceMultiplier = Form.useWatch("priceMultiplier", form);
+
+  const [totalPrice, setTotalPrice] = useState(calcBooksCountsFromValues(initialValues).totalCount);
 
   const onSearchChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setSearchString(e.target.value.toLowerCase());
@@ -81,8 +78,9 @@ export const DistributorTransferForm = (props: Props) => {
 
   const onValuesChange = () => {
     const formValues: StockFormValues = form.getFieldsValue();
-    const { totalCount } = calcBooksCountsFromValues(formValues);
+    const { totalCount, operationBooks } = calcBooksCountsFromValues(formValues);
     setTotalBooksCount(totalCount);
+    setTotalPrice(calcTotalPrice(operationBooks, bookPrices, priceMultiplier));
 
     if (typeParam !== formValues.transferType) {
       onTypeChange(formValues.transferType as DistributorTransferType);
@@ -92,22 +90,18 @@ export const DistributorTransferForm = (props: Props) => {
   const onBooksReset = () => {
     form.resetFields();
     const formValues: StockFormValues = form.getFieldsValue();
-    const { totalCount } = calcBooksCountsFromValues(formValues);
+    const { totalCount, operationBooks } = calcBooksCountsFromValues(formValues);
     setTotalBooksCount(totalCount);
+    setTotalPrice(calcTotalPrice(operationBooks, bookPrices, priceMultiplier));
   };
 
   const { Search } = Input;
-
-  const [form] = Form.useForm();
 
   const onSelectClick = (bookId: string) => {
     const newBook = books.find((book) => book.id === bookId);
     if (newBook) {
       setSelectedBooks([...selectedBooks, newBook]);
-      form.setFieldsValue({ [bookId]: 1 });
-      setTimeout(() => {
-        onValuesChange();
-      });
+      form.setFieldsValue({ [bookId]: 0 });
     }
   };
 
@@ -127,51 +121,40 @@ export const DistributorTransferForm = (props: Props) => {
     }
   };
 
-  const onFinishHandler = (formValues: StockFormValues) => {
-    onFinish(formValues);
+  const onFinishHandler = (formValues: DistributorTransferFormValues) => {
+    onFinish({ ...formValues }, totalPrice);
     storage.setReportBooks([]);
   };
 
   const renderBookItem = (book: Book, isSelected: boolean) => {
-    const StarIcon = isSelected ? StarFilled : StarOutlined;
     const isBookFinded =
       book.name.toLowerCase().includes(searchString) ||
       book.short_name.toLowerCase().includes(searchString);
 
-    const availableBookCount = availableBooks?.[book.id];
+    const availableBookCount = availableBooks?.[book.id] || 0;
 
     const minCount = 0;
     const maxCount = (availableBooks && availableBookCount) || 10000;
+    const bookCountText = availableBookCount > 0 ? `(На складе: ${availableBookCount})` : "";
+
+    const bookCount = form.getFieldValue(book.id) || 0;
+    const price = (bookPrices[book.id] || 0) * priceMultiplier || 0;
+    const roundedPrice = roundPrice(price);
+    const bookTotalPrice = roundedPrice * bookCount;
 
     return isBookFinded && (!availableBooks || (availableBookCount && availableBookCount > 0)) ? (
-      <List.Item>
-        <StarIcon style={{ fontSize: "24px", marginRight: 12, color: "#bae0ff" }} />
-        <List.Item.Meta title={book.name} description={book.short_name} />
-        <Space>
-          <Typography>Доступно {availableBookCount}</Typography>
-
-          {isSelected ? (
-            <Space>
-              <Button onClick={() => onMinusClick(book.id, minCount)} icon={<MinusOutlined />} />
-              <Form.Item name={book.id} noStyle>
-                <InputNumber
-                  min={minCount}
-                  max={maxCount}
-                  style={{ width: 70 }}
-                  type="number"
-                  inputMode="numeric"
-                  pattern="\d*"
-                />
-              </Form.Item>
-              <Button onClick={() => onPlusClick(book.id, maxCount)} icon={<PlusOutlined />} />
-            </Space>
-          ) : (
-            <Button onClick={() => onSelectClick(book.id)} icon={<SelectOutlined />}>
-              Выбрать
-            </Button>
-          )}
-        </Space>
-      </List.Item>
+      <BookFormItem
+        bookId={book.id}
+        title={book.name}
+        description={`${book.short_name} ${bookCountText}`}
+        isSelected={isSelected}
+        bottomSlot={
+          <Typography.Text type="secondary">
+            по {roundedPrice} р. на {bookTotalPrice} р.
+          </Typography.Text>
+        }
+        {...{ minCount, maxCount, bookCount, onMinusClick, onPlusClick, onSelectClick }}
+      />
     ) : (
       <Form.Item name={book.id} noStyle />
     );
@@ -198,28 +181,38 @@ export const DistributorTransferForm = (props: Props) => {
         />
       </Form.Item>
 
-      <Form.Item>
-        <Space>
-          <Typography>
-            Выбрано книг: <b>{totalBooksCount}</b>
-          </Typography>
-          <Button
-            type="default"
-            disabled={isSubmitting || userDocLoading || totalBooksCount === 0}
-            onClick={onBooksReset}
-          >
-            Сбросить
-          </Button>
-          <Button
-            type="primary"
-            htmlType="submit"
-            loading={isSubmitting || userDocLoading}
-            disabled={totalBooksCount === 0}
-          >
-            {isSubmitting ? "Сохраняем..." : "Сохранить"}
-          </Button>
-        </Space>
+      <Form.Item name="priceMultiplier" label="Ценовой коэффициент">
+        <InputNumber
+          min={0}
+          max={10}
+          step={0.1}
+          style={{ width: 70 }}
+          type="number"
+          inputMode="numeric"
+          pattern="\d*"
+        />
       </Form.Item>
+
+      <Space>
+        <Typography>
+          Выбрано книг: <b>{totalBooksCount}</b> на {totalPrice} руб.
+        </Typography>
+        <Button
+          type="default"
+          disabled={isSubmitting || totalBooksCount === 0}
+          onClick={onBooksReset}
+        >
+          Сбросить
+        </Button>
+        <Button
+          type="primary"
+          htmlType="submit"
+          loading={isSubmitting}
+          disabled={totalBooksCount === 0}
+        >
+          {isSubmitting ? "Сохраняем..." : "Сохранить"}
+        </Button>
+      </Space>
       <List
         itemLayout="horizontal"
         dataSource={selectedBooks}
@@ -242,7 +235,7 @@ export const DistributorTransferForm = (props: Props) => {
       <List
         itemLayout="horizontal"
         dataSource={newBooks}
-        loading={booksLoading || userDocLoading}
+        loading={booksLoading}
         locale={{ emptyText: "Не найдено книг" }}
         renderItem={(book) => renderBookItem(book, false)}
       />

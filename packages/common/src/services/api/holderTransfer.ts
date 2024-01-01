@@ -35,10 +35,15 @@ export enum HolderTransferType {
   installments = "installments",
   sale = "sale",
   report = "report",
+  reportByMoney = "reportByMoney",
 }
 
 export const StatisticHolderTransferTypes = [HolderTransferType.report, HolderTransferType.sale];
-export const TransferFromDistributorTypes = [HolderTransferType.report, HolderTransferType.return];
+export const TransferFromDistributorTypes = [
+  HolderTransferType.report,
+  HolderTransferType.return,
+  HolderTransferType.reportByMoney,
+];
 
 export const HolderTransferMap = {
   [HolderTransferType.bbtIncome]: { title: "Приход из ББТ", icon: LoginOutlined, description: "" },
@@ -68,10 +73,16 @@ export const HolderTransferMap = {
     description: "Выдать и сразу рассчитаться - книги сразу считаются как распространенные",
   },
   [HolderTransferType.report]: {
-    title: "Отчет",
+    title: "Отчет по книгам",
     icon: CheckCircleOutlined,
     description:
       "Принять отчет по выданным ранее книгам - снимает с баланса санкиртанщика и добавляет в распространенные",
+  },
+  [HolderTransferType.reportByMoney]: {
+    title: "Отчет по деньгам",
+    icon: CheckCircleOutlined,
+    description:
+      "Принять отчет по сумме - автоматически выберет книги, максимально подходящие под сумму и положит остаток на счет санкиртанщика",
   },
 };
 
@@ -83,6 +94,9 @@ export type HolderTransferDoc = {
   fromHolderId: string | null;
   toHolderId: string | null;
   books: HolderBooks;
+  priceMultiplier: number;
+  totalPrice?: number;
+  changedAccount?: number;
 };
 
 export type HolderTransferDocWithId = HolderTransferDoc & {

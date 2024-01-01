@@ -5,7 +5,7 @@ import { useStore } from "effector-react";
 import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import { BaseLayout } from "common/src/components/BaseLayout";
+import { StockBaseLayout } from "../shared/StockBaseLayout";
 import { DistributorForm } from "common/src/components/forms/stock";
 import { StockDistributorFormValues } from "common/src/components/forms/stock/helpers";
 import {
@@ -49,7 +49,7 @@ export const DistributorEdit = ({ currentUser }: Props) => {
   }
 
   return (
-    <BaseLayout
+    <StockBaseLayout
       title="Добавление распространителя"
       backPath={routes.distributors}
       userDocLoading={userDocLoading}
@@ -57,6 +57,6 @@ export const DistributorEdit = ({ currentUser }: Props) => {
     >
       <Divider dashed />
       <DistributorForm currentUser={currentUser} onFinish={onFinish} isSubmitting={isSubmitting} />
-    </BaseLayout>
+    </StockBaseLayout>
   );
 };

@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 import { generatePath, useParams } from "react-router-dom";
-import { Button, Divider, Tooltip, Space, Empty } from "antd";
+import { Button, Divider, Tooltip, Space, Empty, Statistic } from "antd";
 import { BaseButtonProps } from "antd/es/button/button";
 import { useStore } from "effector-react";
 import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import { BaseLayout } from "common/src/components/BaseLayout";
+import { StockBaseLayout } from "../shared/StockBaseLayout";
 import { DistributionStatistic } from "../features/DistributionStatistic";
 import { $distributors, $stock } from "common/src/services/api/holders";
 import { StockList } from "common/src/components/StockList";
@@ -22,6 +22,7 @@ import {
 } from "common/src/services/api/holderTransfer";
 import { WithId } from "common/src/services/api/refs";
 import { HolderTransferList } from "common/src/components/HolderTransferList";
+import { calcTotalBooksAndSum } from "common/src/components/forms/stock/helpers";
 
 type Props = {
   currentUser: CurrentUser;
@@ -84,8 +85,13 @@ export const Distributor = ({ currentUser }: Props) => {
     );
   };
 
+  const { totalCount = 0, totalPrice = 0 } =
+    stock && distributorId ? calcTotalBooksAndSum(stock, distributorId) : {};
+
+  const account = (distributorId && stock?.distributors?.[distributorId].account) || 0;
+
   return (
-    <BaseLayout
+    <StockBaseLayout
       title={currentDistributor?.name || "Распространитель не найден"}
       backPath={routes.distributors}
       userDocLoading={userDocLoading}
@@ -98,9 +104,14 @@ export const Distributor = ({ currentUser }: Props) => {
           <Space wrap>
             {getButtonWithTooltip(HolderTransferType.installments, "primary")}
             {getButtonWithTooltip(HolderTransferType.sale)}
-            {getButtonWithTooltip(HolderTransferType.report)}
             {getButtonWithTooltip(HolderTransferType.return)}
+            {getButtonWithTooltip(HolderTransferType.report)}
+            {getButtonWithTooltip(HolderTransferType.reportByMoney)}
           </Space>
+
+          <Divider dashed />
+          {<Statistic title="Счет санкиртанщика" value={`${account} руб.`} />}
+
           <Divider dashed />
 
           <HolderTransferList
@@ -111,15 +122,19 @@ export const Distributor = ({ currentUser }: Props) => {
           <Divider dashed />
 
           <StockList
-            title="Подотчетные книги у распространителя:"
+            title={`Книги на руках: ${totalCount} шт. на ${totalPrice} руб.`}
             currentUser={currentUser}
             holderBooks={stock.distributors?.[distributorId].books || {}}
+            prices={stock.bookPrices}
+            priceMultiplier={
+              stock.distributors?.[distributorId].priceMultiplier || stock.priceMultiplier
+            }
           />
           <Divider dashed />
 
           <DistributionStatistic holderTransfers={currentHolderTransfers} />
         </>
       )}
-    </BaseLayout>
+    </StockBaseLayout>
   );
 };

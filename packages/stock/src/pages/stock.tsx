@@ -4,7 +4,7 @@ import { Button, Divider, Typography } from "antd";
 
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import { BaseLayout } from "common/src/components/BaseLayout";
+import { StockBaseLayout } from "../shared/StockBaseLayout";
 import { HolderTransferList } from "common/src/components/HolderTransferList";
 import { StockList } from "common/src/components/StockList";
 import { PlusCircleOutlined } from "@ant-design/icons";
@@ -21,6 +21,7 @@ export const Stock = ({ currentUser }: Props) => {
   const navigate = useTransitionNavigate();
   const stock = useStore($stock);
   const stockBooks = stock?.books || {};
+  const stockBookPrices = stock?.bookPrices || {};
 
   const onEditStock = () => {
     navigate(routes.stockEdit);
@@ -33,7 +34,7 @@ export const Stock = ({ currentUser }: Props) => {
   }, [user, loading, navigate]);
 
   return (
-    <BaseLayout
+    <StockBaseLayout
       title="Склад книг"
       backPath={routes.root}
       userDocLoading={userDocLoading}
@@ -48,10 +49,16 @@ export const Stock = ({ currentUser }: Props) => {
       </Button>
 
       <Divider dashed />
-      <HolderTransferList title="Последние операции:" />
+      <StockList
+        title="Книги на складе:"
+        currentUser={currentUser}
+        holderBooks={stockBooks}
+        prices={stockBookPrices}
+        priceMultiplier={stock?.priceMultiplier}
+      />
 
       <Divider dashed />
-      <StockList currentUser={currentUser} holderBooks={stockBooks} title="Книги на складе:" />
-    </BaseLayout>
+      <HolderTransferList title="Последние операции:" />
+    </StockBaseLayout>
   );
 };

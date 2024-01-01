@@ -65,6 +65,40 @@ export const getStatisticDateKeys = (date: moment.MomentInput = moment()) => {
   };
 };
 
+const generateOptions = (startYear: number): string[] => {
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1;
+
+  const options: string[] = [];
+  for (let year = currentYear; year >= startYear; year--) {
+    options.push(String(year));
+    for (let quarter = Math.ceil(currentMonth / 3); quarter >= 1; quarter--) {
+      const quarterStr = `${year}-Q${quarter}`;
+      options.push(quarterStr);
+    }
+    for (let month = currentMonth; month >= 1; month--) {
+      const monthStr = `${year}-${month.toString().padStart(2, "0")}`;
+      options.push(monthStr);
+    }
+  }
+
+  return options;
+};
+
+export const getStatisticPeriodOptions = () => {
+  const startYear = 2022;
+  const options = generateOptions(startYear);
+  const periodOptions = options.map((value) => ({ value, label: value }));
+
+  return periodOptions;
+};
+
+// Пример использования:
+const startYear = 2023; // Укажите нужный год
+const options = generateOptions(startYear);
+console.log(options);
+
 export const typePointsMap = {
   MB: 2,
   B: 1,
