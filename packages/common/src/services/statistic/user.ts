@@ -29,7 +29,7 @@ export const calcUserStat = (
 
 export const recalculateStatisticToUsers = async (users: UserDocWithId[]) => {
   try {
-    const operationsSnapshot = await getDocs(apiRefs.operations);;
+    const operationsSnapshot = await getDocs(apiRefs.operations);
     const userIdsWithoutStatsMap = new Set(users.map((user) => user.id));
 
     const statsByUsers = {} as Record<string, UserDoc["statistic"]>;

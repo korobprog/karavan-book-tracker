@@ -15,11 +15,21 @@ export type BaseLayoutProps = {
   isAdmin?: boolean;
   version?: string;
   transitionName?: string;
+  onAvatarClick?: () => void;
 };
 
 export const BaseLayout = (props: React.PropsWithChildren<BaseLayoutProps>) => {
-  const { children, title, backPath, headerActions, userDocLoading, isAdmin, avatar, version } =
-    props;
+  const {
+    children,
+    title,
+    backPath,
+    headerActions,
+    userDocLoading,
+    isAdmin,
+    avatar,
+    version,
+    onAvatarClick,
+  } = props;
   const { Content, Header } = Layout;
   const navigate = useTransitionNavigate();
   const onBack = backPath ? () => navigate(backPath) : undefined;
@@ -37,7 +47,12 @@ export const BaseLayout = (props: React.PropsWithChildren<BaseLayoutProps>) => {
           onBack={onBack}
           avatar={{
             src: Logo,
-            style: { minWidth: 32, ...getViewTransitionStyles("logo-icon") },
+            style: {
+              minWidth: 32,
+              ...getViewTransitionStyles("logo-icon"),
+              ...(onAvatarClick && { cursor: "pointer" }),
+            },
+            onClick: onAvatarClick,
           }}
           extra={[
             ...(version

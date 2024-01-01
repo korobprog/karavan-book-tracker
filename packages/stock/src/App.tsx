@@ -16,19 +16,20 @@ import { StockEdit } from "./pages/stockEdit";
 import { Distributors } from "./pages/distributors";
 import { Distributor } from "./pages/distributor";
 import { DistributorEdit } from "./pages/distributorEdit";
-import { useHolders } from "common/src/services/api/holders";
+import { useStockHolders } from "common/src/services/api/holders";
 import { DistributorTransfer } from "./pages/distributorTransfer";
 import { useHolderTransfers } from "common/src/services/api/holderTransfer";
 
 import "antd/dist/reset.css";
 import "./App.less";
+import { Statistic } from "./pages/statistic";
 
 const routesWithoutRedirect = [routes.registration, routes.auth, routes.resetpassemail];
 
 function App() {
   const currentUser = useCurrentUser();
   const { profile, loading, user, userDocLoading } = currentUser;
-  const { stock, stockLoading } = useHolders(profile?.stockId);
+  const { stock, stockLoading } = useStockHolders(profile?.stockId);
   // const isStockLoading = profile?.stockId && !stock;
   const navigate = useTransitionNavigate();
   const location = useLocation();
@@ -81,6 +82,8 @@ function App() {
           path={routes.distributorTransfer}
           element={<DistributorTransfer currentUser={currentUser} />}
         />
+
+        <Route path={routes.statistic} element={<Statistic currentUser={currentUser} />} />
       </Routes>
     </div>
   );

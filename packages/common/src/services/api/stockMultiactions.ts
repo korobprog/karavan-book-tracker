@@ -27,7 +27,7 @@ export const addHolderTransferMultiAction = async (
 ) => {
   try {
     const stock = $stock.getState();
-    const newHolderTransfer = removeEmptyFields(holderTransfer);
+    const newHolderTransfer: HolderTransferDoc = removeEmptyFields(holderTransfer);
     const { books, fromHolderId, toHolderId, changedAccount } = newHolderTransfer;
 
     if (!stock) {
@@ -101,10 +101,11 @@ export const addHolderTransferMultiAction = async (
               "+",
               newHolderTransfer
             ),
+            statistic: calcHolderStat(stock.statistic, "+", newHolderTransfer),
           }),
           updateHolder(distributor.id, {
             books: calcObjectFields(distributor.books, "+", books),
-            // statistic: calcHolderStat(distributor.statistic, "+", newHolderTransfer),
+            statistic: calcHolderStat(distributor.statistic, "+", newHolderTransfer),
           }),
           addHolderTransfer(newHolderTransfer),
         ]);
@@ -144,16 +145,21 @@ export const addHolderTransferMultiAction = async (
             "+",
             newHolderTransfer
           ),
+          statistic: calcHolderStat(stock.statistic, "+", newHolderTransfer),
         };
 
         if (changedAccount !== undefined) {
-          console.log("🚀 ~ changedAccount:!!!!!!!!!!!!", changedAccount);
-
           data[`${distributorPath}.account`] = changedAccount;
         }
-        console.log("🚀 ~ data:", data);
 
-        return Promise.all([addHolderTransfer(newHolderTransfer), updateStock(stock.id, data)]);
+        return Promise.all([
+          addHolderTransfer(newHolderTransfer),
+          updateStock(stock.id, data),
+          updateHolder(distributor.id, {
+            books: calcObjectFields(distributor.books, "-", books),
+            statistic: calcHolderStat(distributor.statistic, "+", newHolderTransfer),
+          }),
+        ]);
       }
     }
 

@@ -40,6 +40,7 @@ const teams = getCollectionRef<TeamDoc>("teams");
 const holder = (id: string) =>
   getDocRef<HolderDoc>(id, "holders").withConverter<WithId<HolderDoc>>(idConverter);
 const holders = getCollectionRef<HolderDoc>("holders");
+const holdersWithId = getCollectionRef<WithId<HolderDoc>>("holders");
 const stock = (id: string) =>
   getDocRef<HolderDoc>(id, "holders").withConverter<WithId<HolderStockDoc>>(idConverter);
 const distributors = getCollectionRef<WithId<HolderDistributorDoc>>("holders");
@@ -62,6 +63,7 @@ export const apiRefs = {
   teams,
   holder,
   holders,
+  holdersWithId,
   stock,
   distributors,
   holderTransfer,

@@ -46,6 +46,7 @@ const Profile = ({ currentUser }: Props) => {
       ? profile?.registrationDate
       : new Date().toISOString(),
     stockName: stock?.name || "",
+    region: stock?.region,
   };
 
   const onLogout = () => {
@@ -56,7 +57,7 @@ const Profile = ({ currentUser }: Props) => {
 
   const onFinish = async (formValues: FormValues) => {
     if (userId) {
-      const { stockName, ...newProfile } = formValues;
+      const { stockName, region, ...newProfile } = formValues;
 
       const stockId = profile?.stockId;
       const setHolder =
@@ -66,6 +67,7 @@ const Profile = ({ currentUser }: Props) => {
         creatorId: userId,
         locationId: newProfile.yatraLocationId || "",
         name: stockName,
+        region,
         type: HolderType.stock,
       });
 

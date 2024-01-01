@@ -11,4 +11,6 @@ export const routes = {
   distributor: "/distributor/:distributorId",
   distributorTransfer: "/distributor/:distributorId/transfer",
   distributorNew: "/distributor/new",
+
+  statistic: "/statistic",
 };
