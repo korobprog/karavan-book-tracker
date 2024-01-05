@@ -1,6 +1,6 @@
 {
   "name": "stock",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "karavan-book-stock",
   "scripts": {
     "start": "craco start --mode staging",
