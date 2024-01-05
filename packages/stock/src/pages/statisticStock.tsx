@@ -57,11 +57,11 @@ const initialPeriod = new Date().getFullYear().toString();
 const options = getStatisticPeriodOptions();
 
 export const StatisticStock = ({ currentUser }: Props) => {
-  const { profile, user, loading, userDocLoading } = currentUser;
+  const { profile, userDocLoading } = currentUser;
   const avatar = profile?.avatar;
 
   const { stockId } = useParams<{ stockId: string }>();
-  const { stock, stockLoading } = useStock(stockId);
+  const { stock } = useStock(stockId);
 
   const [period, setPeriod] = useState(initialPeriod);
   const [searchString, setSearchString] = useState("");
@@ -80,7 +80,7 @@ export const StatisticStock = ({ currentUser }: Props) => {
 
     const filteredDistributors = distributors
       .filter((distributors) => (distributors.name || "").toLowerCase().includes(searchString))
-      .map(({ id, name, books, statistic }) => {
+      .map(({ id, name, statistic }) => {
         const distributorsStatistic = getFullStatistic(period, statistic);
 
         return {
@@ -102,29 +102,34 @@ export const StatisticStock = ({ currentUser }: Props) => {
       avatar={avatar}
     >
       <Space style={{ marginBottom: 8 }}>
-        <Typography.Text>Выберите период </Typography.Text>
+        <Typography.Text>Период</Typography.Text>
         <Select
           defaultValue={initialPeriod}
-          style={{ width: 120 }}
+          style={{ width: 100 }}
           onChange={handlePeriodChange}
           options={options}
         />
-        <Row>
-          <Search
-            placeholder="поиск по имени"
-            allowClear
-            onChange={onSearchChange}
-            value={searchString}
-            style={{ flexGrow: 1, width: 200, marginRight: 8 }}
-          />
-          <DownloadExcel
-            columns={columns}
-            dataSource={displayedDistributors}
-            fileName={`Отчет за ${period}`}
-          />
-        </Row>
+        <DownloadExcel
+          columns={columns}
+          dataSource={displayedDistributors}
+          fileName={`Отчет за ${period}`}
+        />
       </Space>
-      <Table columns={columns} dataSource={displayedDistributors} pagination={{ pageSize: 100 }} />
+      <Row style={{ marginBottom: 8 }}>
+        <Search
+          placeholder="поиск по имени"
+          allowClear
+          onChange={onSearchChange}
+          value={searchString}
+          style={{ flexGrow: 1, width: 200, marginRight: 8 }}
+        />
+      </Row>
+      <Table
+        columns={columns}
+        dataSource={displayedDistributors}
+        pagination={{ pageSize: 100 }}
+        scroll={{ x: "max-content" }}
+      />
     </StockBaseLayout>
   );
 };

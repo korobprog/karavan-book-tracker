@@ -67,10 +67,10 @@ const initialPeriod = new Date().getFullYear().toString();
 const options = getStatisticPeriodOptions();
 
 export const Statistic = ({ currentUser }: Props) => {
-  const { profile, user, loading, userDocLoading } = currentUser;
+  const { profile, userDocLoading } = currentUser;
   const avatar = profile?.avatar;
   const navigate = useTransitionNavigate();
-  const { holders, holdersLoading } = useAllHolders();
+  const { holders } = useAllHolders();
 
   const [period, setPeriod] = useState(initialPeriod);
 
@@ -130,10 +130,10 @@ export const Statistic = ({ currentUser }: Props) => {
       avatar={avatar}
     >
       <Space style={{ marginBottom: 8 }}>
-        <Typography.Text>Выберите период </Typography.Text>
+        <Typography.Text>Период</Typography.Text>
         <Select
           defaultValue={initialPeriod}
-          style={{ width: 120 }}
+          style={{ width: 100 }}
           onChange={handlePeriodChange}
           options={options}
         />
@@ -150,13 +150,14 @@ export const Statistic = ({ currentUser }: Props) => {
         rowClassName={(record) => (record.children ? "table-background" : "")}
         expandable={{ expandRowByClick: true }}
         onRow={(data) => ({
-          onClick: (event) => {
+          onClick: () => {
             if (data.id) {
               navigate(generatePath(routes.statisticStock, { stockId: data.id }));
             }
           },
         })}
         style={{ cursor: "pointer" }}
+        scroll={{ x: "max-content" }}
       />
     </StockBaseLayout>
   );
