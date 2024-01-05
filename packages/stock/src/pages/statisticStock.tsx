@@ -2,6 +2,7 @@ import { Row, Select, Space, Typography } from "antd";
 import Table, { ColumnsType } from "antd/es/table";
 import { useMemo, useState } from "react";
 
+import { DownloadExcel } from "common/src/features/downloadExcel";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { useStock } from "common/src/services/api/holders";
 import { getFullStatistic, getStatisticPeriodOptions } from "common/src/services/api/statistic";
@@ -115,6 +116,11 @@ export const StatisticStock = ({ currentUser }: Props) => {
             onChange={onSearchChange}
             value={searchString}
             style={{ flexGrow: 1, width: 200, marginRight: 8 }}
+          />
+          <DownloadExcel
+            columns={columns}
+            dataSource={displayedDistributors}
+            fileName={`Отчет за ${period}`}
           />
         </Row>
       </Space>

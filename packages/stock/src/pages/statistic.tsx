@@ -11,6 +11,7 @@ import { StockBaseLayout } from "../shared/StockBaseLayout";
 import { routes } from "../shared/routes";
 import { calcObjectFields, getObjectFieldsCount } from "common/src/utils/objects";
 import { generatePath } from "react-router-dom";
+import { DownloadExcel } from "common/src/features/downloadExcel";
 
 type Props = {
   currentUser: CurrentUser;
@@ -135,6 +136,11 @@ export const Statistic = ({ currentUser }: Props) => {
           style={{ width: 120 }}
           onChange={handlePeriodChange}
           options={options}
+        />
+        <DownloadExcel
+          columns={columns}
+          dataSource={regionStocks}
+          fileName={`Отчет за ${period}`}
         />
       </Space>
       <Table

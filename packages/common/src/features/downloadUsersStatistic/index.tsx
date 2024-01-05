@@ -7,7 +7,6 @@ import { collection, getDocs } from "firebase/firestore";
 import { $booksHashMap } from "common/src/services/books/index";
 // @ts-ignore
 import { saveAs } from "file-saver";
-// @ts-ignore
 import * as ExcelJS from "exceljs";
 
 const db = getFirestore();
