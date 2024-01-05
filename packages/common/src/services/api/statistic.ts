@@ -72,12 +72,13 @@ const generateOptions = (startYear: number): string[] => {
 
   const options: string[] = [];
   for (let year = currentYear; year >= startYear; year--) {
+    const isCurrentYear = year === currentYear;
     options.push(String(year));
-    for (let quarter = Math.ceil(currentMonth / 3); quarter >= 1; quarter--) {
+    for (let quarter = isCurrentYear ? Math.ceil(currentMonth / 3) : 4; quarter >= 1; quarter--) {
       const quarterStr = `${year}-Q${quarter}`;
       options.push(quarterStr);
     }
-    for (let month = currentMonth; month >= 1; month--) {
+    for (let month = isCurrentYear ? currentMonth : 12; month >= 1; month--) {
       const monthStr = `${year}-${month.toString().padStart(2, "0")}`;
       options.push(monthStr);
     }
@@ -87,17 +88,12 @@ const generateOptions = (startYear: number): string[] => {
 };
 
 export const getStatisticPeriodOptions = () => {
-  const startYear = 2022;
+  const startYear = 2023;
   const options = generateOptions(startYear);
   const periodOptions = options.map((value) => ({ value, label: value }));
 
   return periodOptions;
 };
-
-// Пример использования:
-const startYear = 2023; // Укажите нужный год
-const options = generateOptions(startYear);
-console.log(options);
 
 export const typePointsMap = {
   MB: 2,
@@ -117,4 +113,22 @@ export const calcStaticticPointsSum = (baseStatisticItem?: Partial<BaseStatistic
     : 0;
 
   return points;
+};
+
+export const getFullStatistic = (period: string, statistic?: BaseStatistic) => {
+  const currentStatistic = statistic?.[period] || {};
+  const totalPoints = calcStaticticPointsSum(currentStatistic);
+  const { S = 0, M = 0, B = 0, MB = 0, CC = 0, SB = 0 } = currentStatistic;
+  const totalCount = S + M + B + MB + CC + SB;
+
+  return {
+    S,
+    M,
+    B,
+    MB,
+    CC,
+    SB,
+    totalPoints,
+    totalCount,
+  };
 };

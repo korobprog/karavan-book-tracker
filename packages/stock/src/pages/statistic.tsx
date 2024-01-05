@@ -5,10 +5,12 @@ import { useMemo, useState } from "react";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { HolderType, useAllHolders } from "common/src/services/api/holders";
-import { getStatisticPeriodOptions } from "common/src/services/api/statistic";
+import { getFullStatistic, getStatisticPeriodOptions } from "common/src/services/api/statistic";
 import { bbtRegions } from "common/src/services/regions";
 import { StockBaseLayout } from "../shared/StockBaseLayout";
 import { routes } from "../shared/routes";
+import { calcObjectFields, getObjectFieldsCount } from "common/src/utils/objects";
+import { generatePath } from "react-router-dom";
 
 type Props = {
   currentUser: CurrentUser;
@@ -16,6 +18,7 @@ type Props = {
 
 type DataType = {
   key: string;
+  id: string | null;
   name: string;
   S: number;
   M: number;
@@ -23,6 +26,9 @@ type DataType = {
   MB: number;
   CC: number;
   SB: number;
+  totalCount: number;
+  totalPoints: number;
+  distributorsCount: number;
   children?: DataType[];
 };
 
@@ -35,6 +41,24 @@ const columns: ColumnsType<DataType> = [
     key: "name",
   },
   ...["S", "M", "B", "MB", "CC", "SB"].map((v) => ({ title: v, dataIndex: v, key: v, render })),
+  {
+    title: "Всего книг",
+    dataIndex: "totalCount",
+    key: "totalCount",
+    render,
+  },
+  {
+    title: "Всего очков",
+    dataIndex: "totalPoints",
+    key: "totalPoints",
+    render,
+  },
+  {
+    title: "Распространителей",
+    dataIndex: "distributorsCount",
+    key: "distributorsCount",
+    render,
+  },
 ];
 
 const initialPeriod = new Date().getFullYear().toString();
@@ -59,22 +83,26 @@ export const Statistic = ({ currentUser }: Props) => {
         if (stock.type === HolderType.stock) {
           const region = stock.region || "empty";
           const accRegion = acc.find(({ key }) => key === region);
+          const distributorsCount = getObjectFieldsCount(stock.distributors || {});
 
           const { name, id } = stock;
-          const { S = 0, M = 0, B = 0, MB = 0, CC = 0, SB = 0 } = stock.statistic?.[period] || {};
+          const stockStatistic = getFullStatistic(period, stock.statistic);
 
-          const stockData = { name, id, key: id, region, S, M, B, MB, CC, SB };
+          const stockData = {
+            name,
+            id,
+            key: id,
+            region,
+            ...stockStatistic,
+            distributorsCount,
+          };
 
           if (accRegion) {
             if (!accRegion.children) {
               accRegion.children = [];
             }
-            accRegion.S += S;
-            accRegion.M += M;
-            accRegion.B += B;
-            accRegion.MB += MB;
-            accRegion.CC += CC;
-            accRegion.SB += SB;
+            calcObjectFields(accRegion, "+", stockStatistic);
+            accRegion.distributorsCount += distributorsCount;
 
             accRegion.children.push(stockData);
           } else {
@@ -83,6 +111,7 @@ export const Statistic = ({ currentUser }: Props) => {
               ...stockData,
               name: name,
               key: region,
+              id: null,
             });
             acc[acc.length - 1].children = [stockData];
           }
@@ -99,9 +128,6 @@ export const Statistic = ({ currentUser }: Props) => {
       userDocLoading={userDocLoading}
       avatar={avatar}
     >
-      <Typography.Title className="site-page-title" level={2}>
-        Склады
-      </Typography.Title>
       <Space style={{ marginBottom: 8 }}>
         <Typography.Text>Выберите период </Typography.Text>
         <Select
@@ -116,12 +142,15 @@ export const Statistic = ({ currentUser }: Props) => {
         dataSource={regionStocks}
         pagination={{ pageSize: 100 }}
         rowClassName={(record) => (record.children ? "table-background" : "")}
+        expandable={{ expandRowByClick: true }}
         onRow={(data) => ({
           onClick: (event) => {
-            // navigate to another page
-            console.log("row", data);
+            if (data.id) {
+              navigate(generatePath(routes.statisticStock, { stockId: data.id }));
+            }
           },
         })}
+        style={{ cursor: "pointer" }}
       />
     </StockBaseLayout>
   );

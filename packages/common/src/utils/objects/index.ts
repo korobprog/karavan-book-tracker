@@ -30,3 +30,11 @@ export const calcObjectFields = <Obj extends Record<string, any>>(
   }
   return result as Obj;
 };
+
+export const getObjectFieldsCount = (obj: Record<string, any>) => {
+  let count = 0;
+  for (let _key in obj) {
+    count += 1;
+  }
+  return count;
+};

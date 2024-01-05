@@ -12,6 +12,8 @@ export type HolderBooks = Record<string, BookCount>;
 export type HolderBookPrices = Record<string, BookPrice>;
 
 export type StockDistiributor = {
+  // TODO: remove "?"
+  name?: string;
   books: HolderBooks;
   priceMultiplier?: number;
   account?: number; // счет санкиртанщика (руб.)
@@ -75,6 +77,14 @@ export const $distributors = createStore<WithId<HolderDistributorDoc>[]>([]);
 $stock.on(stockChanged, (_state, stock) => stock);
 $stockLoading.on(stockLoadingChanged, (_state, loading) => loading);
 $distributors.on(distributorsChanged, (_state, distributors) => distributors);
+
+export const useStock = (stockId?: string) => {
+  const [stockDocData, stockDocLoading] = useDocumentData<WithId<HolderStockDoc>>(
+    stockId ? apiRefs.stock(stockId) : null
+  );
+  const stock = usePreloadedData(stockDocData, stockDocLoading);
+  return { stock, stockLoading: stockDocLoading };
+};
 
 export const useStockHolders = (stockId?: string) => {
   const [stockDocData, stockDocLoading] = useDocumentData<WithId<HolderStockDoc>>(
