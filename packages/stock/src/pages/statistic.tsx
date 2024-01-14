@@ -5,11 +5,15 @@ import { useMemo, useState } from "react";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { HolderType, useAllHolders } from "common/src/services/api/holders";
-import { getFullStatistic, getStatisticPeriodOptions } from "common/src/services/api/statistic";
+import {
+  getFullStatistic,
+  getStatisticPeriodOptions,
+  mutateFullStatistic,
+} from "common/src/services/api/statistic";
 import { bbtRegions } from "common/src/services/regions";
 import { StockBaseLayout } from "../shared/StockBaseLayout";
 import { routes } from "../shared/routes";
-import { calcObjectFields, getObjectFieldsCount } from "common/src/utils/objects";
+import { getObjectFieldsCount } from "common/src/utils/objects";
 import { generatePath } from "react-router-dom";
 import { DownloadExcel } from "common/src/features/downloadExcel";
 
@@ -78,12 +82,20 @@ export const Statistic = ({ currentUser }: Props) => {
     setPeriod(value);
   };
 
-  const regionStocks = useMemo(
-    () =>
+  const regionStocks = useMemo(() => {
+    const totalObj = {
+      name: "Всего",
+      id: "total",
+      key: "total",
+      ...getFullStatistic(),
+      distributorsCount: 0,
+    };
+
+    const result =
       holders?.reduce((acc, stock) => {
         if (stock.type === HolderType.stock) {
           const region = stock.region || "empty";
-          const accRegion = acc.find(({ key }) => key === region);
+          let accRegion = acc.find(({ key }) => key === region);
           const distributorsCount = getObjectFieldsCount(stock.distributors || {});
 
           const { name, id } = stock;
@@ -98,11 +110,16 @@ export const Statistic = ({ currentUser }: Props) => {
             distributorsCount,
           };
 
+          // Total row
+          mutateFullStatistic(totalObj, "+", stockData);
+
+          // Region row
           if (accRegion) {
             if (!accRegion.children) {
               accRegion.children = [];
             }
-            calcObjectFields(accRegion, "+", stockStatistic);
+            mutateFullStatistic(stockStatistic, "+", accRegion);
+            Object.assign(accRegion, stockStatistic);
             accRegion.distributorsCount += distributorsCount;
 
             accRegion.children.push(stockData);
@@ -118,9 +135,12 @@ export const Statistic = ({ currentUser }: Props) => {
           }
         }
         return acc;
-      }, [] as DataType[]) || [],
-    [holders, period]
-  );
+      }, [] as DataType[]) || [];
+
+    result.push(totalObj);
+
+    return result;
+  }, [holders, period]);
 
   return (
     <StockBaseLayout
@@ -147,16 +167,18 @@ export const Statistic = ({ currentUser }: Props) => {
         columns={columns}
         dataSource={regionStocks}
         pagination={{ pageSize: 100 }}
-        rowClassName={(record) => (record.children ? "table-background" : "")}
+        rowClassName={(record) =>
+          record.children ? "table-background" : record.key === "total" ? "table-total" : ""
+        }
         expandable={{ expandRowByClick: true }}
         onRow={(data) => ({
           onClick: () => {
-            if (data.id) {
+            if (data.id && data.id !== "total") {
               navigate(generatePath(routes.statisticStock, { stockId: data.id }));
             }
           },
         })}
-        style={{ cursor: "pointer" }}
+        // style={{ cursor: "pointer" }}
         scroll={{ x: "max-content" }}
       />
     </StockBaseLayout>

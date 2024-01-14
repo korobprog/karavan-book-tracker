@@ -11,7 +11,7 @@ export enum BooksCategories {
   mahaBig = "maha_big",
   other = "other",
   sbSet = "sb_set",
-  ccSet = "ccSet",
+  ccSet = "cc_set",
 }
 
 export const mapBooksByCategory: Record<BooksCategories, { shortTitle: keyof BaseStatisticItem }> =

@@ -20,6 +20,17 @@ export type BaseStatisticItem = {
   O: number; // Other
 };
 
+export type StockStatisticItem = {
+  MB: number; // Mahabig
+  B: number; // Big
+  M: number; // Medium
+  S: number; // Small
+  SB: number; // SB set
+  CC: number; // CC set
+  totalPoints: number;
+  totalCount: number;
+};
+
 export const defaultBaseStatistic: BaseStatisticItem = {
   MB: 0,
   B: 0,
@@ -115,8 +126,11 @@ export const calcStaticticPointsSum = (baseStatisticItem?: Partial<BaseStatistic
   return points;
 };
 
-export const getFullStatistic = (period: string, statistic?: BaseStatistic) => {
-  const currentStatistic = statistic?.[period] || {};
+export const getFullStatistic = (
+  period?: string,
+  statistic?: BaseStatistic
+): StockStatisticItem => {
+  const currentStatistic = (period && statistic?.[period]) || {};
   const totalPoints = calcStaticticPointsSum(currentStatistic);
   const { S = 0, M = 0, B = 0, MB = 0, CC = 0, SB = 0 } = currentStatistic;
   const totalCount = S + M + B + MB + CC + SB;
@@ -131,4 +145,18 @@ export const getFullStatistic = (period: string, statistic?: BaseStatistic) => {
     totalPoints,
     totalCount,
   };
+};
+
+export const mutateFullStatistic = (
+  target: StockStatisticItem,
+  operator: "+" | "-",
+  source: Record<string, any>
+) => {
+  for (const keyString in target) {
+    const key = keyString as keyof StockStatisticItem;
+    if (typeof target[key] !== "string" && typeof source[key] !== "string") {
+      if (operator === "+") target[key] = (target[key] || 0) + (source[key] || 0);
+      if (operator === "-") target[key] = (target[key] || 0) - (source[key] || 0);
+    }
+  }
 };

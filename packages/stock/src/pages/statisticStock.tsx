@@ -5,7 +5,11 @@ import { useMemo, useState } from "react";
 import { DownloadExcel } from "common/src/features/downloadExcel";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { useStock } from "common/src/services/api/holders";
-import { getFullStatistic, getStatisticPeriodOptions } from "common/src/services/api/statistic";
+import {
+  getFullStatistic,
+  getStatisticPeriodOptions,
+  mutateFullStatistic,
+} from "common/src/services/api/statistic";
 import { StockBaseLayout } from "../shared/StockBaseLayout";
 import { routes } from "../shared/routes";
 import { useParams } from "react-router-dom";
@@ -74,6 +78,7 @@ export const StatisticStock = ({ currentUser }: Props) => {
   };
 
   const displayedDistributors: DataType[] = useMemo(() => {
+    const total = { ...getFullStatistic(), key: "total", name: "Всего", id: "total" };
     const distributors = stock?.distributors
       ? Object.entries(stock.distributors).map(([key, value]) => ({ ...value, id: key }))
       : [];
@@ -82,6 +87,7 @@ export const StatisticStock = ({ currentUser }: Props) => {
       .filter((distributors) => (distributors.name || "").toLowerCase().includes(searchString))
       .map(({ id, name, statistic }) => {
         const distributorsStatistic = getFullStatistic(period, statistic);
+        mutateFullStatistic(total, "+", distributorsStatistic);
 
         return {
           name: name || "Имя обновится после проведения любой операции с распространителем",
@@ -91,7 +97,13 @@ export const StatisticStock = ({ currentUser }: Props) => {
         };
       });
 
-    return filteredDistributors.sort((a, b) => (a.totalPoints < b.totalPoints ? 1 : -1));
+    const sortedDistibutors = filteredDistributors.sort((a, b) =>
+      a.totalPoints < b.totalPoints ? 1 : -1
+    );
+
+    sortedDistibutors.push(total);
+
+    return sortedDistibutors;
   }, [stock, searchString, period]);
 
   return (
@@ -128,6 +140,7 @@ export const StatisticStock = ({ currentUser }: Props) => {
         columns={columns}
         dataSource={displayedDistributors}
         pagination={{ pageSize: 100 }}
+        rowClassName={(record) => (record.key === "total" ? "table-total" : "")}
         scroll={{ x: "max-content" }}
       />
     </StockBaseLayout>

@@ -31,6 +31,13 @@ const downloadStatistic = <DataType extends BaseDataType>(props: Props<DataType>
 
     dataSource.forEach((data) => {
       const row = worksheet.addRow(data);
+      if (data.key === "total") {
+        row.fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: "e6f4ff" },
+        };
+      }
       if (data.children) {
         row.fill = {
           type: "pattern",
