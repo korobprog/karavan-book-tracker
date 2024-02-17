@@ -31,6 +31,9 @@ import Link from "antd/es/typography/Link";
 
 import printPdfDonations from "common/src/components/forms/profile/pagedonation/printPdfDonations";
 import printPdfDonations88 from "common/src/components/forms/profile/pagedonation/printPdfDonations88";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
+
+
 
 export type PageFormValues = DonationPageDoc;
 
@@ -109,6 +112,9 @@ const PageDonations = ({ currentUser }: Props) => {
   const toggleDisabled = () => {
     setIsChecked(true);
   };
+
+  const navigate = useTransitionNavigate();
+  
   return (
     <>
       <BaseLayout title="Страница для пожертвований" isAdmin backPath={routes.root} avatar={avatar}>
@@ -130,18 +136,14 @@ const PageDonations = ({ currentUser }: Props) => {
         )}
 
         <Space style={{ display: "flex", flexFlow: "column", alignItems: "center" }}>
-          {!isChecked ? (
             <Button
               type="primary"
-              onClick={toggleDisabled}
+              onClick={() => navigate(routes.pageDonationsForm)}
               style={{ marginTop: 16 }}
               icon={<ToolTwoTone />}
             >
               Настроить страницу визитки
             </Button>
-          ) : (
-            ""
-          )}
         </Space>
 
         {donationDocLoading || !initialPageDoc ? (

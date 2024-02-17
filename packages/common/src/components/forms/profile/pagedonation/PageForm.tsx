@@ -60,7 +60,7 @@ export const PageForm = (props: Props) => {
       initialValues={initialValues}
       layout="vertical"
     >
-      <Space style={{ display: "flex", flexFlow: "column", alignItems: "flex-end" }}>
+      <Space style={{ display: "flex", flexFlow: "column", alignItems: "center" }}>
         <Form.Item name={"active"}>
           <Switch
             checkedChildren={<CheckOutlined />}
@@ -70,11 +70,13 @@ export const PageForm = (props: Props) => {
           />
         </Form.Item>
       </Space>
+      <Space direction="vertical" style={{ marginTop: 15, display: "flex", alignItems: "center" }}>
       <Form.Item>
         <Button type="primary" htmlType="submit">
           СОХРАНИТЬ
         </Button>
       </Form.Item>
+      </Space>
       <Space
         direction="horizontal"
         style={{

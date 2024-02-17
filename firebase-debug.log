@@ -1,0 +1,21 @@
+[debug] [2024-01-06T06:33:03.911Z] ----------------------------------------------------------------------
+[debug] [2024-01-06T06:33:03.915Z] Command:       C:\Program Files (x86)\nodejs\node.exe C:\Users\makst\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2024-01-06T06:33:03.915Z] CLI Version:   13.0.2
+[debug] [2024-01-06T06:33:03.916Z] Platform:      win32
+[debug] [2024-01-06T06:33:03.916Z] Node Version:  v20.10.0
+[debug] [2024-01-06T06:33:03.916Z] Time:          Sat Jan 06 2024 16:33:03 GMT+1000 (Владивосток, стандартное время)
+[debug] [2024-01-06T06:33:03.916Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-01-06T06:33:03.923Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-01-06T06:33:03.923Z] > authorizing via signed-in user (korobprog@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\makst\OneDrive\Documents\React\karavan-book-tracker-1
+
