@@ -23,11 +23,6 @@ import whats from "common/src/images/whatsapp.svg";
 import email from "common/src/images/email.svg";
 import link from "common/src/images/link_b.svg";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
-import logo from "../../../../images/logo.png";
-import printPdfDonations from "./printPdfDonations";
-import printPdfDonations88 from "./printPdfDonations88";
-
-const QR_SIZE = 160;
 
 export type PageFormValues = DonationPageDoc;
 
@@ -41,49 +36,20 @@ type Props = {
 export const PageForm = (props: Props) => {
   const { onFinish, initialValues, disabled } = props;
 
-  const { currentUser } = props;
-
-  const userId = currentUser.profile?.id || currentUser.user?.uid;
-  const userName = currentUser.profile?.name;
-
   const [switchState, setSwitchState] = useState(initialValues.active);
 
   const handleSwitchChange = (checked: boolean | ((prevState: boolean) => boolean)) => {
     setSwitchState(checked);
   };
 
-  const { Link } = Typography;
-  const myPageLink = `https://books-donation.web.app/page/${userId}`;
-
   const { Text } = Typography;
   const { TextArea } = Input;
-
-  const downloadQRCode = () => {
-    const canvas = document.getElementById("myqrcode")?.querySelector<HTMLCanvasElement>("canvas");
-    if (canvas) {
-      const url = canvas.toDataURL();
-      const a = document.createElement("a");
-      a.download = "QRCode.png";
-      a.href = url;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }
-  };
 
   const title = {
     titleBank: "Введите названия банка",
     titleCard: "Введите номер карты",
     titleQr: "Введите сслыку на QR",
     titleButton: "Введите свое название",
-  };
-
-  const [value, setValue] = useState(true);
-  console.log("🚀 ~ file: PageForm.tsx:82 ~ PageForm ~ value:", value);
-
-  const onChange = (e: RadioChangeEvent) => {
-    //console.log("radio checked", e.target.value);
-    setValue(e.target.value);
   };
 
   return (
@@ -94,7 +60,7 @@ export const PageForm = (props: Props) => {
       initialValues={initialValues}
       layout="vertical"
     >
-      <Space style={{ display: "flex", flexFlow: "column", alignItems: "flex-end" }}>
+      <Space style={{ display: "flex", flexFlow: "column", alignItems: "center" }}>
         <Form.Item name={"active"}>
           <Switch
             checkedChildren={<CheckOutlined />}
@@ -104,15 +70,13 @@ export const PageForm = (props: Props) => {
           />
         </Form.Item>
       </Space>
-
-      <Alert
-        message="Настройте страницу визитки"
-        description="Вы можете настроить свою страничку пожертвований, а также распечать QR
-      коды для книг в качестве Ваших визиток."
-        type="info"
-        showIcon
-      />
-
+      <Space direction="vertical" style={{ marginTop: 15, display: "flex", alignItems: "center" }}>
+      <Form.Item>
+        <Button type="primary" htmlType="submit">
+          СОХРАНИТЬ
+        </Button>
+      </Form.Item>
+      </Space>
       <Space
         direction="horizontal"
         style={{
@@ -123,41 +87,14 @@ export const PageForm = (props: Props) => {
           marginTop: 25,
         }}
       >
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            СОХРАНИТЬ
-          </Button>
-        </Form.Item>
-        {switchState ? (
-          <Button type="primary" ghost>
-            <Link copyable={{ text: myPageLink }} href={myPageLink} target="_blank">
-              Ваша страница визитки
-            </Link>
-          </Button>
-        ) : (
-          ""
-        )}
+        <Alert
+          message="Настройте страницу визитки"
+          description="Вы можете настроить свою страничку пожертвований, а также распечать QR
+      коды для книг в качестве Ваших визиток."
+          type="info"
+          showIcon
+        />
       </Space>
-
-      {switchState ? (
-        <Space
-          direction="vertical"
-          style={{ display: "flex", flexFlow: "column", alignItems: "center", marginBottom: 15 }}
-        >
-          <Radio.Group name="radiogroup" defaultValue={1} onChange={onChange} value={value}>
-            <Radio value={true}>16 QR</Radio>
-            <Radio value={false}>88 QR</Radio>
-          </Radio.Group>
-          <Button type="primary" ghost icon={<PrinterTwoTone />}>
-            <Link onClick={value ? printPdfDonations : printPdfDonations88} target="_blank">
-              распечатать визитки
-            </Link>
-          </Button>
-        </Space>
-      ) : (
-        ""
-      )}
-
       <Form.Item name={"greetingText"} label="Текст приветствия">
         <TextArea
           showCount
@@ -355,32 +292,6 @@ export const PageForm = (props: Props) => {
           </Form.Item>
         </Space>
       </Space>
-
-      {switchState ? (
-        <div id="myqrcode">
-          <Space
-            direction="vertical"
-            style={{ marginTop: 15, display: "flex", alignItems: "center" }}
-          >
-            <Text italic>{userName}, это Ваш QR странички донатов</Text>
-            <QRCode
-              className="centred"
-              value={myPageLink}
-              bgColor="#fff"
-              style={{ marginBottom: 16 }}
-              errorLevel="H"
-              size={QR_SIZE}
-              iconSize={QR_SIZE / 4}
-              icon={logo}
-            />
-            <Button type="primary" onClick={downloadQRCode}>
-              Скачать QR на устройство
-            </Button>
-          </Space>
-        </div>
-      ) : (
-        ""
-      )}
       <Divider dashed />
       <Space direction="vertical" style={{ marginTop: 15, display: "flex", alignItems: "center" }}>
         <Form.Item>

@@ -26,7 +26,7 @@ export const Reports = ({ currentUser }: Props) => {
     sheetId: process.env.REACT_APP_GOOGLE_SHEETS_ID as string,
   });
   const avatar = profile?.avatar;
-  console.log("🚀 ~ file: reports.tsx:28 ~ Reports ~ avatar:", avatar);
+
   const { operationsDocData, loading: operationLoading } = useOperations();
 
   const onAddOperation = () => {
