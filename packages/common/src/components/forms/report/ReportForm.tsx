@@ -15,8 +15,6 @@ import {
 import { DatePicker } from "common/src/components/DatePicker";
 import { PlusOutlined, MinusOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
 
-import { DatePicker } from "common/src/components/DatePicker";
-
 import { useUser } from "common/src/services/api/useUser";
 import * as storage from "common/src/services/localStorage/reportBooks";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";

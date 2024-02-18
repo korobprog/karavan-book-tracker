@@ -7,6 +7,7 @@ import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavig
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
+import type { CheckboxProps } from "antd";
 
 type Props = {
   currentUser: CurrentUser;
@@ -27,6 +28,7 @@ export const Registration = ({ currentUser }: Props) => {
   const [createUserWithEmailAndPassword, , , error] = useCreateUserWithEmailAndPassword(auth);
   const navigate = useTransitionNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [ofPolicay, onPolicay] = useState(false);
 
   useEffect(() => {
     // Пользователь вошел
@@ -47,6 +49,10 @@ export const Registration = ({ currentUser }: Props) => {
   };
 
   const { Title, Text } = Typography;
+
+  const onChange: CheckboxProps["onChange"] = (e) => {
+    onPolicay(e.target.checked);
+  };
 
   return (
     <BaseLayout title="Регистрация" headerActions={[]}>
@@ -109,6 +115,7 @@ export const Registration = ({ currentUser }: Props) => {
         </Form.Item>
         <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>
           <Checkbox>Запомни меня</Checkbox>
+          <Checkbox onChange={onChange}>Согласен на политику конфиденциальности</Checkbox>
         </Form.Item>
 
         <Space direction="vertical" align="center" style={{ width: "100%" }}>

@@ -8,6 +8,7 @@ import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavig
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { GoogleOutlined } from "@ant-design/icons";
 import { BaseLayout } from "common/src/components/BaseLayout";
+import type { CheckboxProps } from "antd";
 
 type Props = {
   currentUser: CurrentUser;
@@ -19,6 +20,7 @@ export const Auth = ({ currentUser }: Props) => {
   const [signInWithEmailAndPassword, , , emailError] = useSignInWithEmailAndPassword(auth);
   const navigate = useTransitionNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [ofPolicay, onPolicay] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -38,6 +40,10 @@ export const Auth = ({ currentUser }: Props) => {
   };
 
   const { Title, Text } = Typography;
+
+  const onChange: CheckboxProps["onChange"] = (e) => {
+    onPolicay(e.target.checked);
+  };
 
   return (
     <BaseLayout title="Учет книг" headerActions={[]}>
@@ -74,6 +80,7 @@ export const Auth = ({ currentUser }: Props) => {
         </Form.Item>
         <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>
           <Checkbox>Запомни меня</Checkbox>
+          <Checkbox onChange={onChange}>Согласен на политику конфиденциальности</Checkbox>
         </Form.Item>
         <Form.Item
           wrapperCol={{ offset: 8, span: 16 }}
@@ -84,7 +91,6 @@ export const Auth = ({ currentUser }: Props) => {
               Войти
             </Button>
             <Link to={routes.registration}>Регистрация</Link>
-            <Link to={routes.resetpassemail}>Восстановить пароль</Link>
           </Space>
         </Form.Item>
         <Button
