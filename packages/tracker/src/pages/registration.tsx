@@ -48,6 +48,19 @@ export const Registration = ({ currentUser }: Props) => {
 
   const { Title, Text } = Typography;
 
+  const tailFormItemLayout = {
+    wrapperCol: {
+      xs: {
+        span: 24,
+        offset: 0,
+      },
+      sm: {
+        span: 16,
+        offset: 8,
+      },
+    },
+  };
+
   return (
     <BaseLayout title="Регистрация" headerActions={[]}>
       <Title className="site-page-title" level={2}>
@@ -111,6 +124,24 @@ export const Registration = ({ currentUser }: Props) => {
           <Checkbox>Запомни меня</Checkbox>
         </Form.Item>
 
+        <Form.Item
+          name="agreement"
+          valuePropName="checked"
+          rules={[
+            {
+              validator: (_, value) =>
+                value
+                  ? Promise.resolve()
+                  : Promise.reject(new Error("Следует принять соглашение для регистрации")),
+            },
+          ]}
+          {...tailFormItemLayout}
+        >
+          <Checkbox>
+            Я согласен(а) и ознакомлен(на) с <a href="">соглашением</a> и политикой
+            конфиденциальности
+          </Checkbox>
+        </Form.Item>
         <Space direction="vertical" align="center" style={{ width: "100%" }}>
           <Button type="primary" htmlType="submit" block loading={isSubmitting}>
             Зарегистрироваться и войти
