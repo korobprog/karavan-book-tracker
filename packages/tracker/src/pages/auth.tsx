@@ -45,6 +45,19 @@ export const Auth = ({ currentUser }: Props) => {
     onPolicay(e.target.checked);
   };
 
+  const tailFormItemLayout = {
+    wrapperCol: {
+      xs: {
+        span: 24,
+        offset: 0,
+      },
+      sm: {
+        span: 16,
+        offset: 8,
+      },
+    },
+  };
+
   return (
     <BaseLayout title="Учет книг" headerActions={[]}>
       <Title className="site-page-title" level={2}>
@@ -80,7 +93,13 @@ export const Auth = ({ currentUser }: Props) => {
         </Form.Item>
         <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>
           <Checkbox>Запомни меня</Checkbox>
-          <Checkbox onChange={onChange}>Согласен на политику конфиденциальности</Checkbox>
+        </Form.Item>
+        <Form.Item {...tailFormItemLayout}>
+          <Checkbox onChange={onChange}>
+            <Link to={routes.privacy}>
+              Я согласен(а) и ознакомлен(на) с соглашением политикой конфиденциальности и условий
+            </Link>
+          </Checkbox>
         </Form.Item>
         <Form.Item
           wrapperCol={{ offset: 8, span: 16 }}
@@ -93,17 +112,22 @@ export const Auth = ({ currentUser }: Props) => {
             <Link to={routes.registration}>Регистрация</Link>
           </Space>
         </Form.Item>
+
         <Button
           className="centred"
           icon={<GoogleOutlined />}
           type="primary"
           onClick={() => signInWithGoogle()}
+          disabled={!ofPolicay}
         >
           Войти через Google
         </Button>
         {googleError && (
           <Text type="danger">При входе произошла ошибка: {googleError.message}</Text>
         )}
+        <Space direction="vertical" align="center" style={{ width: "100%" }}>
+          {!ofPolicay && <Text type="danger">Следует принять соглашение для регистрации</Text>}
+        </Space>
       </Form>
     </BaseLayout>
   );
