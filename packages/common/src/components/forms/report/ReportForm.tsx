@@ -12,10 +12,7 @@ import {
   Typography,
   message,
 } from "antd";
-import { DatePicker } from "common/src/components/DatePicker";
 import { PlusOutlined, MinusOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
-
-import { DatePicker } from "common/src/components/DatePicker";
 
 import { useUser } from "common/src/services/api/useUser";
 import * as storage from "common/src/services/localStorage/reportBooks";
@@ -24,6 +21,7 @@ import { $books, $booksLoading, Book } from "common/src/services/books";
 import moment from "moment";
 import { calcBooksCountsFromValues, calcFormValuesFromBooks, ReportFormValues } from "./helpers";
 import { SelectLocation } from "../../../features/select-location/SelectLocation";
+import { DatePicker } from "../../DatePicker";
 
 type Props = {
   currentUser: CurrentUser;
