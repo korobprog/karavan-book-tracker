@@ -138,8 +138,9 @@ export const Registration = ({ currentUser }: Props) => {
           {...tailFormItemLayout}
         >
           <Checkbox>
-            Я согласен(а) и ознакомлен(на) с <Link to={routes.privacy}>соглашением</Link> и
-            политикой конфиденциальности
+            <Link to={routes.privacy}>
+              Я согласен(а) и ознакомлен(на) с соглашением политикой конфиденциальности и условий
+            </Link>{" "}
           </Checkbox>
         </Form.Item>
         <Space direction="vertical" align="center" style={{ width: "100%" }}>
