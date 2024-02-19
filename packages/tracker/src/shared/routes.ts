@@ -13,4 +13,5 @@ export const routes = {
   teamEdit: "/team/edit",
   pageDonations: "/page-donations",
   pageDonationsForm: "/page-donations-form",
+  privacy: "/privacy",
 };

@@ -17,12 +17,18 @@ import DonationsPage from "./pages/donationsPage";
 import { useCurrentUser } from "common/src/services/api/useCurrentUser";
 import { useBooks } from "common/src/services/books";
 import { Reset } from "./pages/resetpass";
+import { Privacy } from "./pages/privacy";
 
 import "antd/dist/reset.css";
 import "./App.less";
 import DonationsPageForm from "./pages/donationsPageForm";
 
-const routesWithoutRedirect = [routes.registration, routes.auth, routes.resetpassemail];
+const routesWithoutRedirect = [
+  routes.registration,
+  routes.auth,
+  routes.resetpassemail,
+  routes.privacy,
+];
 
 function App() {
   const currentUser = useCurrentUser();
@@ -66,6 +72,7 @@ function App() {
         <Route path={routes.resetpassemail} element={<Reset currentUser={currentUser} />} />
         <Route path={routes.team} element={<Team currentUser={currentUser} />} />
         <Route path={routes.teamEdit} element={<TeamEdit currentUser={currentUser} />} />
+        <Route path={routes.privacy} element={<Privacy />} />
         <Route
           path={routes.pageDonationsForm}
           element={
