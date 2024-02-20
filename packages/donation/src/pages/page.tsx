@@ -1,5 +1,5 @@
 import React from "react";
-import { Divider, QRCode, Typography, Image, Avatar, Button, Space, Row, Col } from "antd";
+import { Divider, QRCode, Typography, Image, Avatar, Button, Space, Row, Col, Tabs } from "antd";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { BankTwoTone, CreditCardOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
@@ -69,7 +69,9 @@ export const Page = () => {
       </BaseLayout>
     );
   }
-
+  const onChange = (key: string) => {
+    console.log(key);
+  };
   return (
     <BaseLayout title="Book Donation" headerActions={[]}>
       {plug ? (
@@ -89,42 +91,64 @@ export const Page = () => {
               <pre>Вы можете пожертвовать на печать и выкуп книг</pre>
             )}
           </Paragraph>
-          {initialValues.banks.map(({ bankName, cardNumber, qrLink }) => (
-            <Row justify="center" align="top">
-              <Space key={bankName}>
-                <Col span={24}>
-                  {bankName && <Text strong>{bankName}</Text>}
-                  {cardNumber && (
-                    <Paragraph>
-                      <CreditCardOutlined />
-                      <Text copyable={{ tooltips: false }} style={{ fontSize: "150%" }} code>
-                        {cardNumber}
-                      </Text>
-                    </Paragraph>
-                  )}
-                  {qrLink && (
-                    <>
-                      {buttonBank ? (
-                        <Button href={qrLink} icon={<BankTwoTone />}>
-                          {buttonBank} {bankName}
-                        </Button>
-                      ) : (
-                        <Button style={{ marginBottom: 10 }} href={qrLink} icon={<BankTwoTone />}>
-                          {textButton} {bankName}
-                        </Button>
-                      )}
-                      <QRCode
-                        className="centred"
-                        value={qrLink}
-                        bgColor="#fff"
-                        style={{ marginBottom: 16 }}
-                      />
-                    </>
-                  )}
-                </Col>
-              </Space>
-            </Row>
-          ))}
+          <Tabs
+            onChange={onChange}
+            type="card"
+            tabPosition={"top"}
+            items={initialValues.banks.map((n, i) => {
+              const id = String(i + 1);
+              return {
+                label: `${n.bankName} `,
+                key: id,
+                children: (
+                  <>
+                    <Row justify="center" align="top">
+                      <Space key={n.bankName}>
+                        <Col span={24}>
+                          {n.qrLink && (
+                            <>
+                              {buttonBank ? (
+                                <Button href={n.qrLink} icon={<BankTwoTone />}>
+                                  {buttonBank} {n.bankName}
+                                </Button>
+                              ) : (
+                                <Button
+                                  style={{ marginBottom: 10 }}
+                                  href={n.qrLink}
+                                  icon={<BankTwoTone />}
+                                >
+                                  {textButton} {n.bankName}
+                                </Button>
+                              )}
+                              {n.cardNumber && (
+                                <Paragraph>
+                                  <CreditCardOutlined />
+                                  <Text
+                                    copyable={{ tooltips: false }}
+                                    style={{ fontSize: "150%" }}
+                                    code
+                                  >
+                                    {n.cardNumber}
+                                  </Text>
+                                </Paragraph>
+                              )}
+                              <QRCode
+                                className="centred"
+                                value={n.qrLink}
+                                bgColor="#fff"
+                                style={{ marginBottom: 16 }}
+                              />
+                            </>
+                          )}
+                        </Col>
+                      </Space>
+                    </Row>
+                  </>
+                ),
+              };
+            })}
+          />
+
           <Divider dashed />
           <Space
             direction="vertical"

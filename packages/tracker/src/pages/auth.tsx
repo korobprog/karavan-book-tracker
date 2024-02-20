@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Button, Checkbox, Typography, Space } from "antd";
+import { Form, Input, Button, Checkbox, Typography, Space, Alert } from "antd";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { Link } from "react-router-dom";
@@ -20,7 +20,6 @@ export const Auth = ({ currentUser }: Props) => {
   const [signInWithEmailAndPassword, , , emailError] = useSignInWithEmailAndPassword(auth);
   const navigate = useTransitionNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [ofPolicay, onPolicay] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -40,10 +39,6 @@ export const Auth = ({ currentUser }: Props) => {
   };
 
   const { Title, Text } = Typography;
-
-  const onChange: CheckboxProps["onChange"] = (e) => {
-    onPolicay(e.target.checked);
-  };
 
   const tailFormItemLayout = {
     wrapperCol: {
@@ -94,13 +89,6 @@ export const Auth = ({ currentUser }: Props) => {
         <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>
           <Checkbox>Запомни меня</Checkbox>
         </Form.Item>
-        <Form.Item {...tailFormItemLayout}>
-          <Checkbox onChange={onChange}>
-            <Link to={routes.privacy}>
-              Я согласен(а) и ознакомлен(на) с соглашением политикой конфиденциальности и условий
-            </Link>
-          </Checkbox>
-        </Form.Item>
         <Form.Item
           wrapperCol={{ offset: 8, span: 16 }}
           help={emailError && <Text type="danger">Неверный логин или пароль</Text>}
@@ -118,16 +106,23 @@ export const Auth = ({ currentUser }: Props) => {
           icon={<GoogleOutlined />}
           type="primary"
           onClick={() => signInWithGoogle()}
-          disabled={!ofPolicay}
         >
           Войти через Google
         </Button>
         {googleError && (
           <Text type="danger">При входе произошла ошибка: {googleError.message}</Text>
         )}
-        <Space direction="vertical" align="center" style={{ width: "100%" }}>
-          {!ofPolicay && <Text type="danger">Следует принять соглашение для регистрации</Text>}
-        </Space>
+        <Form.Item {...tailFormItemLayout}>
+          <Space direction="vertical" style={{ width: "100%", marginTop: 20 }}>
+            <Text italic>
+              Нажав "Войти с помощью Email/Google" выше, вы подтверждаете, что прочитали и поняли, а
+              также соглашаетесь с &nbsp;
+              <Link to={routes.privacyPolicy}>cоглашением политикой конфиденциальности</Link>{" "}
+              и&nbsp;
+              <Link to={routes.privacy}>правила и условия</Link>
+            </Text>
+          </Space>
+        </Form.Item>
       </Form>
     </BaseLayout>
   );

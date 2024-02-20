@@ -8,7 +8,7 @@ export const Privacy = () => {
   return (
     <BaseLayout title="Регистрация" headerActions={[]} backPath={routes.registration}>
       <Title className="site-page-title" level={2}>
-        Политика конфиденциальности
+        Правила и условия
       </Title>
       <Title className="site-page-title" level={3}>
         Условия использования
