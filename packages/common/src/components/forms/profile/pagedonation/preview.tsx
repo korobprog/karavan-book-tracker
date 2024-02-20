@@ -78,41 +78,28 @@ export const Preview = (props: Props) => {
                 <Row justify="center" align="top">
                   <Space key={n.bankName}>
                     <Col span={24}>
-                      {n.qrLink && (
-                        <>
-                          {buttonBank ? (
-                            <Button href={n.qrLink} icon={<BankTwoTone />}>
-                              {buttonBank} {n.bankName}
-                            </Button>
-                          ) : (
-                            <Button
-                              style={{ marginBottom: 10 }}
-                              href={n.qrLink}
-                              icon={<BankTwoTone />}
-                            >
-                              {textButton} {n.bankName}
-                            </Button>
-                          )}
-                          {n.cardNumber && (
-                            <Paragraph>
-                              <CreditCardOutlined />
-                              <Text
-                                copyable={{ tooltips: false }}
-                                style={{ fontSize: "150%" }}
-                                code
-                              >
-                                {n.cardNumber}
-                              </Text>
-                            </Paragraph>
-                          )}
-                          <QRCode
-                            className="centred"
-                            value={n.qrLink}
-                            bgColor="#fff"
-                            style={{ marginBottom: 16 }}
-                          />
-                        </>
-                      )}
+                      <>
+                        <Button
+                          style={{ marginBottom: 10 }}
+                          href={n.qrLink!}
+                          icon={<BankTwoTone />}
+                        >
+                          {textButton} {n.bankName}
+                        </Button>
+                        <Paragraph>
+                          <CreditCardOutlined />
+                          <Text copyable={{ tooltips: false }} style={{ fontSize: "150%" }} code>
+                            {n.cardNumber!}
+                          </Text>
+                        </Paragraph>
+
+                        <QRCode
+                          className="centred"
+                          value={n.qrLink!}
+                          bgColor="#fff"
+                          style={{ marginBottom: 16 }}
+                        />
+                      </>
                     </Col>
                   </Space>
                 </Row>
