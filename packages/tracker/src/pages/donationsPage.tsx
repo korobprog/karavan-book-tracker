@@ -2,38 +2,17 @@ import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { DonationPageDoc, editDonationPageDoc } from "common/src/services/api/donation";
 import { apiRefs } from "common/src/services/api/refs";
 import { useDocumentData } from "react-firebase-hooks/firestore";
-import {
-  Button,
-  Form,
-  QRCode,
-  Radio,
-  RadioChangeEvent,
-  Space,
-  Typography,
-  notification,
-} from "antd";
+import { Button, Form, QRCode, Space, Typography, notification } from "antd";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { routes } from "../shared/routes";
 import { PageForm } from "common/src/components/forms/profile/pagedonation/PageForm";
 import PageMenu from "common/src/components/forms/profile/pagedonation/PageMenu";
 import { Preview } from "common/src/components/forms/profile/pagedonation/preview";
 import { Switch } from "antd";
-import {
-  CloseOutlined,
-  EyeInvisibleFilled,
-  EyeTwoTone,
-  PrinterTwoTone,
-  ToolTwoTone,
-} from "@ant-design/icons";
+import { EyeInvisibleFilled, EyeTwoTone, ToolTwoTone } from "@ant-design/icons";
 import { useState } from "react";
 import logo from "common/src/images/logo.png";
-import Link from "antd/es/typography/Link";
-
-import printPdfDonations from "common/src/components/forms/profile/pagedonation/printPdfDonations";
-import printPdfDonations88 from "common/src/components/forms/profile/pagedonation/printPdfDonations88";
 import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
-
-
 
 export type PageFormValues = DonationPageDoc;
 
@@ -114,7 +93,7 @@ const PageDonations = ({ currentUser }: Props) => {
   };
 
   const navigate = useTransitionNavigate();
-  
+
   return (
     <>
       <BaseLayout title="Страница для пожертвований" isAdmin backPath={routes.root} avatar={avatar}>
@@ -136,14 +115,14 @@ const PageDonations = ({ currentUser }: Props) => {
         )}
 
         <Space style={{ display: "flex", flexFlow: "column", alignItems: "center" }}>
-            <Button
-              type="primary"
-              onClick={() => navigate(routes.pageDonationsForm)}
-              style={{ marginTop: 16 }}
-              icon={<ToolTwoTone />}
-            >
-              Настроить страницу визитки
-            </Button>
+          <Button
+            type="primary"
+            onClick={() => navigate(routes.pageDonationsForm)}
+            style={{ marginTop: 16 }}
+            icon={<ToolTwoTone />}
+          >
+            Настроить страницу визитки
+          </Button>
         </Space>
 
         {donationDocLoading || !initialPageDoc ? (

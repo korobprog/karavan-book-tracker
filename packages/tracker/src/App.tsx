@@ -18,6 +18,7 @@ import { useCurrentUser } from "common/src/services/api/useCurrentUser";
 import { useBooks } from "common/src/services/books";
 import { Reset } from "./pages/resetpass";
 import { Privacy } from "./pages/privacy";
+import { PrivacyPolicy } from "./pages/privacyPolicy";
 
 import "antd/dist/reset.css";
 import "./App.less";
@@ -28,6 +29,7 @@ const routesWithoutRedirect = [
   routes.auth,
   routes.resetpassemail,
   routes.privacy,
+  routes.privacyPolicy,
 ];
 
 function App() {
@@ -73,6 +75,7 @@ function App() {
         <Route path={routes.team} element={<Team currentUser={currentUser} />} />
         <Route path={routes.teamEdit} element={<TeamEdit currentUser={currentUser} />} />
         <Route path={routes.privacy} element={<Privacy />} />
+        <Route path={routes.privacyPolicy} element={<PrivacyPolicy />} />
         <Route
           path={routes.pageDonationsForm}
           element={
