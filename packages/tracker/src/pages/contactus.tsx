@@ -1,7 +1,7 @@
 import { Button, Divider, Typography } from "antd";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { routes } from "../shared/routes";
-import Link from "antd/es/typography/Link";
+
 import { MessageOutlined } from "@ant-design/icons";
 
 export const ContactUs = () => {
