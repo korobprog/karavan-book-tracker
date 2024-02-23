@@ -79,19 +79,27 @@ export const Preview = (props: Props) => {
                   <Space key={n.bankName}>
                     <Col span={24}>
                       <>
-                        <Button
-                          style={{ marginBottom: 10 }}
-                          href={n.qrLink!}
-                          icon={<BankTwoTone />}
-                        >
-                          {textButton} {n.bankName}
-                        </Button>
-                        <Paragraph>
-                          <CreditCardOutlined />
-                          <Text copyable={{ tooltips: false }} style={{ fontSize: "150%" }} code>
-                            {n.cardNumber!}
-                          </Text>
-                        </Paragraph>
+                        {n.qrLink ? (
+                          <Button
+                            style={{ marginBottom: 10 }}
+                            href={n.qrLink!}
+                            icon={<BankTwoTone />}
+                          >
+                            {textButton} {n.bankName}
+                          </Button>
+                        ) : (
+                          ""
+                        )}
+                        {n.cardNumber ? (
+                          <Paragraph>
+                            <CreditCardOutlined />
+                            <Text copyable={{ tooltips: false }} style={{ fontSize: "150%" }} code>
+                              {n.cardNumber!}
+                            </Text>
+                          </Paragraph>
+                        ) : (
+                          ""
+                        )}
 
                         <QRCode
                           className="centred"

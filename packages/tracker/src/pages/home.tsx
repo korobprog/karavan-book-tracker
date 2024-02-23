@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Divider, Typography } from "antd";
+import { Button, Divider, Space, Typography } from "antd";
 import {
   ReadOutlined,
   UserAddOutlined,
@@ -17,7 +17,7 @@ import { BaseLayout } from "common/src/components/BaseLayout";
 type Props = {
   currentUser: CurrentUser;
 };
-
+const { Title, Text, Paragraph } = Typography;
 export const Home = ({ currentUser }: Props) => {
   const { userDocLoading, profile, user } = currentUser;
   const navigate = useTransitionNavigate();
@@ -55,17 +55,6 @@ export const Home = ({ currentUser }: Props) => {
       </Button>
       <Divider dashed />
       <Button
-        href="https://t.me/karavanBook_bot"
-        target="_blank"
-        block
-        size="large"
-        icon={<MessageOutlined />}
-        type="dashed"
-      >
-        Отправить историю / поддержка
-      </Button>
-      <Divider dashed />
-      <Button
         href="https://sankirtana-map.web.app"
         target="_blank"
         block
@@ -97,6 +86,20 @@ export const Home = ({ currentUser }: Props) => {
         Вторая волна
       </Button>
       <Divider dashed />
+      <Button
+        onClick={() => navigate(routes.contactUs)}
+        target="_blank"
+        block
+        size="large"
+        icon={<MessageOutlined />}
+        type="link"
+      >
+        Связаться с нами
+      </Button>
+      <Divider dashed />
+      <Space direction="vertical" style={{ marginTop: 15, display: "flex", alignItems: "center" }}>
+        <Text italic>v 1.1.0</Text>
+      </Space>
     </BaseLayout>
   );
 };

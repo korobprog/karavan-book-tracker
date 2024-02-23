@@ -106,23 +106,31 @@ export const Page = () => {
                       <Space key={n.bankName}>
                         <Col span={24}>
                           <>
-                            <Button
-                              style={{ marginBottom: 10 }}
-                              href={n.qrLink!}
-                              icon={<BankTwoTone />}
-                            >
-                              {textButton} {n.bankName}
-                            </Button>
-                            <Paragraph>
-                              <CreditCardOutlined />
-                              <Text
-                                copyable={{ tooltips: false }}
-                                style={{ fontSize: "150%" }}
-                                code
+                            {n.qrLink ? (
+                              <Button
+                                style={{ marginBottom: 10 }}
+                                href={n.qrLink!}
+                                icon={<BankTwoTone />}
                               >
-                                {n.cardNumber!}
-                              </Text>
-                            </Paragraph>
+                                {textButton} {n.bankName}
+                              </Button>
+                            ) : (
+                              ""
+                            )}
+                            {n.cardNumber ? (
+                              <Paragraph>
+                                <CreditCardOutlined />
+                                <Text
+                                  copyable={{ tooltips: false }}
+                                  style={{ fontSize: "150%" }}
+                                  code
+                                >
+                                  {n.cardNumber!}
+                                </Text>
+                              </Paragraph>
+                            ) : (
+                              ""
+                            )}
 
                             <QRCode
                               className="centred"
