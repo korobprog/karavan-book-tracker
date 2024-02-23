@@ -23,6 +23,7 @@ import { PrivacyPolicy } from "./pages/privacyPolicy";
 import "antd/dist/reset.css";
 import "./App.less";
 import DonationsPageForm from "./pages/donationsPageForm";
+import { ContactUs } from "./pages/contactus";
 
 const routesWithoutRedirect = [
   routes.registration,
@@ -30,6 +31,7 @@ const routesWithoutRedirect = [
   routes.resetpassemail,
   routes.privacy,
   routes.privacyPolicy,
+  routes.contactUs,
 ];
 
 function App() {
@@ -76,6 +78,7 @@ function App() {
         <Route path={routes.teamEdit} element={<TeamEdit currentUser={currentUser} />} />
         <Route path={routes.privacy} element={<Privacy />} />
         <Route path={routes.privacyPolicy} element={<PrivacyPolicy />} />
+        <Route path={routes.contactUs} element={<ContactUs />} />
         <Route
           path={routes.pageDonationsForm}
           element={

@@ -15,4 +15,5 @@ export const routes = {
   pageDonationsForm: "/page-donations-form",
   privacy: "/privacy",
   privacyPolicy: "/privacy-policy",
+  contactUs: "/contact-us",
 };
