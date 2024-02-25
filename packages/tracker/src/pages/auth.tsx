@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Button, Checkbox, Typography, Space } from "antd";
+import { Form, Input, Button, Checkbox, Typography, Space, Alert } from "antd";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { Link } from "react-router-dom";
@@ -8,6 +8,7 @@ import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavig
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { GoogleOutlined } from "@ant-design/icons";
 import { BaseLayout } from "common/src/components/BaseLayout";
+import type { CheckboxProps } from "antd";
 
 type Props = {
   currentUser: CurrentUser;
@@ -38,6 +39,19 @@ export const Auth = ({ currentUser }: Props) => {
   };
 
   const { Title, Text } = Typography;
+
+  const tailFormItemLayout = {
+    wrapperCol: {
+      xs: {
+        span: 24,
+        offset: 0,
+      },
+      sm: {
+        span: 16,
+        offset: 8,
+      },
+    },
+  };
 
   return (
     <BaseLayout title="Учет книг" headerActions={[]}>
@@ -84,9 +98,9 @@ export const Auth = ({ currentUser }: Props) => {
               Войти
             </Button>
             <Link to={routes.registration}>Регистрация</Link>
-            <Link to={routes.resetpassemail}>Восстановить пароль</Link>
           </Space>
         </Form.Item>
+
         <Button
           className="centred"
           icon={<GoogleOutlined />}
@@ -98,6 +112,17 @@ export const Auth = ({ currentUser }: Props) => {
         {googleError && (
           <Text type="danger">При входе произошла ошибка: {googleError.message}</Text>
         )}
+        <Form.Item {...tailFormItemLayout}>
+          <Space direction="vertical" style={{ width: "100%", marginTop: 20 }}>
+            <Text italic>
+              Нажав "Войти с помощью Email/Google" выше, вы подтверждаете, что прочитали и поняли, а
+              также соглашаетесь с &nbsp;
+              <Link to={routes.privacyPolicy}>cоглашением политикой конфиденциальности</Link>{" "}
+              и&nbsp;
+              <Link to={routes.privacy}>правила и условия</Link>
+            </Text>
+          </Space>
+        </Form.Item>
       </Form>
     </BaseLayout>
   );

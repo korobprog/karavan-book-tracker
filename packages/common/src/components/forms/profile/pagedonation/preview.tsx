@@ -5,10 +5,9 @@ import whats from "common/src/images/whatsapp.svg";
 import email from "common/src/images/email.svg";
 import link from "common/src/images/link_b.svg";
 import logo from "common/src/images/logo.png";
-import { Divider, QRCode, Typography, Image, Avatar, Button, Space } from "antd";
+import { Divider, QRCode, Typography, Image, Avatar, Button, Space, Row, Tabs, Col } from "antd";
 import { CurrentUser } from "../../../../services/api/useCurrentUser";
 import { BankTwoTone, CreditCardOutlined } from "@ant-design/icons";
-import React from "react";
 
 type Props = {
   onFinish: (formValues: PageFormValues) => Promise<void>;
@@ -43,11 +42,13 @@ export const Preview = (props: Props) => {
     socialMail,
     buttonBank,
   } = initialValues;
-  console.log("🚀 ~ file: preview.tsx:36 ~ Preview ~ initialValues:", initialValues);
 
   const { Paragraph, Text, Link, Title } = Typography;
   const textButton = "OnlinePay";
   const { pageId } = useParams<{ pageId: string }>();
+  const onChange = (key: string) => {
+    console.log(key);
+  };
   return (
     <>
       <Space style={{ display: "flex", justifyContent: "center" }}>
@@ -63,48 +64,58 @@ export const Preview = (props: Props) => {
           <pre>Вы можете пожертвовать на печать и выкуп книг</pre>
         )}
       </Paragraph>
-      {initialValues.banks.map(({ bankName, cardNumber, qrLink }) => (
-        <Space
-          key={bankName}
-          style={{
-            display: "flex",
-            marginBottom: 8,
-            flexFlow: "column nowrap",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          align="baseline"
-        >
-          {bankName && <Text strong>{bankName}</Text>}
-          {cardNumber && (
-            <Paragraph>
-              <CreditCardOutlined />
-              <Text copyable={{ tooltips: false }} style={{ fontSize: "150%" }} code>
-                {cardNumber}
-              </Text>
-            </Paragraph>
-          )}
-          {qrLink && (
-            <>
-              {buttonBank ? (
-                <Button href={qrLink} icon={<BankTwoTone />}>
-                  {buttonBank} {bankName}
-                </Button>
-              ) : (
-                <Button href={qrLink} icon={<BankTwoTone />}>
-                  {textButton} {bankName}
-                </Button>
-              )}
-              <QRCode
-                className="centred"
-                value={qrLink}
-                bgColor="#fff"
-                style={{ marginBottom: 16 }}
-              />
-            </>
-          )}
-        </Space>
-      ))}
+      <Tabs
+        onChange={onChange}
+        type="card"
+        tabPosition={"top"}
+        items={initialValues.banks.map((n, i) => {
+          const id = String(i + 1);
+          return {
+            label: `${n.bankName} `,
+            key: id,
+            children: (
+              <>
+                <Row justify="center" align="top">
+                  <Space key={n.bankName}>
+                    <Col span={24}>
+                      <>
+                        {n.qrLink ? (
+                          <Button
+                            style={{ marginBottom: 10 }}
+                            href={n.qrLink!}
+                            icon={<BankTwoTone />}
+                          >
+                            {textButton} {n.bankName}
+                          </Button>
+                        ) : (
+                          ""
+                        )}
+                        {n.cardNumber ? (
+                          <Paragraph>
+                            <CreditCardOutlined />
+                            <Text copyable={{ tooltips: false }} style={{ fontSize: "150%" }} code>
+                              {n.cardNumber!}
+                            </Text>
+                          </Paragraph>
+                        ) : (
+                          ""
+                        )}
+
+                        <QRCode
+                          className="centred"
+                          value={n.qrLink!}
+                          bgColor="#fff"
+                          style={{ marginBottom: 16 }}
+                        />
+                      </>
+                    </Col>
+                  </Space>
+                </Row>
+              </>
+            ),
+          };
+        })}
+      />
       <Divider dashed />
       <Space
         style={{
@@ -116,9 +127,7 @@ export const Preview = (props: Props) => {
           alignItems: "flex-start",
         }}
       >
-        {socialTelegram || socialWhats || socialMail || socialLink ? (
-          <Text>My contacts</Text>
-        ) : null}
+        {socialTelegram || socialWhats || socialMail || socialLink ? <Text>My contact</Text> : null}
         {!telegram || socialTelegram ? (
           <Paragraph>
             <Image alt="socialTelegram" src={telegram} height={30} width={30} preview={false} />

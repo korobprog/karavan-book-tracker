@@ -17,11 +17,22 @@ import DonationsPage from "./pages/donationsPage";
 import { useCurrentUser } from "common/src/services/api/useCurrentUser";
 import { useBooks } from "common/src/services/books";
 import { Reset } from "./pages/resetpass";
+import { Privacy } from "./pages/privacy";
+import { PrivacyPolicy } from "./pages/privacyPolicy";
 
 import "antd/dist/reset.css";
 import "./App.less";
+import DonationsPageForm from "./pages/donationsPageForm";
+import { ContactUs } from "./pages/contactus";
 
-const routesWithoutRedirect = [routes.registration, routes.auth, routes.resetpassemail];
+const routesWithoutRedirect = [
+  routes.registration,
+  routes.auth,
+  routes.resetpassemail,
+  routes.privacy,
+  routes.privacyPolicy,
+  routes.contactUs,
+];
 
 function App() {
   const currentUser = useCurrentUser();
@@ -65,7 +76,49 @@ function App() {
         <Route path={routes.resetpassemail} element={<Reset currentUser={currentUser} />} />
         <Route path={routes.team} element={<Team currentUser={currentUser} />} />
         <Route path={routes.teamEdit} element={<TeamEdit currentUser={currentUser} />} />
-        <Route path={routes.pageDonations} element={<DonationsPage currentUser={currentUser} />} />
+        <Route path={routes.privacy} element={<Privacy />} />
+        <Route path={routes.privacyPolicy} element={<PrivacyPolicy />} />
+        <Route path={routes.contactUs} element={<ContactUs />} />
+        <Route
+          path={routes.pageDonationsForm}
+          element={
+            <DonationsPageForm
+              currentUser={currentUser}
+              initialValues={{
+                active: false,
+                banks: [],
+                socialTelegram: undefined,
+                socialWhats: undefined,
+                socialMail: undefined,
+                socialLink: undefined,
+                avatar: undefined,
+                userName: undefined,
+                greetingText: undefined,
+                buttonBank: undefined,
+              }}
+            />
+          }
+        />
+        <Route
+          path={routes.pageDonations}
+          element={
+            <DonationsPage
+              currentUser={currentUser}
+              initialValues={{
+                active: false,
+                banks: [],
+                socialTelegram: undefined,
+                socialWhats: undefined,
+                socialMail: undefined,
+                socialLink: undefined,
+                avatar: undefined,
+                userName: undefined,
+                greetingText: undefined,
+                buttonBank: undefined,
+              }}
+            />
+          }
+        />
       </Routes>
     </div>
   );

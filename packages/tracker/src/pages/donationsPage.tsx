@@ -2,16 +2,23 @@ import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { DonationPageDoc, editDonationPageDoc } from "common/src/services/api/donation";
 import { apiRefs } from "common/src/services/api/refs";
 import { useDocumentData } from "react-firebase-hooks/firestore";
-import { Form, Space, Typography, notification } from "antd";
+import { Button, Form, QRCode, Space, Typography, notification } from "antd";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { routes } from "../shared/routes";
 import { PageForm } from "common/src/components/forms/profile/pagedonation/PageForm";
+import PageMenu from "common/src/components/forms/profile/pagedonation/PageMenu";
 import { Preview } from "common/src/components/forms/profile/pagedonation/preview";
 import { Switch } from "antd";
-import { CheckOutlined, CloseOutlined, EyeInvisibleFilled, EyeTwoTone } from "@ant-design/icons";
+import { EyeInvisibleFilled, EyeTwoTone, ToolTwoTone } from "@ant-design/icons";
 import { useState } from "react";
+import logo from "common/src/images/logo.png";
+import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
+
+export type PageFormValues = DonationPageDoc;
 
 type Props = {
+  initialValues: PageFormValues;
+  disabled?: boolean;
   currentUser: CurrentUser;
 };
 
@@ -55,27 +62,67 @@ const PageDonations = ({ currentUser }: Props) => {
     }
   };
   const [switchState, setSwitchState] = useState(initialValues.active);
+
   const handleSwitchChange = (checked: boolean | ((prevState: boolean) => boolean)) => {
     setSwitchState(checked);
   };
+  const userName = currentUser.profile?.name;
+  const QR_SIZE = 160;
+  const downloadQRCode = () => {
+    const canvas = document.getElementById("myqrcode")?.querySelector<HTMLCanvasElement>("canvas");
+    if (canvas) {
+      const url = canvas.toDataURL();
+      const a = document.createElement("a");
+      a.download = "QRCode.png";
+      a.href = url;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  };
+
+  const { Text } = Typography;
+  const myPageLink = `https://books-donation.web.app/page/${userId}`;
   const dnone = "none";
   const plug1 = switchState ? "" : dnone;
   const plug2 = switchState ? dnone : "";
 
+  const [isChecked, setIsChecked] = useState(false);
+  const toggleDisabled = () => {
+    setIsChecked(true);
+  };
+
+  const navigate = useTransitionNavigate();
+
   return (
     <>
       <BaseLayout title="Страница для пожертвований" isAdmin backPath={routes.root} avatar={avatar}>
-        <Space style={{ display: "flex", flexFlow: "column", alignItems: "flex-end" }}>
-          <Form layout="vertical">
-            <Form.Item>
-              <Switch
-                checkedChildren={<EyeTwoTone />}
-                unCheckedChildren={<EyeInvisibleFilled />}
-                checked={switchState}
-                onChange={handleSwitchChange}
-              />
-            </Form.Item>
-          </Form>
+        {isChecked ? (
+          <Space style={{ display: "flex", flexFlow: "column", alignItems: "flex-start" }}>
+            <Form layout="vertical">
+              <Form.Item>
+                <Switch
+                  checkedChildren={<EyeTwoTone />}
+                  unCheckedChildren={<EyeInvisibleFilled />}
+                  checked={switchState}
+                  onChange={handleSwitchChange}
+                />
+              </Form.Item>
+            </Form>
+          </Space>
+        ) : (
+          ""
+        )}
+
+        <Space style={{ display: "flex", flexFlow: "column", alignItems: "center" }}>
+          <Button
+            type="primary"
+            onClick={() => navigate(routes.pageDonationsForm)}
+            style={{ marginTop: 16 }}
+            icon={<ToolTwoTone />}
+          >
+            Настроить страницу визитки
+          </Button>
         </Space>
 
         {donationDocLoading || !initialPageDoc ? (
@@ -84,6 +131,8 @@ const PageDonations = ({ currentUser }: Props) => {
           </Typography.Title>
         ) : (
           <>
+            {!isChecked && <PageMenu initialValues={initialValues} currentUser={currentUser} />}
+
             <Space style={{ display: `${switchState ? "" : plug1}` }}>
               <Preview
                 initialValues={initialValues}
@@ -96,12 +145,39 @@ const PageDonations = ({ currentUser }: Props) => {
                 display: `${switchState ? plug2 : ""}`,
               }}
             >
-              <PageForm
-                initialValues={initialValues}
-                onFinish={onFinish}
-                currentUser={currentUser}
-              />
+              <div id="elem" style={{ display: `${isChecked ? "" : plug1}` }}>
+                <PageForm
+                  initialValues={initialValues}
+                  onFinish={onFinish}
+                  currentUser={currentUser}
+                />
+              </div>
             </Space>
+            {initialValues.active && !isChecked ? (
+              <div id="myqrcode">
+                <Space
+                  direction="vertical"
+                  style={{ marginTop: 15, display: "flex", alignItems: "center" }}
+                >
+                  <Text italic>{userName}, это Ваш QR странички донатов</Text>
+                  <QRCode
+                    className="centred"
+                    value={myPageLink}
+                    bgColor="#fff"
+                    style={{ marginBottom: 16 }}
+                    errorLevel="H"
+                    size={QR_SIZE}
+                    iconSize={QR_SIZE / 4}
+                    icon={logo}
+                  />
+                  <Button type="primary" onClick={downloadQRCode}>
+                    Скачать QR на устройство
+                  </Button>
+                </Space>
+              </div>
+            ) : (
+              ""
+            )}
           </>
         )}
       </BaseLayout>
