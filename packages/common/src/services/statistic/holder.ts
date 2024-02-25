@@ -29,8 +29,6 @@ export const getBaseStat = (transfer: HolderTransferDoc): BaseStatisticItem => {
   Object.entries(transfer.books).forEach(([id, count]) => {
     if (count) {
       const category = booksHashMap[id as string].category as BooksCategories;
-      console.log("🚀 ~ Object.entries ~ category:", category);
-      console.log("🚀 ~ Object.entries ~ mapBooksByCategory:", mapBooksByCategory);
       const key = mapBooksByCategory[category].shortTitle;
       statistic[key] += count;
     }

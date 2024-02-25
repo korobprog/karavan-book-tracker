@@ -18,16 +18,26 @@ type Props<DataType extends BaseDataType> = {
   fileName: string;
   listTitle?: string;
   disabled?: boolean;
+  header?: string;
 };
 
 const downloadStatistic = <DataType extends BaseDataType>(props: Props<DataType>) => {
-  const { columns, dataSource, fileName, listTitle = fileName } = props;
+  const { columns, dataSource, fileName, listTitle = fileName, header } = props;
   try {
     const Workbook = new ExcelJS.Workbook();
     const worksheet = Workbook.addWorksheet(listTitle);
-    worksheet.columns = columns.map(({ title, key }) => {
-      return { header: String(title), key: String(key), width: 20 };
+
+    worksheet.columns = columns.map(({ title, key }, index) => {
+      return {
+        header: ["", String(title)],
+        key: String(key),
+        width: index ? (index > 6 ? (index === 9 ? 19 : 11) : 8) : 25,
+      };
     });
+
+    if (header) {
+      worksheet.getCell("A1").value = header;
+    }
 
     dataSource.forEach((data) => {
       const row = worksheet.addRow(data);

@@ -161,6 +161,7 @@ export const Statistic = ({ currentUser }: Props) => {
           columns={columns}
           dataSource={regionStocks}
           fileName={`Отчет за ${period}`}
+          header={`Отчет за ${period}`}
         />
       </Space>
       <Table

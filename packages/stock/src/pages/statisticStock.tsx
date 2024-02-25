@@ -125,6 +125,7 @@ export const StatisticStock = ({ currentUser }: Props) => {
           columns={columns}
           dataSource={displayedDistributors}
           fileName={`Отчет за ${period}`}
+          header={`Отчет за ${period}`}
         />
       </Space>
       <Row style={{ marginBottom: 8 }}>

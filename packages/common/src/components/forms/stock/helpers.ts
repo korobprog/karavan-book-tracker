@@ -2,9 +2,10 @@ import { roundPrice } from "common/src/utils/numbers";
 import type { Moment } from "moment";
 
 import { DistributedBook } from "../../../services/api/operations";
-import { $books } from "common/src/services/books";
+import { $books, BooksCategories, mapBooksByCategory } from "common/src/services/books";
 import { HolderBooks, HolderTransferType } from "../../../services/api/holderTransfer";
 import { HolderBookPrices, HolderStockDoc } from "../../../services/api/holders";
+import { bookCountsInSets } from "../../../services/api/statistic";
 
 export type StockFormValues = Record<number, number> & {
   transferType: HolderTransferType;
@@ -76,8 +77,14 @@ export const calcBooksCounts = (bookIdsWithCounts: CountEntrise) => {
   let totalPoints = 0;
   const operationBooks = bookIdsWithCounts.reduce((acc, [id, count]) => {
     if (Number(count)) {
-      totalCount += count;
-      totalPoints += (Number(books.find((book) => book.id === id)?.points) || 0) * count;
+      const book = books.find((book) => book.id === id);
+      if (!book) {
+        return acc;
+      }
+      const multiplier =
+        bookCountsInSets[mapBooksByCategory[book.category as BooksCategories].shortTitle] || 1;
+      totalCount += count * multiplier;
+      totalPoints += (Number(book?.points) || 0) * count;
       acc[id] = count;
     }
     return acc;

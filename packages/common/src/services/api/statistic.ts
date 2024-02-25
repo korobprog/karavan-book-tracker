@@ -10,6 +10,11 @@ export const defaultYearUserStatistic: UserStatisticType = {
   points: 0,
 };
 
+export const bookCountsInSets: Record<string, number> = {
+  CC: 9,
+  SB: 24,
+};
+
 export type BaseStatisticItem = {
   MB: number; // Mahabig
   B: number; // Big
@@ -133,7 +138,7 @@ export const getFullStatistic = (
   const currentStatistic = (period && statistic?.[period]) || {};
   const totalPoints = calcStaticticPointsSum(currentStatistic);
   const { S = 0, M = 0, B = 0, MB = 0, CC = 0, SB = 0 } = currentStatistic;
-  const totalCount = S + M + B + MB + CC + SB;
+  const totalCount = S + M + B + MB + CC * bookCountsInSets.CC + SB * bookCountsInSets.SB;
 
   return {
     S,
