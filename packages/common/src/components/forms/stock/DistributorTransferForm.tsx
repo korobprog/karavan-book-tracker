@@ -20,6 +20,7 @@ import {
 } from "./helpers";
 import { BookFormItem } from "./BookFormItem";
 import { HolderBookPrices, HolderBooks, HolderType } from "../../../services/api/holders";
+import { TransferFromDistributorTypes } from "../../../services/api/holderTransfer";
 
 type Props = {
   onFinish: (formValues: StockFormValues, totalPrice: number) => void;
@@ -121,6 +122,10 @@ export const DistributorTransferForm = (props: Props) => {
     }
   };
 
+  const bookCountLabel = TransferFromDistributorTypes.includes(typeParam)
+    ? "На руках"
+    : "На складе";
+
   const onFinishHandler = (formValues: DistributorTransferFormValues) => {
     onFinish({ ...formValues }, totalPrice);
     storage.setReportBooks([]);
@@ -135,7 +140,8 @@ export const DistributorTransferForm = (props: Props) => {
 
     const minCount = 0;
     const maxCount = (availableBooks && availableBookCount) || 10000;
-    const bookCountText = availableBookCount > 0 ? `(На складе: ${availableBookCount})` : "";
+    const bookCountText =
+      availableBookCount > 0 ? `(${bookCountLabel}: ${availableBookCount})` : "";
 
     const bookCount = form.getFieldValue(book.id) || 0;
     const price = (bookPrices[book.id] || 0) * priceMultiplier || 0;

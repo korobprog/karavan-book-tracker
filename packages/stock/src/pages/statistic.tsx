@@ -5,10 +5,17 @@ import { useMemo, useState } from "react";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { HolderType, useAllHolders } from "common/src/services/api/holders";
-import { getStatisticPeriodOptions } from "common/src/services/api/statistic";
+import {
+  getFullStatistic,
+  getStatisticPeriodOptions,
+  mutateFullStatistic,
+} from "common/src/services/api/statistic";
 import { bbtRegions } from "common/src/services/regions";
 import { StockBaseLayout } from "../shared/StockBaseLayout";
 import { routes } from "../shared/routes";
+import { getObjectFieldsCount } from "common/src/utils/objects";
+import { generatePath } from "react-router-dom";
+import { DownloadExcel } from "common/src/features/downloadExcel";
 
 type Props = {
   currentUser: CurrentUser;
@@ -16,6 +23,7 @@ type Props = {
 
 type DataType = {
   key: string;
+  id: string | null;
   name: string;
   S: number;
   M: number;
@@ -23,6 +31,9 @@ type DataType = {
   MB: number;
   CC: number;
   SB: number;
+  totalCount: number;
+  totalPoints: number;
+  distributorsCount: number;
   children?: DataType[];
 };
 
@@ -35,6 +46,24 @@ const columns: ColumnsType<DataType> = [
     key: "name",
   },
   ...["S", "M", "B", "MB", "CC", "SB"].map((v) => ({ title: v, dataIndex: v, key: v, render })),
+  {
+    title: "Всего книг",
+    dataIndex: "totalCount",
+    key: "totalCount",
+    render,
+  },
+  {
+    title: "Всего очков",
+    dataIndex: "totalPoints",
+    key: "totalPoints",
+    render,
+  },
+  {
+    title: "Распространителей",
+    dataIndex: "distributorsCount",
+    key: "distributorsCount",
+    render,
+  },
 ];
 
 const initialPeriod = new Date().getFullYear().toString();
@@ -42,10 +71,10 @@ const initialPeriod = new Date().getFullYear().toString();
 const options = getStatisticPeriodOptions();
 
 export const Statistic = ({ currentUser }: Props) => {
-  const { profile, user, loading, userDocLoading } = currentUser;
+  const { profile, userDocLoading } = currentUser;
   const avatar = profile?.avatar;
   const navigate = useTransitionNavigate();
-  const { holders, holdersLoading } = useAllHolders();
+  const { holders } = useAllHolders();
 
   const [period, setPeriod] = useState(initialPeriod);
 
@@ -53,28 +82,45 @@ export const Statistic = ({ currentUser }: Props) => {
     setPeriod(value);
   };
 
-  const regionStocks = useMemo(
-    () =>
+  const regionStocks = useMemo(() => {
+    const totalObj = {
+      name: "Всего",
+      id: "total",
+      key: "total",
+      ...getFullStatistic(),
+      distributorsCount: 0,
+    };
+
+    const result =
       holders?.reduce((acc, stock) => {
         if (stock.type === HolderType.stock) {
           const region = stock.region || "empty";
-          const accRegion = acc.find(({ key }) => key === region);
+          let accRegion = acc.find(({ key }) => key === region);
+          const distributorsCount = getObjectFieldsCount(stock.distributors || {});
 
           const { name, id } = stock;
-          const { S = 0, M = 0, B = 0, MB = 0, CC = 0, SB = 0 } = stock.statistic?.[period] || {};
+          const stockStatistic = getFullStatistic(period, stock.statistic);
 
-          const stockData = { name, id, key: id, region, S, M, B, MB, CC, SB };
+          const stockData = {
+            name,
+            id,
+            key: id,
+            region,
+            ...stockStatistic,
+            distributorsCount,
+          };
 
+          // Total row
+          mutateFullStatistic(totalObj, "+", stockData);
+
+          // Region row
           if (accRegion) {
             if (!accRegion.children) {
               accRegion.children = [];
             }
-            accRegion.S += S;
-            accRegion.M += M;
-            accRegion.B += B;
-            accRegion.MB += MB;
-            accRegion.CC += CC;
-            accRegion.SB += SB;
+            mutateFullStatistic(stockStatistic, "+", accRegion);
+            Object.assign(accRegion, stockStatistic);
+            accRegion.distributorsCount += distributorsCount;
 
             accRegion.children.push(stockData);
           } else {
@@ -83,14 +129,18 @@ export const Statistic = ({ currentUser }: Props) => {
               ...stockData,
               name: name,
               key: region,
+              id: null,
             });
             acc[acc.length - 1].children = [stockData];
           }
         }
         return acc;
-      }, [] as DataType[]) || [],
-    [holders, period]
-  );
+      }, [] as DataType[]) || [];
+
+    result.push(totalObj);
+
+    return result;
+  }, [holders, period]);
 
   return (
     <StockBaseLayout
@@ -99,29 +149,38 @@ export const Statistic = ({ currentUser }: Props) => {
       userDocLoading={userDocLoading}
       avatar={avatar}
     >
-      <Typography.Title className="site-page-title" level={2}>
-        Склады
-      </Typography.Title>
       <Space style={{ marginBottom: 8 }}>
-        <Typography.Text>Выберите период </Typography.Text>
+        <Typography.Text>Период</Typography.Text>
         <Select
           defaultValue={initialPeriod}
-          style={{ width: 120 }}
+          style={{ width: 100 }}
           onChange={handlePeriodChange}
           options={options}
+        />
+        <DownloadExcel
+          columns={columns}
+          dataSource={regionStocks}
+          fileName={`Отчет за ${period}`}
+          header={`Отчет за ${period}`}
         />
       </Space>
       <Table
         columns={columns}
         dataSource={regionStocks}
         pagination={{ pageSize: 100 }}
-        rowClassName={(record) => (record.children ? "table-background" : "")}
+        rowClassName={(record) =>
+          record.children ? "table-background" : record.key === "total" ? "table-total" : ""
+        }
+        expandable={{ expandRowByClick: true }}
         onRow={(data) => ({
-          onClick: (event) => {
-            // navigate to another page
-            console.log("row", data);
+          onClick: () => {
+            if (data.id && data.id !== "total") {
+              navigate(generatePath(routes.statisticStock, { stockId: data.id }));
+            }
           },
         })}
+        // style={{ cursor: "pointer" }}
+        scroll={{ x: "max-content" }}
       />
     </StockBaseLayout>
   );

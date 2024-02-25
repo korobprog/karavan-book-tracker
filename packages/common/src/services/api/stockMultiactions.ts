@@ -79,6 +79,7 @@ export const addHolderTransferMultiAction = async (
             books: calcObjectFields(stock.books, "-", books),
             [`${distributorPath}.books`]: calcStockDistributorBooks(distributor, "+"),
             [`${distributorPath}.priceMultiplier`]: distributorPriceMultiplier,
+            [`${distributorPath}.name`]: distributor.name,
           }),
           updateHolder(distributor.id, { books: calcObjectFields(distributor.books, "+", books) }),
         ]);
@@ -101,6 +102,7 @@ export const addHolderTransferMultiAction = async (
               "+",
               newHolderTransfer
             ),
+            [`${distributorPath}.name`]: distributor.name,
             statistic: calcHolderStat(stock.statistic, "+", newHolderTransfer),
           }),
           updateHolder(distributor.id, {
@@ -124,6 +126,7 @@ export const addHolderTransferMultiAction = async (
             books: calcObjectFields(stock.books, "+", books),
             [`${distributorPath}.books`]: calcStockDistributorBooks(distributor, "-"),
             [`${distributorPath}.priceMultiplier`]: distributorPriceMultiplier,
+            [`${distributorPath}.name`]: distributor.name,
           }),
           updateHolder(distributor.id, { books: calcObjectFields(distributor.books, "-", books) }),
         ]);
@@ -145,6 +148,7 @@ export const addHolderTransferMultiAction = async (
             "+",
             newHolderTransfer
           ),
+          [`${distributorPath}.name`]: distributor.name,
           statistic: calcHolderStat(stock.statistic, "+", newHolderTransfer),
         };
 

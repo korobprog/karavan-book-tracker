@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback, memo } from "react";
 import { useStore } from "effector-react";
 import {
   Button,
@@ -49,14 +49,16 @@ export const ReportForm = (props: Props) => {
 
   const books = useStore($books);
   const booksLoading = useStore($booksLoading);
-
   const booksStorageInitialValues = calcFormValuesFromBooks(storage.getReportBooks());
 
-  const initialValues = {
-    date: moment(),
-    locationId: storage.getLocationId(),
-    ...initialValuesProps,
-  };
+  const initialValues = useMemo(
+    () => ({
+      date: moment(),
+      locationId: storage.getLocationId(),
+      ...initialValuesProps,
+    }),
+    [initialValuesProps]
+  );
 
   useEffect(() => {
     if (!initialValuesProps) {
@@ -80,30 +82,39 @@ export const ReportForm = (props: Props) => {
     setIsOnline(!isOnline);
   };
 
-  const { favoriteBooks, otherBooks } = books.reduce(
-    ({ favoriteBooks, otherBooks }, book) => {
-      if (favorite.includes(book.id)) {
-        favoriteBooks.push(book);
-      } else {
-        otherBooks.push(book);
-      }
+  const { favoriteBooks, otherBooks, hiddenBooks } = useMemo(
+    () =>
+      books.reduce(
+        ({ favoriteBooks, otherBooks, hiddenBooks }, book) => {
+          if (!book.name.toLowerCase().includes(searchString)) {
+            hiddenBooks.push(book);
+          } else {
+            if (favorite.includes(book.id)) {
+              favoriteBooks.push(book);
+            } else {
+              otherBooks.push(book);
+            }
+          }
 
-      return { favoriteBooks, otherBooks };
-    },
-    { favoriteBooks: [] as Book[], otherBooks: [] as Book[] }
+          return { favoriteBooks, otherBooks, hiddenBooks };
+        },
+        { favoriteBooks: [] as Book[], otherBooks: [] as Book[], hiddenBooks: [] as Book[] }
+      ),
+    [books, favorite, searchString]
   );
 
   const onSearchChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setSearchString(e.target.value.toLowerCase());
   };
+  const [form] = Form.useForm();
 
-  const onValuesChange = () => {
+  const onValuesChange = useCallback(() => {
     const formValues: ReportFormValues = form.getFieldsValue();
     const { totalCount, operationBooks } = calcBooksCountsFromValues(formValues);
     setTotalBooksCount(totalCount);
     storage.setReportBooks(operationBooks);
     storage.setLocationId(formValues.locationId);
-  };
+  }, [form]);
 
   const onBooksReset = () => {
     form.resetFields();
@@ -115,21 +126,25 @@ export const ReportForm = (props: Props) => {
 
   const { Search } = Input;
 
-  const [form] = Form.useForm();
-
-  const onPlusClick = (bookId: string) => {
-    const prevValue = form.getFieldValue(bookId) || 0;
-    form.setFieldsValue({ [bookId]: prevValue + 1 });
-    onValuesChange();
-  };
-
-  const onMinusClick = (bookId: string) => {
-    const prevValue = form.getFieldValue(bookId) || 0;
-    if (prevValue !== 0) {
-      form.setFieldsValue({ [bookId]: prevValue - 1 });
+  const onPlusClick = useCallback(
+    (bookId: string) => {
+      const prevValue = form.getFieldValue(bookId) || 0;
+      form.setFieldsValue({ [bookId]: prevValue + 1 });
       onValuesChange();
-    }
-  };
+    },
+    [form, onValuesChange]
+  );
+
+  const onMinusClick = useCallback(
+    (bookId: string) => {
+      const prevValue = form.getFieldValue(bookId) || 0;
+      if (prevValue !== 0) {
+        form.setFieldsValue({ [bookId]: prevValue - 1 });
+        onValuesChange();
+      }
+    },
+    [form, onValuesChange]
+  );
 
   const onFinishHandler = (formValues: ReportFormValues) => {
     if (totalBooksCount > 100 && !profile?.role?.includes("authorized")) {
@@ -145,39 +160,6 @@ export const ReportForm = (props: Props) => {
     }
     onFinish(formValues);
     storage.setReportBooks([]);
-  };
-
-  const renderBookItem = (book: Book, isFavorite: boolean) => {
-    return book.name.toLowerCase().includes(searchString) ? (
-      <List.Item>
-        <Button
-          onClick={() => toggleFavorite(book.id)}
-          icon={isFavorite ? <StarFilled /> : <StarOutlined />}
-          disabled={isSubmitting || userDocLoading}
-          style={{ marginRight: 8 }}
-        />
-        <List.Item.Meta
-          title={book.name}
-          description={book.points ? `Баллы: ${book.points}` : ""}
-        />
-        <Space>
-          <Button onClick={() => onMinusClick(book.id)} icon={<MinusOutlined />} />
-          <Form.Item name={book.id} noStyle>
-            <InputNumber
-              min={0}
-              max={10000}
-              style={{ width: 70 }}
-              type="number"
-              inputMode="numeric"
-              pattern="\d*"
-            />
-          </Form.Item>
-          <Button onClick={() => onPlusClick(book.id)} icon={<PlusOutlined />} />
-        </Space>
-      </List.Item>
-    ) : (
-      <Form.Item name={book.id} noStyle />
-    );
   };
 
   return (
@@ -260,15 +242,75 @@ export const ReportForm = (props: Props) => {
             ? "Не найдено избранного"
             : "Нажмите на ⭐, чтобы добавить в избранное",
         }}
-        renderItem={(book) => renderBookItem(book, true)}
+        renderItem={(book) => (
+          <BookItem
+            book={book}
+            isFavorite={true}
+            key={book.id}
+            onPlusClick={onPlusClick}
+            onMinusClick={onMinusClick}
+            toggleFavorite={toggleFavorite}
+          />
+        )}
       />
       <List
         itemLayout="horizontal"
         dataSource={otherBooks}
         loading={booksLoading || userDocLoading}
         locale={{ emptyText: "Не найдено книг" }}
-        renderItem={(book) => renderBookItem(book, false)}
+        renderItem={(book) => (
+          <BookItem
+            book={book}
+            isFavorite={false}
+            key={book.id}
+            onPlusClick={onPlusClick}
+            onMinusClick={onMinusClick}
+            toggleFavorite={toggleFavorite}
+          />
+        )}
       />
+      {hiddenBooks.map((book) => (
+        <Form.Item name={book.id} noStyle key={book.id}>
+          <InputNumber style={{ display: "none" }} />
+        </Form.Item>
+      ))}
     </Form>
   );
 };
+
+const BookItem = memo((props: any) => {
+  const {
+    book,
+    isFavorite,
+    toggleFavorite,
+    isSubmitting,
+    userDocLoading,
+    onMinusClick,
+    onPlusClick,
+  } = props;
+  return (
+    <List.Item key={book.id}>
+      <Button
+        onClick={() => toggleFavorite(book.id)}
+        icon={isFavorite ? <StarFilled /> : <StarOutlined />}
+        disabled={isSubmitting || userDocLoading}
+        style={{ marginRight: 8 }}
+      />
+      <List.Item.Meta title={book.name} description={book.points ? `Баллы: ${book.points}` : ""} />
+      <Space>
+        <Button onClick={() => onMinusClick(book.id)} icon={<MinusOutlined />} />
+        <Form.Item name={book.id} noStyle>
+          <InputNumber
+            min={0}
+            max={10000}
+            style={{ width: 70 }}
+            type="number"
+            inputMode="numeric"
+            pattern="\d*"
+          />
+        </Form.Item>
+        <Button onClick={() => onPlusClick(book.id)} icon={<PlusOutlined />} />
+      </Space>
+    </List.Item>
+  );
+});

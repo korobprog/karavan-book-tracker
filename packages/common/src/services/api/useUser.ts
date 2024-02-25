@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { User } from "firebase/auth";
 import { setDoc, updateDoc, addDoc, deleteDoc } from "firebase/firestore";
@@ -57,23 +58,26 @@ export const useProfileById = (id?: string) => {
 export const useUser = ({ profile, user }: Params) => {
   const id = profile?.id || user?.uid;
 
-  const toggleFavorite = async (favoriteId: string) => {
-    if (id) {
-      if (profile?.favorite?.includes(favoriteId)) {
-        const filteredFavorite = profile.favorite.filter((value) => value !== favoriteId);
-        await setDoc(apiRefs.user(id), {
-          ...profile,
-          favorite: filteredFavorite,
-        });
-      } else {
-        const newFavorite = [...(profile?.favorite || []), favoriteId];
-        await setDoc(apiRefs.user(id), {
-          ...profile,
-          favorite: newFavorite,
-        });
+  const toggleFavorite = useCallback(
+    async (favoriteId: string) => {
+      if (id) {
+        if (profile?.favorite?.includes(favoriteId)) {
+          const filteredFavorite = profile.favorite.filter((value) => value !== favoriteId);
+          await setDoc(apiRefs.user(id), {
+            ...profile,
+            favorite: filteredFavorite,
+          });
+        } else {
+          const newFavorite = [...(profile?.favorite || []), favoriteId];
+          await setDoc(apiRefs.user(id), {
+            ...profile,
+            favorite: newFavorite,
+          });
+        }
       }
-    }
-  };
+    },
+    [id, profile]
+  );
 
   const setProfile = async (newProfile: UserDoc) => {
     if (id) {

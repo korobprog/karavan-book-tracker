@@ -19,10 +19,11 @@ import { DistributorEdit } from "./pages/distributorEdit";
 import { useStockHolders } from "common/src/services/api/holders";
 import { DistributorTransfer } from "./pages/distributorTransfer";
 import { useHolderTransfers } from "common/src/services/api/holderTransfer";
+import { Statistic } from "./pages/statistic";
+import { StatisticStock } from "./pages/statisticStock";
 
 import "antd/dist/reset.css";
 import "./App.less";
-import { Statistic } from "./pages/statistic";
 
 const routesWithoutRedirect = [routes.registration, routes.auth, routes.resetpassemail];
 
@@ -84,6 +85,10 @@ function App() {
         />
 
         <Route path={routes.statistic} element={<Statistic currentUser={currentUser} />} />
+        <Route
+          path={routes.statisticStock}
+          element={<StatisticStock currentUser={currentUser} />}
+        />
       </Routes>
     </div>
   );

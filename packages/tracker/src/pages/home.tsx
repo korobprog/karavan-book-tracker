@@ -13,6 +13,7 @@ import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavig
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
+import config from "../../package.json";
 
 type Props = {
   currentUser: CurrentUser;
@@ -28,7 +29,12 @@ export const Home = ({ currentUser }: Props) => {
   const { Paragraph, Title } = Typography;
 
   return (
-    <BaseLayout title="Karavan Book Tracker" userDocLoading={userDocLoading} avatar={avatar}>
+    <BaseLayout
+      title="Karavan Book Tracker"
+      userDocLoading={userDocLoading}
+      avatar={avatar}
+      version={config.version}
+    >
       <Title className="site-page-title" level={2}>
         Привет,
         <br />

@@ -10,6 +10,11 @@ export const defaultYearUserStatistic: UserStatisticType = {
   points: 0,
 };
 
+export const bookCountsInSets: Record<string, number> = {
+  CC: 9,
+  SB: 24,
+};
+
 export type BaseStatisticItem = {
   MB: number; // Mahabig
   B: number; // Big
@@ -18,6 +23,17 @@ export type BaseStatisticItem = {
   SB: number; // SB set
   CC: number; // CC set
   O: number; // Other
+};
+
+export type StockStatisticItem = {
+  MB: number; // Mahabig
+  B: number; // Big
+  M: number; // Medium
+  S: number; // Small
+  SB: number; // SB set
+  CC: number; // CC set
+  totalPoints: number;
+  totalCount: number;
 };
 
 export const defaultBaseStatistic: BaseStatisticItem = {
@@ -72,12 +88,13 @@ const generateOptions = (startYear: number): string[] => {
 
   const options: string[] = [];
   for (let year = currentYear; year >= startYear; year--) {
+    const isCurrentYear = year === currentYear;
     options.push(String(year));
-    for (let quarter = Math.ceil(currentMonth / 3); quarter >= 1; quarter--) {
+    for (let quarter = isCurrentYear ? Math.ceil(currentMonth / 3) : 4; quarter >= 1; quarter--) {
       const quarterStr = `${year}-Q${quarter}`;
       options.push(quarterStr);
     }
-    for (let month = currentMonth; month >= 1; month--) {
+    for (let month = isCurrentYear ? currentMonth : 12; month >= 1; month--) {
       const monthStr = `${year}-${month.toString().padStart(2, "0")}`;
       options.push(monthStr);
     }
@@ -87,17 +104,12 @@ const generateOptions = (startYear: number): string[] => {
 };
 
 export const getStatisticPeriodOptions = () => {
-  const startYear = 2022;
+  const startYear = 2023;
   const options = generateOptions(startYear);
   const periodOptions = options.map((value) => ({ value, label: value }));
 
   return periodOptions;
 };
-
-// Пример использования:
-const startYear = 2023; // Укажите нужный год
-const options = generateOptions(startYear);
-console.log(options);
 
 export const typePointsMap = {
   MB: 2,
@@ -117,4 +129,39 @@ export const calcStaticticPointsSum = (baseStatisticItem?: Partial<BaseStatistic
     : 0;
 
   return points;
+};
+
+export const getFullStatistic = (
+  period?: string,
+  statistic?: BaseStatistic
+): StockStatisticItem => {
+  const currentStatistic = (period && statistic?.[period]) || {};
+  const totalPoints = calcStaticticPointsSum(currentStatistic);
+  const { S = 0, M = 0, B = 0, MB = 0, CC = 0, SB = 0 } = currentStatistic;
+  const totalCount = S + M + B + MB + CC * bookCountsInSets.CC + SB * bookCountsInSets.SB;
+
+  return {
+    S,
+    M,
+    B,
+    MB,
+    CC,
+    SB,
+    totalPoints,
+    totalCount,
+  };
+};
+
+export const mutateFullStatistic = (
+  target: StockStatisticItem,
+  operator: "+" | "-",
+  source: Record<string, any>
+) => {
+  for (const keyString in target) {
+    const key = keyString as keyof StockStatisticItem;
+    if (typeof target[key] !== "string" && typeof source[key] !== "string") {
+      if (operator === "+") target[key] = (target[key] || 0) + (source[key] || 0);
+      if (operator === "-") target[key] = (target[key] || 0) - (source[key] || 0);
+    }
+  }
 };

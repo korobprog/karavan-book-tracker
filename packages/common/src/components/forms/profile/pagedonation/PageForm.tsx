@@ -71,11 +71,11 @@ export const PageForm = (props: Props) => {
         </Form.Item>
       </Space>
       <Space direction="vertical" style={{ marginTop: 15, display: "flex", alignItems: "center" }}>
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
-          СОХРАНИТЬ
-        </Button>
-      </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            СОХРАНИТЬ
+          </Button>
+        </Form.Item>
       </Space>
       <Space
         direction="horizontal"
