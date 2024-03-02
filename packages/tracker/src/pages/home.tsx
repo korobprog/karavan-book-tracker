@@ -103,9 +103,6 @@ export const Home = ({ currentUser }: Props) => {
         Связаться с нами
       </Button>
       <Divider dashed />
-      <Space direction="vertical" style={{ marginTop: 15, display: "flex", alignItems: "center" }}>
-        <Text italic>v 1.1.0</Text>
-      </Space>
     </BaseLayout>
   );
 };

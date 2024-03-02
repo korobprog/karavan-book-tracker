@@ -14,10 +14,11 @@ type Props = {
   onFinishHandler: (formValues: TeamFormValues) => Promise<void>;
   initialValues?: TeamFormValues;
   teamId?: string;
+  leaderIdDisabled?: boolean;
 };
 
 export const TeamForm = (props: Props) => {
-  const { onFinishHandler, initialValues, teamId } = props;
+  const { onFinishHandler, initialValues, teamId, leaderIdDisabled } = props;
   const navigate = useTransitionNavigate();
 
   const [userSearchString, setUserSearchString] = useState("");
@@ -106,6 +107,7 @@ export const TeamForm = (props: Props) => {
       >
         <UserSelect
           onSearch={onUserChange}
+          disabled={leaderIdDisabled}
           onAddNewUser={() => navigate(routes.usersNew)}
           userSearchString={userSearchString}
         >
