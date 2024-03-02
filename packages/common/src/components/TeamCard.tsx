@@ -11,6 +11,7 @@ import {
   Dropdown,
   MenuProps,
   Modal,
+  Row,
 } from "antd";
 import {
   TrophyOutlined,
@@ -26,6 +27,7 @@ import { LocationDoc } from "../services/api/locations";
 import { HashMap } from "../utils/getHashMap";
 import { setUserTeam, TeamMemberStatus, UserDocWithId } from "../services/api/useUser";
 import { UsersStatistic } from "common/src/features/downloadUsersStatistic";
+import { Helper } from "./Helper";
 
 type Props = {
   team: TeamDoc;
@@ -114,7 +116,7 @@ export const TeamCard = ({
   return (
     <>
       <Card style={{ marginTop: 16 }} actions={[children]}>
-        <Space>
+        <Row justify="space-between">
           <Card.Meta avatar={<TrophyOutlined />} title={name} description={description} />
           {items.length > 0 && (
             <Dropdown menu={{ items }}>
@@ -126,8 +128,8 @@ export const TeamCard = ({
               ></Button>
             </Dropdown>
           )}
-        </Space>
-        <div>
+        </Row>
+        <Row justify="space-between">
           <Space style={{ marginTop: 14 }}>
             Участники:
             <Avatar.Group>
@@ -151,7 +153,8 @@ export const TeamCard = ({
               ))}
             </Avatar.Group>
           </Space>
-        </div>
+          <Helper title="Участники могут добавиться в команду, оставив заявку. Оставленные заявки отобразятся строкой ниже" />
+        </Row>
         {myStatus === TeamMemberStatus.request && (
           <div className="site-page-title">
             <Typography.Paragraph style={{ marginTop: 14 }}>

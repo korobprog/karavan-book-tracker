@@ -1,6 +1,6 @@
 import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 import { Button, Typography } from "antd";
-import { CheckSquareOutlined } from "@ant-design/icons";
+import { CheckSquareOutlined, UsergroupAddOutlined } from "@ant-design/icons";
 
 import { routes } from "../shared/routes";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
@@ -25,10 +25,14 @@ export const Team = ({ currentUser }: Props) => {
   const myTeamId = profile?.team?.id;
   const myStatus = profile?.team?.status;
 
-  const myTeam = teams.find((team) => team.id === "rJrmHBu9u21v1MOxX8ZF");
+  const myTeam = teams.find((team) => team.id === myTeamId);
 
   const onTeamEdit = () => {
     navigate(routes.teamEdit);
+  };
+
+  const onTeamAdd = () => {
+    navigate(routes.teamNew);
   };
 
   const teamNoSelectedBlock = (
@@ -43,10 +47,14 @@ export const Team = ({ currentUser }: Props) => {
             Команда еще не выбрана
           </Title>
           <Paragraph className="site-page-title">
-            Вы можете подать заявку на вступление в команду
+            Вы можете подать заявку на вступление в команду или создать новую
           </Paragraph>
         </>
       )}
+
+      <Button block size="large" type="primary" icon={<UsergroupAddOutlined />} onClick={onTeamAdd}>
+        Создать свою команду
+      </Button>
 
       {teams.map((team) => {
         return (

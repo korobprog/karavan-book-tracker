@@ -24,6 +24,7 @@ import "antd/dist/reset.css";
 import "./App.less";
 import DonationsPageForm from "./pages/donationsPageForm";
 import { ContactUs } from "./pages/contactus";
+import { TeamNew } from "./pages/teamNew";
 
 const routesWithoutRedirect = [
   routes.registration,
@@ -75,6 +76,7 @@ function App() {
         <Route path={routes.profile} element={<Profile currentUser={currentUser} />} />
         <Route path={routes.resetpassemail} element={<Reset currentUser={currentUser} />} />
         <Route path={routes.team} element={<Team currentUser={currentUser} />} />
+        <Route path={routes.teamNew} element={<TeamNew currentUser={currentUser} />} />
         <Route path={routes.teamEdit} element={<TeamEdit currentUser={currentUser} />} />
         <Route path={routes.privacy} element={<Privacy />} />
         <Route path={routes.privacyPolicy} element={<PrivacyPolicy />} />
