@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { Form, Input, Button, Checkbox, Typography, Space, Alert } from "antd";
+import { useEffect, useState } from "react";
+import { Form, Input, Button, Checkbox, Typography, Space } from "antd";
+import { useTranslation } from "react-i18next";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { Link } from "react-router-dom";
@@ -8,7 +9,6 @@ import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavig
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { GoogleOutlined } from "@ant-design/icons";
 import { BaseLayout } from "common/src/components/BaseLayout";
-import type { CheckboxProps } from "antd";
 
 type Props = {
   currentUser: CurrentUser;
@@ -20,6 +20,7 @@ export const Auth = ({ currentUser }: Props) => {
   const [signInWithEmailAndPassword, , , emailError] = useSignInWithEmailAndPassword(auth);
   const navigate = useTransitionNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (user) {
@@ -56,7 +57,7 @@ export const Auth = ({ currentUser }: Props) => {
   return (
     <BaseLayout title="Учет книг" headerActions={[]}>
       <Title className="site-page-title" level={2}>
-        ВХОД В УЧЕТ КНИГ
+        {t("auth.title")}
       </Title>
       <Form
         name="basic"
@@ -68,21 +69,21 @@ export const Auth = ({ currentUser }: Props) => {
         autoComplete="off"
       >
         <Form.Item
-          label="Email"
+          label={t("auth.email.label")}
           name="email"
           rules={[
             {
               required: true,
-              message: "Пожалуйста, введите ваше имя пользователя",
+              message: t("auth.email.error.required"),
             },
           ]}
         >
           <Input />
         </Form.Item>
         <Form.Item
-          label="Пароль"
+          label={t("auth.password.label")}
           name="password"
-          rules={[{ required: true, message: "Пожалуйста, введите пароль" }]}
+          rules={[{ required: true, message: t("auth.password.error.required") }]}
         >
           <Input.Password />
         </Form.Item>

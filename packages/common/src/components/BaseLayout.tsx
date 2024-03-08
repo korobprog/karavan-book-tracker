@@ -5,6 +5,7 @@ import { UserOutlined } from "@ant-design/icons";
 import { PageHeader } from "@ant-design/pro-layout";
 import { getViewTransitionStyles } from "../utils/transition";
 import Logo from "../images/logo.png";
+import { LangSelect } from "./LangSelect";
 
 export type BaseLayoutProps = {
   title: string;
@@ -62,6 +63,7 @@ export const BaseLayout = (props: React.PropsWithChildren<BaseLayoutProps>) => {
                   </Typography.Text>,
                 ]
               : []),
+            <LangSelect />,
             ...(headerActions ?? [
               <Tooltip title="Профиль" key="profile">
                 <Button
