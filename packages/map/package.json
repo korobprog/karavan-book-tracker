@@ -1,0 +1,56 @@
+{
+  "name": "map",
+  "version": "0.1.1",
+  "dependencies": {
+    "@craco/craco": "^7.0.0",
+    "@reduxjs/toolkit": "^1.7.1",
+    "clsx": "^1.1.1",
+    "craco-less": "^2.0.0",
+    "dotenv": "^16.0.0",
+    "firebase": "^9.6.10",
+    "history": "^5.1.0",
+    "modern-normalize": "^1.1.0",
+    "moment": "^2.29.1",
+    "node-sass": "^6.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-hook-form": "^7.21.2",
+    "react-firebase-hooks": "^5.0.2",
+    "react-redux": "^7.2.6",
+    "react-router-dom": "^6.0.2",
+    "react-scripts": "^5.0.1",
+    "react-switch": "^6.0.0",
+    "react-yandex-maps": "^4.6.0"
+  },
+  "scripts": {
+    "start": "craco start --mode staging",
+    "build:staging": "craco build --mode staging",
+    "deploy:staging": "firebase deploy -P staging",
+    "start:prod": "craco start --mode prod",
+    "build:prod": "craco build --mode prod",
+    "deploy:prod": "firebase deploy -P default",
+    "test": "craco test"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.35",
+    "@types/react-dom": "^17.0.11",
+    "@types/react-router-dom": "^5.3.2",
+    "@types/yandex-maps": "^2.1.20",
+    "typescript": "^4.5.2"
+  }
+}
