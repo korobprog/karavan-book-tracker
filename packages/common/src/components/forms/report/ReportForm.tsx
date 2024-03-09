@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback, memo } from "react";
+import React, { useState, useEffect, useMemo, useCallback, memo, useRef } from "react";
 import { useStore } from "effector-react";
 import {
   Button,
@@ -9,10 +9,18 @@ import {
   Checkbox,
   Row,
   Space,
+  Switch,
   Typography,
   message,
 } from "antd";
-import { PlusOutlined, MinusOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  MinusOutlined,
+  StarFilled,
+  StarOutlined,
+  DashboardOutlined,
+} from "@ant-design/icons";
+import debounce from "lodash/debounce";
 
 import { useUser } from "common/src/services/api/useUser";
 import * as storage from "common/src/services/localStorage/reportBooks";
@@ -22,6 +30,7 @@ import moment from "moment";
 import { calcBooksCountsFromValues, calcFormValuesFromBooks, ReportFormValues } from "./helpers";
 import { SelectLocation } from "../../../features/select-location/SelectLocation";
 import { DatePicker } from "../../DatePicker";
+import { Helper } from "../../Helper";
 
 type Props = {
   currentUser: CurrentUser;
@@ -46,6 +55,12 @@ export const ReportForm = (props: Props) => {
   const { profile, favorite, userDocLoading } = currentUser;
   const { toggleFavorite } = useUser({ profile });
   const [searchString, setSearchString] = useState("");
+  const [showOnliFirstBooks, setShowOnliFirstBooks] = useState(storage.getShowOnliFirstBooks());
+
+  const onShowOnliFirstBooksChange = (flag: boolean) => {
+    setShowOnliFirstBooks(flag);
+    storage.setShowOnliFirstBooks(flag);
+  };
 
   const books = useStore($books);
   const booksLoading = useStore($booksLoading);
@@ -82,30 +97,43 @@ export const ReportForm = (props: Props) => {
     setIsOnline(!isOnline);
   };
 
-  const { favoriteBooks, otherBooks, hiddenBooks } = useMemo(
-    () =>
-      books.reduce(
-        ({ favoriteBooks, otherBooks, hiddenBooks }, book) => {
-          if (!book.name.toLowerCase().includes(searchString)) {
-            hiddenBooks.push(book);
+  const { favoriteBooks, otherBooks, hiddenBooks } = useMemo(() => {
+    const result = books.reduce(
+      ({ favoriteBooks, otherBooks, hiddenBooks }, book) => {
+        if (!book.name.toLowerCase().includes(searchString)) {
+          hiddenBooks.push(book);
+        } else {
+          if (favorite.includes(book.id)) {
+            favoriteBooks.push(book);
           } else {
-            if (favorite.includes(book.id)) {
-              favoriteBooks.push(book);
-            } else {
-              otherBooks.push(book);
-            }
+            otherBooks.push(book);
           }
+        }
 
-          return { favoriteBooks, otherBooks, hiddenBooks };
-        },
-        { favoriteBooks: [] as Book[], otherBooks: [] as Book[], hiddenBooks: [] as Book[] }
-      ),
-    [books, favorite, searchString]
-  );
+        return { favoriteBooks, otherBooks, hiddenBooks };
+      },
+      { favoriteBooks: [] as Book[], otherBooks: [] as Book[], hiddenBooks: [] as Book[] }
+    );
 
-  const onSearchChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    setSearchString(e.target.value.toLowerCase());
-  };
+    if (showOnliFirstBooks) {
+      result.favoriteBooks = result.favoriteBooks.slice(0, 3);
+      result.otherBooks = result.otherBooks.slice(0, 3);
+    }
+    return result;
+  }, [books, favorite, searchString, showOnliFirstBooks]);
+
+  const debouncedSearch = useRef(
+    debounce((e) => {
+      setSearchString(e.target.value.toLowerCase());
+    }, 200)
+  ).current;
+
+  React.useEffect(() => {
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [debouncedSearch]);
+
   const [form] = Form.useForm();
 
   const onValuesChange = useCallback(() => {
@@ -227,10 +255,18 @@ export const ReportForm = (props: Props) => {
         <Search
           placeholder="поиск книги"
           allowClear
-          onChange={onSearchChange}
-          value={searchString}
-          style={{ flexGrow: 1, width: 200, marginRight: 8 }}
+          onChange={debouncedSearch}
+          style={{ flexGrow: 1, width: 200, marginRight: 16 }}
         />
+
+        <Space size="middle">
+          <Helper title="Включение режима опитимзации поиска. Для более быстрой работы показываются только первые 3 избранные и 3 не избранные книги" />
+          <Switch
+            checked={showOnliFirstBooks}
+            onChange={onShowOnliFirstBooksChange}
+            checkedChildren={<DashboardOutlined />}
+          />
+        </Space>
       </Row>
 
       <List
@@ -255,7 +291,7 @@ export const ReportForm = (props: Props) => {
       />
       <List
         itemLayout="horizontal"
-        dataSource={otherBooks}
+        dataSource={showOnliFirstBooks ? otherBooks.slice(0, 5) : otherBooks}
         loading={booksLoading || userDocLoading}
         locale={{ emptyText: "Не найдено книг" }}
         renderItem={(book) => (

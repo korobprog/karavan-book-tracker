@@ -13,6 +13,17 @@ export const getReportBooks = () => {
   return books;
 };
 
+const showOnliFirstBooksKey = "showOnliFirstBooks";
+
+export const setShowOnliFirstBooks = (flag: boolean) => {
+  storage.local.setItem(showOnliFirstBooksKey, String(flag));
+};
+
+export const getShowOnliFirstBooks = () => {
+  const stringValue = storage.local.getItem(showOnliFirstBooksKey);
+  return stringValue ? stringValue === "true" : true;
+};
+
 const locationKey = "reportLocation";
 
 export const setLocationId = (locationId: string) => {
