@@ -13,6 +13,7 @@ import { EyeInvisibleFilled, EyeTwoTone, ToolTwoTone } from "@ant-design/icons";
 import { useState } from "react";
 import logo from "common/src/images/logo.png";
 import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
+import { useTranslation } from "react-i18next";
 
 export type PageFormValues = DonationPageDoc;
 
@@ -24,6 +25,7 @@ type Props = {
 
 const PageDonations = ({ currentUser }: Props) => {
   const { profile, user } = currentUser;
+  const { t } = useTranslation();
 
   const avatar = profile?.avatar;
 
@@ -58,7 +60,7 @@ const PageDonations = ({ currentUser }: Props) => {
         userName: profile?.name,
       };
       editDonationPageDoc(userId, updatedValues);
-      notification.success({ message: "Страница успешно сохранена" });
+      notification.success({ message: t("donation.save_success") });
     }
   };
   const [switchState, setSwitchState] = useState(initialValues.active);
@@ -96,7 +98,7 @@ const PageDonations = ({ currentUser }: Props) => {
 
   return (
     <>
-      <BaseLayout title="Страница для пожертвований" isAdmin backPath={routes.root} avatar={avatar}>
+      <BaseLayout title={t("home.donations")} isAdmin backPath={routes.root} avatar={avatar}>
         {isChecked ? (
           <Space style={{ display: "flex", flexFlow: "column", alignItems: "flex-start" }}>
             <Form layout="vertical">
@@ -121,13 +123,13 @@ const PageDonations = ({ currentUser }: Props) => {
             style={{ marginTop: 16 }}
             icon={<ToolTwoTone />}
           >
-            Настроить страницу визитки
+            {t("donation.customize")}
           </Button>
         </Space>
 
         {donationDocLoading || !initialPageDoc ? (
           <Typography.Title className="site-page-title" level={5}>
-            Загрузка...
+            {t("loading")}
           </Typography.Title>
         ) : (
           <>
@@ -159,7 +161,9 @@ const PageDonations = ({ currentUser }: Props) => {
                   direction="vertical"
                   style={{ marginTop: 15, display: "flex", alignItems: "center" }}
                 >
-                  <Text italic>{userName}, это Ваш QR странички донатов</Text>
+                  <Text italic>
+                    {userName}, {t("donation.your_qr")}
+                  </Text>
                   <QRCode
                     className="centred"
                     value={myPageLink}
@@ -171,7 +175,7 @@ const PageDonations = ({ currentUser }: Props) => {
                     icon={logo}
                   />
                   <Button type="primary" onClick={downloadQRCode}>
-                    Скачать QR на устройство
+                    {t("donation.download_qr")}
                   </Button>
                 </Space>
               </div>
