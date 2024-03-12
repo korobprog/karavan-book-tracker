@@ -44,10 +44,10 @@ export const Home = ({ currentUser }: Props) => {
         {profile?.nameSpiritual || profile?.name || user?.displayName || "друг"}
       </Title>
       <Title className="site-page-subtitle" level={5}>
-        {t("home.happy_sankirtana")},
+        {t("home.happy_sankirtana")}
       </Title>
       <Button type="primary" block size="large" icon={<ReadOutlined />} onClick={onAddReport}>
-        {t("home.report")},
+        {t("home.report")}
       </Button>
       <Divider dashed />
       <Button

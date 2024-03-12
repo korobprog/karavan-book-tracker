@@ -55,7 +55,7 @@ export const Auth = ({ currentUser }: Props) => {
   };
 
   return (
-    <BaseLayout title="Учет книг" headerActions={[]}>
+    <BaseLayout title={t("auth.title")} headerActions={[]}>
       <Title className="site-page-title" level={2}>
         {t("auth.title")}
       </Title>
@@ -88,17 +88,17 @@ export const Auth = ({ currentUser }: Props) => {
           <Input.Password />
         </Form.Item>
         <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>
-          <Checkbox>Запомни меня</Checkbox>
+          <Checkbox>{t("auth.remember_me")}</Checkbox>
         </Form.Item>
         <Form.Item
           wrapperCol={{ offset: 8, span: 16 }}
-          help={emailError && <Text type="danger">Неверный логин или пароль</Text>}
+          help={emailError && <Text type="danger">{t("auth.invalid_login_password")}</Text>}
         >
           <Space>
             <Button type="primary" htmlType="submit" loading={isSubmitting}>
-              Войти
+              {t("auth.login")}
             </Button>
-            <Link to={routes.registration}>Регистрация</Link>
+            <Link to={routes.registration}>{t("auth.registration")}</Link>
           </Space>
         </Form.Item>
 
@@ -108,19 +108,19 @@ export const Auth = ({ currentUser }: Props) => {
           type="primary"
           onClick={() => signInWithGoogle()}
         >
-          Войти через Google
+          {t("auth.login_with_google")}
         </Button>
         {googleError && (
-          <Text type="danger">При входе произошла ошибка: {googleError.message}</Text>
+          <Text type="danger">
+            {t("auth.error_occurred")}: {googleError.message}
+          </Text>
         )}
         <Form.Item {...tailFormItemLayout}>
           <Space direction="vertical" style={{ width: "100%", marginTop: 20 }}>
             <Text italic>
-              Нажав "Войти с помощью Email/Google" выше, вы подтверждаете, что прочитали и поняли, а
-              также соглашаетесь с &nbsp;
-              <Link to={routes.privacyPolicy}>cоглашением политикой конфиденциальности</Link>{" "}
-              и&nbsp;
-              <Link to={routes.privacy}>правила и условия</Link>
+              {t("auth.login_disclaimer")}
+              <Link to={routes.privacyPolicy}>{t("auth.privacy_policy")}</Link> {t("auth.and")}{" "}
+              <Link to={routes.privacy}>{t("auth.terms_and_conditions")}</Link>
             </Text>
           </Space>
         </Form.Item>

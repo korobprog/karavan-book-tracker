@@ -6,6 +6,7 @@ import { SelectLocation } from "common/src/features/select-location/SelectLocati
 import { removeEmptyFields } from "../../../utils/objects";
 import { AvatarUploader } from "./AvatarUploader ";
 import { getViewTransitionStyles } from "../../../utils/transition";
+import { useTranslation } from "react-i18next";
 
 const layout = {
   labelCol: { span: 8 },
@@ -34,6 +35,7 @@ export const ProfileForm = <FormValues extends ProfileFormValues>(props: Props<F
     slot,
     isYatraLocationRequired,
   } = props;
+  const { t } = useTranslation();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | undefined>(initialValues?.avatar);
@@ -58,9 +60,9 @@ export const ProfileForm = <FormValues extends ProfileFormValues>(props: Props<F
       autoComplete="off"
       {...layout}
     >
-      <Typography.Paragraph>Обязательно заполните профиль</Typography.Paragraph>
+      <Typography.Paragraph>{t("profile.form.fill_profile")}</Typography.Paragraph>
       {userId !== "none" && (
-        <Form.Item name="avatar" label="Avatar" valuePropName="avatar">
+        <Form.Item name="avatar" label={t("profile.form.avatar_label")} valuePropName="avatar">
           <AvatarUploader
             imageUrl={imageUrl}
             onImageUrlChange={setImageUrl}
@@ -69,42 +71,52 @@ export const ProfileForm = <FormValues extends ProfileFormValues>(props: Props<F
           />
         </Form.Item>
       )}
-      <Form.Item name="name" label="Ваше Ф.И.О" rules={[{ required: true }]}>
+      <Form.Item name="name" label={t("profile.form.full_name_label")} rules={[{ required: true }]}>
         <Input />
       </Form.Item>
-      <Form.Item name="nameSpiritual" label="Ваше духовное имя" rules={[{ required: false }]}>
+      <Form.Item
+        name="nameSpiritual"
+        label={t("profile.form.spiritual_name_label")}
+        rules={[{ required: false }]}
+      >
         <Input />
       </Form.Item>
-      <Form.Item name="city" label="Ваш город" rules={[{ required: true }]}>
+      <Form.Item name="city" label={t("profile.form.city_label")} rules={[{ required: true }]}>
         <SelectLocation name="city" />
       </Form.Item>
       <Form.Item
         name="yatraLocationId"
-        label="Ваша ятра"
+        label={t("profile.form.yatra_label")}
         rules={[{ required: isYatraLocationRequired }]}
       >
         <SelectLocation name="yatraLocationId" />
       </Form.Item>
       <Form.Item
         name="phone"
-        label="Ваш телефон"
+        label={t("profile.form.phone_label")}
         rules={[
-          { required: true, message: "Пожалуйста, введите свой номер телефона!" },
-          { pattern: phoneNumberPattern, message: "Пожалуйста, введите корректный номер" },
+          { required: true, message: t("profile.form.phone_required_message") },
+          { pattern: phoneNumberPattern, message: t("profile.form.phone_pattern_message") },
         ]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="email"
-        label="email"
+        label={t("profile.form.email")}
         rules={
-          isEmailEditable ? [{ required: true, message: "Пожалуйста, введите email" }] : undefined
+          isEmailEditable
+            ? [{ required: true, message: t("profile.form.email_required_message") }]
+            : undefined
         }
       >
         <Input disabled={!isEmailEditable} />
       </Form.Item>
-      <Form.Item name="address" label="Ваш адрес" rules={[{ required: false }]}>
+      <Form.Item
+        name="address"
+        label={t("profile.form.address_label")}
+        rules={[{ required: false }]}
+      >
         <Input />
       </Form.Item>
 
@@ -112,7 +124,7 @@ export const ProfileForm = <FormValues extends ProfileFormValues>(props: Props<F
 
       <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
         <Button type="primary" htmlType="submit" loading={isSubmitting || isLoading}>
-          СОХРАНИТЬ
+          {t("common.save")}
         </Button>
       </Form.Item>
     </Form>
