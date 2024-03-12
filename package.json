@@ -27,6 +27,12 @@
     "donation:deploy:staging": "npm run deploy:staging -w donation",
     "donation:build:prod": "npm run build:prod -w donation",
     "donation:deploy:prod": "npm run deploy:prod -w donation",
+    "map": "npm run start -w map",
+    "map:prod": "npm run start:prod -w map",
+    "map:build:staging": "npm run build:staging -w map",
+    "map:deploy:staging": "npm run deploy:staging -w map",
+    "map:build:prod": "npm run build:prod -w map",
+    "map:deploy:prod": "npm run deploy:prod -w map",
     "prepare": "husky install"
   },
   "eslintConfig": {
@@ -40,7 +46,8 @@
     "packages/admin",
     "packages/tracker",
     "packages/stock",
-    "packages/donation"
+    "packages/donation",
+    "packages/map"
   ],
   "dependencies": {
     "@ant-design/pro-layout": "^7.17.6",
@@ -52,6 +59,7 @@
   },
   "devDependencies": {
     "@types/firebase": "^3.2.1",
+    "@types/lodash": "^4.14.202",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
     "craco-plugin-env": "^1.0.5",

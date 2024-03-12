@@ -43,7 +43,7 @@ type Props = {
 
 export const UsersStatistic = (props: Props) => {
   const [selectedYear, setSelectedYear] = useState(0);
-  const [selectedMonth, setSelectedMonth] = useState(0);
+  const [selectedMonth, setSelectedMonth] = useState<string>();
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const { Title } = Typography;
 
@@ -68,13 +68,13 @@ export const UsersStatistic = (props: Props) => {
       const operations = await getDocs(operationsQuery);
       let monthlyBooks: any = {};
       let exportTable: any = [];
-      const pickedMonth = months[selectedMonth - 1];
+      const pickedMonth = months[Number(selectedMonth) - 1];
       operations.forEach((doc) => {
         const { date, books, userName = "Unknown", totalCount = 0, totalPoints = 0 } = doc.data();
         const year = new Date(date).getFullYear() ?? "Unknown";
         const month = new Date(date).getMonth() ?? "Unknown";
         const bookHashMap = $booksHashMap.getState();
-        if (year === selectedYear || month === Number(selectedMonth) - 1) {
+        if (year === selectedYear && month === Number(selectedMonth) - 1) {
           monthlyBooks[userName] = monthlyBooks?.[userName] ?? {};
           monthlyBooks[userName]["Количество книг"] =
             (monthlyBooks?.[userName]?.["Количество книг"] || 0) + totalCount;
@@ -157,7 +157,7 @@ export const UsersStatistic = (props: Props) => {
   const onChange = (date: any, dateString: any) => {
     const [month, year] = dateString.split(".");
     setSelectedMonth(month);
-    setSelectedYear(year);
+    setSelectedYear(Number(year));
     setButtonDisabled(false);
   };
 

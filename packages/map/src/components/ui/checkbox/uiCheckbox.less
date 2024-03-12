@@ -1,0 +1,30 @@
+.uiCheckbox {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  &__input {
+    display: none;
+  }
+
+  &__checkbox {
+    fill: var(--color-input);
+    margin-right: 16px;
+    min-width: 24px;
+    height: 24px;
+  }
+
+  &__check {
+    position: absolute;
+    left: 0;
+    color: var(--color-secondary);
+    transition: opacity 0.26s ease-in-out;
+    min-width: 24px;
+    height: 24px;
+    padding: 1px;
+    &_hidden {
+      opacity: 0;
+    }
+  }
+}
