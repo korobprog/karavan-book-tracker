@@ -4,6 +4,7 @@ import {
   Button,
   List,
   Input,
+  InputRef,
   InputNumber,
   Form,
   Checkbox,
@@ -56,6 +57,7 @@ export const ReportForm = (props: Props) => {
   const { toggleFavorite } = useUser({ profile });
   const [searchString, setSearchString] = useState("");
   const [showOnliFirstBooks, setShowOnliFirstBooks] = useState(storage.getShowOnliFirstBooks());
+  const searchRef = useRef<InputRef>(null);
 
   const onShowOnliFirstBooksChange = (flag: boolean) => {
     setShowOnliFirstBooks(flag);
@@ -156,6 +158,7 @@ export const ReportForm = (props: Props) => {
 
   const onPlusClick = useCallback(
     (bookId: string) => {
+      searchRef.current?.focus();
       const prevValue = form.getFieldValue(bookId) || 0;
       form.setFieldsValue({ [bookId]: prevValue + 1 });
       onValuesChange();
@@ -165,6 +168,7 @@ export const ReportForm = (props: Props) => {
 
   const onMinusClick = useCallback(
     (bookId: string) => {
+      searchRef.current?.focus();
       const prevValue = form.getFieldValue(bookId) || 0;
       if (prevValue !== 0) {
         form.setFieldsValue({ [bookId]: prevValue - 1 });
@@ -253,6 +257,7 @@ export const ReportForm = (props: Props) => {
 
       <Row>
         <Search
+          ref={searchRef}
           placeholder="поиск книги"
           allowClear
           onChange={debouncedSearch}
