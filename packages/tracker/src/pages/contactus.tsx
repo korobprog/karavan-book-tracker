@@ -3,24 +3,27 @@ import { BaseLayout } from "common/src/components/BaseLayout";
 import { routes } from "../shared/routes";
 
 import { MessageOutlined } from "@ant-design/icons";
+import { useTranslation } from "react-i18next";
 
 export const ContactUs = () => {
   const { Title, Text, Paragraph } = Typography;
+  const { t } = useTranslation();
+
   return (
-    <BaseLayout title="Связаться с нами" headerActions={[]} backPath={routes.root}>
+    <BaseLayout title={t("contact.title")} headerActions={[]} backPath={routes.root}>
       <Title className="site-page-title" level={4}>
-        Напишите нам
+        {t("contact.write_to_us")}
       </Title>
       <Paragraph>
-        Напишите нам с помощью нашего <Text strong>BookTrackerSupport</Text> бота{" "}
-        <Text strong>Даси</Text> в телеграм:
+        {t("contact.write_to_us_with_bot")} <Text strong>{t("contact.book_tracker_support")}</Text>{" "}
+        {t("contact.bot_dasa")}:
       </Paragraph>
       <Text></Text>
       <Paragraph>
         <ul>
-          <li>Техничесская поддержка</li>
-          <li>Отправить историю</li>
-          <li>Инструкция приложения</li>
+          <li>{t("contact.technical_support")}</li>
+          <li>{t("contact.send_story")}</li>
+          <li>{t("contact.app_instructions")}</li>
         </ul>
       </Paragraph>
       <Divider dashed />
@@ -32,10 +35,10 @@ export const ContactUs = () => {
         icon={<MessageOutlined />}
         type="dashed"
       >
-        поддержка
+        {t("contact.support")}
       </Button>
       <Divider dashed />
-      <Text italic>Разработчики BookTracker - Коробков Максим и Вадим Токарь</Text>
+      <Text italic>{t("contact.book_tracker_developers")}</Text>
     </BaseLayout>
   );
 };

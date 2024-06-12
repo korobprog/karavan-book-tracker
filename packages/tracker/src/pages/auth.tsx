@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { Form, Input, Button, Checkbox, Typography, Space, Alert } from "antd";
+import { useEffect, useState } from "react";
+import { Form, Input, Button, Checkbox, Typography, Space } from "antd";
+import { useTranslation } from "react-i18next";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { Link } from "react-router-dom";
@@ -8,7 +9,6 @@ import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavig
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { GoogleOutlined } from "@ant-design/icons";
 import { BaseLayout } from "common/src/components/BaseLayout";
-import type { CheckboxProps } from "antd";
 
 type Props = {
   currentUser: CurrentUser;
@@ -20,6 +20,7 @@ export const Auth = ({ currentUser }: Props) => {
   const [signInWithEmailAndPassword, , , emailError] = useSignInWithEmailAndPassword(auth);
   const navigate = useTransitionNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (user) {
@@ -54,9 +55,9 @@ export const Auth = ({ currentUser }: Props) => {
   };
 
   return (
-    <BaseLayout title="Учет книг" headerActions={[]}>
+    <BaseLayout title={t("auth.title")} headerActions={[]}>
       <Title className="site-page-title" level={2}>
-        ВХОД В УЧЕТ КНИГ
+        {t("auth.title")}
       </Title>
       <Form
         name="basic"
@@ -68,36 +69,36 @@ export const Auth = ({ currentUser }: Props) => {
         autoComplete="off"
       >
         <Form.Item
-          label="Email"
+          label={t("auth.email.label")}
           name="email"
           rules={[
             {
               required: true,
-              message: "Пожалуйста, введите ваше имя пользователя",
+              message: t("auth.email.error.required"),
             },
           ]}
         >
           <Input />
         </Form.Item>
         <Form.Item
-          label="Пароль"
+          label={t("auth.password.label")}
           name="password"
-          rules={[{ required: true, message: "Пожалуйста, введите пароль" }]}
+          rules={[{ required: true, message: t("auth.password.error.required") }]}
         >
           <Input.Password />
         </Form.Item>
         <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>
-          <Checkbox>Запомни меня</Checkbox>
+          <Checkbox>{t("auth.remember_me")}</Checkbox>
         </Form.Item>
         <Form.Item
           wrapperCol={{ offset: 8, span: 16 }}
-          help={emailError && <Text type="danger">Неверный логин или пароль</Text>}
+          help={emailError && <Text type="danger">{t("auth.invalid_login_password")}</Text>}
         >
           <Space>
             <Button type="primary" htmlType="submit" loading={isSubmitting}>
-              Войти
+              {t("auth.login")}
             </Button>
-            <Link to={routes.registration}>Регистрация</Link>
+            <Link to={routes.registration}>{t("auth.registration")}</Link>
           </Space>
         </Form.Item>
 
@@ -107,19 +108,19 @@ export const Auth = ({ currentUser }: Props) => {
           type="primary"
           onClick={() => signInWithGoogle()}
         >
-          Войти через Google
+          {t("auth.login_with_google")}
         </Button>
         {googleError && (
-          <Text type="danger">При входе произошла ошибка: {googleError.message}</Text>
+          <Text type="danger">
+            {t("auth.error_occurred")}: {googleError.message}
+          </Text>
         )}
         <Form.Item {...tailFormItemLayout}>
           <Space direction="vertical" style={{ width: "100%", marginTop: 20 }}>
             <Text italic>
-              Нажав "Войти с помощью Email/Google" выше, вы подтверждаете, что прочитали и поняли, а
-              также соглашаетесь с &nbsp;
-              <Link to={routes.privacyPolicy}>cоглашением политикой конфиденциальности</Link>{" "}
-              и&nbsp;
-              <Link to={routes.privacy}>правила и условия</Link>
+              {t("auth.login_disclaimer")}
+              <Link to={routes.privacyPolicy}>{t("auth.privacy_policy")}</Link> {t("auth.and")}{" "}
+              <Link to={routes.privacy}>{t("auth.terms_and_conditions")}</Link>
             </Text>
           </Space>
         </Form.Item>
