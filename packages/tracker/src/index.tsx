@@ -9,7 +9,7 @@ import reportWebVitals from "./reportWebVitals";
 import { ConfigProvider } from "antd";
 import moment from "moment";
 import "moment/locale/ru";
-
+import { YMaps } from "react-yandex-maps";
 moment.locale("ru");
 
 ReactDOM.render(
@@ -17,7 +17,9 @@ ReactDOM.render(
     <BrowserRouter>
       <Offline>
         <ConfigProvider locale={ru_RU}>
-          <App />
+          <YMaps query={{ apikey: "c255f685-e775-4ad8-a92a-00ab2b2b3ba3", lang: "ru_RU" }}>
+            <App />
+          </YMaps>
         </ConfigProvider>
       </Offline>
     </BrowserRouter>

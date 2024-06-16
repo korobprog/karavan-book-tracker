@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { Select, SelectProps, Typography, RefSelectProps, Modal } from "antd";
+import { GeolocationControl, Map, YMaps, ZoomControl, Placemark } from "react-yandex-maps";
+import { EnvironmentTwoTone } from "@ant-design/icons";
 
 type LocationSelectProps = SelectProps & {
   onAddNewLocation: () => void;
@@ -20,6 +22,38 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
       <PlusOutlined />
       Добавить "{locationSearchString}"
     </Typography.Link>;
+
+    const mapOptions = {
+      modules: ["geocode", "SuggestView"],
+      defaultOptions: { suppressMapOpenBlock: true },
+      width: "auto",
+      height: 400,
+    };
+    const mapState = {
+      center: [55.76, 37.64],
+      zoom: 8,
+      controls: [],
+    };
+
+    const geolocationOptions = {
+      defaultOptions: { maxWidth: 128 },
+      defaultData: { content: "Determine" },
+    };
+
+    const [mapConstructor, setMapConstructor] = useState(null);
+    const [addressCoord, setAddressCoord] = useState();
+
+    console.log("🚀 ~ setMapConstructor:", setMapConstructor);
+
+    useEffect(() => {
+      if (mapConstructor) {
+        // @ts-ignore
+        mapConstructor.geocode(locationSearchString).then((result) => {
+          const coord = result.geoObjects.get(0).geometry.getCoordinates();
+          setAddressCoord(coord);
+        });
+      }
+    }, [mapConstructor]);
 
     return (
       <>
@@ -66,7 +100,22 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
           open={modal1Open}
           onOk={() => setModal1Open(false)}
           onCancel={() => setModal1Open(false)}
-        ></Modal>
+        >
+          <Map
+            {...mapOptions}
+            // @ts-ignore
+            state={addressCoord ? { ...mapState, center: addressCoord } : mapState}
+            // @ts-ignore
+            onLoad={setMapConstructor}
+            defaultState={{
+              center: [55.751574, 37.573856],
+              zoom: 5,
+            }}
+          >
+            {addressCoord && <Placemark geometry={addressCoord} />}
+            <GeolocationControl {...geolocationOptions} />
+          </Map>
+        </Modal>
       </>
     );
   }

@@ -44,9 +44,11 @@
   ],
   "dependencies": {
     "@ant-design/pro-layout": "^7.17.6",
+    "@pbe/react-yandex-maps": "^1.2.5",
     "exceljs": "^4.3.0",
     "file-saver": "^2.0.5",
-    "jspdf": "^2.5.1"
+    "jspdf": "^2.5.1",
+    "react-yandex-maps": "^4.6.0"
   },
   "devDependencies": {
     "@types/firebase": "^3.2.1",
