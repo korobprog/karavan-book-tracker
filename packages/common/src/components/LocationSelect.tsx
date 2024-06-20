@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
-import { Select, SelectProps, Typography, RefSelectProps, Modal } from "antd";
-import { GeolocationControl, Map, YMaps, ZoomControl, Placemark } from "react-yandex-maps";
-import { EnvironmentTwoTone } from "@ant-design/icons";
+import { Select, SelectProps, Typography, RefSelectProps, Modal, Button } from "antd";
+import { MapSearch } from "./MapSearch";
 
 type LocationSelectProps = SelectProps & {
   onAddNewLocation: () => void;
@@ -18,42 +17,23 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
 
     const [modal1Open, setModal1Open] = useState(false);
 
+    const [loadingCity, setLoading] = useState(false);
+
     <Typography.Link onClick={onAddNewLocation} style={{ whiteSpace: "nowrap" }}>
       <PlusOutlined />
       Добавить "{locationSearchString}"
     </Typography.Link>;
 
-    const mapOptions = {
-      modules: ["geocode", "SuggestView"],
-      defaultOptions: { suppressMapOpenBlock: true },
-      width: "auto",
-      height: 400,
-    };
-    const mapState = {
-      center: [55.76, 37.64],
-      zoom: 8,
-      controls: [],
+    const handleOk = () => {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+      }, 3000);
     };
 
-    const geolocationOptions = {
-      defaultOptions: { maxWidth: 128 },
-      defaultData: { content: "Determine" },
+    const handleCancel = () => {
+      setModal1Open(false);
     };
-
-    const [mapConstructor, setMapConstructor] = useState(null);
-    const [addressCoord, setAddressCoord] = useState();
-
-    console.log("🚀 ~ setMapConstructor:", setMapConstructor);
-
-    useEffect(() => {
-      if (mapConstructor) {
-        // @ts-ignore
-        mapConstructor.geocode(locationSearchString).then((result) => {
-          const coord = result.geoObjects.get(0).geometry.getCoordinates();
-          setAddressCoord(coord);
-        });
-      }
-    }, [mapConstructor]);
 
     return (
       <>
@@ -95,26 +75,16 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
           {children}
         </Select>
         <Modal
-          title="20px to Top"
           style={{ top: 20 }}
           open={modal1Open}
-          onOk={() => setModal1Open(false)}
-          onCancel={() => setModal1Open(false)}
+          onCancel={handleCancel}
+          footer={[
+            <Button key="submit" type="primary" loading={loadingCity} onClick={handleOk}>
+              {`Выбрать место локации где были распространены книги`}
+            </Button>,
+          ]}
         >
-          <Map
-            {...mapOptions}
-            // @ts-ignore
-            state={addressCoord ? { ...mapState, center: addressCoord } : mapState}
-            // @ts-ignore
-            onLoad={setMapConstructor}
-            defaultState={{
-              center: [55.751574, 37.573856],
-              zoom: 5,
-            }}
-          >
-            {addressCoord && <Placemark geometry={addressCoord} />}
-            <GeolocationControl {...geolocationOptions} />
-          </Map>
+          {modal1Open && <MapSearch locationSearchString={locationSearchString} />}
         </Modal>
       </>
     );
