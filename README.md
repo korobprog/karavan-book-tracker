@@ -7,13 +7,13 @@ It based on [npm workspaces](https://docs.npmjs.com/cli/v8/using-npm/workspaces)
 
 You can register and see the project, it is connected to the test base, you can do anything there:
 An application for employees: <https://karavan-book-tracker-test.web.app/>
-For admins: <https://karavan-book-tracker-admin-test.web.app/>
+For admins: <https://karavan-book-tracker-admin-test.web.app/> For warehouse workers <https://karavan-book-stock.web.app/>
 
 # Examples
 
-There are two projects:
+There are three projects:
 
-[Tracker-app](https://karavan-book-tracker.web.app/) and [Admin-app](https://karavan-book-tracker-admin.web.app/)
+[Tracker-app](https://karavan-book-tracker.web.app/) , [Admin-app](https://karavan-book-tracker-admin.web.app/) and [Stock-app](https://karavan-book-stock.web.app/)
 
 # Getting Started
 

@@ -31,6 +31,7 @@ import { nowYear } from "common/src/services/year";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { YearSwitch } from "common/src/components/YearSwitch";
 import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
+import { UserStatisticByBooks } from "common/src/features/downloadUserStatisticByBooks";
 
 type Props = {
   currentUser: CurrentUser;
@@ -178,6 +179,7 @@ export const Statistic = ({ currentUser }: Props) => {
           <AntdStatistic title="Баллов" value={statistic?.points} loading={userDocLoading} />
         </Space>
       </Row>
+      <UserStatisticByBooks currentUser={currentUser} />
       <Divider dashed />
       <Button
         block
@@ -188,6 +190,7 @@ export const Statistic = ({ currentUser }: Props) => {
       >
         Добавить операцию
       </Button>
+
       <Divider dashed />
       <Table
         columns={columns}
