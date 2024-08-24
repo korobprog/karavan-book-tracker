@@ -89,10 +89,8 @@ const PageDonations = ({ currentUser }: Props) => {
   const plug1 = switchState ? "" : dnone;
   const plug2 = switchState ? dnone : "";
 
-  const [isChecked, setIsChecked] = useState(false);
-  const toggleDisabled = () => {
-    setIsChecked(true);
-  };
+  // TODO: check is it need
+  const [isChecked] = useState(false);
 
   const navigate = useTransitionNavigate();
 

@@ -4,7 +4,7 @@ import { routes } from "../shared/routes";
 import Link from "antd/es/typography/Link";
 
 export const PrivacyPolicy = () => {
-  const { Title, Text, Paragraph } = Typography;
+  const { Title, Paragraph } = Typography;
   return (
     <BaseLayout title="Регистрация" headerActions={[]} backPath={routes.registration}>
       <Title className="site-page-title" level={2}>
