@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback, memo, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useStore } from "effector-react";
 import {
   Button,
@@ -53,6 +54,7 @@ export const ReportForm = (props: Props) => {
     userSelect,
     initialValues: initialValuesProps,
   } = props;
+  const { t } = useTranslation();
   const { profile, favorite, userDocLoading } = currentUser;
   const { toggleFavorite } = useUser({ profile });
   const [searchString, setSearchString] = useState("");
@@ -181,8 +183,7 @@ export const ReportForm = (props: Props) => {
   const onFinishHandler = (formValues: ReportFormValues) => {
     if (totalBooksCount > 100 && !profile?.role?.includes("authorized")) {
       message.warning({
-        content:
-          "Спасибо, ваша операция добавлена, но еще не подтверждена. Мы свяжемся с вами в ближайшее время для подтверждения.",
+        content: t("report.form.warning_unauthrized"),
         duration: 5,
         style: {
           marginTop: "10vh",
@@ -205,11 +206,11 @@ export const ReportForm = (props: Props) => {
       {userSelect}
       <Form.Item
         name="locationId"
-        label="Место"
+        label={t("report.form.location_label")}
         rules={[
           {
             required: true,
-            message: "Выберите или создайте новое место",
+            message: t("report.form.location_required"),
           },
         ]}
       >
@@ -227,7 +228,7 @@ export const ReportForm = (props: Props) => {
         </Form.Item>
         <Form.Item>
           <Checkbox onChange={onOnlineChange} checked={isOnline}>
-            Онлайн-распространение
+            {t("report.form.online_label")}
           </Checkbox>
         </Form.Item>
       </Space>
@@ -235,14 +236,14 @@ export const ReportForm = (props: Props) => {
       <Form.Item>
         <Space>
           <Typography>
-            Выбрано книг: <b>{totalBooksCount}</b>
+            {t("report.form.books_selected")} <b>{totalBooksCount}</b>
           </Typography>
           <Button
             type="default"
             disabled={isSubmitting || userDocLoading || totalBooksCount === 0}
             onClick={onBooksReset}
           >
-            Сбросить
+            {t("report.form.reset")}
           </Button>
           <Button
             type="primary"
@@ -250,7 +251,7 @@ export const ReportForm = (props: Props) => {
             loading={isSubmitting || userDocLoading}
             disabled={totalBooksCount === 0}
           >
-            {isSubmitting ? "Отправляем..." : "Отправить"}
+            {isSubmitting ? t("report.form.submitting") : t("report.form.submit")}
           </Button>
         </Space>
       </Form.Item>
@@ -258,14 +259,14 @@ export const ReportForm = (props: Props) => {
       <Row>
         <Search
           ref={searchRef}
-          placeholder="поиск книги"
+          placeholder={t("report.form.search")}
           allowClear
           onChange={debouncedSearch}
           style={{ flexGrow: 1, width: 200, marginRight: 16 }}
         />
 
         <Space size="middle">
-          <Helper title="Включение режима опитимзации поиска. Для более быстрой работы показываются только первые 3 избранные и 3 не избранные книги" />
+          <Helper title={t("report.form.optimizing_mode")} />
           <Switch
             checked={showOnliFirstBooks}
             onChange={onShowOnliFirstBooksChange}
@@ -280,8 +281,8 @@ export const ReportForm = (props: Props) => {
         loadMore={booksLoading}
         locale={{
           emptyText: searchString
-            ? "Не найдено избранного"
-            : "Нажмите на ⭐, чтобы добавить в избранное",
+            ? t("report.form.favorite_empty_no_found")
+            : t("report.form.favorite_empty_add"),
         }}
         renderItem={(book) => (
           <BookItem
@@ -298,7 +299,7 @@ export const ReportForm = (props: Props) => {
         itemLayout="horizontal"
         dataSource={showOnliFirstBooks ? otherBooks.slice(0, 5) : otherBooks}
         loading={booksLoading || userDocLoading}
-        locale={{ emptyText: "Не найдено книг" }}
+        locale={{ emptyText: t("report.form.list_empty") }}
         renderItem={(book) => (
           <BookItem
             book={book}
@@ -320,6 +321,7 @@ export const ReportForm = (props: Props) => {
 };
 
 const BookItem = memo((props: any) => {
+  const { t } = useTranslation();
   const {
     book,
     isFavorite,
@@ -337,7 +339,10 @@ const BookItem = memo((props: any) => {
         disabled={isSubmitting || userDocLoading}
         style={{ marginRight: 8 }}
       />
-      <List.Item.Meta title={book.name} description={book.points ? `Баллы: ${book.points}` : ""} />
+      <List.Item.Meta
+        title={book.name}
+        description={book.points ? `${t("report.form.points")} ${book.points}` : ""}
+      />
       <Space>
         <Button onClick={() => onMinusClick(book.id)} icon={<MinusOutlined />} />
         <Form.Item name={book.id} noStyle>

@@ -39,6 +39,7 @@ const resources = {
       "auth.terms_and_conditions": "terms and conditions",
 
       "profile.title": "Your profile",
+      "profile.logout": "Logout",
       "profile.form.fill_profile": "Please fill in your profile",
       "profile.form.avatar_label": "Avatar",
       "profile.form.full_name_label": "Your Full Name",
@@ -99,6 +100,23 @@ const resources = {
       "donation.form.email_suffix_title": "Example: mymail@mail.com",
       "donation.form.other_links_placeholder": "other links",
       "donation.form.other_links_suffix_title": "Example: www.example.com",
+
+      "report.form.warning_unauthrized":
+        "Thank you, your operation has been added but is not yet confirmed. We will contact you shortly for confirmation.",
+      "report.form.location_label": "Location",
+      "report.form.location_required": "Select or create a new location",
+      "report.form.online_label": "Online Distribution",
+      "report.form.books_selected": "Books selected:",
+      "report.form.reset": "Reset",
+      "report.form.submitting": "Submitting...",
+      "report.form.submit": "Submit",
+      "report.form.search": "Search for a book",
+      "report.form.optimizing_mode":
+        "Enabling search optimization mode. Only the first 3 favorite and 3 non-favorite books are shown for faster performance.",
+      "report.form.favorite_empty_no_found": "No favorites found",
+      "report.form.favorite_empty_add": "Click on ⭐ to add to favorites",
+      "report.form.list_empty": "No books found",
+      "report.form.points": "Points:",
     },
   },
   ru: {
@@ -135,6 +153,7 @@ const resources = {
       "auth.terms_and_conditions": "правилами и условиями",
 
       "profile.title": "Ваш профиль",
+      "profile.logout": "Выйти",
       "profile.form.fill_profile": "Обязательно заполните профиль",
       "profile.form.avatar_label": "Аватар",
       "profile.form.full_name_label": "Ваше Ф.И.О",
@@ -196,6 +215,23 @@ const resources = {
       "donation.form.email_suffix_title": "Пример: mymail@mail.com",
       "donation.form.other_links_placeholder": "другие ссылки",
       "donation.form.other_links_suffix_title": "Пример: www.exemple.com",
+
+      "report.form.warning_unauthrized":
+        "Спасибо, ваша операция добавлена, но еще не подтверждена. Мы свяжемся с вами в ближайшее время для подтверждения.",
+      "report.form.location_label": "Место",
+      "report.form.location_required": "Выберите или создайте новое место",
+      "report.form.online_label": "Онлайн-распространение",
+      "report.form.books_selected": "Выбрано книг:",
+      "report.form.reset": "Сбросить",
+      "report.form.submitting": "Отправляем...",
+      "report.form.submit": "Отправить",
+      "report.form.search": "Поиск книги",
+      "report.form.optimizing_mode":
+        "Включение режима оптимизации  поиска. Для более быстрой работы показываются только первые 3 избранные и 3 не избранные книги",
+      "report.form.favorite_empty_no_found": "Не найдено избранного",
+      "report.form.favorite_empty_add": "Нажмите на ⭐, чтобы добавить в избранное",
+      "report.form.list_empty": "Не найдено книг",
+      "report.form.points": "Баллы:",
     },
   },
 };
@@ -207,7 +243,6 @@ i18n
     lng: "ru", // language to use, more information here: https://www.i18next.com/overview/configuration-options#languages-namespaces-resources
     // you can use the i18n.changeLanguage function to change the language manually: https://www.i18next.com/overview/api#changelanguage
     // if you're using a language detector, do not define the lng option
-
     interpolation: {
       escapeValue: false, // react already safes from xss
     },

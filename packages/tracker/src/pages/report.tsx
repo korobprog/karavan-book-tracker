@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 
 import { routes } from "../shared/routes";
@@ -17,6 +18,7 @@ type Props = {
 };
 
 export const Report = ({ currentUser }: Props) => {
+  const { t } = useTranslation();
   const { profile, user, loading, userDocLoading } = currentUser;
   const [isOnline, setIsOnline] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -61,7 +63,7 @@ export const Report = ({ currentUser }: Props) => {
 
   return (
     <BaseLayout
-      title="Отметить книги"
+      title={t("home.report")}
       backPath={routes.root}
       userDocLoading={userDocLoading}
       avatar={avatar}
