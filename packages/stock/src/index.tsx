@@ -3,22 +3,18 @@ import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import "common/src/app/clientApp";
 import { Offline, register as registerServiceWorker } from "common/src/app/offline";
-import ru_RU from "antd/locale/ru_RU";
+import { LocaleProvider } from "common/src/app/locale-provider/LocaleProvider";
+import "./i18n";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { ConfigProvider } from "antd";
-import moment from "moment";
-import "moment/locale/ru";
-
-moment.locale("ru");
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <Offline>
-        <ConfigProvider locale={ru_RU}>
+        <LocaleProvider>
           <App />
-        </ConfigProvider>
+        </LocaleProvider>
       </Offline>
     </BrowserRouter>
   </React.StrictMode>,

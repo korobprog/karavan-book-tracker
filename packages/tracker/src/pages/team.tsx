@@ -9,12 +9,14 @@ import { TeamCard } from "common/src/components/TeamCard";
 import { useLocations } from "common/src/services/api/locations";
 import { TeamMemberStatus, setUserTeam } from "common/src/services/api/useUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   currentUser: CurrentUser;
 };
 
 export const Team = ({ currentUser }: Props) => {
+  const { t } = useTranslation();
   const { profile, userDocLoading } = currentUser;
   const { locationsHashMap } = useLocations();
   const navigate = useTransitionNavigate();
@@ -39,21 +41,19 @@ export const Team = ({ currentUser }: Props) => {
     <>
       {loading || userDocLoading ? (
         <Title className="site-page-title" level={5}>
-          Загрузка...
+          {t("team.loading")}
         </Title>
       ) : (
         <>
           <Title className="site-page-title" level={5}>
-            Команда еще не выбрана
+            {t("team.not_selected")}
           </Title>
-          <Paragraph className="site-page-title">
-            Вы можете подать заявку на вступление в команду или создать новую
-          </Paragraph>
+          <Paragraph className="site-page-title">{t("team.not_selected_help")}</Paragraph>
         </>
       )}
 
       <Button block size="large" type="primary" icon={<UsergroupAddOutlined />} onClick={onTeamAdd}>
-        Создать свою команду
+        {t("team.add_team")}
       </Button>
 
       {teams.map((team) => {
@@ -68,7 +68,7 @@ export const Team = ({ currentUser }: Props) => {
               style={{ marginLeft: "auto" }}
               loading={userDocLoading}
             >
-              Подать заявку
+              {t("team.add_applications")}
             </Button>
           </TeamCard>
         );
@@ -78,7 +78,7 @@ export const Team = ({ currentUser }: Props) => {
 
   return (
     <BaseLayout
-      title="Моя команда"
+      title={t("home.my_team")}
       backPath={routes.root}
       userDocLoading={userDocLoading}
       avatar={avatar}

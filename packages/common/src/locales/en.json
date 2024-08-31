@@ -30,6 +30,13 @@
         "email_suffix_title": "Example: mymail@mail.com",
         "other_links_placeholder": "other links",
         "other_links_suffix_title": "Example: www.example.com"
+      },
+      "menu": {
+        "your_page": "Your donation page",
+        "print": "Print business cards"
+      },
+      "preview": {
+        "greeting": "You can donate for printing and redeeming books"
       }
     },
     "save": "Save",
@@ -66,6 +73,71 @@
         "list_empty": "No books found",
         "points": "Points:"
       }
+    },
+    "download_user_statistic_by_books": {
+      "title": "Statistics for the Period",
+      "date_from": "Date From",
+      "date_to": "Date To"
+    },
+    "download": "Download",
+    "name": "Name",
+    "books_count": "Books count",
+    "book_category": {
+      "mahabig": "MahaBig",
+      "big": "Big",
+      "medium": "Medium",
+      "small": "Small",
+      "goswamibooks": "Goswami Books",
+      "other": "Other"
+    },
+    "month": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    },
+    "download_user_statistic": {
+      "title": "Monthly Statistics"
+    },
+    "points": "Points",
+    "team_card": {
+      "where_now": "where now",
+      "leave_question": "Do you want to leave this group?",
+      "leave": "Leave group",
+      "members": "Members",
+      "under_consideration": "Application under review",
+      "cancel_applications": "Cancel application",
+      "applications": "Group applications",
+      "accept_application": "Accept application",
+      "helper": "Members can join the team by submitting an application. Submitted applications will be listed below"
+    },
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "team_form": {
+      "name": {
+        "label": "Name",
+        "required": "Enter a name"
+      },
+      "leader": {
+        "label": "Group Leader",
+        "required": "Select a leader"
+      },
+      "location": {
+        "label": "Base Location"
+      },
+      "currentLocation": {
+        "label": "Current Location"
+      },
+      "save": "SAVE"
     }
-  }
+  },
+  "year": "Year"
 }

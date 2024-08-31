@@ -51,7 +51,8 @@
     "my_team": "My team",
     "map": "General statistics on the map",
     "second-wave": {
-      "help": "Send received contacts:"
+      "help": "Send received contacts:",
+      "button": "Second wave"
     },
     "contact": "Contact us"
   },
@@ -123,5 +124,29 @@
     "confidentiality": {
       "title": "Privacy Policy"
     }
+  },
+  "statistic": {
+    "table": {
+      "date": "Date",
+      "total_books": "Total Books",
+      "location": "City",
+      "books": "Books",
+      "pcs": "pcs.",
+      "status": "Status",
+      "status_approved": "Approved",
+      "status_waiting": "Waiting",
+      "action": "Action",
+      "action_remove_operation": "Remove operation?"
+    },
+    "button_add": "Add Operation",
+    "books": "Books",
+    "points": "Points"
+  },
+  "team": {
+    "loading": "Loading...",
+    "not_selected": "Team not selected",
+    "not_selected_help": "You can apply to join a team or create a new one",
+    "add_team": "Create your team",
+    "add_applications": "Submit an application"
   }
 }

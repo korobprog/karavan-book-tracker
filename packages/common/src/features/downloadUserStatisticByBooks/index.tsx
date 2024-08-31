@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Space, Button, Typography } from "antd";
 import { DatePicker } from "common/src/components/DatePicker";
-import { AppleOutlined } from "@ant-design/icons";
+import { DownloadOutlined } from "@ant-design/icons";
 import { query, where } from "firebase/firestore";
 import { getDocs } from "firebase/firestore";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
@@ -10,6 +10,7 @@ import { apiRefs } from "common/src/services/api/refs";
 // @ts-ignore
 import { saveAs } from "file-saver";
 import * as ExcelJS from "exceljs";
+import { useTranslation } from "react-i18next";
 
 const months = [
   "Январь",
@@ -43,6 +44,7 @@ type Props = {
 };
 
 export const UserStatisticByBooks = ({ currentUser }: Props) => {
+  const { t } = useTranslation();
   const [dateStringFrom, setDateStringFrom] = useState<string>();
   const [dateStringTo, setDateStringTo] = useState<string>();
 
@@ -133,28 +135,30 @@ export const UserStatisticByBooks = ({ currentUser }: Props) => {
 
   return (
     <>
-      <Typography.Title level={5}>Статистика за период</Typography.Title>
+      <Typography.Title level={5}>
+        {t("common.download_user_statistic_by_books.title")}
+      </Typography.Title>
       <Space>
         <DatePicker
           onChange={(_, dateString) => setDateStringFrom(dateString)}
           format={monthFormat}
           picker="date"
-          placeholder="Дата с"
+          placeholder={t("common.download_user_statistic_by_books.date_from")}
         />
         <DatePicker
           onChange={(_, dateString) => setDateStringTo(dateString)}
           format={monthFormat}
           picker="date"
-          placeholder="Дата до"
+          placeholder={t("common.download_user_statistic_by_books.date_to")}
         />
         <Button
           disabled={isButtonDisabled}
-          icon={<AppleOutlined />}
+          icon={<DownloadOutlined />}
           onClick={() => {
             downloadStatistic();
           }}
         >
-          Скачать
+          {t("common.download")}
         </Button>
       </Space>
     </>

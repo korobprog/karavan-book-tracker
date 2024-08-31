@@ -92,7 +92,7 @@ export const Home = ({ currentUser }: Props) => {
         icon={<UserAddOutlined />}
         type="dashed"
       >
-        {t("home.second-wave")}
+        {t("home.second-wave.button")}
       </Button>
       <Divider dashed />
       <Button
