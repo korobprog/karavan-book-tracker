@@ -8,6 +8,7 @@ import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { BaseLayout } from "common/src/components/BaseLayout";
 import { LogoutOutlined } from "@ant-design/icons";
 import { ProfileForm, ProfileFormValues } from "common/src/components/forms/profile/ProfileForm";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   currentUser: CurrentUser;
@@ -18,6 +19,7 @@ const Profile = ({ currentUser }: Props) => {
   const { setProfile } = useUser({ profile, user });
   const auth = getAuth();
   const navigate = useTransitionNavigate();
+  const { t } = useTranslation();
 
   const avatar = profile?.avatar;
 
@@ -44,22 +46,22 @@ const Profile = ({ currentUser }: Props) => {
 
   return (
     <BaseLayout
-      title="Профиль"
+      title={t("profile.title")}
       backPath={routes.root}
       userDocLoading={userDocLoading}
       headerActions={[
-        <Tooltip title="Выйти" key="logout">
+        <Tooltip title={t("profile.logout")} key="logout">
           <Button type="default" shape="circle" icon={<LogoutOutlined />} onClick={onLogout} />
         </Tooltip>,
       ]}
       avatar={avatar}
     >
       <Typography.Title className="site-page-title" level={2}>
-        Ваш профиль
+        {t("profile.title")}
       </Typography.Title>
       {userDocLoading ? (
         <Typography.Title className="site-page-title" level={5}>
-          Загрузка...
+          {t("common.loading")}
         </Typography.Title>
       ) : (
         <ProfileForm initialValues={initialValues} onFinish={onFinish} userId={userId} />

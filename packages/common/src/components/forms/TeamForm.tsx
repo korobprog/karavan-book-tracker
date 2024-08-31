@@ -9,6 +9,7 @@ import { TeamFormValues } from "common/src/services/teams";
 import { removeEmptyFields } from "common/src/utils/objects";
 import { SelectLocation } from "../../features/select-location/SelectLocation";
 import { TeamMemberStatus, setUserTeam } from "../../services/api/useUser";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   onFinishHandler: (formValues: TeamFormValues) => Promise<void>;
@@ -18,6 +19,7 @@ type Props = {
 };
 
 export const TeamForm = (props: Props) => {
+  const { t } = useTranslation();
   const { onFinishHandler, initialValues, teamId, leaderIdDisabled } = props;
   const navigate = useTransitionNavigate();
 
@@ -95,15 +97,15 @@ export const TeamForm = (props: Props) => {
     >
       <Form.Item
         name="name"
-        label="Название"
-        rules={[{ required: true, message: "Введите название" }]}
+        label={t("common.team_form.name.label")}
+        rules={[{ required: true, message: t("common.team_form.name.required") }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="leaderId"
-        label="Лидер группы"
-        rules={[{ required: true, message: "Выберите лидера" }]}
+        label={t("common.team_form.leader.label")}
+        rules={[{ required: true, message: t("common.team_form.leader.required") }]}
       >
         <UserSelect
           onSearch={onUserChange}
@@ -114,16 +116,16 @@ export const TeamForm = (props: Props) => {
           {usersOptions}
         </UserSelect>
       </Form.Item>
-      <Form.Item name="location" label="Место базирования">
+      <Form.Item name="location" label={t("common.team_form.location.label")}>
         <SelectLocation name="location" />
       </Form.Item>
-      <Form.Item name="currentLocation" label="Текущее место пребывания">
+      <Form.Item name="currentLocation" label={t("common.team_form.currentLocation.label")}>
         <SelectLocation name="currentLocation" />
       </Form.Item>
 
       <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
         <Button type="primary" htmlType="submit" loading={isSubmitting}>
-          СОХРАНИТЬ
+          {t("common.team_form.save")}
         </Button>
       </Form.Item>
     </Form>

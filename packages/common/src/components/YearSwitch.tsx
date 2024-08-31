@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Space, Statistic as AntdStatistic } from "antd";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import { useTranslation } from "react-i18next";
 import { getIsNowYear, getIsStartYear } from "../services/year";
 
 type Props = {
@@ -9,6 +10,7 @@ type Props = {
 };
 
 export const YearSwitch = (props: Props) => {
+  const { t } = useTranslation();
   const { selectedYear, setSelectedYear } = props;
   return (
     <Space size="small">
@@ -18,7 +20,7 @@ export const YearSwitch = (props: Props) => {
         disabled={getIsStartYear(selectedYear)}
         size="small"
       />
-      <AntdStatistic title="Год" value={selectedYear} groupSeparator="" />
+      <AntdStatistic title={t("year")} value={selectedYear} groupSeparator="" />
       <Button
         icon={<RightOutlined />}
         onClick={() => setSelectedYear(selectedYear + 1)}

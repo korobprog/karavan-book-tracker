@@ -28,6 +28,7 @@ import { HashMap } from "../utils/getHashMap";
 import { setUserTeam, TeamMemberStatus, UserDocWithId } from "../services/api/useUser";
 import { UsersStatistic } from "common/src/features/downloadUsersStatistic";
 import { Helper } from "./Helper";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   team: TeamDoc;
@@ -48,6 +49,7 @@ export const TeamCard = ({
   children,
   isAdmin,
 }: Props) => {
+  const { t } = useTranslation();
   const { name, location, currentLocation, leader } = team;
 
   const { teamMembers } = useTeamMembers({ teamId: team?.id });
@@ -57,7 +59,7 @@ export const TeamCard = ({
     currentLocation && locationsHashMap ? locationsHashMap[currentLocation]?.name : "";
 
   const description = `${locationName} ${
-    currentLocationName ? `(где сейчас: ${currentLocationName})` : ""
+    currentLocationName ? `(${t("common.team_card.where_now")}: ${currentLocationName})` : ""
   }`;
 
   const onAcceptMember = (memberProfile: UserDocWithId) => {
@@ -81,11 +83,11 @@ export const TeamCard = ({
 
     const showLeaveConfirm = () => {
       Modal.confirm({
-        title: "Вы хотите выйти из этой группы?",
+        title: t("common.team_card.leave_question"),
         icon: <ExclamationCircleOutlined />,
-        okText: "Покинуть группу",
+        okText: t("common.team_card.leave"),
         okType: "danger",
-        cancelText: "Отмена",
+        cancelText: t("common.cancel"),
         onOk: (close) => {
           onLeaveTeam?.();
           close();
@@ -95,7 +97,7 @@ export const TeamCard = ({
 
     if (onTeamEdit) {
       result.push({
-        label: "Редактировать",
+        label: t("common.edit"),
         key: "edit",
         icon: <UserOutlined />,
         onClick: () => onTeamEdit?.(team.id),
@@ -103,7 +105,7 @@ export const TeamCard = ({
     }
     if (onLeaveTeam) {
       result.push({
-        label: "Выйти из группы",
+        label: t("common.team_card.leave"),
         key: "leave",
         icon: <UserOutlined />,
         onClick: showLeaveConfirm,
@@ -131,7 +133,7 @@ export const TeamCard = ({
         </Row>
         <Row justify="space-between">
           <Space style={{ marginTop: 14 }}>
-            Участники:
+            {t("common.team_card.members")}
             <Avatar.Group>
               <Tooltip title={teamLeader[0]?.nameSpiritual || teamLeader[0]?.name} placement="top">
                 <Badge count={<StarTwoTone twoToneColor="#e4db30" />} offset={[-25, 5]}>
@@ -153,12 +155,12 @@ export const TeamCard = ({
               ))}
             </Avatar.Group>
           </Space>
-          <Helper title="Участники могут добавиться в команду, оставив заявку. Оставленные заявки отобразятся строкой ниже" />
+          <Helper title={t("common.team_card.helper")} />
         </Row>
         {myStatus === TeamMemberStatus.request && (
           <div className="site-page-title">
             <Typography.Paragraph style={{ marginTop: 14 }}>
-              Заявка на рассмотрении <ClockCircleOutlined />
+              {t("common.team_card.under_consideration")} <ClockCircleOutlined />
             </Typography.Paragraph>
             {onLeaveTeam && (
               <Button
@@ -169,7 +171,7 @@ export const TeamCard = ({
                 onClick={() => onLeaveTeam()}
                 style={{ marginLeft: "auto" }}
               >
-                Отменить заявку
+                {t("common.team_card.cancel_applications")}
               </Button>
             )}
           </div>
@@ -178,7 +180,7 @@ export const TeamCard = ({
         {myStatus === TeamMemberStatus.admin && Boolean(requestTeamMembers?.length) && (
           <div>
             <Typography.Paragraph className="site-page-title">
-              Заявки в группу <ClockCircleOutlined />
+              {t("common.team_card.applications")} <ClockCircleOutlined />
             </Typography.Paragraph>
 
             {requestTeamMembers.map((requestMember) => (
@@ -190,7 +192,7 @@ export const TeamCard = ({
                   onClick={() => onAcceptMember(requestMember)}
                   style={{ marginLeft: "auto" }}
                 >
-                  Принять заявку
+                  {t("common.team_card.accept_application")}
                 </Button>
                 <Avatar style={{ backgroundColor: "#87d068" }} icon={<UserOutlined />} />
                 <Typography.Text>

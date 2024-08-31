@@ -8,6 +8,7 @@ import logo from "common/src/images/logo.png";
 import { Divider, QRCode, Typography, Image, Avatar, Button, Space, Row, Tabs, Col } from "antd";
 import { CurrentUser } from "../../../../services/api/useCurrentUser";
 import { BankTwoTone, CreditCardOutlined } from "@ant-design/icons";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   onFinish: (formValues: PageFormValues) => Promise<void>;
@@ -17,6 +18,7 @@ type Props = {
 };
 export type PageFormValues = DonationPageDoc;
 export const Preview = (props: Props) => {
+  const { t } = useTranslation();
   const initialPageDoc: DonationPageDoc = {
     banks: [],
     active: false,
@@ -61,7 +63,7 @@ export const Preview = (props: Props) => {
         {greetingText ? (
           <pre>{greetingText}</pre>
         ) : (
-          <pre>Вы можете пожертвовать на печать и выкуп книг</pre>
+          <pre>{t("common.donation.preview.greeting")}</pre>
         )}
       </Paragraph>
       <Tabs

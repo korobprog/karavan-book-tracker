@@ -19,6 +19,7 @@ import {
 } from "@ant-design/icons";
 import { useStore } from "effector-react";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
 
 import { routes } from "../shared/routes";
 import { OperationDoc, useMyOperations } from "common/src/services/api/operations";
@@ -38,6 +39,7 @@ type Props = {
 };
 
 export const Statistic = ({ currentUser }: Props) => {
+  const { t } = useTranslation();
   const { loading, profile, user, userDocLoading } = currentUser;
   const navigate = useTransitionNavigate();
   const booksHashMap = useStore($booksHashMap);
@@ -99,25 +101,25 @@ export const Statistic = ({ currentUser }: Props) => {
 
   const columns: TableColumnsType<(typeof data)[0]> = [
     {
-      title: "Дата",
+      title: t("statistic.table.date"),
       dataIndex: "date",
       key: "date",
       render: (date: string) => moment(date).calendar(),
     },
     {
-      title: "Всего книг",
+      title: t("statistic.table.total_books"),
       dataIndex: "totalCount",
       key: "totalCount",
     },
     {
-      title: "Город",
+      title: t("statistic.table.location"),
       dataIndex: "location",
       key: "location",
       // TODO: refactor to hashmap
       render: (locationId) => locations.find((location) => location.id === locationId)?.name,
     },
     {
-      title: "Книги",
+      title: t("statistic.table.books"),
       dataIndex: "books",
       key: "books",
       render: (books: OperationDoc["books"]) => (
@@ -128,7 +130,7 @@ export const Statistic = ({ currentUser }: Props) => {
 
             return (
               <Tag color={color} key={index}>
-                {bookName} - {book.count} шт.
+                {bookName} - {book.count} {t("statistic.table.pcs")}
               </Tag>
             );
           })}
@@ -136,14 +138,18 @@ export const Statistic = ({ currentUser }: Props) => {
       ),
     },
     {
-      title: "Статус",
+      title: t("statistic.table.status"),
       dataIndex: "isAuthorized",
       key: "isAuthorized",
       render: (status: boolean) =>
-        status ? <Tag color="green">Подтвержден</Tag> : <Tag color="processing">Ожидание</Tag>,
+        status ? (
+          <Tag color="green">{t("statistic.table.status_approved")}</Tag>
+        ) : (
+          <Tag color="processing">{t("statistic.table.status_waiting")}</Tag>
+        ),
     },
     {
-      title: "Действие",
+      title: t("statistic.table.action"),
       key: "action",
       fixed: "right",
       render: (text: string, record) => (
@@ -155,7 +161,7 @@ export const Statistic = ({ currentUser }: Props) => {
             onClick={() => onEditOperation(record.id)}
           />
           <Popconfirm
-            title={`Удалить операцию?`}
+            title={t("statistic.table.action_remove_operation")}
             onConfirm={() => onRemoveOperation(String(record.key))}
           >
             <Button danger icon={<DeleteOutlined />} loading={deleteLoading} />
@@ -167,7 +173,7 @@ export const Statistic = ({ currentUser }: Props) => {
 
   return (
     <BaseLayout
-      title="Моя статистика"
+      title={t("home.my_statistic")}
       backPath={routes.root}
       userDocLoading={userDocLoading}
       avatar={avatar}
@@ -175,8 +181,16 @@ export const Statistic = ({ currentUser }: Props) => {
       <Row justify="center" align="middle">
         <Space split={<Divider type="vertical" />}>
           <YearSwitch selectedYear={selectedYear} setSelectedYear={setSelectedYear} />
-          <AntdStatistic title="Книг" value={statistic?.count} loading={userDocLoading} />
-          <AntdStatistic title="Баллов" value={statistic?.points} loading={userDocLoading} />
+          <AntdStatistic
+            title={t("statistic.books")}
+            value={statistic?.count}
+            loading={userDocLoading}
+          />
+          <AntdStatistic
+            title={t("statistic.points")}
+            value={statistic?.points}
+            loading={userDocLoading}
+          />
         </Space>
       </Row>
       <UserStatisticByBooks currentUser={currentUser} />
@@ -188,7 +202,7 @@ export const Statistic = ({ currentUser }: Props) => {
         icon={<PlusCircleOutlined />}
         onClick={onAddOperation}
       >
-        Добавить операцию
+        {t("statistic.button_add")}
       </Button>
 
       <Divider dashed />
