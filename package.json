@@ -9,6 +9,7 @@
     "tracker:deploy:staging": "npm run deploy:staging -w tracker",
     "tracker:build:prod": "npm run build:prod -w tracker",
     "tracker:deploy:prod": "npm run deploy:prod -w tracker",
+    "tracker:scan": "npm run scan -w tracker",
     "admin": "npm run start -w admin",
     "admin:prod": "npm run start:prod -w admin",
     "admin:build:staging": "npm run build:staging -w admin",
@@ -33,6 +34,7 @@
     "map:deploy:staging": "npm run deploy:staging -w map",
     "map:build:prod": "npm run build:prod -w map",
     "map:deploy:prod": "npm run deploy:prod -w map",
+    "common:scan": "npm run scan -w common",
     "prepare": "husky install"
   },
   "eslintConfig": {
@@ -65,6 +67,7 @@
     "craco-plugin-env": "^1.0.5",
     "firebase": "^9.23.0",
     "husky": "^8.0.3",
+    "i18next-scanner": "^4.5.0",
     "lint-staged": "^13.2.2",
     "prettier": "2.8.8"
   },

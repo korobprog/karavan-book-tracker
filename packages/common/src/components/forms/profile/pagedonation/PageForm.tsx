@@ -44,10 +44,10 @@ export const PageForm = (props: Props) => {
   const { TextArea } = Input;
 
   const title = {
-    titleBank: t("donation.form.titleBank"),
-    titleCard: t("donation.form.titleCard"),
-    titleQr: t("donation.form.titleQr"),
-    titleButton: t("donation.form.titleButton"),
+    titleBank: t("common.donation.form.titleBank"),
+    titleCard: t("common.donation.form.titleCard"),
+    titleQr: t("common.donation.form.titleQr"),
+    titleButton: t("common.donation.form.titleButton"),
   };
 
   return (
@@ -86,17 +86,17 @@ export const PageForm = (props: Props) => {
         }}
       >
         <Alert
-          message={t("donation.form.setup_message_title")}
-          description={t("donation.form.setup_message_description")}
+          message={t("common.donation.form.setup_message_title")}
+          description={t("common.donation.form.setup_message_description")}
           type="info"
           showIcon
         />
       </Space>
-      <Form.Item name={"greetingText"} label={t("donation.form.greeting_text_label")}>
+      <Form.Item name={"greetingText"} label={t("common.donation.form.greeting_text_label")}>
         <TextArea
           showCount
           maxLength={200}
-          placeholder={t("donation.form.greeting_text_placeholder")}
+          placeholder={t("common.donation.form.greeting_text_placeholder")}
           style={{ height: 120, resize: "none" }}
         />
       </Form.Item>
@@ -115,10 +115,15 @@ export const PageForm = (props: Props) => {
                   <Form.Item
                     {...restField}
                     name={[name, "bankName"]}
-                    rules={[{ required: true, message: t("donation.form.bank_name_required") }]}
-                    label={t("donation.form.bank_label")}
+                    rules={[
+                      { required: true, message: t("common.donation.form.bank_name_required") },
+                    ]}
+                    label={t("common.donation.form.bank_label")}
                   >
-                    <Input disabled={disabled} placeholder={t("donation.form.bank_placeholder")} />
+                    <Input
+                      disabled={disabled}
+                      placeholder={t("common.donation.form.bank_placeholder")}
+                    />
                   </Form.Item>
                 </Tooltip>
                 <Tooltip
@@ -135,11 +140,11 @@ export const PageForm = (props: Props) => {
                         required: false,
                       },
                     ]}
-                    label={t("donation.form.card_number_label")}
+                    label={t("common.donation.form.card_number_label")}
                   >
                     <Input
                       disabled={disabled}
-                      placeholder={t("donation.form.card_number_placeholder")}
+                      placeholder={t("common.donation.form.card_number_placeholder")}
                     />
                   </Form.Item>
                 </Tooltip>
@@ -153,16 +158,16 @@ export const PageForm = (props: Props) => {
                     {...restField}
                     name={[name, "qrLink"]}
                     initialValue=""
-                    label={t("donation.form.qr_link_label")}
+                    label={t("common.donation.form.qr_link_label")}
                   >
                     <Input
                       suffix={
-                        <Tooltip title={t("donation.form.qr_link_suffix_title")}>
+                        <Tooltip title={t("common.donation.form.qr_link_suffix_title")}>
                           <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
                         </Tooltip>
                       }
                       disabled={disabled}
-                      placeholder={t("donation.form.qr_link_placeholder")}
+                      placeholder={t("common.donation.form.qr_link_placeholder")}
                     />
                   </Form.Item>
                 </Tooltip>
@@ -178,7 +183,7 @@ export const PageForm = (props: Props) => {
                 icon={<PlusOutlined />}
                 style={{ width: "95%" }}
               >
-                {t("donation.form.add_bank_details_button")}
+                {t("common.donation.form.add_bank_details_button")}
               </Button>
             </Form.Item>
           </>
@@ -190,10 +195,10 @@ export const PageForm = (props: Props) => {
         overlayClassName="numeric-input"
         title={title.titleButton}
       >
-        <Form.Item name="buttonBank" label={t("donation.form.button_label")}>
+        <Form.Item name="buttonBank" label={t("common.donation.form.button_label")}>
           <Input
             disabled={disabled}
-            placeholder={t("donation.form.button_placeholder")}
+            placeholder={t("common.donation.form.button_placeholder")}
             style={{ width: "60%" }}
             maxLength={25}
           />
@@ -201,7 +206,7 @@ export const PageForm = (props: Props) => {
       </Tooltip>
       <Divider dashed />
       <Space direction="vertical" style={{ marginTop: 15, display: "flex", alignItems: "center" }}>
-        <Text italic>{t("donation.form.contact_info_message")}</Text>
+        <Text italic>{t("common.donation.form.contact_info_message")}</Text>
         <Space style={{ marginTop: 15 }}>
           <Image
             style={{ position: "absolute", top: -10, left: 5 }}
@@ -215,9 +220,9 @@ export const PageForm = (props: Props) => {
             <Input
               addonBefore="https://t.me/"
               disabled={disabled}
-              placeholder={t("donation.form.telegram_placeholder")}
+              placeholder={t("common.donation.form.telegram_placeholder")}
               suffix={
-                <Tooltip title={t("donation.form.telegram_suffix_title")}>
+                <Tooltip title={t("common.donation.form.telegram_suffix_title")}>
                   <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
                 </Tooltip>
               }
@@ -236,9 +241,9 @@ export const PageForm = (props: Props) => {
           <Form.Item name="socialWhats">
             <Input
               disabled={disabled}
-              placeholder={t("donation.form.whats_placeholder")}
+              placeholder={t("common.donation.form.whats_placeholder")}
               suffix={
-                <Tooltip title={t("donation.form.whats_suffix_title")}>
+                <Tooltip title={t("common.donation.form.whats_suffix_title")}>
                   <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
                 </Tooltip>
               }
@@ -257,9 +262,9 @@ export const PageForm = (props: Props) => {
           <Form.Item name="socialMail">
             <Input
               disabled={disabled}
-              placeholder={t("donation.form.email_placeholder")}
+              placeholder={t("common.donation.form.email_placeholder")}
               suffix={
-                <Tooltip title={t("donation.form.email_suffix_title")}>
+                <Tooltip title={t("common.donation.form.email_suffix_title")}>
                   <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
                 </Tooltip>
               }
@@ -278,9 +283,9 @@ export const PageForm = (props: Props) => {
           <Form.Item name="socialLink">
             <Input
               disabled={disabled}
-              placeholder={t("donation.form.other_links_placeholder")}
+              placeholder={t("common.donation.form.other_links_placeholder")}
               suffix={
-                <Tooltip title={t("donation.form.other_links_suffix_title")}>
+                <Tooltip title={t("common.donation.form.other_links_suffix_title")}>
                   <InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
                 </Tooltip>
               }

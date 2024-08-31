@@ -1,0 +1,71 @@
+{
+  "common": {
+    "donation": {
+      "form": {
+        "titleBank": "Enter bank name",
+        "titleCard": "Enter card number",
+        "titleQr": "Enter QR link",
+        "titleButton": "Enter your title",
+        "setup_message_title": "Set Up Your Donation Page",
+        "setup_message_description": "You can customize your donation page and print QR codes for books as your business cards.",
+        "greeting_text_label": "Greeting Text",
+        "greeting_text_placeholder": "Enter greeting text, or leave empty. By default, it will be - You can donate to print and redeem books",
+        "bank_name_required": "Enter bank name",
+        "bank_label": "Bank",
+        "bank_placeholder": "Bank...",
+        "card_number_label": "Card Number",
+        "card_number_placeholder": "99009...",
+        "qr_link_label": "QR Link",
+        "qr_link_suffix_title": "Copy the link from your banking app",
+        "qr_link_placeholder": "http://site...",
+        "add_bank_details_button": "Add New Bank Details",
+        "button_label": "Button Text",
+        "button_placeholder": "By default - OnlinePay",
+        "contact_info_message": "Here you can specify your contacts and links:",
+        "telegram_placeholder": "Telegram link",
+        "telegram_suffix_title": "Example: mylogin",
+        "whats_placeholder": "Whats link",
+        "whats_suffix_title": "Example: 7xxxxxxxx",
+        "email_placeholder": "eMail",
+        "email_suffix_title": "Example: mymail@mail.com",
+        "other_links_placeholder": "other links",
+        "other_links_suffix_title": "Example: www.example.com"
+      }
+    },
+    "save": "Save",
+    "profile": {
+      "form": {
+        "fill_profile": "Please fill in your profile",
+        "avatar_label": "Avatar",
+        "full_name_label": "Your Full Name",
+        "spiritual_name_label": "Your Spiritual Name",
+        "city_label": "Your City",
+        "yatra_label": "Your Yatra",
+        "phone_label": "Your Phone",
+        "phone_required_message": "Please enter your phone number!",
+        "phone_pattern_message": "Please enter a valid phone number",
+        "email": "Email",
+        "email_required_message": "Please enter email",
+        "address_label": "Your Address"
+      }
+    },
+    "report": {
+      "form": {
+        "warning_unauthrized": "Thank you, your operation has been added but is not yet confirmed. We will contact you shortly for confirmation.",
+        "location_label": "Location",
+        "location_required": "Select or create a new location",
+        "online_label": "Online Distribution",
+        "books_selected": "Books selected:",
+        "reset": "Reset",
+        "submitting": "Submitting...",
+        "submit": "Submit",
+        "search": "Search for a book",
+        "optimizing_mode": "Enabling search optimization mode. Only the first 3 favorite and 3 non-favorite books are shown for faster performance.",
+        "favorite_empty_no_found": "No favorites found",
+        "favorite_empty_add": "Click on ⭐ to add to favorites",
+        "list_empty": "No books found",
+        "points": "Points:"
+      }
+    }
+  }
+}

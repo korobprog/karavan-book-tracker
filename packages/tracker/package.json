@@ -9,7 +9,8 @@
     "start:prod": "craco start --mode prod",
     "build:prod": "craco build --mode prod",
     "deploy:prod": "firebase deploy -P default",
-    "test": "craco test"
+    "test": "craco test",
+    "scan": "i18next-scanner"
   },
   "author": "",
   "license": "ISC",

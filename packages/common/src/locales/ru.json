@@ -1,0 +1,71 @@
+{
+  "common": {
+    "save": "Сохранить",
+    "donation": {
+      "form": {
+        "titleBank": "Введите название банка",
+        "titleCard": "Введите номер карты",
+        "titleQr": "Введите ссылку на QR",
+        "titleButton": "Введите свое название",
+        "setup_message_title": "Настройте свою страницу пожертвований",
+        "setup_message_description": "Вы можете настроить свою страницу пожертвований и распечатать QR-коды для книг в качестве визитных карточек.",
+        "greeting_text_label": "Текст приветствия",
+        "greeting_text_placeholder": "Введите текст приветствия или оставьте пустым. По умолчанию будет написано - Вы можете пожертвовать на печать и выкуп книг",
+        "bank_name_required": "Введите название банка",
+        "bank_label": "Банк",
+        "bank_placeholder": "Банк...",
+        "card_number_label": "№ карты",
+        "card_number_placeholder": "99009...",
+        "qr_link_label": "cсылка на QR",
+        "qr_link_suffix_title": "Скопируйте ссылку с вашего банковского приложения",
+        "qr_link_placeholder": "http://site...",
+        "add_bank_details_button": "Добавить новые реквизиты банка",
+        "button_label": "Текст кнопки",
+        "button_placeholder": "По умолчанию - OnlinePay",
+        "contact_info_message": "Здесь вы можете указать свои контакты и ссылки:",
+        "telegram_placeholder": "ссылка на Telegram",
+        "telegram_suffix_title": "Пример: mylogin",
+        "whats_placeholder": "ссылка на Whats",
+        "whats_suffix_title": "Пример: 7xxxxxxxx",
+        "email_placeholder": "eMail",
+        "email_suffix_title": "Пример: mymail@mail.com",
+        "other_links_placeholder": "другие ссылки",
+        "other_links_suffix_title": "Пример: www.exemple.com"
+      }
+    },
+    "profile": {
+      "form": {
+        "fill_profile": "Обязательно заполните профиль",
+        "avatar_label": "Аватар",
+        "full_name_label": "Ваше Ф.И.О",
+        "spiritual_name_label": "Ваше духовное имя",
+        "city_label": "Ваш город",
+        "yatra_label": "Ваша ятра",
+        "phone_label": "Ваш телефон",
+        "phone_required_message": "Пожалуйста, введите свой номер телефона!",
+        "phone_pattern_message": "Пожалуйста, введите корректный номер",
+        "email": "Email",
+        "email_required_message": "Пожалуйста, введите email",
+        "address_label": "Ваш адрес"
+      }
+    },
+    "report": {
+      "form": {
+        "warning_unauthrized": "Спасибо, ваша операция добавлена, но еще не подтверждена. Мы свяжемся с вами в ближайшее время для подтверждения.",
+        "location_label": "Место",
+        "location_required": "Выберите или создайте новое место",
+        "online_label": "Онлайн-распространение",
+        "books_selected": "Выбрано книг:",
+        "reset": "Сбросить",
+        "submitting": "Отправляем...",
+        "submit": "Отправить",
+        "search": "Поиск книги",
+        "optimizing_mode": "Включение режима оптимизации поиска. Для более быстрой работы показываются только первые 3 избранные и 3 не избранные книги",
+        "favorite_empty_no_found": "Не найдено избранного",
+        "favorite_empty_add": "Нажмите на ⭐, чтобы добавить в избранное",
+        "list_empty": "Не найдено книг",
+        "points": "Баллы:"
+      }
+    }
+  }
+}

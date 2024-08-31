@@ -60,9 +60,13 @@ export const ProfileForm = <FormValues extends ProfileFormValues>(props: Props<F
       autoComplete="off"
       {...layout}
     >
-      <Typography.Paragraph>{t("profile.form.fill_profile")}</Typography.Paragraph>
+      <Typography.Paragraph>{t("common.profile.form.fill_profile")}</Typography.Paragraph>
       {userId !== "none" && (
-        <Form.Item name="avatar" label={t("profile.form.avatar_label")} valuePropName="avatar">
+        <Form.Item
+          name="avatar"
+          label={t("common.profile.form.avatar_label")}
+          valuePropName="avatar"
+        >
           <AvatarUploader
             imageUrl={imageUrl}
             onImageUrlChange={setImageUrl}
@@ -71,42 +75,50 @@ export const ProfileForm = <FormValues extends ProfileFormValues>(props: Props<F
           />
         </Form.Item>
       )}
-      <Form.Item name="name" label={t("profile.form.full_name_label")} rules={[{ required: true }]}>
+      <Form.Item
+        name="name"
+        label={t("common.profile.form.full_name_label")}
+        rules={[{ required: true }]}
+      >
         <Input />
       </Form.Item>
       <Form.Item
         name="nameSpiritual"
-        label={t("profile.form.spiritual_name_label")}
+        label={t("common.profile.form.spiritual_name_label")}
         rules={[{ required: false }]}
       >
         <Input />
       </Form.Item>
-      <Form.Item name="city" label={t("profile.form.city_label")} rules={[{ required: true }]}>
+      <Form.Item
+        name="city"
+        label={t("common.profile.form.city_label")}
+        rules={[{ required: true }]}
+      >
         <SelectLocation name="city" />
       </Form.Item>
       <Form.Item
         name="yatraLocationId"
-        label={t("profile.form.yatra_label")}
+        label={t("common.profile.form.yatra_label")}
         rules={[{ required: isYatraLocationRequired }]}
       >
         <SelectLocation name="yatraLocationId" />
       </Form.Item>
       <Form.Item
         name="phone"
-        label={t("profile.form.phone_label")}
+        label={t("common.profile.form.phone_label")}
         rules={[
-          { required: true, message: t("profile.form.phone_required_message") },
-          { pattern: phoneNumberPattern, message: t("profile.form.phone_pattern_message") },
+          { required: true, message: t("common.profile.form.phone_required_message") },
+          { pattern: phoneNumberPattern, message: t("common.profile.form.phone_pattern_message") },
         ]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="email"
-        label={t("profile.form.email")}
+        label={t("common.profile.form.email")}
         rules={
           isEmailEditable
-            ? [{ required: true, message: t("profile.form.email_required_message") }]
+            ? [{ required: true, message: t("common.profile.form.email_required_message") }]
             : undefined
         }
       >
@@ -114,7 +126,7 @@ export const ProfileForm = <FormValues extends ProfileFormValues>(props: Props<F
       </Form.Item>
       <Form.Item
         name="address"
-        label={t("profile.form.address_label")}
+        label={t("common.profile.form.address_label")}
         rules={[{ required: false }]}
       >
         <Input />
