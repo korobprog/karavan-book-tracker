@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-undef */
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
@@ -10,6 +11,7 @@ import { ConfigProvider } from "antd";
 import moment from "moment";
 import "moment/locale/ru";
 import { YMaps } from "react-yandex-maps";
+
 moment.locale("ru");
 
 ReactDOM.render(
@@ -17,7 +19,7 @@ ReactDOM.render(
     <BrowserRouter>
       <Offline>
         <ConfigProvider locale={ru_RU}>
-          <YMaps query={{ apikey: "c255f685-e775-4ad8-a92a-00ab2b2b3ba3", lang: "ru_RU" }}>
+          <YMaps query={{ apikey: process.env.REACT_APP_YMAP_KEY, lang: "ru_RU" }}>
             <App />
           </YMaps>
         </ConfigProvider>

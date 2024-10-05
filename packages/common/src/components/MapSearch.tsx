@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { GeolocationControl, Map, Placemark } from "react-yandex-maps";
+import { GeolocationControl, Map, Placemark, SearchControl } from "react-yandex-maps";
 
 type MapSearchProps = {
   locationSearchString: string;
@@ -7,6 +7,7 @@ type MapSearchProps = {
 
 export const MapSearch = (Props: React.PropsWithChildren<MapSearchProps>) => {
   const { locationSearchString } = Props;
+  console.log("🚀 ~ MapSearch ~ locationSearchString:", locationSearchString);
   const [mapConstructor, setMapConstructor] = useState(null);
 
   const [addressCoord, setAddressCoord] = useState();
@@ -68,6 +69,7 @@ export const MapSearch = (Props: React.PropsWithChildren<MapSearchProps>) => {
         />
       )}
       <GeolocationControl {...geolocationOptions} />
+      <SearchControl options={{ float: "left", size: "large" }} />
     </Map>
   );
 };
