@@ -137,6 +137,23 @@
         "label": "Current Location"
       },
       "save": "SAVE"
+    },
+    "book": {
+      "form": {
+        "name_label": "Name",
+        "short_name_label": "Short Name",
+        "lang_label": "Language",
+        "lang_placeholder": "Select the book's language",
+        "category_label": "Category",
+        "category_placeholder": "Select a category",
+        "submitting": "Saving",
+        "submit": "Save"
+      },
+      "lang": {
+        "en": "English",
+        "ru": "Russian",
+        "hi": "Hindi"
+      }
     }
   },
   "year": "Year"

@@ -19,6 +19,9 @@ import { Teams } from "./pages/teams";
 import { TeamsNew } from "./pages/teamsNew";
 import { TeamsEdit } from "./pages/teamsEdit";
 import Profile from "./pages/profile";
+import { Books } from "./pages/books";
+import BooksNew from "./pages/booksNew";
+import BooksEdit from "./pages/booksEdit";
 import { useTransitionNavigate } from "common/src/utils/hooks/useTransitionNavigate";
 
 import "antd/dist/reset.css";
@@ -67,6 +70,10 @@ function App() {
         <Route path={routes.auth} element={<Auth currentUser={currentUser} />} />
         <Route path={routes.registration} element={<Registration currentUser={currentUser} />} />
         <Route path={routes.profile} element={<Profile currentUser={currentUser} />} />
+
+        <Route path={routes.books} element={<Books currentUser={currentUser} />} />
+        <Route path={routes.booksNew} element={<BooksNew currentUser={currentUser} />} />
+        <Route path={routes.booksEdit} element={<BooksEdit currentUser={currentUser} />} />
 
         <Route path={routes.reports} element={<Reports currentUser={currentUser} />} />
         <Route path={routes.report} element={<Report currentUser={currentUser} />} />
