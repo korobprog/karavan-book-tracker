@@ -125,7 +125,7 @@ export const Books = ({ currentUser }: Props) => {
           />
         </Form.Item>
 
-        <Button type="default" onClick={onMigrateBooks}>
+        <Button type="default" onClick={onMigrateBooks} disabled>
           Migrate books from doc
         </Button>
       </Space>
