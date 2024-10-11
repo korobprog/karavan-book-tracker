@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { GeolocationControl, Map, Placemark, SearchControl } from "react-yandex-maps";
 
 type MapSearchProps = {
@@ -7,6 +7,7 @@ type MapSearchProps = {
 
 export const MapSearch = (Props: React.PropsWithChildren<MapSearchProps>) => {
   const { locationSearchString } = Props;
+  const searchControlRef = useRef<ymaps.control.SearchControl | null>;
   console.log("🚀 ~ MapSearch ~ locationSearchString:", locationSearchString);
   const [mapConstructor, setMapConstructor] = useState(null);
 
@@ -46,6 +47,36 @@ export const MapSearch = (Props: React.PropsWithChildren<MapSearchProps>) => {
     fetchAddressCoord();
   }, [locationSearchString, mapConstructor]);
 
+  useEffect(() => {
+    const fetchSearchControl = async () => {
+      // @ts-ignore
+      const searchControl = searchControlRef.current;
+      if (searchControl) {
+        try {
+          // @ts-ignore
+          await searchControl.events.add("resultselect", (e) => {
+            const index = e.get("index");
+            // @ts-ignore
+            const results = searchControl.getResultsArray();
+            // @ts-ignore
+            if (results && results.length > 0) {
+              const selectedResult = results[index];
+
+              const address = selectedResult.properties.get("name");
+              const coordinates = selectedResult.geometry.getCoordinates();
+
+              console.log("Выбранный адрес:", address);
+              console.log("Координаты:", coordinates);
+            }
+          });
+        } catch (error) {
+          console.error("Error fetching search :", error);
+        }
+      }
+    };
+    fetchSearchControl();
+  }, [searchControlRef]);
+
   return (
     <Map
       {...mapOptions}
@@ -69,7 +100,13 @@ export const MapSearch = (Props: React.PropsWithChildren<MapSearchProps>) => {
         />
       )}
       <GeolocationControl {...geolocationOptions} />
-      <SearchControl options={{ float: "left", size: "large" }} />
+      <SearchControl
+        instanceRef={(ref) => {
+          // @ts-ignore
+          searchControlRef.current = ref;
+        }}
+        options={{ float: "left", size: "large", provider: "yandex#map" }}
+      />
     </Map>
   );
 };

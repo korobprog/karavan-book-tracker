@@ -19,7 +19,14 @@ ReactDOM.render(
     <BrowserRouter>
       <Offline>
         <ConfigProvider locale={ru_RU}>
-          <YMaps query={{ apikey: process.env.REACT_APP_YMAP_KEY, lang: "ru_RU" }}>
+          <YMaps
+            query={{
+              apikey: process.env.REACT_APP_YMAP_KEY,
+              //@ts-ignorets-ignore
+              suggest_apikey: process.env.REACT_APP_YMAPGEO_KEY,
+              lang: "ru_RU",
+            }}
+          >
             <App />
           </YMaps>
         </ConfigProvider>
