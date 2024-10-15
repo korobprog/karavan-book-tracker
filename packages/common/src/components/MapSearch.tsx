@@ -3,9 +3,9 @@ import { GeolocationControl, Map, Placemark, SearchControl } from "react-yandex-
 
 type MapSearchProps = {
   locationSearchString: string;
-  setDataCoordModal: (data: string) => void;
-  setDataAdressModal: (data: string) => void;
-  setAddressCoord: (data: string) => void;
+  setDataCoordModal: (newDataCord: []) => void;
+  setDataAdressModal: (newDataAdress: string) => void;
+  setAddressCoord: (newDataCord: []) => void;
 };
 
 export const MapSearch = (Props: React.PropsWithChildren<MapSearchProps>) => {
@@ -16,7 +16,6 @@ export const MapSearch = (Props: React.PropsWithChildren<MapSearchProps>) => {
   const [mapConstructor, setMapConstructor] = useState(null);
 
   const [addressCoord, setAddressCoordMap] = useState();
-  console.log("🚀 ~ MapSearch ~ addressCoord:", addressCoord);
 
   const mapOptions = {
     modules: ["geocode", "SuggestView"],

@@ -21,6 +21,11 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
     });
     const [creationLoading, setCreationLoading] = useState(false);
 
+    const [coordinates, setDataCoord] = useState([]);
+    console.log("🚀 ~ coordinates:", coordinates);
+    const [adres, setDataAdress] = useState("");
+    console.log("🚀 ~ adres:", adres);
+
     const onLocationSearchChange = useDebouncedCallback((value: string) => {
       const trimmedValue = value.trim();
       setLocationSearchString(trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1));
@@ -28,11 +33,12 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
 
     const onAddNewLocation = () => {
       setCreationLoading(true);
-      addLocation({ name: locationSearchString })
+      addLocation({ name: locationSearchString, coordinates: coordinates })
         .then(({ id }) => {
           setFieldValue(name, id);
           localRef.current?.blur();
           setLocationSearchString("");
+          setDataCoord([]);
         })
         .finally(() => {
           setCreationLoading(false);
@@ -60,6 +66,8 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
         isOnline={isOnline}
         loading={loading || creationLoading}
         autoClearSearchValue
+        setDataCoord={setDataCoord}
+        setDataAdress={setDataAdress}
         {...props}
       >
         {locationOptions}
