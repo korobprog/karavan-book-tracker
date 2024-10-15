@@ -3,15 +3,20 @@ import { GeolocationControl, Map, Placemark, SearchControl } from "react-yandex-
 
 type MapSearchProps = {
   locationSearchString: string;
+  setDataCoordModal: (data: string) => void;
+  setDataAdressModal: (data: string) => void;
+  setAddressCoord: (data: string) => void;
 };
 
 export const MapSearch = (Props: React.PropsWithChildren<MapSearchProps>) => {
-  const { locationSearchString } = Props;
+  const { locationSearchString, setDataCoordModal, setDataAdressModal, setAddressCoord } = Props;
+
   const searchControlRef = useRef<ymaps.control.SearchControl | null>;
-  console.log("🚀 ~ MapSearch ~ locationSearchString:", locationSearchString);
+
   const [mapConstructor, setMapConstructor] = useState(null);
 
-  const [addressCoord, setAddressCoord] = useState();
+  const [addressCoord, setAddressCoordMap] = useState();
+  console.log("🚀 ~ MapSearch ~ addressCoord:", addressCoord);
 
   const mapOptions = {
     modules: ["geocode", "SuggestView"],
@@ -36,7 +41,11 @@ export const MapSearch = (Props: React.PropsWithChildren<MapSearchProps>) => {
         try {
           // @ts-ignore
           const result = await mapConstructor.geocode(locationSearchString);
-          const coord = result.geoObjects.get(0).geometry.getCoordinates();
+          // @ts-ignore
+
+          const coord = await result.geoObjects.get(0).geometry.getCoordinates();
+
+          setAddressCoordMap(coord);
           setAddressCoord(coord);
         } catch (error) {
           console.error("Error fetching address coordinates:", error);
@@ -45,7 +54,7 @@ export const MapSearch = (Props: React.PropsWithChildren<MapSearchProps>) => {
     };
 
     fetchAddressCoord();
-  }, [locationSearchString, mapConstructor]);
+  });
 
   useEffect(() => {
     const fetchSearchControl = async () => {
@@ -62,11 +71,12 @@ export const MapSearch = (Props: React.PropsWithChildren<MapSearchProps>) => {
             if (results && results.length > 0) {
               const selectedResult = results[index];
 
-              const address = selectedResult.properties.get("name");
-              const coordinates = selectedResult.geometry.getCoordinates();
+              const newadress = selectedResult.properties.get("name");
 
-              console.log("Выбранный адрес:", address);
-              console.log("Координаты:", coordinates);
+              const newcoordinates = selectedResult.geometry.getCoordinates();
+
+              setDataAdressModal(newadress);
+              setDataCoordModal(newcoordinates);
             }
           });
         } catch (error) {
@@ -75,7 +85,7 @@ export const MapSearch = (Props: React.PropsWithChildren<MapSearchProps>) => {
       }
     };
     fetchSearchControl();
-  }, [searchControlRef]);
+  });
 
   return (
     <Map

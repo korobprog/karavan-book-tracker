@@ -14,6 +14,14 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
   (props, ref) => {
     const { onAddNewLocation, locationSearchString, children, isOnline, loading, ...restProps } =
       props;
+    const [newcordmodal, setDataCoord] = useState<string>("");
+    console.log("🚀 ~ newcordmodal:", newcordmodal);
+
+    const [newadressmodal, setDataAdressModal] = useState<string>("");
+    console.log("🚀 ~ newadressmodal:", newadressmodal);
+
+    const [newadress, setDataAdress] = useState<string>("");
+    console.log("🚀 ~ newadress:", newadress);
 
     const [modal1Open, setModal1Open] = useState(false);
 
@@ -24,11 +32,20 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
       Добавить "{locationSearchString}"
     </Typography.Link>;
 
-    const handleOk = () => {
+    const handleOkCordModal = (newData: string) => {
+      setDataCoord(newData);
       setLoading(true);
       setTimeout(() => {
         setLoading(false);
       }, 3000);
+    };
+
+    const handleOkAdressModal = (newData: string) => {
+      setDataAdressModal(newData);
+    };
+
+    const handleOkAdress = (newData: string) => {
+      setDataAdress(newData);
     };
 
     const handleCancel = () => {
@@ -79,12 +96,19 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
           open={modal1Open}
           onCancel={handleCancel}
           footer={[
-            <Button key="submit" type="primary" loading={loadingCity} onClick={handleOk}>
+            <Button key="submit" type="primary" loading={loadingCity} onClick={onAddNewLocation}>
               {`Выбрать место локации где были распространены книги`}
             </Button>,
           ]}
         >
-          {modal1Open && <MapSearch locationSearchString={locationSearchString} />}
+          {modal1Open && (
+            <MapSearch
+              locationSearchString={locationSearchString}
+              setDataCoordModal={handleOkCordModal}
+              setDataAdressModal={handleOkAdressModal}
+              setAddressCoord={handleOkAdress}
+            />
+          )}
         </Modal>
       </>
     );
