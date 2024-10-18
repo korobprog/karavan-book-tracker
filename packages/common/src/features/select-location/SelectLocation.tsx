@@ -21,10 +21,14 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
     });
     const [creationLoading, setCreationLoading] = useState(false);
 
-    const [coordinates, setDataCoord] = useState([]);
-    console.log("🚀 ~ coordinates:", coordinates);
-    const [adres, setDataAdress] = useState("");
-    console.log("🚀 ~ adres:", adres);
+    const [cords, setAddressCoord] = useState<number[]>([]); //работает
+    console.log("🚀 ~ cords:", cords);
+
+    const [adressmodal, setDataAdressModal] = useState(""); //работает
+    console.log("🚀 ~ adressmodal:", adressmodal);
+
+    const [coordinatesmodal, setDataCoordModal] = useState<number[]>([]); // работает
+    console.log("🚀 ~ coordinatesmodal:", coordinatesmodal);
 
     const onLocationSearchChange = useDebouncedCallback((value: string) => {
       const trimmedValue = value.trim();
@@ -33,12 +37,11 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
 
     const onAddNewLocation = () => {
       setCreationLoading(true);
-      addLocation({ name: locationSearchString, coordinates: coordinates })
+      addLocation({ name: locationSearchString })
         .then(({ id }) => {
           setFieldValue(name, id);
           localRef.current?.blur();
           setLocationSearchString("");
-          setDataCoord([]);
         })
         .finally(() => {
           setCreationLoading(false);
@@ -59,15 +62,15 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
             ref.current = node;
           }
         }}
-        // ref={ref}
         onSearch={onLocationSearchChange}
         onAddNewLocation={onAddNewLocation}
         locationSearchString={locationSearchString}
         isOnline={isOnline}
         loading={loading || creationLoading}
         autoClearSearchValue
-        setDataCoord={setDataCoord}
-        setDataAdress={setDataAdress}
+        setDataAdressModal={setDataAdressModal}
+        setDataCordModal={setDataCoordModal}
+        setAddressCoord={setAddressCoord}
         {...props}
       >
         {locationOptions}

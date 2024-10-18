@@ -5,8 +5,10 @@ import { MapSearch } from "./MapSearch";
 
 type LocationSelectProps = SelectProps & {
   onAddNewLocation: () => void;
-  setDataCoord: (newDataCord: []) => void;
-  setDataAdress: (newDataAdress: string) => void;
+
+  setDataAdressModal: (newDataAdress: string) => void;
+  setDataCordModal: (newDataCord: []) => void;
+  setAddressCoord: (newDataCord: []) => void;
   locationSearchString: string;
   isOnline?: boolean;
   loading?: boolean;
@@ -16,8 +18,9 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
   (props, ref) => {
     const {
       onAddNewLocation,
-      setDataCoord,
-      setDataAdress,
+      setDataAdressModal,
+      setDataCordModal,
+      setAddressCoord,
       locationSearchString,
       children,
       isOnline,
@@ -25,11 +28,11 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
       ...restProps
     } = props;
 
-    const [newadressmodal, setDataAdressModal] = useState("");
+    //const [newadressmodal, setDataAdressModal] = useState("");
 
-    const [newadresscord, setDataCordModal] = useState([]);
+    //const [newadresscord, setDataCordModal] = useState([]);
 
-    const [cord, setAddressCoord] = useState([]);
+    //const [cord, setAddressCoord] = useState([]);
 
     const [modal1Open, setModal1Open] = useState(false);
 
