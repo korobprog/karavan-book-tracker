@@ -209,7 +209,7 @@ export const ReportForm = (props: Props) => {
           },
         ]}
       >
-        <SelectLocation name="locationId" />
+        <SelectLocation name="locationId" coordinates={[]} />
       </Form.Item>
       <Space style={{ flexGrow: 1, marginRight: 8 }}>
         <Form.Item name="date">

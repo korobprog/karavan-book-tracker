@@ -8,6 +8,7 @@ import { useState } from "react";
 import Link from "antd/es/typography/Link";
 import printPdfDonations from "common/src/components/forms/profile/pagedonation/printPdfDonations";
 import printPdfDonations88 from "common/src/components/forms/profile/pagedonation/printPdfDonations88";
+import React from "react";
 
 export type PageFormValues = DonationPageDoc;
 

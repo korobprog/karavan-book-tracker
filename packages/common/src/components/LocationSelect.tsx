@@ -5,10 +5,9 @@ import { MapSearch } from "./MapSearch";
 
 type LocationSelectProps = SelectProps & {
   onAddNewLocation: () => void;
-
-  setDataAdressModal: (newDataAdress: string) => void;
-  setDataCordModal: (newDataCord: []) => void;
-  setAddressCoord: (newDataCord: []) => void;
+  setDataCoordModalClick: (newDataCordModalClick: number[]) => void;
+  setDataAdressModalClick: (newDataAdressModalClick: string) => void;
+  setDataCoordClick: (newDataCordClick: number[]) => void;
   locationSearchString: string;
   isOnline?: boolean;
   loading?: boolean;
@@ -18,9 +17,9 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
   (props, ref) => {
     const {
       onAddNewLocation,
-      setDataAdressModal,
-      setDataCordModal,
-      setAddressCoord,
+      setDataAdressModalClick,
+      setDataCoordModalClick,
+      setDataCoordClick,
       locationSearchString,
       children,
       isOnline,
@@ -28,38 +27,37 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
       ...restProps
     } = props;
 
-    //const [newadressmodal, setDataAdressModal] = useState("");
-
-    //const [newadresscord, setDataCordModal] = useState([]);
-
-    //const [cord, setAddressCoord] = useState([]);
-
     const [modal1Open, setModal1Open] = useState(false);
 
     const [loadingCity, setLoading] = useState(false);
+
+    const [cords, setAddressCoord] = useState<number[]>();
+
+    const [adressmodal, setDataAdressModal] = useState("");
+
+    const [coordinatesmodal, setDataCoordModal] = useState<number[]>();
 
     <Typography.Link onClick={onAddNewLocation} style={{ whiteSpace: "nowrap" }}>
       <PlusOutlined />
       Добавить "{locationSearchString}"
     </Typography.Link>;
 
-    const onAddNewLocationMap = () => {
-      setLoading(true);
+    const onAddNewLocationClick = () => {
+      setDataAdressModalClick(adressmodal);
+      if (coordinatesmodal) {
+        setDataCoordModalClick(coordinatesmodal);
+      }
+
+      if (cords) {
+        setDataCoordClick(cords);
+      }
       setTimeout(() => {
         setLoading(false);
+        setModal1Open(false);
       }, 3000);
-    };
-
-    const handleOkAdressModal = (newDataAdress: string) => {
-      setDataAdressModal(newDataAdress);
-    };
-
-    const handleOkCordModal = (newDataCord: []) => {
-      setDataCordModal(newDataCord);
-    };
-
-    const handleOkAdressCord = (newDataCord: []) => {
-      setAddressCoord(newDataCord);
+      setAddressCoord([]);
+      setDataAdressModal("");
+      setDataCoordModal([]);
     };
 
     const handleCancel = () => {
@@ -110,7 +108,16 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
           open={modal1Open}
           onCancel={handleCancel}
           footer={[
-            <Button key="submit" type="primary" loading={loadingCity} onClick={onAddNewLocationMap}>
+            <Button
+              key="submit"
+              type="primary"
+              loading={loadingCity}
+              onClick={() => {
+                onAddNewLocationClick();
+                setLoading(true);
+                console.log("hello");
+              }}
+            >
               {`Выбрать место локации где были распространены книги`}
             </Button>,
           ]}
@@ -119,9 +126,13 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
             <MapSearch
               //тут передается только true modal1Open (((   )))
               locationSearchString={locationSearchString}
-              setDataCoordModal={handleOkCordModal}
-              setDataAdressModal={handleOkAdressModal}
-              setAddressCoord={handleOkAdressCord}
+              setDataAdressModal={(newDataAdressModal: string) =>
+                setDataAdressModal(newDataAdressModal)
+              }
+              setDataCoordModal={(newDataCordModal: number[]) =>
+                setDataCoordModal(newDataCordModal)
+              }
+              setAddressCoord={(newDataCord: number[]) => setAddressCoord(newDataCord)}
             />
           )}
         </Modal>

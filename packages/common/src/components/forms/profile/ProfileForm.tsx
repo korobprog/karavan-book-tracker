@@ -76,14 +76,14 @@ export const ProfileForm = <FormValues extends ProfileFormValues>(props: Props<F
         <Input />
       </Form.Item>
       <Form.Item name="city" label="Ваш город" rules={[{ required: true }]}>
-        <SelectLocation name="city" />
+        <SelectLocation name="city" coordinates={[]} />
       </Form.Item>
       <Form.Item
         name="yatraLocationId"
         label="Ваша ятра"
         rules={[{ required: isYatraLocationRequired }]}
       >
-        <SelectLocation name="yatraLocationId" />
+        <SelectLocation name="yatraLocationId" coordinates={[]} />
       </Form.Item>
       <Form.Item
         name="phone"

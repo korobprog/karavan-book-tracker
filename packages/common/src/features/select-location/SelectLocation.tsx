@@ -7,28 +7,25 @@ import { addLocation, useLocations } from "common/src/services/api/locations";
 import { $isOnline } from "../../app/offline/lib/isOnlineStore";
 import { LocationSelect } from "../../components/LocationSelect";
 
-type SelectLocationProps = SelectProps & { name: string };
+type SelectLocationProps = SelectProps & { name: string; coordinates: number[] };
 
 export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationProps>(
-  ({ name, ...props }, ref) => {
+  ({ name, coordinates, ...props }, ref) => {
     const isOnline = useStore($isOnline);
     const { setFieldValue } = Form.useFormInstance();
     const localRef = useRef<RefSelectProps | null>(null);
-
+    const [adressmodal, setDataAdressModal] = useState("");
     const [locationSearchString, setLocationSearchString] = useState("");
     const { locations, loading } = useLocations({
-      searchString: locationSearchString,
+      searchString: locationSearchString ? locationSearchString : adressmodal,
     });
+
     const [creationLoading, setCreationLoading] = useState(false);
 
-    const [cords, setAddressCoord] = useState<number[]>([]); //работает
+    const [cords, setDataCord] = useState<number[]>();
     console.log("🚀 ~ cords:", cords);
 
-    const [adressmodal, setDataAdressModal] = useState(""); //работает
-    console.log("🚀 ~ adressmodal:", adressmodal);
-
-    const [coordinatesmodal, setDataCoordModal] = useState<number[]>([]); // работает
-    console.log("🚀 ~ coordinatesmodal:", coordinatesmodal);
+    const [coordinatesmodal, setDataCoordModal] = useState<number[]>();
 
     const onLocationSearchChange = useDebouncedCallback((value: string) => {
       const trimmedValue = value.trim();
@@ -37,11 +34,17 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
 
     const onAddNewLocation = () => {
       setCreationLoading(true);
-      addLocation({ name: locationSearchString })
+      addLocation({
+        name: locationSearchString ? locationSearchString : adressmodal,
+        coordinates: cords ? cords : coordinatesmodal,
+      })
         .then(({ id }) => {
           setFieldValue(name, id);
           localRef.current?.blur();
           setLocationSearchString("");
+          setDataCord([]);
+          setDataAdressModal("");
+          setDataCoordModal([]);
         })
         .finally(() => {
           setCreationLoading(false);
@@ -54,23 +57,18 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
 
     return (
       <LocationSelect
-        ref={(node) => {
-          localRef.current = node;
-          if (typeof ref === "function") {
-            ref(node);
-          } else if (ref) {
-            ref.current = node;
-          }
-        }}
+        ref={ref}
+        setDataCoordModalClick={(newDataCordModal: number[]) => setDataCoordModal(newDataCordModal)}
+        setDataAdressModalClick={(newDataAdressModal: string) =>
+          setDataAdressModal(newDataAdressModal)
+        }
+        setDataCoordClick={(newDataCordClick: number[]) => setDataCord(newDataCordClick)}
         onSearch={onLocationSearchChange}
         onAddNewLocation={onAddNewLocation}
         locationSearchString={locationSearchString}
         isOnline={isOnline}
         loading={loading || creationLoading}
         autoClearSearchValue
-        setDataAdressModal={setDataAdressModal}
-        setDataCordModal={setDataCoordModal}
-        setAddressCoord={setAddressCoord}
         {...props}
       >
         {locationOptions}

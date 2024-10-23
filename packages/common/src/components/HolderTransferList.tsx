@@ -21,6 +21,7 @@ import { $booksHashMap } from "common/src/services/books/index";
 import { WithId } from "../services/api/refs";
 import { getBookDeclensions, getTypeDeclensions } from "../utils/declension";
 import { calcBooksCounts } from "./forms/stock/helpers";
+import React from "react";
 
 const displayedTransersCount = 3;
 

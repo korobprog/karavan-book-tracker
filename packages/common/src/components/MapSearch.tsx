@@ -3,9 +3,9 @@ import { GeolocationControl, Map, Placemark, SearchControl } from "react-yandex-
 
 type MapSearchProps = {
   locationSearchString: string;
-  setDataCoordModal: (newDataCord: []) => void;
-  setDataAdressModal: (newDataAdress: string) => void;
-  setAddressCoord: (newDataCord: []) => void;
+  setDataCoordModal: (newDataCordModal: number[]) => void;
+  setDataAdressModal: (newDataAdressModal: string) => void;
+  setAddressCoord: (newDataCord: number[]) => void;
 };
 
 export const MapSearch = (Props: React.PropsWithChildren<MapSearchProps>) => {

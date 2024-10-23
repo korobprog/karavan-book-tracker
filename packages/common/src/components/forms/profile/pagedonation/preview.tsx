@@ -8,6 +8,7 @@ import logo from "common/src/images/logo.png";
 import { Divider, QRCode, Typography, Image, Avatar, Button, Space, Row, Tabs, Col } from "antd";
 import { CurrentUser } from "../../../../services/api/useCurrentUser";
 import { BankTwoTone, CreditCardOutlined } from "@ant-design/icons";
+import React from "react";
 
 type Props = {
   onFinish: (formValues: PageFormValues) => Promise<void>;
