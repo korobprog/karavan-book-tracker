@@ -10,20 +10,22 @@ import { LocationSelect } from "../../components/LocationSelect";
 type SelectLocationProps = SelectProps & { name: string; coordinates: number[] };
 
 export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationProps>(
-  ({ name, coordinates, ...props }, ref) => {
+  ({ ...props }, ref) => {
     const isOnline = useStore($isOnline);
     const { setFieldValue } = Form.useFormInstance();
     const localRef = useRef<RefSelectProps | null>(null);
+
     const [adressmodal, setDataAdressModal] = useState("");
     const [locationSearchString, setLocationSearchString] = useState("");
     const { locations, loading } = useLocations({
-      searchString: locationSearchString ? locationSearchString : adressmodal,
+      searchString: locationSearchString,
     });
 
     const [creationLoading, setCreationLoading] = useState(false);
 
     const [cords, setDataCord] = useState<number[]>();
-    console.log("🚀 ~ cords:", cords);
+
+    const [location, setDataLocation] = useState("");
 
     const [coordinatesmodal, setDataCoordModal] = useState<number[]>();
 
@@ -31,12 +33,21 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
       const trimmedValue = value.trim();
       setLocationSearchString(trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1));
     }, 1000);
+    const newAdress = location;
+    const newCords = cords;
 
+    const newCordsModal = coordinatesmodal;
+    const newAdressModal = adressmodal;
+
+    const name = newAdress ? newAdress : newAdressModal;
+
+    const coordinates = newCords ? newCords : newCordsModal;
+    console.log("FINISH", name, coordinates);
     const onAddNewLocation = () => {
       setCreationLoading(true);
       addLocation({
-        name: locationSearchString ? locationSearchString : adressmodal,
-        coordinates: cords ? cords : coordinatesmodal,
+        name,
+        coordinates,
       })
         .then(({ id }) => {
           setFieldValue(name, id);
@@ -66,6 +77,7 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
         onSearch={onLocationSearchChange}
         onAddNewLocation={onAddNewLocation}
         locationSearchString={locationSearchString}
+        setAddressClick={(location: string) => setDataLocation(location)}
         isOnline={isOnline}
         loading={loading || creationLoading}
         autoClearSearchValue

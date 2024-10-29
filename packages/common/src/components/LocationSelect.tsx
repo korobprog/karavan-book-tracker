@@ -8,6 +8,7 @@ type LocationSelectProps = SelectProps & {
   setDataCoordModalClick: (newDataCordModalClick: number[]) => void;
   setDataAdressModalClick: (newDataAdressModalClick: string) => void;
   setDataCoordClick: (newDataCordClick: number[]) => void;
+  setAddressClick: (newDataAddressClick: string) => void;
   locationSearchString: string;
   isOnline?: boolean;
   loading?: boolean;
@@ -20,6 +21,7 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
       setDataAdressModalClick,
       setDataCoordModalClick,
       setDataCoordClick,
+      setAddressClick,
       locationSearchString,
       children,
       isOnline,
@@ -33,31 +35,37 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
 
     const [cords, setAddressCoord] = useState<number[]>();
 
+    const [location, setAddress] = useState("");
+
     const [adressmodal, setDataAdressModal] = useState("");
 
     const [coordinatesmodal, setDataCoordModal] = useState<number[]>();
 
-    <Typography.Link onClick={onAddNewLocation} style={{ whiteSpace: "nowrap" }}>
+    const handleButtonClick = () => {
+      setAddress(locationSearchString);
+    };
+
+    <Typography.Link onClick={handleButtonClick} style={{ whiteSpace: "nowrap" }}>
       <PlusOutlined />
-      Добавить "{locationSearchString}"
+      Добавить "{location}"
     </Typography.Link>;
 
     const onAddNewLocationClick = () => {
-      setDataAdressModalClick(adressmodal);
-      if (coordinatesmodal) {
+      if (cords && location) {
+        setDataCoordClick(cords);
+        setAddressClick(location);
+      }
+
+      if (adressmodal && coordinatesmodal) {
+        setDataAdressModalClick(adressmodal);
         setDataCoordModalClick(coordinatesmodal);
       }
 
-      if (cords) {
-        setDataCoordClick(cords);
-      }
       setTimeout(() => {
         setLoading(false);
+        onAddNewLocation();
         setModal1Open(false);
-      }, 3000);
-      setAddressCoord([]);
-      setDataAdressModal("");
-      setDataCoordModal([]);
+      }, 1000);
     };
 
     const handleCancel = () => {
@@ -125,7 +133,6 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
           {modal1Open && (
             <MapSearch
               //тут передается только true modal1Open (((   )))
-              locationSearchString={locationSearchString}
               setDataAdressModal={(newDataAdressModal: string) =>
                 setDataAdressModal(newDataAdressModal)
               }
@@ -133,6 +140,8 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
                 setDataCoordModal(newDataCordModal)
               }
               setAddressCoord={(newDataCord: number[]) => setAddressCoord(newDataCord)}
+              setAddress={location}
+              locationSearchString={locationSearchString}
             />
           )}
         </Modal>

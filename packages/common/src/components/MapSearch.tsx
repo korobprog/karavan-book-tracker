@@ -1,15 +1,22 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { GeolocationControl, Map, Placemark, SearchControl } from "react-yandex-maps";
 
 type MapSearchProps = {
-  locationSearchString: string;
   setDataCoordModal: (newDataCordModal: number[]) => void;
   setDataAdressModal: (newDataAdressModal: string) => void;
   setAddressCoord: (newDataCord: number[]) => void;
+  setAddress: string;
+  locationSearchString: string;
 };
 
-export const MapSearch = (Props: React.PropsWithChildren<MapSearchProps>) => {
-  const { locationSearchString, setDataCoordModal, setDataAdressModal, setAddressCoord } = Props;
+export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchProps>, ref) => {
+  const {
+    locationSearchString,
+    setAddress,
+    setDataCoordModal,
+    setDataAdressModal,
+    setAddressCoord,
+  } = Props;
 
   const searchControlRef = useRef<ymaps.control.SearchControl | null>;
 
@@ -35,23 +42,38 @@ export const MapSearch = (Props: React.PropsWithChildren<MapSearchProps>) => {
   };
 
   useEffect(() => {
-    const fetchAddressCoord = async () => {
+    const fetchAddressCoordStateMap = async () => {
       if (mapConstructor) {
         try {
           // @ts-ignore
           const result = await mapConstructor.geocode(locationSearchString);
           // @ts-ignore
 
-          const coord = await result.geoObjects.get(0).geometry.getCoordinates();
+          const coordstate = await result.geoObjects.get(0).geometry.getCoordinates();
+          setAddressCoordMap(coordstate);
+        } catch (error) {
+          console.error("Error fetching address coordinates Map:", error);
+        }
+      }
+    };
+    fetchAddressCoordStateMap();
+  });
 
-          setAddressCoordMap(coord);
-          setAddressCoord(coord);
+  useEffect(() => {
+    const fetchAddressCoord = async () => {
+      if (mapConstructor) {
+        try {
+          // @ts-ignore
+          const result = await mapConstructor.geocode(setAddress);
+
+          // @ts-ignore
+          const coord = await result.geoObjects.get(0).geometry.getCoordinates();
+          setAddressCoord(coord); //не работает
         } catch (error) {
           console.error("Error fetching address coordinates:", error);
         }
       }
     };
-
     fetchAddressCoord();
   });
 
@@ -70,7 +92,8 @@ export const MapSearch = (Props: React.PropsWithChildren<MapSearchProps>) => {
             if (results && results.length > 0) {
               const selectedResult = results[index];
 
-              const newadress = selectedResult.properties.get("name");
+              const newadress = selectedResult.properties.get("LocalityName");
+              console.log("🚀 ~ awaitsearchControl.events.add ~ newadress:", newadress);
 
               const newcoordinates = selectedResult.geometry.getCoordinates();
 
@@ -118,4 +141,4 @@ export const MapSearch = (Props: React.PropsWithChildren<MapSearchProps>) => {
       />
     </Map>
   );
-};
+});
