@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
-import { Select, SelectProps, Typography, RefSelectProps, Modal, Button } from "antd";
+import { Select, SelectProps, Typography, RefSelectProps, Modal } from "antd";
 import { MapSearch } from "./MapSearch";
 
 type LocationSelectProps = SelectProps & {
@@ -31,11 +31,11 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
 
     const [modal1Open, setModal1Open] = useState(false);
 
-    const [loadingCity, setLoading] = useState(false);
+    /*     const [loadingCity, setLoading] = useState(false);
 
-    const [cords, setAddressCoord] = useState<number[]>();
+    const [cords, setAddressCoord] = useState<number[]>(); */
 
-    const [location, setAddress] = useState("");
+    const [adress, setAddress] = useState("");
 
     const [adressmodal, setDataAdressModal] = useState("");
 
@@ -47,26 +47,8 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
 
     <Typography.Link onClick={handleButtonClick} style={{ whiteSpace: "nowrap" }}>
       <PlusOutlined />
-      Добавить "{location}"
+      Добавить "{locationSearchString}"
     </Typography.Link>;
-
-    const onAddNewLocationClick = () => {
-      if (cords && location) {
-        setDataCoordClick(cords);
-        setAddressClick(location);
-      }
-
-      if (adressmodal && coordinatesmodal) {
-        setDataAdressModalClick(adressmodal);
-        setDataCoordModalClick(coordinatesmodal);
-      }
-
-      setTimeout(() => {
-        setLoading(false);
-        onAddNewLocation();
-        setModal1Open(false);
-      }, 1000);
-    };
 
     const handleCancel = () => {
       setModal1Open(false);
@@ -111,25 +93,7 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
         >
           {children}
         </Select>
-        <Modal
-          style={{ top: 20 }}
-          open={modal1Open}
-          onCancel={handleCancel}
-          footer={[
-            <Button
-              key="submit"
-              type="primary"
-              loading={loadingCity}
-              onClick={() => {
-                onAddNewLocationClick();
-                setLoading(true);
-                console.log("hello");
-              }}
-            >
-              {`Выбрать место локации где были распространены книги`}
-            </Button>,
-          ]}
-        >
+        <Modal style={{ top: 20 }} open={modal1Open} onCancel={handleCancel}>
           {modal1Open && (
             <MapSearch
               //тут передается только true modal1Open (((   )))
@@ -139,8 +103,7 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
               setDataCoordModal={(newDataCordModal: number[]) =>
                 setDataCoordModal(newDataCordModal)
               }
-              setAddressCoord={(newDataCord: number[]) => setAddressCoord(newDataCord)}
-              setAddress={location}
+              setAddress={adress}
               locationSearchString={locationSearchString}
             />
           )}

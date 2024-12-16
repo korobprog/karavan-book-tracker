@@ -1,22 +1,17 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { GeolocationControl, Map, Placemark, SearchControl } from "react-yandex-maps";
+import { Button } from "antd";
 
 type MapSearchProps = {
   setDataCoordModal: (newDataCordModal: number[]) => void;
   setDataAdressModal: (newDataAdressModal: string) => void;
-  setAddressCoord: (newDataCord: number[]) => void;
+
   setAddress: string;
   locationSearchString: string;
 };
 
 export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchProps>, ref) => {
-  const {
-    locationSearchString,
-    setAddress,
-    setDataCoordModal,
-    setDataAdressModal,
-    setAddressCoord,
-  } = Props;
+  const { locationSearchString, setAddress, setDataCoordModal, setDataAdressModal } = Props;
 
   const searchControlRef = useRef<ymaps.control.SearchControl | null>;
 
@@ -68,7 +63,7 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
 
           // @ts-ignore
           const coord = await result.geoObjects.get(0).geometry.getCoordinates();
-          setAddressCoord(coord); //не работает
+          console.log("🚀 ~ fetchAddressCoord ~ coord:", coord);
         } catch (error) {
           console.error("Error fetching address coordinates:", error);
         }
@@ -91,10 +86,12 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
             // @ts-ignore
             if (results && results.length > 0) {
               const selectedResult = results[index];
-
-              const newadress = selectedResult.properties.get("LocalityName");
+              // Получение название города
+              const newadress = selectedResult.properties.get(
+                "metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.LocalityName"
+              );
               console.log("🚀 ~ awaitsearchControl.events.add ~ newadress:", newadress);
-
+              // Новые координаты с карты яд
               const newcoordinates = selectedResult.geometry.getCoordinates();
 
               setDataAdressModal(newadress);
@@ -108,6 +105,8 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
     };
     fetchSearchControl();
   });
+
+  const onAddNewLocationClick = () => {};
 
   return (
     <Map
@@ -138,7 +137,18 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
           searchControlRef.current = ref;
         }}
         options={{ float: "left", size: "large", provider: "yandex#map" }}
-      />
+      />{" "}
+      <Button
+        key="submit"
+        type="primary"
+        onClick={() => {
+          onAddNewLocationClick();
+
+          console.log("hello");
+        }}
+      >
+        {`Выбрать место локации где были распространены книги`}
+      </Button>
     </Map>
   );
 });
