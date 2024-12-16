@@ -15,7 +15,6 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
     const { setFieldValue } = Form.useFormInstance();
     const localRef = useRef<RefSelectProps | null>(null);
 
-    const [adressmodal, setDataAdressModal] = useState("");
     const [locationSearchString, setLocationSearchString] = useState("");
     const { locations, loading } = useLocations({
       searchString: locationSearchString,
@@ -23,39 +22,21 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
 
     const [creationLoading, setCreationLoading] = useState(false);
 
-    const [cords, setDataCord] = useState<number[]>();
-
-    const [location, setDataLocation] = useState("");
-
-    const [coordinatesmodal, setDataCoordModal] = useState<number[]>();
-
     const onLocationSearchChange = useDebouncedCallback((value: string) => {
       const trimmedValue = value.trim();
       setLocationSearchString(trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1));
     }, 1000);
-    const newAdress = location;
-    const newCords = cords;
 
-    const newCordsModal = coordinatesmodal;
-    const newAdressModal = adressmodal;
-
-    const name = newAdress ? newAdress : newAdressModal;
-
-    const coordinates = newCords ? newCords : newCordsModal;
-    console.log("FINISH", name, coordinates);
     const onAddNewLocation = () => {
       setCreationLoading(true);
       addLocation({
-        name,
-        coordinates,
+        name: locationSearchString,
       })
         .then(({ id }) => {
+          // eslint-disable-next-line no-restricted-globals
           setFieldValue(name, id);
           localRef.current?.blur();
           setLocationSearchString("");
-          setDataCord([]);
-          setDataAdressModal("");
-          setDataCoordModal([]);
         })
         .finally(() => {
           setCreationLoading(false);
@@ -69,15 +50,9 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
     return (
       <LocationSelect
         ref={ref}
-        setDataCoordModalClick={(newDataCordModal: number[]) => setDataCoordModal(newDataCordModal)}
-        setDataAdressModalClick={(newDataAdressModal: string) =>
-          setDataAdressModal(newDataAdressModal)
-        }
-        setDataCoordClick={(newDataCordClick: number[]) => setDataCord(newDataCordClick)}
         onSearch={onLocationSearchChange}
         onAddNewLocation={onAddNewLocation}
         locationSearchString={locationSearchString}
-        setAddressClick={(location: string) => setDataLocation(location)}
         isOnline={isOnline}
         loading={loading || creationLoading}
         autoClearSearchValue

@@ -3,15 +3,12 @@ import { GeolocationControl, Map, Placemark, SearchControl } from "react-yandex-
 import { Button } from "antd";
 
 type MapSearchProps = {
-  setDataCoordModal: (newDataCordModal: number[]) => void;
-  setDataAdressModal: (newDataAdressModal: string) => void;
-
-  setAddress: string;
-  locationSearchString: string;
+  setAddressAntd: string;
 };
 
 export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchProps>, ref) => {
-  const { locationSearchString, setAddress, setDataCoordModal, setDataAdressModal } = Props;
+  const { setAddressAntd } = Props;
+  const adressantd = setAddressAntd;
 
   const searchControlRef = useRef<ymaps.control.SearchControl | null>;
 
@@ -23,8 +20,6 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
     address: "",
     coordinates: [],
   });
-
-  console.log("🚀 ~ MapSearch ~ searchData:", searchData);
 
   const mapOptions = {
     modules: ["geocode", "SuggestView"],
@@ -48,7 +43,7 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
       if (mapConstructor) {
         try {
           // @ts-ignore
-          const result = await mapConstructor.geocode(locationSearchString);
+          const result = await mapConstructor.geocode(adressantd);
           // @ts-ignore
 
           const coordstate = await result.geoObjects.get(0).geometry.getCoordinates();
@@ -66,7 +61,7 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
       if (mapConstructor) {
         try {
           // @ts-ignore
-          const result = await mapConstructor.geocode(setAddress);
+          const result = await mapConstructor.geocode(locationSearchString);
 
           // @ts-ignore
           const coord = await result.geoObjects.get(0).geometry.getCoordinates();
