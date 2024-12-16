@@ -8,6 +8,7 @@ type MapSearchProps = {
 
 export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchProps>, ref) => {
   const { setAddressAntd } = Props;
+  // Получаю разовый адрес с ANTD
   const adressantd = setAddressAntd;
 
   const searchControlRef = useRef<ymaps.control.SearchControl | null>;
@@ -20,6 +21,8 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
     address: "",
     coordinates: [],
   });
+
+  console.log("🚀 ~ MapSearch ~ searchData:", searchData);
 
   const mapOptions = {
     modules: ["geocode", "SuggestView"],
@@ -42,21 +45,26 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
     const fetchAddressCoordStateMap = async () => {
       if (mapConstructor) {
         try {
+          // тут принимает название города и конвертирует  его в coords
           // @ts-ignore
           const result = await mapConstructor.geocode(adressantd);
           // @ts-ignore
-
           const coordstate = await result.geoObjects.get(0).geometry.getCoordinates();
           setAddressCoordMap(coordstate);
+
+          setSearchData({
+            address: adressantd,
+            coordinates: coordstate,
+          });
         } catch (error) {
           console.error("Error fetching address coordinates Map:", error);
         }
       }
     };
     fetchAddressCoordStateMap();
-  });
+  }, [adressantd]);
 
-  useEffect(() => {
+  /*   useEffect(() => {
     const fetchAddressCoord = async () => {
       if (mapConstructor) {
         try {
@@ -72,7 +80,7 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
       }
     };
     fetchAddressCoord();
-  });
+  }); */
 
   const onAddNewLocationClick = () => {};
 
@@ -94,6 +102,7 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
               const searchmapnewadress = selectedResult.properties.get(
                 "metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.LocalityName"
               );
+              // Новые координаты с карты яд
               const searchmapnewcoordinates = selectedResult.geometry.getCoordinates();
               if (searchmapnewadress && searchmapnewcoordinates) {
                 setSearchData({
@@ -101,8 +110,6 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
                   coordinates: searchmapnewcoordinates,
                 });
               }
-
-              // Новые координаты с карты яд
             }
           });
         } catch (error) {
