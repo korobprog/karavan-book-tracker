@@ -19,6 +19,13 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
 
   const [addressCoord, setAddressCoordMap] = useState();
 
+  const [searchData, setSearchData] = useState({
+    address: "",
+    coordinates: [],
+  });
+
+  console.log("🚀 ~ MapSearch ~ searchData:", searchData);
+
   const mapOptions = {
     modules: ["geocode", "SuggestView"],
     defaultOptions: { suppressMapOpenBlock: true },
@@ -72,6 +79,8 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
     fetchAddressCoord();
   });
 
+  const onAddNewLocationClick = () => {};
+
   useEffect(() => {
     const fetchSearchControl = async () => {
       // @ts-ignore
@@ -87,15 +96,18 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
             if (results && results.length > 0) {
               const selectedResult = results[index];
               // Получение название города
-              const newadress = selectedResult.properties.get(
+              const searchmapnewadress = selectedResult.properties.get(
                 "metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.LocalityName"
               );
-              console.log("🚀 ~ awaitsearchControl.events.add ~ newadress:", newadress);
-              // Новые координаты с карты яд
-              const newcoordinates = selectedResult.geometry.getCoordinates();
+              const searchmapnewcoordinates = selectedResult.geometry.getCoordinates();
+              if (searchmapnewadress && searchmapnewcoordinates) {
+                setSearchData({
+                  address: searchmapnewadress,
+                  coordinates: searchmapnewcoordinates,
+                });
+              }
 
-              setDataAdressModal(newadress);
-              setDataCoordModal(newcoordinates);
+              // Новые координаты с карты яд
             }
           });
         } catch (error) {
@@ -105,8 +117,6 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
     };
     fetchSearchControl();
   });
-
-  const onAddNewLocationClick = () => {};
 
   return (
     <Map
