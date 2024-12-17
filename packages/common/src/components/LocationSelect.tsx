@@ -3,8 +3,14 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Select, SelectProps, Typography, RefSelectProps, Modal } from "antd";
 import { MapSearch } from "./MapSearch";
 
+type Adress = {
+  address: string;
+  coordinates: Number[];
+};
+
 type LocationSelectProps = SelectProps & {
   onAddNewLocation: () => void;
+  setSearchData: (searchData: Adress) => void;
   locationSearchString: string;
   isOnline?: boolean;
   loading?: boolean;
@@ -12,8 +18,15 @@ type LocationSelectProps = SelectProps & {
 
 export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectProps>(
   (props, ref) => {
-    const { onAddNewLocation, locationSearchString, children, isOnline, loading, ...restProps } =
-      props;
+    const {
+      onAddNewLocation,
+      setSearchData,
+      locationSearchString,
+      children,
+      isOnline,
+      loading,
+      ...restProps
+    } = props;
 
     const [modal1Open, setModal1Open] = useState(false);
 
@@ -68,10 +81,20 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
         >
           {children}
         </Select>
-        <Modal style={{ top: 20 }} open={modal1Open} onCancel={handleCancel}>
-          {modal1Open && <MapSearch setAddressAntd={adressantd} setSearchData={function (searchData: { address: string; coordinates: Number[]; }): void {
-            throw new Error("Function not implemented.");
-          } } />}
+        <Modal
+          style={{ top: 20 }}
+          open={modal1Open}
+          onCancel={handleCancel}
+          okButtonProps={{ style: { display: "none" } }}
+          cancelButtonProps={{ style: { display: "none" } }}
+        >
+          {modal1Open && (
+            <MapSearch
+              setAddressAntd={adressantd}
+              setNewSearchData={(location) => setSearchData(location)}
+              handleCancel={handleCancel}
+            />
+          )}
         </Modal>
       </>
     );

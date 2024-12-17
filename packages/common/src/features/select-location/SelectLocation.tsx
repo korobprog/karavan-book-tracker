@@ -7,6 +7,11 @@ import { addLocation, useLocations } from "common/src/services/api/locations";
 import { $isOnline } from "../../app/offline/lib/isOnlineStore";
 import { LocationSelect } from "../../components/LocationSelect";
 
+type Adress = {
+  address: string;
+  coordinates: Number[];
+};
+
 type SelectLocationProps = SelectProps & { name: string; coordinates: number[] };
 
 export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationProps>(
@@ -21,6 +26,9 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
     });
 
     const [creationLoading, setCreationLoading] = useState(false);
+
+    const [datacord, setSearchData] = useState<Adress>();
+    console.log("🚀 ~ родительский:", datacord);
 
     const onLocationSearchChange = useDebouncedCallback((value: string) => {
       const trimmedValue = value.trim();
@@ -49,6 +57,7 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
 
     return (
       <LocationSelect
+        setSearchData={(searchData) => setSearchData(searchData)}
         ref={ref}
         onSearch={onLocationSearchChange}
         onAddNewLocation={onAddNewLocation}
