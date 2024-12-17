@@ -69,7 +69,9 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
           {children}
         </Select>
         <Modal style={{ top: 20 }} open={modal1Open} onCancel={handleCancel}>
-          {modal1Open && <MapSearch setAddressAntd={adressantd} />}
+          {modal1Open && <MapSearch setAddressAntd={adressantd} setSearchData={function (searchData: { address: string; coordinates: Number[]; }): void {
+            throw new Error("Function not implemented.");
+          } } />}
         </Modal>
       </>
     );

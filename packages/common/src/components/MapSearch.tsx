@@ -1,9 +1,15 @@
 import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { GeolocationControl, Map, Placemark, SearchControl } from "react-yandex-maps";
-import { Button } from "antd";
+import { Button, Tooltip } from "antd";
+
+type Adres = {
+  address: string;
+  coordinates: Number[];
+};
 
 type MapSearchProps = {
   setAddressAntd: string;
+  setSearchData: (searchData: Adres) => void;
 };
 
 export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchProps>, ref) => {
@@ -21,8 +27,6 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
     address: "",
     coordinates: [],
   });
-
-  console.log("🚀 ~ MapSearch ~ searchData:", searchData);
 
   const mapOptions = {
     modules: ["geocode", "SuggestView"],
@@ -64,30 +68,15 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
     fetchAddressCoordStateMap();
   }, [adressantd]);
 
-  /*   useEffect(() => {
-    const fetchAddressCoord = async () => {
-      if (mapConstructor) {
-        try {
-          // @ts-ignore
-          const result = await mapConstructor.geocode(locationSearchString);
-
-          // @ts-ignore
-          const coord = await result.geoObjects.get(0).geometry.getCoordinates();
-          console.log("🚀 ~ fetchAddressCoord ~ coord:", coord);
-        } catch (error) {
-          console.error("Error fetching address coordinates:", error);
-        }
-      }
-    };
-    fetchAddressCoord();
-  }); */
-
-  const onAddNewLocationClick = () => {};
+  const onAddNewLocationClick = () => {
+    setSearchData(searchData);
+  };
 
   useEffect(() => {
     const fetchSearchControl = async () => {
       // @ts-ignore
       const searchControl = searchControlRef.current;
+
       if (searchControl) {
         try {
           // @ts-ignore
@@ -104,12 +93,12 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
               );
               // Новые координаты с карты яд
               const searchmapnewcoordinates = selectedResult.geometry.getCoordinates();
-              if (searchmapnewadress && searchmapnewcoordinates) {
+              if (searchmapnewadress && selectedResult) {
                 setSearchData({
                   address: searchmapnewadress,
                   coordinates: searchmapnewcoordinates,
                 });
-              }
+              } else console.error("Только город или поселение");
             }
           });
         } catch (error) {
@@ -119,6 +108,34 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
     };
     fetchSearchControl();
   });
+
+  const handleGeolocationClick = async () => {
+    try {
+      await navigator.geolocation.getCurrentPosition(async (position) => {
+        if (mapConstructor) {
+          const coords = [position.coords.latitude, position.coords.longitude];
+
+          // Обратное геокодирование
+          // @ts-ignore
+          const result = await mapConstructor.geocode(coords);
+
+          const firstGeoObject = result.geoObjects.get(0);
+          const newAddress = firstGeoObject.getLocalities(); // Получаем полный адрес
+          if (newAddress) {
+            console.log(
+              "🚀 ~ await navigator.geolocation.getCurrentPosition ~ newAddress:",
+              newAddress,
+              coords
+            );
+          } else {
+            alert("город не найден, воспользуйтесь поиском");
+          }
+        }
+      });
+    } catch (error) {
+      console.error("Ошибка получения геолокации:", error);
+    }
+  };
 
   return (
     <Map
@@ -142,7 +159,11 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
           }}
         />
       )}
-      <GeolocationControl {...geolocationOptions} />
+      <GeolocationControl
+        {...geolocationOptions}
+        options={{ float: "right" }}
+        onClick={handleGeolocationClick}
+      />
       <SearchControl
         instanceRef={(ref) => {
           // @ts-ignore
@@ -155,8 +176,6 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
         type="primary"
         onClick={() => {
           onAddNewLocationClick();
-
-          console.log("hello");
         }}
       >
         {`Выбрать место локации где были распространены книги`}
