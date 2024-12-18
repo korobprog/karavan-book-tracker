@@ -5,7 +5,7 @@ import { MapSearch } from "./MapSearch";
 
 type Adress = {
   address: string;
-  coordinates: Number[];
+  coordinates: number[];
 };
 
 type LocationSelectProps = SelectProps & {
@@ -60,13 +60,13 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
 
                 {isOnline ? (
                   <Typography.Link
-                    onClick={() => setModal1Open(true)}
+                    onClick={() => {
+                      setModal1Open(true);
+                      handleOpen();
+                    }}
                     style={{ whiteSpace: "nowrap" }}
                   >
-                    <div onClick={handleOpen}>
-                      {" "}
-                      <PlusOutlined /> Добавить "{locationSearchString}"
-                    </div>
+                    <PlusOutlined /> Добавить "{locationSearchString}"
                   </Typography.Link>
                 ) : (
                   <Typography.Text>
@@ -93,6 +93,8 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
               setAddressAntd={adressantd}
               setNewSearchData={(location) => setSearchData(location)}
               handleCancel={handleCancel}
+              onAddNewLocation={onAddNewLocation}
+              handleOpen={handleOpen}
             />
           )}
         </Modal>

@@ -6,6 +6,7 @@ import { Offline, register as registerServiceWorker } from "common/src/app/offli
 import ru_RU from "antd/locale/ru_RU";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { YMaps } from "react-yandex-maps";
 
 import "moment/locale/ru";
 import moment from "moment";
@@ -18,7 +19,16 @@ ReactDOM.render(
     <BrowserRouter>
       <Offline>
         <ConfigProvider locale={ru_RU}>
-          <App />
+          <YMaps
+            query={{
+              apikey: process.env.REACT_APP_YMAP_KEY,
+              //@ts-ignorets-ignore
+              suggest_apikey: process.env.REACT_APP_YMAPGEO_KEY,
+              lang: "ru_RU",
+            }}
+          >
+            <App />
+          </YMaps>
         </ConfigProvider>
       </Offline>
     </BrowserRouter>

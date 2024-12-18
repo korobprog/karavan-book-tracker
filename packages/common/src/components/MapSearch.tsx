@@ -4,19 +4,20 @@ import { Button } from "antd";
 
 type Adress = {
   address: string;
-  coordinates: Number[];
+  coordinates: number[];
 };
 
 type MapSearchProps = {
   setAddressAntd: string;
+  handleOpen: () => void;
   setNewSearchData: (searchData: Adress) => void;
   handleCancel: () => void;
+  onAddNewLocation: () => void;
 };
 
 export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchProps>, ref) => {
-  const { setAddressAntd, setNewSearchData, handleCancel } = Props;
-  // Получаю разовый адрес с ANTD
-  const adressantd = setAddressAntd;
+  const { setAddressAntd, setNewSearchData, handleCancel, onAddNewLocation, handleOpen } = Props;
+  console.log("🚀 ~ MapSearch ~ setAddressAntd:", setAddressAntd);
 
   const searchControlRef = useRef<ymaps.control.SearchControl | null>;
 
@@ -28,7 +29,6 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
     address: "",
     coordinates: [],
   });
-  console.log("🚀 ~ дочерний компонент", searchData);
   const mapOptions = {
     modules: ["geocode", "SuggestView"],
     defaultOptions: { suppressMapOpenBlock: true },
@@ -48,26 +48,28 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
 
   useEffect(() => {
     const fetchAddressCoordStateMap = async () => {
-      if (mapConstructor) {
+      if (mapConstructor && setAddressAntd) {
         try {
           // тут принимает название города и конвертирует  его в coords
           // @ts-ignore
-          const result = await mapConstructor.geocode(adressantd);
+          const result = await mapConstructor.geocode(setAddressAntd);
           // @ts-ignore
           const coordstate = await result.geoObjects.get(0).geometry.getCoordinates();
           setAddressCoordMap(coordstate);
 
           setSearchData({
-            address: adressantd,
+            address: setAddressAntd,
             coordinates: coordstate,
           });
         } catch (error) {
           console.error("Error fetching address coordinates Map:", error);
         }
+      } else {
+        console.log("Ошиька получения локации");
       }
     };
     fetchAddressCoordStateMap();
-  }, [adressantd]);
+  }, [handleOpen]);
 
   useEffect(() => {
     const fetchSearchControl = async () => {
@@ -153,6 +155,7 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
         coordinates: [],
       });
       handleCancel();
+      onAddNewLocation();
     } else {
       alert("Ошибка сервера, попробуйте еще раз");
     }
@@ -199,8 +202,9 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
         onClick={() => {
           onAddNewLocationClick();
         }}
+        disabled={trimmedString ? false : true}
       >
-        {`Выбрать "${trimmedString}"`}
+        {`Выбрать ${trimmedString}`}
       </Button>
     </Map>
   );

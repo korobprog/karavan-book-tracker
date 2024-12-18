@@ -9,46 +9,50 @@ import { LocationSelect } from "../../components/LocationSelect";
 
 type Adress = {
   address: string;
-  coordinates: Number[];
+  coordinates: number[];
 };
 
 type SelectLocationProps = SelectProps & { name: string; coordinates: number[] };
 
 export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationProps>(
-  ({ ...props }, ref) => {
+  ({ name, ...props }, ref) => {
     const isOnline = useStore($isOnline);
     const { setFieldValue } = Form.useFormInstance();
     const localRef = useRef<RefSelectProps | null>(null);
+
+    const [datacord, setSearchData] = useState<Adress>();
+    console.log("🚀 ~ datacord:", datacord);
 
     const [locationSearchString, setLocationSearchString] = useState("");
     const { locations, loading } = useLocations({
       searchString: locationSearchString,
     });
-
     const [creationLoading, setCreationLoading] = useState(false);
-
-    const [datacord, setSearchData] = useState<Adress>();
-    console.log("🚀 ~ родительский:", datacord);
 
     const onLocationSearchChange = useDebouncedCallback((value: string) => {
       const trimmedValue = value.trim();
       setLocationSearchString(trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1));
     }, 1000);
 
+    let locationname = datacord?.address ? datacord?.address : locationSearchString;
+    let locationcord = datacord?.coordinates;
+
     const onAddNewLocation = () => {
-      setCreationLoading(true);
-      addLocation({
-        name: locationSearchString,
-      })
-        .then(({ id }) => {
-          // eslint-disable-next-line no-restricted-globals
-          setFieldValue(name, id);
-          localRef.current?.blur();
-          setLocationSearchString("");
-        })
-        .finally(() => {
-          setCreationLoading(false);
-        });
+      if (locationname && locationcord) {
+        setCreationLoading(true);
+        addLocation({ name: locationname, coordinates: locationcord })
+          .then(({ id }) => {
+            setFieldValue(name, id);
+            localRef.current?.blur();
+            setLocationSearchString("");
+            setSearchData(datacord);
+          })
+          .finally(() => {
+            setCreationLoading(false);
+          });
+      } else {
+        console.log("Ошибка локации");
+      }
     };
 
     const locationOptions = locations.map((d) => (
@@ -57,14 +61,22 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
 
     return (
       <LocationSelect
-        setSearchData={(searchData) => setSearchData(searchData)}
-        ref={ref}
+        ref={(node) => {
+          localRef.current = node;
+          if (typeof ref === "function") {
+            ref(node);
+          } else if (ref) {
+            ref.current = node;
+          }
+        }}
+        // ref={ref}
         onSearch={onLocationSearchChange}
         onAddNewLocation={onAddNewLocation}
         locationSearchString={locationSearchString}
         isOnline={isOnline}
         loading={loading || creationLoading}
         autoClearSearchValue
+        setSearchData={(searchData) => setSearchData(searchData)}
         {...props}
       >
         {locationOptions}
