@@ -10,25 +10,22 @@ type Adress = {
 type MapSearchProps = {
   setAddressAntd: string;
   handleOpen: () => void;
-  setNewSearchData: (searchData: Adress) => void;
+  setSearchData: (searchData: Adress) => void;
   handleCancel: () => void;
   onAddNewLocation: () => void;
+  searchdata: Adress;
 };
 
 export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchProps>, ref) => {
-  const { setAddressAntd, setNewSearchData, handleCancel, onAddNewLocation, handleOpen } = Props;
-  console.log("🚀 ~ MapSearch ~ setAddressAntd:", setAddressAntd);
+  const { setAddressAntd, handleCancel, onAddNewLocation, handleOpen, setSearchData, searchdata } =
+    Props;
 
   const searchControlRef = useRef<ymaps.control.SearchControl | null>;
 
   const [mapConstructor, setMapConstructor] = useState(null);
 
-  const [addressCoord, setAddressCoordMap] = useState();
+  const [addressCoord, setAddressCoordMap] = useState<number[]>();
 
-  const [searchData, setSearchData] = useState<Adress>({
-    address: "",
-    coordinates: [],
-  });
   const mapOptions = {
     modules: ["geocode", "SuggestView"],
     defaultOptions: { suppressMapOpenBlock: true },
@@ -50,17 +47,24 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
     const fetchAddressCoordStateMap = async () => {
       if (mapConstructor && setAddressAntd) {
         try {
-          // тут принимает название города и конвертирует  его в coords
           // @ts-ignore
-          const result = await mapConstructor.geocode(setAddressAntd);
+          const cords = await mapConstructor.geocode(setAddressAntd);
           // @ts-ignore
-          const coordstate = await result.geoObjects.get(0).geometry.getCoordinates();
-          setAddressCoordMap(coordstate);
+          const coordstate = await cords.geoObjects.get(0).geometry.getCoordinates();
 
-          setSearchData({
-            address: setAddressAntd,
-            coordinates: coordstate,
-          });
+          const firstGeoObject = await cords.geoObjects.get(0);
+
+          const searchmapnewadress = await firstGeoObject.getLocalities();
+
+          if (coordstate && searchmapnewadress) {
+            setSearchData({
+              address: searchmapnewadress,
+              coordinates: coordstate,
+            });
+          } else {
+            alert("город не найден, воспользуйтесь поиском");
+          }
+          setAddressCoordMap(coordstate);
         } catch (error) {
           console.error("Error fetching address coordinates Map:", error);
         }
@@ -86,18 +90,15 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
             // @ts-ignore
             if (results && results.length > 0) {
               const selectedResult = results[index];
-              // Получение название города
+
               const searchmapnewadress = selectedResult.properties.get(
                 "metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.LocalityName"
               );
-              // Новые координаты с карты яд
               const searchmapnewcoordinates = selectedResult.geometry.getCoordinates();
-              if (searchmapnewadress && selectedResult) {
-                setSearchData({
-                  address: searchmapnewadress,
-                  coordinates: searchmapnewcoordinates,
-                });
-              } else console.error("Только город или поселение");
+              setSearchData({
+                address: searchmapnewadress,
+                coordinates: searchmapnewcoordinates,
+              });
             }
           });
         } catch (error) {
@@ -116,13 +117,12 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
             position.coords.latitude,
             position.coords.longitude,
           ];
-
-          // Обратное геокодирование
           // @ts-ignore
           const result = await mapConstructor.geocode(searchmapnewcoordinates);
 
           const firstGeoObject = result.geoObjects.get(0);
           const searchmapnewadress = firstGeoObject.getLocalities(); // Получаем полный адрес
+
           if (searchmapnewcoordinates && searchmapnewadress) {
             setSearchData({
               address: searchmapnewadress,
@@ -138,26 +138,16 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
     }
   };
 
-  const trimAdress = (str: string, maxLength: number) => {
-    if (str.length > maxLength) {
-      return str.slice(0, maxLength) + "...";
-    }
-    return str;
-  };
-  const str: string = searchData.address;
-  const trimmedString: string = trimAdress(str, 10);
-
-  const onAddNewLocationClick = () => {
-    if (searchData) {
-      setNewSearchData(searchData);
+  const onAddNewLocationClick = async () => {
+    try {
+      await onAddNewLocation();
       setSearchData({
         address: "",
         coordinates: [],
       });
       handleCancel();
-      onAddNewLocation();
-    } else {
-      alert("Ошибка сервера, попробуйте еще раз");
+    } catch (error) {
+      console.error("Ошибка при добавлении новой локации:", error);
     }
   };
 
@@ -202,9 +192,9 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
         onClick={() => {
           onAddNewLocationClick();
         }}
-        disabled={trimmedString ? false : true}
+        disabled={searchdata.address ? false : true}
       >
-        {`Выбрать ${trimmedString}`}
+        {`Выбрать ${searchdata.address || "Выберете город или поселок"}`}
       </Button>
     </Map>
   );

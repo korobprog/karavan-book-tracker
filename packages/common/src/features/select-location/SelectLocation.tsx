@@ -12,7 +12,10 @@ type Adress = {
   coordinates: number[];
 };
 
-type SelectLocationProps = SelectProps & { name: string; coordinates: number[] };
+type SelectLocationProps = SelectProps & {
+  name: string;
+  coordinates: number[];
+};
 
 export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationProps>(
   ({ name, ...props }, ref) => {
@@ -20,8 +23,10 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
     const { setFieldValue } = Form.useFormInstance();
     const localRef = useRef<RefSelectProps | null>(null);
 
-    const [datacord, setSearchData] = useState<Adress>();
-    console.log("🚀 ~ datacord:", datacord);
+    const [searchdata, setSearchData] = useState<Adress>({
+      address: "",
+      coordinates: [],
+    });
 
     const [locationSearchString, setLocationSearchString] = useState("");
     const { locations, loading } = useLocations({
@@ -34,18 +39,21 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
       setLocationSearchString(trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1));
     }, 1000);
 
-    let locationname = datacord?.address ? datacord?.address : locationSearchString;
-    let locationcord = datacord?.coordinates;
+    let locationname = searchdata.address;
+    let locationcord = searchdata.coordinates;
 
     const onAddNewLocation = () => {
-      if (locationname && locationcord) {
+      if (locationname || locationcord) {
         setCreationLoading(true);
         addLocation({ name: locationname, coordinates: locationcord })
           .then(({ id }) => {
             setFieldValue(name, id);
             localRef.current?.blur();
             setLocationSearchString("");
-            setSearchData(datacord);
+            setSearchData({
+              address: "",
+              coordinates: [],
+            });
           })
           .finally(() => {
             setCreationLoading(false);
@@ -77,6 +85,7 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
         loading={loading || creationLoading}
         autoClearSearchValue
         setSearchData={(searchData) => setSearchData(searchData)}
+        searchdata={searchdata}
         {...props}
       >
         {locationOptions}

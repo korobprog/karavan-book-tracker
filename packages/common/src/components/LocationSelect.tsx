@@ -14,6 +14,7 @@ type LocationSelectProps = SelectProps & {
   locationSearchString: string;
   isOnline?: boolean;
   loading?: boolean;
+  searchdata: Adress;
 };
 
 export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectProps>(
@@ -21,6 +22,7 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
     const {
       onAddNewLocation,
       setSearchData,
+      searchdata,
       locationSearchString,
       children,
       isOnline,
@@ -91,10 +93,11 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
           {modal1Open && (
             <MapSearch
               setAddressAntd={adressantd}
-              setNewSearchData={(location) => setSearchData(location)}
+              setSearchData={(searchData) => setSearchData(searchData)}
               handleCancel={handleCancel}
               onAddNewLocation={onAddNewLocation}
               handleOpen={handleOpen}
+              searchdata={searchdata}
             />
           )}
         </Modal>
