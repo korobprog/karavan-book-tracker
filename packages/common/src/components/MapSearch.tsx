@@ -9,7 +9,7 @@ type Adress = {
 
 type MapSearchProps = {
   setAddressAntd: string;
-  handleOpen: () => void;
+  handleOpen: () => true;
   setSearchData: (searchData: Adress) => void;
   handleCancel: () => void;
   onAddNewLocation: () => void;
@@ -25,6 +25,8 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
   const [mapConstructor, setMapConstructor] = useState(null);
 
   const [addressCoord, setAddressCoordMap] = useState<number[]>();
+
+  const [hasFetched, setHasFetched] = useState<boolean>(false); // Состояние для отслеживания вызова функции
 
   const mapOptions = {
     modules: ["geocode", "SuggestView"],
@@ -55,6 +57,11 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
           const firstGeoObject = await cords.geoObjects.get(0);
 
           const searchmapnewadress = await firstGeoObject.getLocalities();
+          console.log(
+            "🚀 ~ fetchAddressCoordStateMap ~ searchmapnewadress:",
+            searchmapnewadress,
+            coordstate
+          );
 
           if (coordstate && searchmapnewadress) {
             setSearchData({
@@ -69,11 +76,15 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
           console.error("Error fetching address coordinates Map:", error);
         }
       } else {
-        console.log("Ошиька получения локации");
+        console.log("Ошибка получения локации");
       }
     };
-    fetchAddressCoordStateMap();
-  }, [handleOpen]);
+    if (handleOpen() && hasFetched) {
+      // Проверяем состояние и вызываем функцию
+      fetchAddressCoordStateMap();
+      setHasFetched(true); // Устанавливаем состояние в true после вызова функции
+    }
+  }, [mapConstructor, setAddressAntd, hasFetched]);
 
   useEffect(() => {
     const fetchSearchControl = async () => {
@@ -117,11 +128,18 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
             position.coords.latitude,
             position.coords.longitude,
           ];
+
           // @ts-ignore
+
           const result = await mapConstructor.geocode(searchmapnewcoordinates);
 
           const firstGeoObject = result.geoObjects.get(0);
           const searchmapnewadress = firstGeoObject.getLocalities(); // Получаем полный адрес
+          console.log(
+            "🚀 ~ navigator.geolocation.getCurrentPosition ~ searchmapnewadress:",
+            searchmapnewadress,
+            searchmapnewcoordinates
+          );
 
           if (searchmapnewcoordinates && searchmapnewadress) {
             setSearchData({

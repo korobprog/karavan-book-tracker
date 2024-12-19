@@ -32,6 +32,7 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
     const { locations, loading } = useLocations({
       searchString: locationSearchString,
     });
+
     const [creationLoading, setCreationLoading] = useState(false);
 
     const onLocationSearchChange = useDebouncedCallback((value: string) => {
@@ -60,6 +61,10 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
           });
       } else {
         console.log("Ошибка локации");
+        setSearchData({
+          address: "",
+          coordinates: [],
+        });
       }
     };
 

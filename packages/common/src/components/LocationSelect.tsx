@@ -38,8 +38,9 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
       setModal1Open(false);
     };
 
-    const handleOpen = () => {
+    const handleOpen: () => true = () => {
       setAddressAntd(locationSearchString);
+      return true;
     };
 
     return (
