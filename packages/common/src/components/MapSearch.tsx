@@ -47,36 +47,27 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
 
   useEffect(() => {
     const fetchAddressCoordStateMap = async () => {
-      if (mapConstructor && setAddressAntd) {
-        try {
-          // @ts-ignore
-          const cords = await mapConstructor.geocode(setAddressAntd);
-          // @ts-ignore
-          const coordstate = await cords.geoObjects.get(0).geometry.getCoordinates();
+      try {
+        // @ts-ignore
+        const cords = await mapConstructor.geocode(setAddressAntd);
+        // @ts-ignore
+        const coordstate = cords.geoObjects.get(0).geometry.getCoordinates();
 
-          const firstGeoObject = await cords.geoObjects.get(0);
+        const firstGeoObject = cords.geoObjects.get(0);
 
-          const searchmapnewadress = await firstGeoObject.getLocalities();
-          console.log(
-            "🚀 ~ fetchAddressCoordStateMap ~ searchmapnewadress:",
-            searchmapnewadress,
-            coordstate
-          );
+        const searchmapnewadress = firstGeoObject.getLocalities();
 
-          if (coordstate && searchmapnewadress) {
-            setSearchData({
-              address: searchmapnewadress,
-              coordinates: coordstate,
-            });
-          } else {
-            alert("город не найден, воспользуйтесь поиском");
-          }
-          setAddressCoordMap(coordstate);
-        } catch (error) {
-          console.error("Error fetching address coordinates Map:", error);
+        if (coordstate && searchmapnewadress) {
+          setSearchData({
+            address: searchmapnewadress,
+            coordinates: coordstate,
+          });
+        } else {
+          alert("город не найден, воспользуйтесь поиском");
         }
-      } else {
-        console.log("Ошибка получения локации");
+        setAddressCoordMap(coordstate);
+      } catch (error) {
+        console.error("Error fetching address coordinates Map:", error);
       }
     };
     if (handleOpen() && hasFetched) {
@@ -135,11 +126,6 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
 
           const firstGeoObject = result.geoObjects.get(0);
           const searchmapnewadress = firstGeoObject.getLocalities(); // Получаем полный адрес
-          console.log(
-            "🚀 ~ navigator.geolocation.getCurrentPosition ~ searchmapnewadress:",
-            searchmapnewadress,
-            searchmapnewcoordinates
-          );
 
           if (searchmapnewcoordinates && searchmapnewadress) {
             setSearchData({

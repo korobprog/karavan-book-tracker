@@ -1,11 +1,12 @@
 import React, { useState, useRef } from "react";
 import { useStore } from "effector-react";
-import { Select, RefSelectProps, SelectProps, Form } from "antd";
+import { Select, RefSelectProps, SelectProps, Form, notification } from "antd";
 import { useDebouncedCallback } from "use-debounce";
 
 import { addLocation, useLocations } from "common/src/services/api/locations";
 import { $isOnline } from "../../app/offline/lib/isOnlineStore";
 import { LocationSelect } from "../../components/LocationSelect";
+import { InfoCircleOutlined } from "@ant-design/icons";
 
 type Adress = {
   address: string;
@@ -32,7 +33,6 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
     const { locations, loading } = useLocations({
       searchString: locationSearchString,
     });
-
     const [creationLoading, setCreationLoading] = useState(false);
 
     const onLocationSearchChange = useDebouncedCallback((value: string) => {
@@ -40,30 +40,19 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
       setLocationSearchString(trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1));
     }, 1000);
 
-    const searchingDuplicate: (newName: string) => string = (newName) => {
-      // Проверяем, существует ли уже название города и его координаты
-      const existingLocation = locations.find((location) => location.name === newName);
-      if (existingLocation) {
-        return existingLocation.name!;
-      } else {
-        return "";
-      }
-    };
-
     let locationname = searchdata.address;
-    const filtrelocation = searchingDuplicate(locationname);
+
     let locationcord = searchdata.coordinates;
 
-    console.log("🚀 ~ filtrelocation:", filtrelocation);
-
     const onAddNewLocation = () => {
-      if (locationname || locationcord) {
+      const existingLocation = locations.find((product) => product.name === locationname);
+
+      if (!existingLocation?.name) {
         setCreationLoading(true);
         addLocation({ name: locationname, coordinates: locationcord })
           .then(({ id }) => {
             setFieldValue(name, id);
             localRef.current?.blur();
-            setLocationSearchString("");
             setSearchData({
               address: "",
               coordinates: [],
@@ -73,7 +62,7 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
             setCreationLoading(false);
           });
       } else {
-        console.log("Ошибка локации");
+        notification.success({ message: "Такой город уже есть", icon: <InfoCircleOutlined /> });
         setSearchData({
           address: "",
           coordinates: [],
