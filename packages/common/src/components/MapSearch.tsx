@@ -26,7 +26,7 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
 
   const [addressCoord, setAddressCoordMap] = useState<number[]>();
 
-  const [hasFetched, setHasFetched] = useState<boolean>(false); // Состояние для отслеживания вызова функции
+  const [hasFetched, setHasFetched] = useState<boolean>(true); // Состояние для отслеживания вызова функции
 
   const mapOptions = {
     modules: ["geocode", "SuggestView"],
@@ -84,7 +84,7 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
       fetchAddressCoordStateMap();
       setHasFetched(true); // Устанавливаем состояние в true после вызова функции
     }
-  }, [mapConstructor, setAddressAntd, hasFetched]);
+  });
 
   useEffect(() => {
     const fetchSearchControl = async () => {

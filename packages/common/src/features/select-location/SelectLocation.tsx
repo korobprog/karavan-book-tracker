@@ -40,8 +40,21 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
       setLocationSearchString(trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1));
     }, 1000);
 
+    const searchingDuplicate: (newName: string) => string = (newName) => {
+      // Проверяем, существует ли уже название города и его координаты
+      const existingLocation = locations.find((location) => location.name === newName);
+      if (existingLocation) {
+        return existingLocation.name!;
+      } else {
+        return "";
+      }
+    };
+
     let locationname = searchdata.address;
+    const filtrelocation = searchingDuplicate(locationname);
     let locationcord = searchdata.coordinates;
+
+    console.log("🚀 ~ filtrelocation:", filtrelocation);
 
     const onAddNewLocation = () => {
       if (locationname || locationcord) {
