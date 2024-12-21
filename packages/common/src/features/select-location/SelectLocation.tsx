@@ -15,7 +15,6 @@ type Adress = {
 
 type SelectLocationProps = SelectProps & {
   name: string;
-  coordinates: number[];
 };
 
 export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationProps>(

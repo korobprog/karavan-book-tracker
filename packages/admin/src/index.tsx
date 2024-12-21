@@ -22,7 +22,7 @@ ReactDOM.render(
           <YMaps
             query={{
               apikey: process.env.REACT_APP_YMAP_KEY,
-              //@ts-ignorets-ignore
+              // @ts-ignore
               suggest_apikey: process.env.REACT_APP_YMAPGEO_KEY,
               lang: "ru_RU",
             }}
