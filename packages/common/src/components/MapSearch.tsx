@@ -47,6 +47,7 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
 
   useEffect(() => {
     const fetchAddressCoordStateMap = async () => {
+      if (!mapConstructor) return;
       try {
         // @ts-ignore
         const cords = await mapConstructor.geocode(setAddressAntd);
@@ -75,7 +76,7 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
       fetchAddressCoordStateMap();
       setHasFetched(true); // Устанавливаем состояние в true после вызова функции
     }
-  });
+  }, [mapConstructor]);
 
   useEffect(() => {
     const fetchSearchControl = async () => {
@@ -109,7 +110,7 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
       }
     };
     fetchSearchControl();
-  });
+  }, []);
 
   const handleGeolocationClick = async () => {
     try {
