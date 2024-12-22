@@ -1,6 +1,6 @@
 {
   "name": "book-tracker",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "scripts": {
     "tracker": "npm run start -w tracker",
@@ -9,24 +9,35 @@
     "tracker:deploy:staging": "npm run deploy:staging -w tracker",
     "tracker:build:prod": "npm run build:prod -w tracker",
     "tracker:deploy:prod": "npm run deploy:prod -w tracker",
+    "tracker:scan": "npm run scan -w tracker",
     "admin": "npm run start -w admin",
     "admin:prod": "npm run start:prod -w admin",
     "admin:build:staging": "npm run build:staging -w admin",
     "admin:deploy:staging": "npm run deploy:staging -w admin",
     "admin:build:prod": "npm run build:prod -w admin",
     "admin:deploy:prod": "npm run deploy:prod -w admin",
+    "admin:scan": "npm run scan -w admin",
     "stock": "npm run start -w stock",
     "stock:prod": "npm run start:prod -w stock",
     "stock:build:staging": "npm run build:staging -w stock",
     "stock:deploy:staging": "npm run deploy:staging -w stock",
     "stock:build:prod": "npm run build:prod -w stock",
     "stock:deploy:prod": "npm run deploy:prod -w stock",
+    "stock:scan": "npm run scan -w stock",
     "donation": "npm run start -w donation",
     "donation:prod": "npm run start:prod -w donation",
     "donation:build:staging": "npm run build:staging -w donation",
     "donation:deploy:staging": "npm run deploy:staging -w donation",
     "donation:build:prod": "npm run build:prod -w donation",
     "donation:deploy:prod": "npm run deploy:prod -w donation",
+    "donation:scan": "npm run scan -w donation",
+    "map": "npm run start -w map",
+    "map:prod": "npm run start:prod -w map",
+    "map:build:staging": "npm run build:staging -w map",
+    "map:deploy:staging": "npm run deploy:staging -w map",
+    "map:build:prod": "npm run build:prod -w map",
+    "map:deploy:prod": "npm run deploy:prod -w map",
+    "common:scan": "npm run scan -w common",
     "prepare": "husky install"
   },
   "eslintConfig": {
@@ -40,7 +51,8 @@
     "packages/admin",
     "packages/tracker",
     "packages/stock",
-    "packages/donation"
+    "packages/donation",
+    "packages/map"
   ],
   "dependencies": {
     "@ant-design/pro-layout": "^7.17.6",
@@ -48,7 +60,9 @@
     "exceljs": "^4.3.0",
     "file-saver": "^2.0.5",
     "jspdf": "^2.5.1",
-    "react-yandex-maps": "^4.6.0"
+    "react-yandex-maps": "^4.6.0",
+    "i18next": "^23.10.0",
+    "react-i18next": "^14.1.0"
   },
   "devDependencies": {
     "@types/firebase": "^3.2.1",
@@ -59,6 +73,7 @@
     "craco-plugin-env": "^1.0.5",
     "firebase": "^9.23.0",
     "husky": "^8.0.3",
+    "i18next-scanner": "^4.5.0",
     "lint-staged": "^13.2.2",
     "prettier": "2.8.8"
   },

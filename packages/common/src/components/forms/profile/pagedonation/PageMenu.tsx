@@ -8,7 +8,7 @@ import { useState } from "react";
 import Link from "antd/es/typography/Link";
 import printPdfDonations from "common/src/components/forms/profile/pagedonation/printPdfDonations";
 import printPdfDonations88 from "common/src/components/forms/profile/pagedonation/printPdfDonations88";
-import React from "react";
+import { useTranslation } from "react-i18next";
 
 export type PageFormValues = DonationPageDoc;
 
@@ -20,6 +20,7 @@ type Props = {
 
 const PageMenu = ({ currentUser }: Props) => {
   const { profile, user } = currentUser;
+  const { t } = useTranslation();
 
   const initialPageDoc: DonationPageDoc = {
     banks: [],
@@ -76,7 +77,7 @@ const PageMenu = ({ currentUser }: Props) => {
         {initialValues.active ? (
           <Button type="primary" ghost icon={<LinkOutlined />}>
             <Link copyable={{ text: myPageLink }} href={myPageLink} target="_blank">
-              Ваша страница визитки
+              {t("common.donation.menu.your_page")}
             </Link>
           </Button>
         ) : (
@@ -84,7 +85,7 @@ const PageMenu = ({ currentUser }: Props) => {
         )}
         {initialValues.active ? (
           <Button type="dashed" onClick={showModal} icon={<PrinterTwoTone />}>
-            Распечатать визитки
+            {t("common.donation.menu.print")}
           </Button>
         ) : (
           ""

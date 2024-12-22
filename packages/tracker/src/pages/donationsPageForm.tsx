@@ -10,6 +10,7 @@ import { Preview } from "common/src/components/forms/profile/pagedonation/previe
 import { Switch } from "antd";
 import { EyeInvisibleFilled, EyeTwoTone } from "@ant-design/icons";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 export type PageFormValues = DonationPageDoc;
 
 type Props = {
@@ -20,6 +21,7 @@ type Props = {
 
 const PageDonations = ({ currentUser }: Props) => {
   const { profile, user } = currentUser;
+  const { t } = useTranslation();
 
   const avatar = profile?.avatar;
 
@@ -54,7 +56,7 @@ const PageDonations = ({ currentUser }: Props) => {
         userName: profile?.name,
       };
       editDonationPageDoc(userId, updatedValues);
-      notification.success({ message: "Страница успешно сохранена" });
+      notification.success({ message: t("donation.save_success") });
     }
   };
   const [switchState, setSwitchState] = useState(initialValues.active);
@@ -69,7 +71,7 @@ const PageDonations = ({ currentUser }: Props) => {
   return (
     <>
       <BaseLayout
-        title="Страница для пожертвований"
+        title={t("home.donations")}
         isAdmin
         backPath={routes.pageDonations}
         avatar={avatar}
@@ -88,7 +90,7 @@ const PageDonations = ({ currentUser }: Props) => {
         </Space>
         {donationDocLoading || !initialPageDoc ? (
           <Typography.Title className="site-page-title" level={5}>
-            Загрузка...
+            {t("loading")}
           </Typography.Title>
         ) : (
           <>

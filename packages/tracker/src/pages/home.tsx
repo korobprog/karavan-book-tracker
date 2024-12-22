@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, Divider, Space, Typography } from "antd";
+import { Button, Divider, Typography } from "antd";
+import { useTranslation } from "react-i18next";
 import {
   ReadOutlined,
   UserAddOutlined,
@@ -18,10 +19,12 @@ import config from "../../package.json";
 type Props = {
   currentUser: CurrentUser;
 };
-const { Title, Text, Paragraph } = Typography;
+
 export const Home = ({ currentUser }: Props) => {
+  const { t } = useTranslation();
   const { userDocLoading, profile, user } = currentUser;
   const navigate = useTransitionNavigate();
+
   const onAddReport = () => {
     navigate(routes.report);
   };
@@ -36,15 +39,15 @@ export const Home = ({ currentUser }: Props) => {
       version={config.version}
     >
       <Title className="site-page-title" level={2}>
-        Привет,
+        {t("home.hello")},
         <br />
         {profile?.nameSpiritual || profile?.name || user?.displayName || "друг"}
       </Title>
       <Title className="site-page-subtitle" level={5}>
-        Удачной санкиртаны!
+        {t("home.happy_sankirtana")}
       </Title>
       <Button type="primary" block size="large" icon={<ReadOutlined />} onClick={onAddReport}>
-        Отметить книги
+        {t("home.report")}
       </Button>
       <Divider dashed />
       <Button
@@ -53,11 +56,11 @@ export const Home = ({ currentUser }: Props) => {
         icon={<BarChartOutlined />}
         onClick={() => navigate(routes.statistic)}
       >
-        Моя статистика
+        {t("home.my_statistic")}
       </Button>
       <Divider dashed />
       <Button block size="large" icon={<TeamOutlined />} onClick={() => navigate(routes.team)}>
-        Моя команда
+        {t("home.my_team")}
       </Button>
       <Divider dashed />
       <Button
@@ -68,7 +71,7 @@ export const Home = ({ currentUser }: Props) => {
         icon={<EnvironmentOutlined />}
         type="dashed"
       >
-        Общая статистика на карте
+        {t("home.map")}
       </Button>
       <Divider dashed />
       <Button
@@ -77,10 +80,10 @@ export const Home = ({ currentUser }: Props) => {
         icon={<WalletOutlined />}
         onClick={() => navigate(routes.pageDonations)}
       >
-        Страница для пожертвований
+        {t("home.donations")}
       </Button>
       <Divider dashed />
-      <Paragraph>Отправить полученные контакты:</Paragraph>
+      <Paragraph>{t("home.second-wave.help")}</Paragraph>
       <Button
         href="http://san.bhakti-vriksha.ru/"
         target="_blank"
@@ -89,7 +92,7 @@ export const Home = ({ currentUser }: Props) => {
         icon={<UserAddOutlined />}
         type="dashed"
       >
-        Вторая волна
+        {t("home.second-wave.button")}
       </Button>
       <Divider dashed />
       <Button
@@ -100,7 +103,7 @@ export const Home = ({ currentUser }: Props) => {
         icon={<MessageOutlined />}
         type="link"
       >
-        Связаться с нами
+        {t("home.contact")}
       </Button>
       <Divider dashed />
     </BaseLayout>

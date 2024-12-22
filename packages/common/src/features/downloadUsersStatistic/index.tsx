@@ -1,65 +1,70 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Space, Button, Typography } from "antd";
 import { DatePicker } from "common/src/components/DatePicker";
-import { AppleOutlined } from "@ant-design/icons";
+import { DownloadOutlined } from "@ant-design/icons";
 import { getFirestore, query, where } from "firebase/firestore";
 import { collection, getDocs } from "firebase/firestore";
 import { $booksHashMap } from "common/src/services/books/index";
 // @ts-ignore
 import { saveAs } from "file-saver";
 import * as ExcelJS from "exceljs";
+import { useTranslation } from "react-i18next";
 
 const db = getFirestore();
-const months = [
-  "Январь",
-  "Февраль",
-  "Март",
-  "Апрель",
-  "Май",
-  "Июнь",
-  "Июль",
-  "Август",
-  "Сентябрь",
-  "Октябрь",
-  "Ноябрь",
-  "Декабрь",
-];
+
 const monthFormat = "MM.YYYY";
-const headersTranslation: any = {
-  Имя: "Имя",
-  "Количество книг": "Количество книг",
-  maha_big: "МахаБиг",
-  big: "Биг",
-  medium: "Средние",
-  small: "Маленькие",
-  goswamibooks: "Книги Госвами",
-  other: "Другие",
-  "Количество очков": "Количество очков",
-};
 
 type Props = {
   teamMembers: string[];
 };
 
 export const UsersStatistic = (props: Props) => {
+  const { t } = useTranslation();
   const [selectedYear, setSelectedYear] = useState(0);
   const [selectedMonth, setSelectedMonth] = useState<string>();
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const { Title } = Typography;
 
+  const headersTranslation: Record<string, string> = {
+    name: t("common.name"),
+    books_count: t("common.books_count"),
+    maha_big: t("common.book_category.mahabig"),
+    big: t("common.book_category.big"),
+    medium: t("common.book_category.medium"),
+    small: t("common.book_category.small"),
+    goswamibooks: t("common.book_category.goswamibooks"),
+    other: t("common.book_category.other"),
+    points: t("common.points"),
+  };
+
+  const months = [
+    t("common.month.january"),
+    t("common.month.february"),
+    t("common.month.march"),
+    t("common.month.april"),
+    t("common.month.may"),
+    t("common.month.june"),
+    t("common.month.july"),
+    t("common.month.august"),
+    t("common.month.september"),
+    t("common.month.october"),
+    t("common.month.november"),
+    t("common.month.december"),
+  ];
+
   const downloadStatistic = async () => {
     let sortedHeader = [
-      "Имя",
-      "Количество книг",
+      "name",
+      "books_count",
       "maha_big",
       "big",
       "medium",
       "small",
       "goswamibooks",
       "other",
-      "Количество очков",
+      "points",
     ];
-    let operationsHeaders = new Set<string>(["Имя", "Количество книг", "Количество очков"]);
+    let operationsHeaders = new Set<string>(["name", "books_count", "points"]);
     try {
       const operationsQuery = query(
         collection(db, "operations"),
@@ -68,7 +73,7 @@ export const UsersStatistic = (props: Props) => {
       const operations = await getDocs(operationsQuery);
       let monthlyBooks: any = {};
       let exportTable: any = [];
-      const pickedMonth = months[Number(selectedMonth) - 1];
+      const pickedMonth = months[Number(selectedMonth)];
       operations.forEach((doc) => {
         const { date, books, userName = "Unknown", totalCount = 0, totalPoints = 0 } = doc.data();
         const year = new Date(date).getFullYear() ?? "Unknown";
@@ -76,11 +81,10 @@ export const UsersStatistic = (props: Props) => {
         const bookHashMap = $booksHashMap.getState();
         if (year === selectedYear && month === Number(selectedMonth) - 1) {
           monthlyBooks[userName] = monthlyBooks?.[userName] ?? {};
-          monthlyBooks[userName]["Количество книг"] =
-            (monthlyBooks?.[userName]?.["Количество книг"] || 0) + totalCount;
-          monthlyBooks[userName]["Количество очков"] =
-            (monthlyBooks?.[userName]?.["Количество очков"] || 0) + totalPoints;
-          monthlyBooks[userName]["Имя"] = monthlyBooks?.[userName]?.["Имя"] ?? userName;
+          monthlyBooks[userName].books_count =
+            (monthlyBooks?.[userName]?.books_count || 0) + totalCount;
+          monthlyBooks[userName].points = (monthlyBooks?.[userName]?.points || 0) + totalPoints;
+          monthlyBooks[userName].name = monthlyBooks?.[userName]?.name ?? userName;
           if (books !== undefined) {
             for (let i = 0; i < books.length; i++) {
               const { bookId, count } = books[i];
@@ -93,7 +97,7 @@ export const UsersStatistic = (props: Props) => {
         }
       });
       exportTable = Object.values(monthlyBooks);
-      exportTable.sort((a: any, b: any) => b["Количество очков"] - a["Количество очков"]);
+      exportTable.sort((a: any, b: any) => b.points - a.points);
       sortedHeader = sortedHeader.filter((word) =>
         Array.from(operationsHeaders.values()).includes(word)
       );
@@ -163,17 +167,17 @@ export const UsersStatistic = (props: Props) => {
 
   return (
     <>
-      <Title level={5}>Статистика за месяц</Title>
+      <Title level={5}>{t("common.download_user_statistic.title")}</Title>
       <Space>
         <DatePicker onChange={onChange} format={monthFormat} picker="month" />
         <Button
           disabled={buttonDisabled}
-          icon={<AppleOutlined />}
+          icon={<DownloadOutlined />}
           onClick={() => {
             downloadStatistic();
           }}
         >
-          Скачать
+          {t("common.download")}
         </Button>
       </Space>
     </>
