@@ -1,12 +1,13 @@
 import React, { useState, useRef } from "react";
 import { useStore } from "effector-react";
-import { Select, RefSelectProps, SelectProps, Form, notification } from "antd";
+import { Select, RefSelectProps, SelectProps, Form, Modal, notification } from "antd";
 import { useDebouncedCallback } from "use-debounce";
 
 import { addLocation, useLocations } from "common/src/services/api/locations";
 import { $isOnline } from "../../app/offline/lib/isOnlineStore";
 import { LocationSelect } from "../../components/LocationSelect";
 import { InfoCircleOutlined } from "@ant-design/icons";
+import { MapSearch } from "../../components/MapSearch";
 
 type Adress = {
   address: string;
@@ -23,7 +24,7 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
     const { setFieldValue } = Form.useFormInstance();
     const localRef = useRef<RefSelectProps | null>(null);
 
-    const [searchdata, setSearchData] = useState<Adress>({
+    const [searchData, setSearchData] = useState<Adress>({
       address: "",
       coordinates: [],
     });
@@ -38,17 +39,15 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
       const trimmedValue = value.trim();
       setLocationSearchString(trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1));
     }, 1000);
-
-    let locationname = searchdata.address;
-
-    let locationcord = searchdata.coordinates;
+    let locationName = searchData.address;
+    let locationCord = searchData.coordinates;
 
     const onAddNewLocation = () => {
-      const existingLocation = locations.find((product) => product.name === locationname);
+      const existingLocation = locations.find((product) => product.name === locationName);
 
       if (!existingLocation?.name) {
         setCreationLoading(true);
-        addLocation({ name: locationname, coordinates: locationcord })
+        addLocation({ name: locationName, coordinates: locationCord })
           .then(({ id }) => {
             setFieldValue(name, id);
             localRef.current?.blur();
@@ -61,7 +60,7 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
             setCreationLoading(false);
           });
       } else {
-        notification.success({ message: "Такой город уже есть", icon: <InfoCircleOutlined /> });
+        notification.info({ message: "Такой город уже есть", icon: <InfoCircleOutlined /> });
         setSearchData({
           address: "",
           coordinates: [],
@@ -69,33 +68,64 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
       }
     };
 
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalSearchName, setModalSearchName] = useState("");
+
+    const onAddLocation = (search: string) => {
+      setModalOpen(true);
+      setModalSearchName(search);
+    };
+
+    const handleClose = () => {
+      setModalOpen(false);
+      setModalSearchName("");
+    };
+
     const locationOptions = locations.map((d) => (
       <Select.Option key={d.id}>{d.name}</Select.Option>
     ));
 
     return (
-      <LocationSelect
-        ref={(node) => {
-          localRef.current = node;
-          if (typeof ref === "function") {
-            ref(node);
-          } else if (ref) {
-            ref.current = node;
-          }
-        }}
-        // ref={ref}
-        onSearch={onLocationSearchChange}
-        onAddNewLocation={onAddNewLocation}
-        locationSearchString={locationSearchString}
-        isOnline={isOnline}
-        loading={loading || creationLoading}
-        autoClearSearchValue
-        setSearchData={(searchData) => setSearchData(searchData)}
-        searchdata={searchdata}
-        {...props}
-      >
-        {locationOptions}
-      </LocationSelect>
+      <>
+        <LocationSelect
+          ref={(node) => {
+            localRef.current = node;
+            if (typeof ref === "function") {
+              ref(node);
+            } else if (ref) {
+              ref.current = node;
+            }
+          }}
+          onSearch={onLocationSearchChange}
+          onAddNewLocation={onAddNewLocation}
+          locationSearchString={locationSearchString}
+          isOnline={isOnline}
+          loading={loading || creationLoading}
+          autoClearSearchValue
+          onAddLocation={onAddLocation}
+          {...props}
+        >
+          {locationOptions}
+        </LocationSelect>
+
+        <Modal
+          style={{ top: 20 }}
+          open={modalOpen}
+          onCancel={handleClose}
+          okButtonProps={{ style: { display: "none" } }}
+          cancelButtonProps={{ style: { display: "none" } }}
+        >
+          {modalOpen && (
+            <MapSearch
+              locationName={modalSearchName}
+              setSearchData={(searchData) => setSearchData(searchData)}
+              handleClose={handleClose}
+              onAddNewLocation={onAddNewLocation}
+              searchData={searchData}
+            />
+          )}
+        </Modal>
+      </>
     );
   }
 );
