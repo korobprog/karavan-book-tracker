@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useRef, useState } from "react";
-import { GeolocationControl, Map, Placemark, SearchControl } from "react-yandex-maps";
+import { GeolocationControl, Map, Placemark, SearchControl, YMapsApi } from "react-yandex-maps";
 import { Button } from "antd";
 
 type Adress = {
@@ -8,8 +8,8 @@ type Adress = {
 };
 
 type MapSearchProps = {
-  setAddressAntd: string;
-  handleOpen: () => true;
+  setLocationName: string;
+  handleOpen: () => void;
   setSearchData: (searchData: Adress) => void;
   handleCancel: () => void;
   onAddNewLocation: () => void;
@@ -17,16 +17,14 @@ type MapSearchProps = {
 };
 
 export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchProps>, ref) => {
-  const { setAddressAntd, handleCancel, onAddNewLocation, handleOpen, setSearchData, searchdata } =
+  const { setLocationName, handleCancel, onAddNewLocation, handleOpen, setSearchData, searchdata } =
     Props;
 
   const searchControlRef = useRef<ymaps.control.SearchControl | null>;
 
-  const [mapConstructor, setMapConstructor] = useState(null);
+  const [mapConstructor, setMapConstructor] = useState<YMapsApi | null>(null);
 
   const [addressCoord, setAddressCoordMap] = useState<number[]>();
-
-  const [hasFetched, setHasFetched] = useState<boolean>(true); // Состояние для отслеживания вызова функции
 
   const mapOptions = {
     modules: ["geocode", "SuggestView"],
@@ -50,7 +48,8 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
       if (!mapConstructor) return;
       try {
         // @ts-ignore
-        const cords = await mapConstructor.geocode(setAddressAntd);
+        const cords = await mapConstructor.geocode(setLocationName);
+
         // @ts-ignore
         const coordstate = cords.geoObjects.get(0).geometry.getCoordinates();
 
@@ -71,12 +70,8 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
         console.error("Error fetching address coordinates Map:", error);
       }
     };
-    if (handleOpen() && hasFetched) {
-      // Проверяем состояние и вызываем функцию
-      fetchAddressCoordStateMap();
-      setHasFetched(true); // Устанавливаем состояние в true после вызова функции
-    }
-  }, [mapConstructor]);
+    fetchAddressCoordStateMap();
+  });
 
   useEffect(() => {
     const fetchSearchControl = async () => {
@@ -120,13 +115,11 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
             position.coords.latitude,
             position.coords.longitude,
           ];
-
           // @ts-ignore
-
           const result = await mapConstructor.geocode(searchmapnewcoordinates);
 
           const firstGeoObject = result.geoObjects.get(0);
-          const searchmapnewadress = firstGeoObject.getLocalities(); // Получаем полный адрес
+          const searchmapnewadress = firstGeoObject.getLocalities(0);
 
           if (searchmapnewcoordinates && searchmapnewadress) {
             setSearchData({

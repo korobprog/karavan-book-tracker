@@ -32,14 +32,15 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
 
     const [modal1Open, setModal1Open] = useState(false);
 
-    const [adressantd, setAddressAntd] = useState("");
+    const [adressantd, setLocationName] = useState("");
 
     const handleCancel = () => {
+      console.log("открыт");
       setModal1Open(false);
     };
 
     const handleOpen: () => true = () => {
-      setAddressAntd(locationSearchString);
+      setLocationName(locationSearchString);
       return true;
     };
 
@@ -93,7 +94,7 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
         >
           {modal1Open && (
             <MapSearch
-              setAddressAntd={adressantd}
+              setLocationName={adressantd}
               setSearchData={(searchData) => setSearchData(searchData)}
               handleCancel={handleCancel}
               onAddNewLocation={onAddNewLocation}
