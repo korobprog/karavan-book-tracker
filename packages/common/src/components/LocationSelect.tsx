@@ -7,12 +7,20 @@ type LocationSelectProps = SelectProps & {
   locationSearchString: string;
   isOnline?: boolean;
   loading?: boolean;
+  onAddLocation: (location: string) => void;
 };
 
 export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectProps>(
   (props, ref) => {
-    const { onAddNewLocation, locationSearchString, children, isOnline, loading, ...restProps } =
-      props;
+    const {
+      onAddNewLocation,
+      onAddLocation,
+      locationSearchString,
+      children,
+      isOnline,
+      loading,
+      ...restProps
+    } = props;
 
     return (
       <Select
@@ -32,9 +40,13 @@ export const LocationSelect = React.forwardRef<RefSelectProps, LocationSelectPro
               </Typography.Paragraph>
 
               {isOnline ? (
-                <Typography.Link onClick={onAddNewLocation} style={{ whiteSpace: "nowrap" }}>
-                  <PlusOutlined />
-                  Добавить "{locationSearchString}"
+                <Typography.Link
+                  onClick={() => {
+                    onAddLocation(locationSearchString);
+                  }}
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  <PlusOutlined /> Добавить "{locationSearchString}"
                 </Typography.Link>
               ) : (
                 <Typography.Text>

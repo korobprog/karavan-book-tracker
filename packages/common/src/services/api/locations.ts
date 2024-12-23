@@ -24,7 +24,7 @@ export const defaultYearLocationStatistic = {
 
 export type LocationDoc = {
   id?: string;
-  name: string;
+  name?: string;
   country?: string;
   coordinates?: number[];
   image?: string;
