@@ -30,7 +30,6 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
       coordinates: [],
       country: "",
     });
-
     const [locationSearchString, setLocationSearchString] = useState("");
     const { locations, loading } = useLocations({
       searchString: locationSearchString,
@@ -43,13 +42,13 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
     }, 1000);
     let locationName = searchData.address;
     let locationCord = searchData.coordinates;
-
+    let locationCountry = searchData.country;
     const onAddNewLocation = () => {
       const existingLocation = locations.find((product) => product.name === locationName);
 
       if (!existingLocation?.name) {
         setCreationLoading(true);
-        addLocation({ name: locationName, coordinates: locationCord })
+        addLocation({ name: locationName, coordinates: locationCord, country: locationCountry })
           .then(({ id }) => {
             setFieldValue(name, id);
             localRef.current?.blur();
