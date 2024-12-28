@@ -49,7 +49,7 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
         const coordstate = result.geoObjects.get(0)?.geometry.getCoordinates();
         const firstGeoObject = result.geoObjects.get(0);
         const searchMapNewAdress = firstGeoObject?.getLocalities(0);
-        const searchMapCountry = firstGeoObject?.getCountry();
+        const searchMapCountry = firstGeoObject?.getCountryCode();
 
         if (coordstate && searchMapNewAdress) {
           setSearchData({
@@ -83,7 +83,7 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
             // @ts-ignore
             const searchMapNewCoordinates = selectedResult.geometry.getCoordinates();
             // @ts-ignore
-            const country = selectedResult.getCountry();
+            const country = selectedResult.getCountryCode();
 
             if (searchMapNewCoordinates && searchMapNewAdress && country) {
               setSearchData({
@@ -110,7 +110,7 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
 
           const firstGeoObject = result.geoObjects.get(0);
           const searchMapNewAdress = firstGeoObject.getLocalities(0);
-          const searchMapCountry = firstGeoObject?.getCountry();
+          const searchMapCountry = firstGeoObject?.getCountryCode();
 
           if (searchMapNewCoordinates && searchMapNewAdress && searchMapCountry) {
             setSearchData({
