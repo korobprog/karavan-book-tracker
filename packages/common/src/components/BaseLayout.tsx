@@ -63,7 +63,7 @@ export const BaseLayout = (props: React.PropsWithChildren<BaseLayoutProps>) => {
                   </Typography.Text>,
                 ]
               : []),
-            <LangSelect />,
+            <LangSelect key="langSelect" />,
             ...(headerActions ?? [
               <Tooltip title="Профиль" key="profile">
                 <Button

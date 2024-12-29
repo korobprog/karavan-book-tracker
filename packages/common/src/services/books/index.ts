@@ -3,16 +3,7 @@ import { Sheet } from "use-google-sheets/dist/types";
 import { createStore, createEvent } from "effector";
 import useGoogleSheets from "use-google-sheets";
 import { BaseStatisticItem } from "../api/statistic";
-
-export enum BooksCategories {
-  small = "small",
-  medium = "medium",
-  big = "big",
-  mahaBig = "maha_big",
-  other = "other",
-  sbSet = "sb_set",
-  ccSet = "cc_set",
-}
+import { BooksCategories } from "../api/books";
 
 export const mapBooksByCategory: Record<BooksCategories, { shortTitle: keyof BaseStatisticItem }> =
   {
