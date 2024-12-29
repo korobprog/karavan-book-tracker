@@ -43,24 +43,16 @@ type Props = {
 export const TeamCard = ({
   team,
   myStatus,
-  locationsHashMap,
+
   onLeaveTeam,
   onTeamEdit,
   children,
   isAdmin,
 }: Props) => {
   const { t } = useTranslation();
-  const { name, location, currentLocation, leader } = team;
+  const { name, leader } = team;
 
   const { teamMembers } = useTeamMembers({ teamId: team?.id });
-
-  const locationName = location && locationsHashMap ? locationsHashMap[location].name : "";
-  const currentLocationName =
-    currentLocation && locationsHashMap ? locationsHashMap[currentLocation]?.name : "";
-
-  const description = `${locationName} ${
-    currentLocationName ? `(${t("common.team_card.where_now")}: ${currentLocationName})` : ""
-  }`;
 
   const onAcceptMember = (memberProfile: UserDocWithId) => {
     setUserTeam({ id: team.id, status: TeamMemberStatus.member }, memberProfile.id);
@@ -119,7 +111,7 @@ export const TeamCard = ({
     <>
       <Card style={{ marginTop: 16 }} actions={[children]}>
         <Row justify="space-between">
-          <Card.Meta avatar={<TrophyOutlined />} title={name} description={description} />
+          <Card.Meta avatar={<TrophyOutlined />} title={name} />
           {items.length > 0 && (
             <Dropdown menu={{ items }}>
               <Button

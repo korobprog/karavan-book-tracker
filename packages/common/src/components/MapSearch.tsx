@@ -5,6 +5,7 @@ import { Button, notification } from "antd";
 type Adress = {
   address: string;
   coordinates: number[];
+  country: string;
 };
 
 type MapSearchProps = {
@@ -47,12 +48,14 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
         const result = await mapConstructor.geocode(locationName);
         const coordstate = result.geoObjects.get(0)?.geometry.getCoordinates();
         const firstGeoObject = result.geoObjects.get(0);
-        const searchMapNewAdress = firstGeoObject?.getLocalities();
+        const searchMapNewAdress = firstGeoObject?.getLocalities(0);
+        const searchMapCountry = firstGeoObject?.getCountryCode();
 
         if (coordstate && searchMapNewAdress) {
           setSearchData({
             address: searchMapNewAdress,
             coordinates: coordstate,
+            country: searchMapCountry,
           });
         } else {
           notification.info({ message: "Город не найден, воспользуйтесь поиском" });
@@ -79,10 +82,16 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
             );
             // @ts-ignore
             const searchMapNewCoordinates = selectedResult.geometry.getCoordinates();
-            setSearchData({
-              address: searchMapNewAdress,
-              coordinates: searchMapNewCoordinates,
-            });
+            // @ts-ignore
+            const country = selectedResult.getCountryCode();
+
+            if (searchMapNewCoordinates && searchMapNewAdress && country) {
+              setSearchData({
+                address: searchMapNewAdress,
+                coordinates: searchMapNewCoordinates,
+                country: country,
+              });
+            }
           }
         });
       } catch (error) {
@@ -101,11 +110,13 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
 
           const firstGeoObject = result.geoObjects.get(0);
           const searchMapNewAdress = firstGeoObject.getLocalities(0);
+          const searchMapCountry = firstGeoObject?.getCountryCode();
 
-          if (searchMapNewCoordinates && searchMapNewAdress) {
+          if (searchMapNewCoordinates && searchMapNewAdress && searchMapCountry) {
             setSearchData({
               address: searchMapNewAdress,
               coordinates: searchMapNewCoordinates,
+              country: searchMapCountry,
             });
           } else {
             notification.info({ message: "Город не найден, воспользуйтесь поиском" });
@@ -124,6 +135,7 @@ export const MapSearch = forwardRef((Props: React.PropsWithChildren<MapSearchPro
       setSearchData({
         address: "",
         coordinates: [],
+        country: "",
       });
       handleClose();
     } catch (error) {

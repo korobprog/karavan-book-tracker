@@ -12,6 +12,7 @@ import { MapSearch } from "../../components/MapSearch";
 type Adress = {
   address: string;
   coordinates: number[];
+  country: string;
 };
 
 type SelectLocationProps = SelectProps & {
@@ -27,8 +28,8 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
     const [searchData, setSearchData] = useState<Adress>({
       address: "",
       coordinates: [],
+      country: "",
     });
-
     const [locationSearchString, setLocationSearchString] = useState("");
     const { locations, loading } = useLocations({
       searchString: locationSearchString,
@@ -41,19 +42,20 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
     }, 1000);
     let locationName = searchData.address;
     let locationCord = searchData.coordinates;
-
+    let locationCountry = searchData.country;
     const onAddNewLocation = () => {
       const existingLocation = locations.find((product) => product.name === locationName);
 
       if (!existingLocation?.name) {
         setCreationLoading(true);
-        addLocation({ name: locationName, coordinates: locationCord })
+        addLocation({ name: locationName, coordinates: locationCord, country: locationCountry })
           .then(({ id }) => {
             setFieldValue(name, id);
             localRef.current?.blur();
             setSearchData({
               address: "",
               coordinates: [],
+              country: "",
             });
           })
           .finally(() => {
@@ -64,6 +66,7 @@ export const SelectLocation = React.forwardRef<RefSelectProps, SelectLocationPro
         setSearchData({
           address: "",
           coordinates: [],
+          country: "",
         });
       }
     };
