@@ -20,6 +20,7 @@ import email from "common/src/images/email.svg";
 import link from "common/src/images/link_b.svg";
 import { CurrentUser } from "common/src/services/api/useCurrentUser";
 import { useTranslation } from "react-i18next";
+import React from "react";
 
 export type PageFormValues = DonationPageDoc;
 

@@ -7,13 +7,27 @@ import { LocaleProvider } from "common/src/app/locale-provider/LocaleProvider";
 import "./i18n";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { YMaps } from "react-yandex-maps";
+import { ConfigProvider } from "antd";
+import ru_RU from "antd/locale/ru_RU";
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <Offline>
         <LocaleProvider>
-          <App />
+          <ConfigProvider locale={ru_RU}>
+            <YMaps
+              query={{
+                apikey: process.env.REACT_APP_YMAP_KEY,
+                // @ts-ignore
+                suggest_apikey: process.env.REACT_APP_YMAPGEO_KEY,
+                lang: "ru_RU",
+              }}
+            >
+              <App />
+            </YMaps>
+          </ConfigProvider>
         </LocaleProvider>
       </Offline>
     </BrowserRouter>

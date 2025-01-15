@@ -1,0 +1,108 @@
+[debug] [2025-01-13T23:21:20.015Z] ----------------------------------------------------------------------
+[debug] [2025-01-13T23:21:20.019Z] Command:       /usr/bin/node /usr/local/bin/firebase init
+[debug] [2025-01-13T23:21:20.019Z] CLI Version:   13.29.1
+[debug] [2025-01-13T23:21:20.020Z] Platform:      linux
+[debug] [2025-01-13T23:21:20.020Z] Node Version:  v18.19.1
+[debug] [2025-01-13T23:21:20.021Z] Time:          Tue Jan 14 2025 09:21:20 GMT+1000 (Владивосток, стандартное время)
+[debug] [2025-01-13T23:21:20.021Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-01-13T23:21:20.030Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-01-13T23:21:20.031Z] > authorizing via signed-in user (korobprog@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /home/korobprog/Doc/Git/karavan-book-tracker
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2025-01-13T23:23:03.813Z] Checked if tokens are valid: false, expires at: 1736811310493
+[debug] [2025-01-13T23:23:03.814Z] Checked if tokens are valid: false, expires at: 1736811310493
+[debug] [2025-01-13T23:23:03.816Z] > refreshing access token with scopes: []
+[debug] [2025-01-13T23:23:03.824Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-01-13T23:23:03.825Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-01-13T23:23:04.380Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-01-13T23:23:04.380Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-01-13T23:23:04.393Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=100
+[debug] [2025-01-13T23:23:05.293Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-01-13T23:23:05.293Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[info] i  Using project book-tracker-statistics (book-tracker-statistics) 
+[info] 
+=== Hosting Setup
+[debug] [2025-01-13T23:23:40.022Z] Checked if tokens are valid: true, expires at: 1736814183380
+[debug] [2025-01-13T23:23:40.022Z] Checked if tokens are valid: true, expires at: 1736814183380
+[debug] [2025-01-13T23:23:40.023Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/book-tracker-statistics [none]
+[debug] [2025-01-13T23:23:40.704Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/book-tracker-statistics 200
+[debug] [2025-01-13T23:23:40.704Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/book-tracker-statistics {"projectId":"book-tracker-statistics","projectNumber":"134910146404","displayName":"book-tracker-statistics","name":"projects/book-tracker-statistics","resources":{"hostingSite":"book-tracker-statistics"},"state":"ACTIVE","etag":"1_2714fe9f-4cd1-45f6-8585-aec9cdef7e73"}
+[debug] [2025-01-15T06:04:16.532Z] ----------------------------------------------------------------------
+[debug] [2025-01-15T06:04:16.535Z] Command:       /usr/bin/node /usr/local/bin/firebase init hosting
+[debug] [2025-01-15T06:04:16.536Z] CLI Version:   13.29.1
+[debug] [2025-01-15T06:04:16.536Z] Platform:      linux
+[debug] [2025-01-15T06:04:16.537Z] Node Version:  v18.19.1
+[debug] [2025-01-15T06:04:16.537Z] Time:          Wed Jan 15 2025 16:04:16 GMT+1000 (Владивосток, стандартное время)
+[debug] [2025-01-15T06:04:16.537Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-01-15T06:04:16.547Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-01-15T06:04:16.548Z] > authorizing via signed-in user (korobprog@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /home/korobprog/Doc/Git/karavan-book-tracker
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2025-01-15T06:04:19.363Z] Checked if tokens are valid: true, expires at: 1736924284446
+[debug] [2025-01-15T06:04:19.364Z] Checked if tokens are valid: true, expires at: 1736924284446
+[debug] [2025-01-15T06:04:19.370Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=100
+[debug] [2025-01-15T06:04:20.300Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-01-15T06:04:20.300Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[info] i  Using project book-tracker-statistics (book-tracker-statistics) 
+[info] 
+=== Hosting Setup
+[debug] [2025-01-15T06:04:42.042Z] Checked if tokens are valid: true, expires at: 1736924284446
+[debug] [2025-01-15T06:04:42.042Z] Checked if tokens are valid: true, expires at: 1736924284446
+[debug] [2025-01-15T06:04:42.043Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/book-tracker-statistics [none]
+[debug] [2025-01-15T06:04:42.697Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/book-tracker-statistics 200
+[debug] [2025-01-15T06:04:42.697Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/book-tracker-statistics {"projectId":"book-tracker-statistics","projectNumber":"134910146404","displayName":"book-tracker-statistics","name":"projects/book-tracker-statistics","resources":{"hostingSite":"book-tracker-statistics"},"state":"ACTIVE","etag":"1_c1e31265-d4d1-4ef5-9d09-fc657189d36f"}
+[debug] [2025-01-15T06:05:21.692Z] Error: Cannot find module 'vite'
+Require stack:
+- /usr/local/lib/node_modules/firebase-tools/lib/frameworks/utils.js
+- /usr/local/lib/node_modules/firebase-tools/lib/frameworks/index.js
+- /usr/local/lib/node_modules/firebase-tools/lib/emulator/controller.js
+- /usr/local/lib/node_modules/firebase-tools/lib/emulator/commandUtils.js
+- /usr/local/lib/node_modules/firebase-tools/lib/commands/database-get.js
+- /usr/local/lib/node_modules/firebase-tools/lib/commands/index.js
+- /usr/local/lib/node_modules/firebase-tools/lib/index.js
+- /usr/local/lib/node_modules/firebase-tools/lib/bin/firebase.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1134:15)
+    at Function.resolve (node:internal/modules/helpers:188:19)
+    at relativeRequire (/usr/local/lib/node_modules/firebase-tools/lib/frameworks/utils.js:195:34)
+    at getConfig (/usr/local/lib/node_modules/firebase-tools/lib/frameworks/vite/index.js:111:65)
+    at discover (/usr/local/lib/node_modules/firebase-tools/lib/frameworks/vite/index.js:60:68)
+    at async /usr/local/lib/node_modules/firebase-tools/lib/frameworks/vite/index.js:38:55
+    at async discover (/usr/local/lib/node_modules/firebase-tools/lib/frameworks/index.js:47:32)
+    at async doSetup (/usr/local/lib/node_modules/firebase-tools/lib/init/features/hosting/index.js:54:11)
+    at async init (/usr/local/lib/node_modules/firebase-tools/lib/init/index.js:41:9)
+[error] 
+[error] Error: An unexpected error has occurred.

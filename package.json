@@ -37,6 +37,9 @@
     "map:deploy:staging": "npm run deploy:staging -w map",
     "map:build:prod": "npm run build:prod -w map",
     "map:deploy:prod": "npm run deploy:prod -w map",
+    "statistik": "npm run dev -w statistik",
+    "statistik:build": "npm run build -w statistik",
+    "statistik:deploy": "npm run deploy -w statistik",
     "common:scan": "npm run scan -w common",
     "prepare": "husky install"
   },
@@ -52,21 +55,28 @@
     "packages/tracker",
     "packages/stock",
     "packages/donation",
-    "packages/map"
+    "packages/map",
+    "packages/statistik"
   ],
   "dependencies": {
     "@ant-design/pro-layout": "^7.17.6",
+    "@astrojs/react": "^4.1.4",
+    "@pbe/react-yandex-maps": "^1.2.5",
     "exceljs": "^4.3.0",
     "file-saver": "^2.0.5",
     "i18next": "^23.10.0",
     "jspdf": "^2.5.1",
-    "react-i18next": "^14.1.0"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-i18next": "^14.1.0",
+    "react-yandex-maps": "^4.6.0"
   },
   "devDependencies": {
     "@types/firebase": "^3.2.1",
     "@types/lodash": "^4.14.202",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
+    "@yandex/ymaps3-types": "^0.0.28",
     "craco-plugin-env": "^1.0.5",
     "firebase": "^9.23.0",
     "husky": "^8.0.3",

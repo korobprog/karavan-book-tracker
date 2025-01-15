@@ -1,4 +1,5 @@
 import { Select } from "antd";
+import React from "react";
 import { useTranslation } from "react-i18next";
 
 export const getLang = () => localStorage.getItem("current_language");
