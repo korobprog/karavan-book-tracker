@@ -1,0 +1,23 @@
+{
+  "name": "square-spiral",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "deploy": "firebase deploy"
+  },
+  "dependencies": {
+    "@astrojs/react": "^4.1.4",
+    "@chakra-ui/react": "^3.3.1",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "astro": "^5.1.6",
+    "framer-motion": "^11.18.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^5.7.3"
+  }
+}
