@@ -1,3 +1,4 @@
+import { BookDoc, BookDocWithId } from "./books";
 import {
   collection,
   CollectionReference,
@@ -31,6 +32,9 @@ const users = getCollectionRef<UserDocWithId>("users");
 const operation = (id: string) => getDocRef<OperationDoc>(id, "operations");
 const operations = getCollectionRef<OperationDocWithId>("operations");
 
+const book = (id: string) => getDocRef<BookDoc>(id, "books");
+const books = getCollectionRef<BookDocWithId>("books");
+
 const location = (id: string) => getDocRef<LocationDoc>(id, "locations");
 const locations = getCollectionRef<LocationDoc>("locations");
 
@@ -57,6 +61,8 @@ export const apiRefs = {
   users,
   operation,
   operations,
+  book,
+  books,
   location,
   locations,
   team,

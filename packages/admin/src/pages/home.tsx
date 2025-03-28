@@ -20,7 +20,7 @@ type Props = {
 const Home = ({ currentUser }: Props) => {
   const { user, profile } = currentUser;
   const navigate = useTransitionNavigate();
-  const onAddReport = () => {
+  const onReports = () => {
     navigate(routes.reports);
   };
   const onLocationsSelect = () => {
@@ -42,8 +42,12 @@ const Home = ({ currentUser }: Props) => {
       <Title className="site-page-subtitle" level={5}>
         Удачной санкиртаны!
       </Title>
-      <Button type="primary" block size="large" icon={<ReadOutlined />} onClick={onAddReport}>
+      <Button type="primary" block size="large" icon={<ReadOutlined />} onClick={onReports}>
         Последние операции
+      </Button>
+      <Divider dashed />
+      <Button block size="large" icon={<ReadOutlined />} onClick={() => navigate(routes.books)}>
+        Книги
       </Button>
       <Divider dashed />
       <Button block size="large" icon={<TeamOutlined />} onClick={onUsersSelect}>

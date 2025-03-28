@@ -1,1 +1,18 @@
-{}
+{
+  "books": {
+    "name": "Name",
+    "short_name": "Short Name",
+    "lang": "Language",
+    "category": "Category",
+    "action": "Action",
+    "delete_confirm": "Are you sure you want to delete the book?",
+    "title": "Books",
+    "add_book": "Add Book",
+    "loading": "Loading",
+    "not_exists": "Such a book does not exist",
+    "edit_book": "Edit Book",
+    "filter_none": "All languages",
+    "lang_label": "Filter by languages",
+    "lang_placeholder": "Select a language"
+  }
+}

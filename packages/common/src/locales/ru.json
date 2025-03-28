@@ -137,6 +137,23 @@
         "label": "Текущее место пребывания"
       },
       "save": "СОХРАНИТЬ"
+    },
+    "book": {
+      "form": {
+        "name_label": "Название",
+        "short_name_label": "Короткое название",
+        "lang_label": "Язык",
+        "lang_placeholder": "Выберите язык книги",
+        "category_label": "Категория",
+        "category_placeholder": "Выберите категорию",
+        "submitting": "Сохраняем",
+        "submit": "Сохранить"
+      },
+      "lang": {
+        "en": "Английский",
+        "ru": "Русский",
+        "hi": "Хинди"
+      }
     }
   },
   "year": "Год"
